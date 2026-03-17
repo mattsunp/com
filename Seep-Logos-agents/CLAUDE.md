@@ -157,6 +157,49 @@
 
 ---
 
+## ディレクトリ構成
+
+```
+Seep-Logos-agents/
+├── minutes/                    # 議事録（secretary / 全部門横断）
+├── seeds/                      # タイトル未確定の探索的制作物（主に部門2）
+│   ├── plots/
+│   ├── scenarios/
+│   └── worldbuilding/
+├── titles/                     # タイトル確定済みの作品単位（全部門横断）
+│   └── [作品名]/
+│       ├── plots/
+│       ├── scenarios/
+│       ├── worldbuilding/
+│       ├── original/
+│       ├── comics/
+│       ├── audio-drama/
+│       ├── art-direction/
+│       ├── backgrounds/
+│       ├── visual/
+│       ├── ui/
+│       ├── dev/
+│       ├── video/
+│       └── localization/
+├── proposals/                  # 企画書・新規IP立案（保存先は検討中）
+└── marketing/                  # マーケティング・PR・採用（会社・ブランド単位）
+    ├── press-releases/
+    ├── sns/
+    ├── media/
+    ├── research/
+    ├── recruitment/
+    └── internal/
+```
+
+### seeds → titles 昇格フロー
+- `seeds/` で探索・制作したコンテンツがタイトルとして確定した際は、`titles/[作品名]/` 以下に移動する
+- 移動のタイミングはプロデューサーの判断による
+
+### proposalsの保存先（検討中）
+- `proposals/`（トップレベル）か `seeds/` 内かは未確定
+
+---
+
 ## secretary エージェント 仕様
 
 ### 役割
