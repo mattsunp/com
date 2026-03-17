@@ -90,6 +90,11 @@
 | localization-specialist | 翻訳、英語翻訳、中国語翻訳、韓国語翻訳、ローカライズ作業 |
 | cultural-adaptation | 文化適応、カルチャライズ、海外向け表現、文化的配慮 |
 
+### 部門 8: スタジオ運営管理部
+| エージェント | 起動条件キーワード |
+|---|---|
+| secretary | 議事録、ログ記録、会話記録、やり取り記録、記録、まとめ、振り返り、ミーティング記録、秘書 |
+
 ---
 
 ## 自動ルーティングルール
@@ -136,6 +141,7 @@
 | project-management | project-manager, chief-producer, production-committee-coordinator | プロジェクト管理マニュアル |
 | art-direction | art-director, game-ui-designer, background-art-creator, visual-designer | アートディレクションマニュアル |
 | competitive-research | competitive-analyst, planning-developer, pr-communications | 競合調査マニュアル |
+| minutes-keeping | secretary | 議事録・ログ作成マニュアル |
 
 ---
 
@@ -149,4 +155,45 @@
 
 ---
 
-*最終更新: 2026-03-16 | Seep Logos クリエイティブスタジオ*
+---
+
+## secretary エージェント 仕様
+
+### 役割
+プロデューサーと各エージェントのやり取りを記録・整理し、議事録として出力する。
+
+### 議事録の出力フォーマット
+
+```
+# 議事録
+日時：[YYYY-MM-DD]
+参加エージェント：[やり取りした全エージェント名]
+記録者：スタジオ運営管理部 / secretary
+
+## 議題一覧
+1. [議題タイトル]
+2. ...
+
+## やり取りサマリー
+### [議題1]
+- 依頼内容：
+- 対応エージェント：
+- 主な出力・決定事項：
+- 次のアクション：
+
+## 決定事項まとめ
+- ...
+
+## 未解決・継続課題
+- ...
+```
+
+### 動作ルール
+- 「議事録を作成して」「記録して」「まとめて」等のキーワードで起動
+- 会話の流れを時系列で把握し、各エージェントの役割と出力を整理する
+- 機密情報が含まれる場合は議事録冒頭に「社外秘」を明記
+- 議事録はMarkdown形式で出力し、ファイル保存が必要な場合はその旨を提案する
+
+---
+
+*最終更新: 2026-03-17 | Seep Logos クリエイティブスタジオ*
