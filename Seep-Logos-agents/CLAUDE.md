@@ -275,14 +275,26 @@ Seep-Logos-agents/
 │       ├── video/
 │       └── localization/
 ├── proposals/                  # 企画書・新規IP立案（保存先は検討中）
+├── creators/                   # 所属クリエイター管理
+│   └── _private/               # 【機密】個人情報・契約情報（GitHub非公開）
 └── marketing/                  # マーケティング・PR・採用（会社・ブランド単位）
     ├── press-releases/
     ├── sns/
     ├── media/
+    │   └── _private/           # 【機密】営業先会社情報・担当者情報（GitHub非公開）
     ├── research/
     ├── recruitment/
+    │   └── _private/           # 【機密】応募者・候補者の個人情報（GitHub非公開）
     └── internal/
 ```
+
+### 機密データの取り扱いルール
+- 採用応募者・候補者の個人情報 → `marketing/recruitment/_private/`
+- 営業先会社情報・担当者情報 → `marketing/media/_private/`
+- 所属クリエイターの個人情報・契約情報 → `creators/_private/`
+- `_private/` ディレクトリは `.gitignore` により GitHub に公開されない
+- 機密データを含むファイルは必ず `_private/` 内に保存すること
+- 将来新たな機密データが生じた場合も、該当部門の `_private/` に格納する
 
 ### seeds → titles 昇格フロー
 - `seeds/` で探索・制作したコンテンツがタイトルとして確定した際は、`titles/[作品名]/` 以下に移動する
