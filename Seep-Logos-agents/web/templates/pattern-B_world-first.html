@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pattern B: World-first型</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Georgia', serif;
+      background: #080810;
+      color: #fff;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      background: rgba(8,8,16,0.85);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #1a1a2a;
+    }
+    .nav-logo {
+      font-size: 14px;
+      letter-spacing: 0.3em;
+      color: #ccc;
+      text-transform: uppercase;
+    }
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 11px;
+      color: #888;
+      text-decoration: none;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+    .nav-links .cta {
+      color: #fff;
+      border: 1px solid #444;
+      padding: 8px 20px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 24px;
+      position: relative;
+      background: linear-gradient(180deg, #0d0d1e 0%, #080810 100%);
+    }
+    .placeholder-bg {
+      position: absolute;
+      inset: 0;
+      border: 2px dashed #1a1a2e;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      padding: 16px;
+    }
+    .placeholder-bg span { font-size: 11px; color: #2a2a4a; font-family: monospace; }
+
+    .hero-logo {
+      border: 2px dashed #333;
+      padding: 18px 56px;
+      font-size: 13px;
+      color: #555;
+      font-family: monospace;
+      letter-spacing: 2px;
+    }
+    .hero h1 {
+      font-size: clamp(28px, 5vw, 64px);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #eee;
+    }
+    .hero p {
+      font-size: clamp(13px, 1.4vw, 17px);
+      color: #888;
+      max-width: 520px;
+      line-height: 1.8;
+    }
+    .hero-cta {
+      margin-top: 8px;
+      display: inline-block;
+      padding: 14px 40px;
+      border: 1px solid #555;
+      font-size: 12px;
+      letter-spacing: 0.3em;
+      color: #ccc;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    /* ── SECTION COMMON ── */
+    section { padding: 100px 40px; }
+    .section-label {
+      font-size: 10px;
+      letter-spacing: 0.5em;
+      color: #444;
+      text-transform: uppercase;
+      margin-bottom: 48px;
+      font-family: monospace;
+    }
+    .section-label::before { content: '── '; }
+    .section-label::after { content: ' ──'; }
+
+    /* ── WORLD ── */
+    .world {
+      background: #0a0a14;
+      border-top: 1px solid #1a1a2a;
+    }
+    .world-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    .world-image {
+      aspect-ratio: 4/3;
+      background: #111122;
+      border: 2px dashed #222;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 8px;
+      color: #333;
+      font-family: monospace;
+      font-size: 12px;
+    }
+    .world-image .icon { font-size: 32px; color: #222; }
+    .world-text h2 {
+      font-size: clamp(22px, 2.5vw, 36px);
+      margin-bottom: 24px;
+      color: #ddd;
+      font-weight: normal;
+    }
+    .world-text p {
+      font-size: 15px;
+      line-height: 2;
+      color: #888;
+    }
+    .world-tags {
+      margin-top: 24px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .tag {
+      border: 1px solid #2a2a3a;
+      padding: 6px 14px;
+      font-size: 11px;
+      color: #666;
+      letter-spacing: 0.1em;
+    }
+
+    /* ── CHARACTERS ── */
+    .characters { background: #080810; }
+    .characters-inner { max-width: 1100px; margin: 0 auto; }
+    .char-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .char-card {
+      border: 1px solid #1a1a2a;
+      text-align: center;
+      overflow: hidden;
+    }
+    .char-visual {
+      aspect-ratio: 2/3;
+      background: #111122;
+      border-bottom: 1px solid #1a1a2a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 8px;
+      color: #2a2a4a;
+      font-family: monospace;
+      font-size: 11px;
+      position: relative;
+    }
+    .char-visual .silhouette {
+      width: 80px;
+      height: 140px;
+      background: #1a1a2a;
+      border-radius: 40px 40px 0 0;
+      opacity: 0.6;
+    }
+    .char-visual span { font-size: 11px; color: #333; }
+    .char-info { padding: 20px; }
+    .char-name { font-size: 14px; color: #ccc; letter-spacing: 0.1em; margin-bottom: 6px; }
+    .char-role { font-size: 11px; color: #555; font-family: monospace; }
+
+    /* ── NEWS ── */
+    .news { background: #0a0a14; border-top: 1px solid #1a1a2a; }
+    .news-inner { max-width: 800px; margin: 0 auto; }
+    .news-list { border-top: 1px solid #1a1a2a; }
+    .news-item {
+      display: grid;
+      grid-template-columns: 120px 80px 1fr 20px;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 0;
+      border-bottom: 1px solid #1a1a2a;
+      font-size: 13px;
+    }
+    .news-date { color: #555; font-family: monospace; font-size: 12px; }
+    .news-tag {
+      font-size: 10px;
+      padding: 3px 10px;
+      border: 1px solid #2a2a3a;
+      color: #666;
+      text-align: center;
+      letter-spacing: 0.1em;
+    }
+    .news-title { color: #bbb; }
+    .news-arrow { color: #444; }
+
+    /* ── CTA ── */
+    .cta-section {
+      background: #0d0d1e;
+      border-top: 1px solid #1a1a2a;
+      text-align: center;
+    }
+    .cta-section h2 { font-size: 15px; color: #888; font-weight: normal; margin-bottom: 32px; letter-spacing: 0.1em; }
+    .form-row {
+      display: flex;
+      max-width: 480px;
+      margin: 0 auto 24px;
+    }
+    .form-row input {
+      flex: 1;
+      padding: 14px 20px;
+      background: #111;
+      border: 1px solid #333;
+      border-right: none;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+    }
+    .form-row input::placeholder { color: #444; }
+    .form-row button {
+      padding: 14px 28px;
+      background: #fff;
+      color: #000;
+      border: none;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .sns-links { display: flex; gap: 12px; justify-content: center; }
+    .sns-btn {
+      width: 44px; height: 44px;
+      border: 1px solid #2a2a3a;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; color: #555; font-family: monospace; cursor: pointer;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #060608;
+      padding: 40px;
+      border-top: 1px solid #1a1a2a;
+    }
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-nav { display: flex; gap: 24px; list-style: none; }
+    .footer-nav a { font-size: 11px; color: #444; text-decoration: none; letter-spacing: 0.1em; }
+    .footer-copy { font-size: 11px; color: #333; font-family: monospace; }
+
+    .wf-label {
+      position: fixed; top: 12px; left: 12px;
+      background: #222; border: 1px solid #444;
+      padding: 6px 12px; font-size: 11px; font-family: monospace; color: #aaa; z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wf-label">WIREFRAME / Pattern B: World-first型</div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">Game Title</div>
+    <ul class="nav-links">
+      <li><a href="#">World</a></li>
+      <li><a href="#">Characters</a></li>
+      <li><a href="#">News</a></li>
+      <li><a href="#" class="cta">登録する</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="placeholder-bg">
+      <span>[PLACEHOLDER: キービジュアル / なし時はグラデーションで代替]</span>
+    </div>
+    <div class="hero-logo">[PLACEHOLDER: ゲームロゴ]</div>
+    <h1>Game Title</h1>
+    <p>[PLACEHOLDER: キャッチコピー2行。世界観と物語の核心を表す言葉]</p>
+    <div class="hero-cta">世界を知る ▼</div>
+  </section>
+
+  <!-- WORLD -->
+  <section class="world" id="world">
+    <div class="world-inner">
+      <div class="world-image">
+        <div class="icon">🖼</div>
+        <span>[PLACEHOLDER: コンセプトアート]</span>
+        <span style="color:#222;">なし時 → カラーブロック＋引用テキストで代替</span>
+      </div>
+      <div class="world-text">
+        <p class="section-label">World</p>
+        <h2>[PLACEHOLDER: 世界観タイトル]</h2>
+        <p>[PLACEHOLDER: 世界観テキスト 300〜500字。ゲームの舞台・時代・雰囲気を説明する。完全でなくてよい。断片的・詩的でも機能する。]</p>
+        <div class="world-tags">
+          <span class="tag">[キーワード1]</span>
+          <span class="tag">[キーワード2]</span>
+          <span class="tag">[キーワード3]</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHARACTERS -->
+  <section class="characters" id="characters">
+    <div class="characters-inner">
+      <p class="section-label" style="text-align:center;">Characters</p>
+      <div class="char-grid">
+        <div class="char-card">
+          <div class="char-visual">
+            <div class="silhouette"></div>
+            <span>[PLACEHOLDER: キャラ立ち絵 / シルエット可]</span>
+          </div>
+          <div class="char-info">
+            <div class="char-name">[キャラクター名]</div>
+            <div class="char-role">[肩書き・役割]</div>
+          </div>
+        </div>
+        <div class="char-card">
+          <div class="char-visual">
+            <div class="silhouette"></div>
+            <span>[PLACEHOLDER: キャラ立ち絵 / シルエット可]</span>
+          </div>
+          <div class="char-info">
+            <div class="char-name">[キャラクター名]</div>
+            <div class="char-role">[肩書き・役割]</div>
+          </div>
+        </div>
+        <div class="char-card">
+          <div class="char-visual">
+            <div class="silhouette"></div>
+            <span>[PLACEHOLDER: キャラ立ち絵 / シルエット可]</span>
+          </div>
+          <div class="char-info">
+            <div class="char-name">[キャラクター名]</div>
+            <div class="char-role">[肩書き・役割]</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWS -->
+  <section class="news" id="news">
+    <div class="news-inner">
+      <p class="section-label">News</p>
+      <div class="news-list">
+        <div class="news-item">
+          <span class="news-date">2026.XX.XX</span>
+          <span class="news-tag">INFO</span>
+          <span class="news-title">記事タイトルが入ります</span>
+          <span class="news-arrow">→</span>
+        </div>
+        <div class="news-item">
+          <span class="news-date">2026.XX.XX</span>
+          <span class="news-tag">UPDATE</span>
+          <span class="news-title">記事タイトルが入ります</span>
+          <span class="news-arrow">→</span>
+        </div>
+        <div class="news-item">
+          <span class="news-date">2026.XX.XX</span>
+          <span class="news-tag">INFO</span>
+          <span class="news-title">記事タイトルが入ります</span>
+          <span class="news-arrow">→</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section" style="padding:80px 40px;">
+    <h2>最新情報をいち早くお届けします</h2>
+    <div class="form-row">
+      <input type="email" placeholder="メールアドレスを入力">
+      <button>登録する</button>
+    </div>
+    <div class="sns-links">
+      <div class="sns-btn">X</div>
+      <div class="sns-btn">IG</div>
+      <div class="sns-btn">YT</div>
+      <div class="sns-btn">DC</div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <ul class="footer-nav">
+        <li><a href="#">World</a></li>
+        <li><a href="#">Characters</a></li>
+        <li><a href="#">News</a></li>
+        <li><a href="#">利用規約</a></li>
+        <li><a href="#">プライバシーポリシー</a></li>
+      </ul>
+      <p class="footer-copy">© 2026 [会社名] All Rights Reserved</p>
+    </div>
+  </footer>
+
+</body>
+</html>
