@@ -9,7 +9,8 @@
 
 | ファイル | 内容 | 主な参照エージェント |
 |---|---|---|
-| [industry/anime-companies.md](./industry/anime-companies.md) | 元請けアニメ企業リスト（264社）| 営業人、情報屋、全体戦略家 |
+| [industry/anime-companies.md](./industry/anime-companies.md) | 元請けアニメ企業リスト（265社）| 営業人、情報屋、全体戦略家 |
+| [industry/game-companies.md](./industry/game-companies.md) | ゲーム企業リスト（223社）| 営業人、情報屋、全体戦略家 |
 
 ---
 
