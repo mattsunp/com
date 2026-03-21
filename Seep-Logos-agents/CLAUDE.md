@@ -73,9 +73,11 @@
 |---|---|---|
 | 宣伝人 | pr-communications | PR戦略、広報計画、メディア戦略、ブランドコミュニケーション |
 | 速報屋 | press-release-writer | プレスリリース、ニュースリリース、発表文、メディア向け文書 |
-| 伝道人 | sns-manager | SNS、Twitter（X）、Instagram、TikTok、YouTube、投稿文、ハッシュタグ |
+| 投稿型SNS担当 | sns-manager | SNS、Twitter（X）、Instagram、TikTok、YouTube、投稿文、ハッシュタグ |
+| 運用型SNS担当 | community-manager | Discord、コミュニティ運用、サーバー設計、モデレーション、コミュニティイベント |
 | 渉外人 | media-relations | メディア対応、取材対応、インタビュー、記者対応、メディアリスト |
 | 情報屋 | competitive-analyst | 競合調査、市場調査、トレンド分析、競合比較、業界動向 |
+| 営業人 | sales-director | 提案書作成、サービス設計、料金設計、見積書、契約スコープ、B2B営業 |
 
 ### 部門 5: 採用・クリエイター運用部
 | 愛称 | エージェント | 起動条件キーワード |
@@ -138,6 +140,8 @@
 - 「海外向けにローカライズして」→ **localization-director** × **localization-specialist** × **cultural-adaptation** が連携
 - 「クリエイターを採用したい」→ **recruitment-strategist** × **recruitment-pr-writer** が連携
 - 「世界観を構築して」→ **worldbuilding-creator** × **scenario-writer** × **art-director** が連携
+- 「外部クライアントに提案したい」→ **sales-director** × **project-manager** が連携
+- 「Discordサーバーを設計・運用したい」→ **community-manager** × **sns-manager** が連携
 
 ### 優先度ルール
 1. 外部公開コンテンツ（プレスリリース・SNS等）は必ずブランドルールチェックを実施
@@ -154,7 +158,8 @@
 | scenario-writing | scenario-writer, audio-drama-producer, original-work-developer | シナリオ・脚本執筆マニュアル |
 | worldbuilding | worldbuilding-creator, scenario-writer, art-director | 世界観設定構築マニュアル |
 | press-release | press-release-writer, pr-communications, media-relations | プレスリリース作成マニュアル |
-| sns-management | sns-manager, pr-communications, recruitment-pr-writer | SNS運用マニュアル |
+| sns-management | sns-manager, community-manager, pr-communications, recruitment-pr-writer | SNS・コミュニティ運用マニュアル |
+| b2b-sales | sales-director, project-manager, chief-producer | B2Bサービス営業・提案マニュアル |
 | recruitment-pr | recruitment-pr-writer, recruitment-strategist, creator-relations | 採用広報マニュアル |
 | localization | localization-specialist, localization-director, cultural-adaptation | 翻訳・ローカライズマニュアル |
 | project-management | project-manager, chief-producer, production-committee-coordinator | プロジェクト管理マニュアル |
@@ -345,5 +350,5 @@ Seep-Logos-agents/
 
 ---
 
-*最終更新: 2026-03-20 | Seep Logos クリエイティブスタジオ*
+*最終更新: 2026-03-21 | Seep Logos クリエイティブスタジオ*
 
