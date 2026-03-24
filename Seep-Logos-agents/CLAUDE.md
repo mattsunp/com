@@ -41,6 +41,36 @@
 
 ---
 
+## エージェント運用方針
+
+このリポジトリではECCプラグインのエージェントを活用する。
+
+| 用途 | 使い方 |
+|---|---|
+| 計画立案 | `/plan` スキル |
+| コードレビュー | `code-reviewer` エージェント |
+| セキュリティ確認 | `security-reviewer` エージェント |
+| ビルドエラー修正 | `build-error-resolver` エージェント |
+| ドキュメント更新 | `doc-updater` エージェント |
+| リファクタリング | `refactor-cleaner` エージェント |
+
+## Seep-Logos独自エージェント
+
+`agents/` 以下に8部門・32エージェントを配置。詳細は各エージェントファイルを参照。
+
+| 部門 | エージェント数 |
+|---|---|
+| 企画プロデュース部 | 4 |
+| クリエイティブ制作部 | 5 |
+| アートディレクション部 | 4 |
+| マーケティングPR部 | 7 |
+| 採用・クリエイター運用部 | 4 |
+| デジタル・技術部 | 4 |
+| ローカライズ・翻訳部 | 3 |
+| スタジオ運営管理部 | 1 |
+
+---
+
 ## エージェント一覧と起動条件
 
 ### 部門 1: 企画プロデュース部
@@ -56,7 +86,7 @@
 |---|---|---|
 | シナリオ書き | scenario-writer | シナリオ、脚本、ストーリー、セリフ、ゲームシナリオ |
 | 世界観構築人 | worldbuilding-creator | 世界観設定、設定資料集、用語集、地図、年表、種族設定 |
-| 原作人 | original-work-developer | 原作開発、ノベル、小説、原案、原作执筆 |
+| 原作人 | original-work-developer | 原作開発、ノベル、小説、原案、原作執筆 |
 | 漫画家 | comic-creator | コミック、漫画、ネーム、コマ割り、吹き出し |
 | 声劇人 | audio-drama-producer | 朗読劇、音声劇、ラジオドラマ、台本、キャスト |
 
@@ -73,19 +103,19 @@
 |---|---|---|
 | 宣伝人 | pr-communications | PR戦略、広報計画、メディア戦略、ブランドコミュニケーション |
 | 速報屋 | press-release-writer | プレスリリース、ニュースリリース、発表文、メディア向け文書 |
-| 投稿型SNS担当 | sns-manager | SNS、Twitter（X）、Instagram、TikTok、YouTube、投稿文、ハッシュタグ |
-| 運用型SNS担当 | community-manager | Discord、コミュニティ運用、サーバー設計、モデレーション、コミュニティイベント |
-| 渉外人 | media-relations | メディア対応、取材対応、インタビュー、記者対応、メディアリスト |
+| 投稿型SNS担当 | sns-manager | SNS、X（旧Twitter）、Instagram、TikTok、YouTube、投稿文、ハッシュタグ |
+| 運用型SNS担当 | community-manager | Discord、コミュニティ運用、サーバー設計、モデレーション |
+| 渉外人 | media-relations | メディア対応、取材対応、インタビュー、記者対応 |
 | 情報屋 | competitive-analyst | 競合調査、市場調査、トレンド分析、競合比較、業界動向 |
-| 営業人 | sales-director | 提案書作成、サービス設計、料金設計、見積書、契約スコープ、B2B営業 |
+| 営業人 | sales-director | 提案書作成、サービス設計、料金設計、見積書、B2B営業 |
 
 ### 部門 5: 採用・クリエイター運用部
 | 愛称 | エージェント | 起動条件キーワード |
 |---|---|---|
 | 採用計画人 | recruitment-strategist | 採用戦略、採用計画、人材要件、採用フロー設計 |
-| 採用広報 | recruitment-pr-writer | 採用広報、求人票、採用ページ、エンジニアブログ、クリエイター向け文章 |
-| マネージャー | creator-relations | クリエイター管理、所属クリエイター、業務委託、契約、フリーランス対応 |
-| 社内広報 | internal-communications | 社内広報、社内報、インナーブランディング、社内コミュニケーション |
+| 採用広報 | recruitment-pr-writer | 採用広報、求人票、採用ページ、クリエイター向け文章 |
+| マネージャー | creator-relations | クリエイター管理、所属クリエイター、業務委託、契約 |
+| 社内広報 | internal-communications | 社内広報、社内報、インナーブランディング |
 
 ### 部門 6: デジタル・技術部
 | 愛称 | エージェント | 起動条件キーワード |
@@ -105,116 +135,46 @@
 ### 部門 8: スタジオ運営管理部
 | 愛称 | エージェント | 起動条件キーワード |
 |---|---|---|
-| 書記 | secretary | 議事録、ログ記録、会話記録、やり取り記録、記録、まとめ、振り返り、ミーティング記録、秘書 |
-
----
-
-## エージェント愛称・性格設定
-
-→ 詳細は [`.claude/agents/`](../../.claude/agents/) を参照。各エージェント名に対応した `.md` ファイルに愛称・性格・口調・【指針】が定義されている。
-
-各エージェントは愛称と固有の性格・口調・【指針】を持つ。応答時はその設定に基づいた雰囲気で会話する。
-出力ヘッダーおよび稼働ログでは、エージェント名の代わりに愛称を使用する。
-
----
-
-## 自動ルーティングルール
-
-### ルーティング判断フロー
-
-```
-ユーザーからの指示を受信
-    ↓
-① キーワードマッチング（上記エージェント一覧を参照）
-    ↓
-② 複数部門にまたがる場合 → リード部門を判断し、関連部門を連携に指定
-    ↓
-③ 対応Skillを選択（下記Skills一覧を参照）
-    ↓
-④ エージェントを起動し、Skillを参照させながらタスク実行
-```
-
-### 複合タスクの処理ルール
-- 「新IP発表のプレスリリースを書いて」→ **planning-developer** × **press-release-writer** × **pr-communications** が連携
-- 「ゲームのUIを設計して」→ **art-director** × **game-ui-designer** × **ui-engineering** が連携
-- 「海外向けにローカライズして」→ **localization-director** × **localization-specialist** × **cultural-adaptation** が連携
-- 「クリエイターを採用したい」→ **recruitment-strategist** × **recruitment-pr-writer** が連携
-- 「世界観を構築して」→ **worldbuilding-creator** × **scenario-writer** × **art-director** が連携
-- 「外部クライアントに提案したい」→ **sales-director** × **project-manager** が連携
-- 「Discordサーバーを設計・運用したい」→ **community-manager** × **sns-manager** が連携
-
-### 優先度ルール
-1. 外部公開コンテンツ（プレスリリース・SNS等）は必ずブランドルールチェックを実施
-2. 未発表情報を含む場合は、機密フラグを立てて出力に注記を入れる
-3. 複数エージェントが連携する場合、最初に起動したエージェントがリードを取る
+| 書記 | secretary | 議事録、ログ記録、まとめ、振り返り、ミーティング記録、秘書 |
 
 ---
 
 ## Skills一覧
 
-| スキル名 | 参照エージェント | 用途 |
-|---|---|---|
-| brand-guidelines | 全エージェント | ブランドルール・トーン・用語ガイド |
-| scenario-writing | scenario-writer, audio-drama-producer, original-work-developer | シナリオ・脚本執筆マニュアル |
-| worldbuilding | worldbuilding-creator, scenario-writer, art-director | 世界観設定構築マニュアル |
-| press-release | press-release-writer, pr-communications, media-relations | プレスリリース作成マニュアル |
-| sns-management | sns-manager, community-manager, pr-communications, recruitment-pr-writer | SNS・コミュニティ運用マニュアル |
-| b2b-sales | sales-director, project-manager, chief-producer | B2Bサービス営業・提案マニュアル |
-| recruitment-pr | recruitment-pr-writer, recruitment-strategist, creator-relations | 採用広報マニュアル |
-| localization | localization-specialist, localization-director, cultural-adaptation | 翻訳・ローカライズマニュアル |
-| project-management | project-manager, chief-producer, production-committee-coordinator | プロジェクト管理マニュアル |
-| art-direction | art-director, game-ui-designer, background-art-creator, visual-designer | アートディレクションマニュアル |
-| competitive-research | competitive-analyst, planning-developer, pr-communications | 競合調査マニュアル |
-| minutes-keeping | secretary | 議事録・ログ作成マニュアル |
+| スキル名 | 用途 |
+|---|---|
+| brand-guidelines | ブランドルール・トーン・用語ガイド |
+| scenario-writing | シナリオ・脚本執筆マニュアル |
+| worldbuilding | 世界観設定構築マニュアル |
+| press-release | プレスリリース作成マニュアル |
+| sns-management | SNS・コミュニティ運用マニュアル |
+| b2b-sales | B2Bサービス営業・提案マニュアル |
+| recruitment-pr | 採用広報マニュアル |
+| localization | 翻訳・ローカライズマニュアル |
+| project-management | プロジェクト管理マニュアル |
+| art-direction | アートディレクションマニュアル |
+| competitive-research | 競合調査マニュアル |
+| minutes-keeping | 議事録・ログ作成マニュアル |
 
 ---
 
-## 出力フォーマット標準
+## 出力フォーマット
 
-### 全エージェント共通の出力形式
+### 基本方針
+ECCのエージェント運用に準拠し、自然な形で専門家として応答する。固定ヘッダーは不要。
 
-**① 起動ヘッダー（タスク冒頭に必ず表示）**
-
-```
-─────────────────────────────────────
-部門名 / エージェント名
-─────────────────────────────────────
-愛称：
-〇〇〇〇
-```
-
-例：
-```
-─────────────────────────────────────
-マーケティングPR部 / press-release-writer
-─────────────────────────────────────
-速報屋：
-依頼を受けました。事実を力強く、端的に。
-```
-
-- 「愛称：」の後は改行し、次の行から本文を書く
-- 参照したSkillを末尾に「参照Skill：[スキル名]」として記載
+### Seep-Logos固有の慣習
 - 機密情報が含まれる場合は冒頭に「⚠️ 社外秘」を記載
-- 他エージェントへの引き継ぎが必要な場合は「→ 次のアクション：[エージェント名]へ連携」を末尾に追記
+- 未発表情報を含む場合は出力に機密フラグ注記を入れる
+- 他エージェントへの連携が必要な場合は末尾に「→ 次のアクション：[エージェント名]へ連携」を追記
+- 参照したSkillがある場合は末尾に「参照Skill：[スキル名]」として記載
 
-**② 稼働ログへの追記（全エージェント必須）**
-
-起動するたびに `minutes/agent-activity.log` へ以下の形式で1行追記する。
+### 稼働ログ
+エージェントが作業を行った際は `minutes/agent-activity.log` に任意で追記できる（強制ではない）。
 
 ```
-YYYY-MM-DD HH:MM | [部門名] / [エージェント名] | [タスク概要（20字以内）]
+YYYY-MM-DD HH:MM | [エージェント名] | [タスク概要（20字以内）]
 ```
-
-例：
-```
-2026-03-20 14:32 | 速報屋 | 新IP発表プレスリリース作成
-2026-03-20 14:45 | 伝道人 | X投稿文案作成
-```
-
-- ファイルが存在しない場合は新規作成する
-- 追記のみ行い、既存の行は変更しない
-
----
 
 ---
 
@@ -279,7 +239,7 @@ Seep-Logos-agents/
 │       ├── dev/
 │       ├── video/
 │       └── localization/
-├── proposals/                  # 企画書・新規IP立案（保存先は検討中）
+├── proposals/                  # 企画書・新規IP立案
 ├── creators/                   # 所属クリエイター管理
 │   └── _private/               # 【機密】個人情報・契約情報（GitHub非公開）
 └── marketing/                  # マーケティング・PR・採用（会社・ブランド単位）
@@ -299,18 +259,14 @@ Seep-Logos-agents/
 - 所属クリエイターの個人情報・契約情報 → `creators/_private/`
 - `_private/` ディレクトリは `.gitignore` により GitHub に公開されない
 - 機密データを含むファイルは必ず `_private/` 内に保存すること
-- 将来新たな機密データが生じた場合も、該当部門の `_private/` に格納する
 
 ### seeds → titles 昇格フロー
 - `seeds/` で探索・制作したコンテンツがタイトルとして確定した際は、`titles/[作品名]/` 以下に移動する
 - 移動のタイミングはプロデューサーの判断による
 
-### proposalsの保存先（検討中）
-- `proposals/`（トップレベル）か `seeds/` 内かは未確定
-
 ---
 
-## secretary エージェント 仕様
+## secretary エージェント仕様
 
 ### 役割
 プロデューサーと各エージェントのやり取りを記録・整理し、議事録として出力する。
@@ -346,9 +302,8 @@ Seep-Logos-agents/
 - 会話の流れを時系列で把握し、各エージェントの役割と出力を整理する
 - 機密情報が含まれる場合は議事録冒頭に「社外秘」を明記
 - 議事録はMarkdown形式で出力し、`minutes/` ディレクトリに保存する
-- ファイル名は `YYYY-MM-DD_HH-MM_[議題タイトル].md` 形式とする（例：`2026-03-17_14-30_IP展開計画.md`）
+- ファイル名は `YYYY-MM-DD_HH-MM_[議題タイトル].md` 形式とする
 
 ---
 
-*最終更新: 2026-03-21 | Seep Logos クリエイティブスタジオ*
-
+*最終更新: 2026-03-24（ECC移行完了） | Seep Logos クリエイティブスタジオ*

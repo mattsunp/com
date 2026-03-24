@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pattern B_2: World-first型（ライト）</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Georgia', serif;
+      background: #f8f8f6;
+      color: #1a1a1a;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      background: rgba(248,248,246,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #e0e0e0;
+    }
+    .nav-logo {
+      font-size: 14px;
+      letter-spacing: 0.3em;
+      color: #1a1a1a;
+      text-transform: uppercase;
+    }
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 11px;
+      color: #888;
+      text-decoration: none;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+    .nav-links .cta {
+      color: #1a1a1a;
+      border: 1px solid #ccc;
+      padding: 8px 20px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 24px;
+      position: relative;
+      background: url('../assets/images/background.png') center/cover no-repeat;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      pointer-events: none;
+    }
+
+    .hero > * { position: relative; z-index: 1; }
+
+    .hero-logo {
+      border: 2px dashed #333;
+      padding: 18px 56px;
+      font-size: 13px;
+      color: #555;
+      font-family: monospace;
+      letter-spacing: 2px;
+    }
+    .hero h1 {
+      font-size: clamp(28px, 5vw, 64px);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #eee;
+    }
+    .hero p {
+      font-size: clamp(13px, 1.4vw, 17px);
+      color: #888;
+      max-width: 520px;
+      line-height: 1.8;
+    }
+    .hero-cta {
+      margin-top: 8px;
+      display: inline-block;
+      padding: 14px 40px;
+      border: 1px solid #555;
+      font-size: 12px;
+      letter-spacing: 0.3em;
+      color: #ccc;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    /* ── SECTION COMMON ── */
+    section { padding: 100px 40px; }
+    .section-label {
+      font-size: 10px;
+      letter-spacing: 0.5em;
+      color: #aaa;
+      text-transform: uppercase;
+      margin-bottom: 48px;
+      font-family: monospace;
+    }
+    .section-label::before { content: '── '; }
+    .section-label::after { content: ' ──'; }
+
+    /* ── WORLD ── */
+    .world {
+      background: #ffffff;
+      border-top: 1px solid #e5e5e5;
+    }
+    .world-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    .world-image {
+      aspect-ratio: 4/3;
+      background: url('../assets/images/scene.png') center/cover no-repeat;
+      overflow: hidden;
+    }
+    .world-text h2 {
+      font-size: clamp(22px, 2.5vw, 36px);
+      margin-bottom: 24px;
+      color: #1a1a1a;
+      font-weight: normal;
+    }
+    .world-text p {
+      font-size: 15px;
+      line-height: 2;
+      color: #666;
+    }
+    .world-tags {
+      margin-top: 24px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .tag {
+      border: 1px solid #ddd;
+      padding: 6px 14px;
+      font-size: 11px;
+      color: #888;
+      letter-spacing: 0.1em;
+    }
+
+    /* ── CHARACTERS ── */
+    .characters { background: #f5f5f3; }
+    .characters-inner { max-width: 1100px; margin: 0 auto; }
+    .char-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .char-card {
+      border: 1px solid #e0e0e0;
+      text-align: center;
+      overflow: hidden;
+    }
+    .char-visual {
+      aspect-ratio: 2/3;
+      background: #e8e8e8;
+      border-bottom: 1px solid #d8d8d8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 8px;
+      color: #ccc;
+      font-family: monospace;
+      font-size: 11px;
+      position: relative;
+    }
+    .char-visual .silhouette {
+      width: 80px;
+      height: 140px;
+      background: #c8c8c8;
+      border-radius: 40px 40px 0 0;
+      opacity: 0.6;
+    }
+    .char-visual span { font-size: 11px; color: #bbb; }
+    .char-info { padding: 20px; }
+    .char-name { font-size: 14px; color: #1a1a1a; letter-spacing: 0.1em; margin-bottom: 6px; }
+    .char-role { font-size: 11px; color: #888; font-family: monospace; }
+
+    /* ── NEWS ── */
+    .news { background: #ffffff; border-top: 1px solid #e5e5e5; }
+    .news-inner { max-width: 800px; margin: 0 auto; }
+    .news-list { border-top: 1px solid #e5e5e5; }
+    .news-item {
+      display: grid;
+      grid-template-columns: 120px 80px 1fr 20px;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 0;
+      border-bottom: 1px solid #e5e5e5;
+      font-size: 13px;
+    }
+    .news-date { color: #aaa; font-family: monospace; font-size: 12px; }
+    .news-tag {
+      font-size: 10px;
+      padding: 3px 10px;
+      border: 1px solid #ddd;
+      color: #999;
+      text-align: center;
+      letter-spacing: 0.1em;
+    }
+    .news-title { color: #333; }
+    .news-arrow { color: #bbb; }
+
+    /* ── CTA ── */
+    .cta-section {
+      background: #f0ede8;
+      border-top: 1px solid #e5e5e5;
+      text-align: center;
+    }
+    .cta-section h2 { font-size: 15px; color: #888; font-weight: normal; margin-bottom: 32px; letter-spacing: 0.1em; }
+    .contact-email {
+      display: block;
+      font-size: 16px;
+      color: #1a1a1a;
+      font-family: monospace;
+      letter-spacing: 0.08em;
+      border-bottom: 1px solid #bbb;
+      padding-bottom: 3px;
+      text-decoration: none;
+      margin-bottom: 32px;
+    }
+    .sns-links { display: flex; gap: 12px; justify-content: center; }
+    .sns-btn {
+      width: 44px; height: 44px;
+      border: 1px solid #ddd;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; color: #999; font-family: monospace; cursor: pointer;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #f0ede8;
+      padding: 40px;
+      border-top: 1px solid #e0e0e0;
+    }
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-nav { display: flex; gap: 24px; list-style: none; }
+    .footer-nav a { font-size: 11px; color: #888; text-decoration: none; letter-spacing: 0.1em; }
+    .footer-copy { font-size: 11px; color: #999; font-family: monospace; }
+
+    .wf-label {
+      position: fixed; top: 12px; left: 12px;
+      background: #fff; border: 1px solid #ccc;
+      padding: 6px 12px; font-size: 11px; font-family: monospace; color: #666; z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wf-label">WIREFRAME / Pattern B_2: World-first型（ライト）</div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">Game Title</div>
+    <ul class="nav-links">
+      <li><a href="#">World</a></li>
+      <li><a href="#">Characters</a></li>
+      <li><a href="#">News</a></li>
+      <li><a href="#" class="cta">お問い合わせ</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-logo">[PLACEHOLDER: ゲームロゴ]</div>
+    <h1>Game Title</h1>
+    <p>[PLACEHOLDER: キャッチコピー2行。世界観と物語の核心を表す言葉]</p>
+    <div class="hero-cta">世界を知る ▼</div>
+  </section>
+
+  <!-- WORLD -->
+  <section class="world" id="world">
+    <div class="world-inner">
+      <div class="world-image"></div>
+      <div class="world-text">
+        <p class="section-label">World</p>
+        <h2>[PLACEHOLDER: 世界観タイトル]</h2>
+        <p>[PLACEHOLDER: 世界観テキスト 300〜500字。ゲームの舞台・時代・雰囲気を説明する。完全でなくてよい。断片的・詩的でも機能する。]</p>
+        <div class="world-tags">
+          <span class="tag">[キーワード1]</span>
+          <span class="tag">[キーワード2]</span>
+          <span class="tag">[キーワード3]</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHARACTERS -->
+  <section class="characters" id="characters">
+    <div class="characters-inner">
+      <p class="section-label" style="text-align:center;">Characters</p>
+      <div class="char-grid">
+        <div class="char-card">
+          <div class="char-visual">
+            <div class="silhouette"></div>
+            <span>[PLACEHOLDER: キャラ立ち絵 / シルエット可]</span>
+          </div>
+          <div class="char-info">
+            <div class="char-name">[キャラクター名]</div>
+            <div class="char-role">[肩書き・役割]</div>
+          </div>
+        </div>
+        <div class="char-card">
+          <div class="char-visual">
+            <div class="silhouette"></div>
+            <span>[PLACEHOLDER: キャラ立ち絵 / シルエット可]</span>
+          </div>
+          <div class="char-info">
+            <div class="char-name">[キャラクター名]</div>
+            <div class="char-role">[肩書き・役割]</div>
+          </div>
+        </div>
+        <div class="char-card">
+          <div class="char-visual">
+            <div class="silhouette"></div>
+            <span>[PLACEHOLDER: キャラ立ち絵 / シルエット可]</span>
+          </div>
+          <div class="char-info">
+            <div class="char-name">[キャラクター名]</div>
+            <div class="char-role">[肩書き・役割]</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWS -->
+  <section class="news" id="news">
+    <div class="news-inner">
+      <p class="section-label">News</p>
+      <div class="news-list">
+        <div class="news-item">
+          <span class="news-date">2026.XX.XX</span>
+          <span class="news-tag">INFO</span>
+          <span class="news-title">記事タイトルが入ります</span>
+          <span class="news-arrow">→</span>
+        </div>
+        <div class="news-item">
+          <span class="news-date">2026.XX.XX</span>
+          <span class="news-tag">UPDATE</span>
+          <span class="news-title">記事タイトルが入ります</span>
+          <span class="news-arrow">→</span>
+        </div>
+        <div class="news-item">
+          <span class="news-date">2026.XX.XX</span>
+          <span class="news-tag">INFO</span>
+          <span class="news-title">記事タイトルが入ります</span>
+          <span class="news-arrow">→</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="cta-section" style="padding:80px 40px;">
+    <h2>お問い合わせ</h2>
+    <a class="contact-email" href="mailto:[PLACEHOLDER: contact@example.com]">[PLACEHOLDER: contact@example.com]</a>
+    <div class="sns-links">
+      <div class="sns-btn">X</div>
+      <div class="sns-btn">IG</div>
+      <div class="sns-btn">YT</div>
+      <div class="sns-btn">DC</div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <ul class="footer-nav">
+        <li><a href="#">World</a></li>
+        <li><a href="#">Characters</a></li>
+        <li><a href="#">News</a></li>
+        <li><a href="#">利用規約</a></li>
+        <li><a href="#">プライバシーポリシー</a></li>
+      </ul>
+      <p class="footer-copy">© 2026 [会社名] All Rights Reserved</p>
+    </div>
+  </footer>
+
+</body>
+</html>

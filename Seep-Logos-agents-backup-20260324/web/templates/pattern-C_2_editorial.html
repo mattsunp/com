@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pattern C_2: Editorial型（ライト）</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Georgia', serif;
+      background: #f5f0eb;
+      color: #1a1a1a;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 40px;
+      background: rgba(245,240,235,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #ddd;
+    }
+    .nav-title { font-size: 12px; letter-spacing: 0.3em; color: #888; text-transform: uppercase; }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a { font-size: 11px; color: #888; text-decoration: none; letter-spacing: 0.2em; text-transform: uppercase; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      padding: 140px 40px 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg-text {
+      position: absolute;
+      top: 60px;
+      left: -10px;
+      font-size: clamp(80px, 15vw, 200px);
+      font-weight: 900;
+      color: rgba(0,0,0,0.04);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      text-transform: uppercase;
+      white-space: nowrap;
+      user-select: none;
+    }
+    .hero-main-title {
+      font-size: clamp(48px, 10vw, 140px);
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: #1a1a1a;
+      text-transform: uppercase;
+      font-weight: 400;
+      position: relative;
+    }
+    .hero-sub {
+      margin-top: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-top: 1px solid #ccc;
+      padding-top: 20px;
+    }
+    .hero-tagline {
+      font-size: clamp(13px, 1.4vw, 17px);
+      color: #666;
+      line-height: 1.7;
+      max-width: 420px;
+    }
+    .hero-meta {
+      text-align: right;
+      font-size: 11px;
+      color: #aaa;
+      font-family: monospace;
+      letter-spacing: 0.15em;
+      line-height: 2;
+    }
+
+    /* ── KEY VISUAL ── */
+    .key-visual {
+      width: 100%;
+      aspect-ratio: 16/7;
+      background: url('../assets/images/background.png') center/cover no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .kv-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+    }
+    .kv-quote {
+      position: relative;
+      z-index: 1;
+      font-size: clamp(18px, 2.5vw, 36px);
+      color: #fff;
+      line-height: 1.5;
+      font-style: italic;
+      text-align: center;
+      padding: 40px;
+      max-width: 700px;
+    }
+    .kv-label { font-size: 11px; color: #aaa; font-family: monospace; }
+
+    /* ── FRAGMENTS ── */
+    .fragments {
+      padding: 100px 40px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .fragment-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      padding: 60px 0;
+      border-bottom: 1px solid #ddd;
+    }
+    .fragment-row.reverse { direction: rtl; }
+    .fragment-row.reverse > * { direction: ltr; }
+
+    .fragment-image {
+      aspect-ratio: 4/3;
+      background: url('../assets/images/scene.png') center/cover no-repeat;
+      overflow: hidden;
+    }
+    .fragment-text {}
+    .fragment-num {
+      font-size: 10px;
+      color: #bbb;
+      letter-spacing: 0.3em;
+      font-family: monospace;
+      margin-bottom: 16px;
+    }
+    .fragment-text blockquote {
+      font-size: clamp(18px, 2vw, 28px);
+      line-height: 1.7;
+      color: #333;
+      font-style: italic;
+      border-left: 3px solid #ccc;
+      padding-left: 20px;
+      margin-bottom: 16px;
+    }
+    .fragment-text p {
+      font-size: 14px;
+      color: #888;
+      line-height: 1.8;
+    }
+
+    /* ── NEWS ── */
+    .news {
+      background: #1a1a1a;
+      color: #eee;
+      padding: 80px 40px;
+    }
+    .news-inner { max-width: 800px; margin: 0 auto; }
+    .news-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px solid #333;
+      padding-bottom: 16px;
+      margin-bottom: 0;
+    }
+    .news-header h2 { font-size: 12px; letter-spacing: 0.4em; color: #666; font-weight: normal; text-transform: uppercase; }
+    .news-list {}
+    .news-item {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 18px 0;
+      border-bottom: 1px solid #222;
+      font-size: 13px;
+    }
+    .news-date { color: #555; font-family: monospace; font-size: 12px; min-width: 100px; }
+    .news-tag { font-size: 10px; padding: 3px 10px; border: 1px solid #333; color: #666; min-width: 70px; text-align: center; }
+    .news-title { color: #aaa; flex: 1; }
+    .news-arrow { color: #444; }
+
+    /* ── CTA ── */
+    .cta-section {
+      padding: 100px 40px;
+      text-align: center;
+      background: #f5f0eb;
+      border-top: 1px solid #e0dbd4;
+    }
+    .cta-section h2 {
+      font-size: clamp(24px, 4vw, 48px);
+      color: #1a1a1a;
+      margin-bottom: 16px;
+      font-weight: 400;
+    }
+    .cta-section p { font-size: 14px; color: #888; margin-bottom: 40px; }
+    .contact-email {
+      display: block;
+      font-size: 16px;
+      color: #1a1a1a;
+      font-family: monospace;
+      letter-spacing: 0.08em;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 3px;
+      text-decoration: none;
+      margin-bottom: 32px;
+    }
+    .sns-links { display: flex; gap: 12px; justify-content: center; }
+    .sns-btn {
+      width: 44px; height: 44px; border: 1px solid #ccc;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; color: #aaa; font-family: monospace; cursor: pointer;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #1a1a1a;
+      padding: 32px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: #444;
+      font-family: monospace;
+    }
+    footer a { color: #555; text-decoration: none; }
+
+    .wf-label {
+      position: fixed; top: 12px; left: 12px;
+      background: #fff; border: 1px solid #ccc;
+      padding: 6px 12px; font-size: 11px; font-family: monospace; color: #888; z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wf-label">WIREFRAME / Pattern C_2: Editorial型（ライト）</div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-title">Game Title</div>
+    <ul class="nav-links">
+      <li><a href="#">News</a></li>
+      <li><a href="#">お問い合わせ</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg-text">GAME</div>
+    <h1 class="hero-main-title">GAME<br>TITLE</h1>
+    <div class="hero-sub">
+      <p class="hero-tagline">[PLACEHOLDER: キャッチコピー 2〜3行。<br>タイポグラフィが主役なので、文章の強さが重要]</p>
+      <div class="hero-meta">
+        2026<br>
+        [ジャンル]<br>
+        [対応機種]
+      </div>
+    </div>
+  </section>
+
+  <!-- KEY VISUAL -->
+  <div class="key-visual">
+    <div class="kv-overlay"></div>
+    <p class="kv-quote">"[PLACEHOLDER: 世界観を表す印象的な一文]"</p>
+  </div>
+
+  <!-- FRAGMENTS -->
+  <div class="fragments">
+
+    <div class="fragment-row">
+      <div class="fragment-image"></div>
+      <div class="fragment-text">
+        <div class="fragment-num">01 ／ FRAGMENT</div>
+        <blockquote>"[PLACEHOLDER: 世界観の断片テキスト①<br>詩的・短文でよい]"</blockquote>
+        <p>[PLACEHOLDER: 補足テキスト。数行でOK]</p>
+      </div>
+    </div>
+
+    <div class="fragment-row reverse">
+      <div class="fragment-image"></div>
+      <div class="fragment-text">
+        <div class="fragment-num">02 ／ FRAGMENT</div>
+        <blockquote>"[PLACEHOLDER: 世界観の断片テキスト②]"</blockquote>
+        <p>[PLACEHOLDER: 補足テキスト。数行でOK]</p>
+      </div>
+    </div>
+
+    <div class="fragment-row">
+      <div class="fragment-image"></div>
+      <div class="fragment-text">
+        <div class="fragment-num">03 ／ FRAGMENT</div>
+        <blockquote>"[PLACEHOLDER: 世界観の断片テキスト③]"</blockquote>
+        <p>[PLACEHOLDER: 補足テキスト。数行でOK]</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- NEWS -->
+  <section class="news">
+    <div class="news-inner">
+      <div class="news-header">
+        <h2>News</h2>
+      </div>
+      <div class="news-list">
+        <div class="news-item">
+          <span class="news-date">2026.XX.XX</span>
+          <span class="news-tag">INFO</span>
+          <span class="news-title">記事タイトルが入ります</span>
+          <span class="news-arrow">→</span>
+        </div>
+        <div class="news-item">
+          <span class="news-date">2026.XX.XX</span>
+          <span class="news-tag">UPDATE</span>
+          <span class="news-title">記事タイトルが入ります</span>
+          <span class="news-arrow">→</span>
+        </div>
+        <div class="news-item">
+          <span class="news-date">2026.XX.XX</span>
+          <span class="news-tag">INFO</span>
+          <span class="news-title">記事タイトルが入ります</span>
+          <span class="news-arrow">→</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="cta-section">
+    <h2>お問い合わせ</h2>
+    <a class="contact-email" href="mailto:[PLACEHOLDER: contact@example.com]">[PLACEHOLDER: contact@example.com]</a>
+    <div class="sns-links">
+      <div class="sns-btn">X</div>
+      <div class="sns-btn">IG</div>
+      <div class="sns-btn">DC</div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>GAME TITLE</span>
+    <span>© 2026 [会社名] &nbsp;｜&nbsp; <a href="#">利用規約</a> &nbsp;｜&nbsp; <a href="#">PP</a></span>
+  </footer>
+
+</body>
+</html>
