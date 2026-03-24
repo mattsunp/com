@@ -127,37 +127,14 @@
       font-weight: normal;
     }
 
-    .form-row {
-      display: flex;
-      gap: 0;
-      width: 100%;
-      max-width: 480px;
-    }
-    .form-row input {
-      flex: 1;
-      padding: 14px 20px;
-      background: #1a1a1a;
-      border: 1px solid #333;
-      border-right: none;
-      color: #fff;
-      font-size: 14px;
-      outline: none;
-    }
-    .form-row input::placeholder { color: #444; }
-    .form-row button {
-      padding: 14px 28px;
-      background: #fff;
-      color: #000;
-      border: none;
-      font-size: 13px;
-      letter-spacing: 0.1em;
-      cursor: pointer;
-    }
-
-    .divider {
-      font-size: 11px;
-      color: #444;
-      letter-spacing: 0.2em;
+    .contact-email {
+      font-size: 16px;
+      color: #ccc;
+      font-family: monospace;
+      letter-spacing: 0.08em;
+      border-bottom: 1px solid #444;
+      padding-bottom: 3px;
+      text-decoration: none;
     }
 
     .sns-links {
@@ -244,16 +221,11 @@
     <p class="scroll-hint">▼ SCROLL</p>
   </section>
 
-  <!-- PRE-REGISTRATION -->
+  <!-- CONTACT -->
   <section class="pre-reg">
-    <h2>最新情報をいち早くお届けします</h2>
+    <h2>お問い合わせ</h2>
 
-    <div class="form-row">
-      <input type="email" placeholder="メールアドレスを入力">
-      <button>登録する</button>
-    </div>
-
-    <p class="divider">── または ──</p>
+    <a class="contact-email" href="mailto:[PLACEHOLDER: contact@example.com]">[PLACEHOLDER: contact@example.com]</a>
 
     <div class="sns-links">
       <div class="sns-btn">X</div>

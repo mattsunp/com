@@ -239,19 +239,14 @@
     .prereg-copy { font-size: 16px; color: #c7d2fe; }
     .prereg-copy strong { color: #ffffff; font-weight: 600; }
     .prereg-right { display: flex; align-items: center; gap: 14px; }
-    .prereg-form { display: flex; }
-    .prereg-in {
-      width: 240px; padding: 10px 16px;
-      background: rgba(255,255,255,0.14);
-      border: 1px solid rgba(255,255,255,0.3); border-right: none;
-      border-radius: 8px 0 0 8px; color: #fff; font-size: 13px; outline: none;
-    }
-    .prereg-in::placeholder { color: rgba(255,255,255,0.4); }
-    .prereg-btn {
-      padding: 10px 22px; background: #ffffff; color: #4338ca;
-      border: none; border-radius: 0 8px 8px 0;
-      font-size: 12px; letter-spacing: 0.04em;
-      cursor: pointer; font-weight: 700;
+    .contact-email {
+      font-size: 15px;
+      color: #e0e7ff;
+      font-family: monospace;
+      letter-spacing: 0.06em;
+      border-bottom: 1px solid rgba(255,255,255,0.4);
+      padding-bottom: 2px;
+      text-decoration: none;
     }
     .prereg-sns { display: flex; gap: 8px; }
     .sns-ic {
@@ -295,7 +290,7 @@
         <li><a href="#">Characters</a></li>
         <li><a href="#">News</a></li>
       </ul>
-      <button class="nav-btn">登録する</button>
+      <button class="nav-btn">お問い合わせ</button>
     </div>
   </nav>
 
@@ -372,14 +367,11 @@
         </div>
       </div>
 
-      <!-- 6. PRE-REG ── インディゴ・フル幅CTA -->
+      <!-- 6. CONTACT ── インディゴ・フル幅CTA -->
       <div class="b b-prereg">
-        <div class="prereg-copy"><strong>最新情報</strong>をいち早く受け取る</div>
+        <div class="prereg-copy"><strong>お問い合わせ</strong></div>
         <div class="prereg-right">
-          <div class="prereg-form">
-            <input class="prereg-in" type="email" placeholder="メールアドレスを入力">
-            <button class="prereg-btn">登録する</button>
-          </div>
+          <a class="contact-email" href="mailto:[PLACEHOLDER: contact@example.com]">[PLACEHOLDER: contact@example.com]</a>
           <div class="prereg-sns">
             <div class="sns-ic">X</div>
             <div class="sns-ic">IG</div>

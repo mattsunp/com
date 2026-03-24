@@ -229,20 +229,16 @@
       font-weight: 400;
     }
     .cta-section p { font-size: 14px; color: #888; margin-bottom: 40px; }
-    .form-row {
-      display: flex;
-      max-width: 480px;
-      margin: 0 auto 24px;
-    }
-    .form-row input {
-      flex: 1; padding: 14px 20px;
-      background: #fff; border: 1px solid #ccc; border-right: none;
-      color: #1a1a1a; font-size: 14px; outline: none;
-    }
-    .form-row input::placeholder { color: #aaa; }
-    .form-row button {
-      padding: 14px 28px; background: #1a1a1a; color: #fff;
-      border: none; font-size: 13px; cursor: pointer; letter-spacing: 0.1em;
+    .contact-email {
+      display: block;
+      font-size: 16px;
+      color: #1a1a1a;
+      font-family: monospace;
+      letter-spacing: 0.08em;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 3px;
+      text-decoration: none;
+      margin-bottom: 32px;
     }
     .sns-links { display: flex; gap: 12px; justify-content: center; }
     .sns-btn {
@@ -280,7 +276,7 @@
     <div class="nav-title">Game Title</div>
     <ul class="nav-links">
       <li><a href="#">News</a></li>
-      <li><a href="#">登録する</a></li>
+      <li><a href="#">お問い合わせ</a></li>
     </ul>
   </nav>
 
@@ -383,14 +379,10 @@
     </div>
   </section>
 
-  <!-- CTA -->
+  <!-- CONTACT -->
   <section class="cta-section">
-    <h2>続報を見逃すな。</h2>
-    <p>最新情報をメールでお届けします</p>
-    <div class="form-row">
-      <input type="email" placeholder="メールアドレスを入力">
-      <button>登録する</button>
-    </div>
+    <h2>お問い合わせ</h2>
+    <a class="contact-email" href="mailto:[PLACEHOLDER: contact@example.com]">[PLACEHOLDER: contact@example.com]</a>
     <div class="sns-links">
       <div class="sns-btn">X</div>
       <div class="sns-btn">IG</div>

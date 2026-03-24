@@ -241,29 +241,16 @@
       text-align: center;
     }
     .cta-section h2 { font-size: 15px; color: #888; font-weight: normal; margin-bottom: 32px; letter-spacing: 0.1em; }
-    .form-row {
-      display: flex;
-      max-width: 480px;
-      margin: 0 auto 24px;
-    }
-    .form-row input {
-      flex: 1;
-      padding: 14px 20px;
-      background: #111;
-      border: 1px solid #333;
-      border-right: none;
-      color: #fff;
-      font-size: 14px;
-      outline: none;
-    }
-    .form-row input::placeholder { color: #444; }
-    .form-row button {
-      padding: 14px 28px;
-      background: #fff;
-      color: #000;
-      border: none;
-      font-size: 13px;
-      cursor: pointer;
+    .contact-email {
+      display: block;
+      font-size: 16px;
+      color: #ccc;
+      font-family: monospace;
+      letter-spacing: 0.08em;
+      border-bottom: 1px solid #444;
+      padding-bottom: 3px;
+      text-decoration: none;
+      margin-bottom: 32px;
     }
     .sns-links { display: flex; gap: 12px; justify-content: center; }
     .sns-btn {
@@ -310,7 +297,7 @@
       <li><a href="#">World</a></li>
       <li><a href="#">Characters</a></li>
       <li><a href="#">News</a></li>
-      <li><a href="#" class="cta">登録する</a></li>
+      <li><a href="#" class="cta">お問い合わせ</a></li>
     </ul>
   </nav>
 
@@ -412,13 +399,10 @@
     </div>
   </section>
 
-  <!-- CTA -->
+  <!-- CONTACT -->
   <section class="cta-section" style="padding:80px 40px;">
-    <h2>最新情報をいち早くお届けします</h2>
-    <div class="form-row">
-      <input type="email" placeholder="メールアドレスを入力">
-      <button>登録する</button>
-    </div>
+    <h2>お問い合わせ</h2>
+    <a class="contact-email" href="mailto:[PLACEHOLDER: contact@example.com]">[PLACEHOLDER: contact@example.com]</a>
     <div class="sns-links">
       <div class="sns-btn">X</div>
       <div class="sns-btn">IG</div>
