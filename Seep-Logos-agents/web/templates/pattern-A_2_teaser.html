@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pattern A_2: Teaser型（ライト）</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Georgia', serif;
+      background: #f5f0eb;
+      color: #1a1a1a;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background: url('../assets/images/background.png') center/cover no-repeat;
+      text-align: center;
+      gap: 24px;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      pointer-events: none;
+    }
+
+    .hero > * { position: relative; z-index: 1; }
+
+    .logo-placeholder {
+      border: 2px dashed #555;
+      padding: 20px 60px;
+      color: #888;
+      font-size: 13px;
+      font-family: monospace;
+      letter-spacing: 2px;
+    }
+
+    .game-title {
+      font-size: clamp(32px, 6vw, 72px);
+      letter-spacing: 0.2em;
+      color: #fff;
+      text-transform: uppercase;
+    }
+
+    .tagline {
+      font-size: clamp(13px, 1.5vw, 18px);
+      color: #aaa;
+      letter-spacing: 0.1em;
+      max-width: 480px;
+    }
+
+    .coming-soon {
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      color: #666;
+      text-transform: uppercase;
+    }
+
+    .countdown {
+      display: flex;
+      gap: 16px;
+    }
+    .countdown-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .countdown-num {
+      width: 64px;
+      height: 64px;
+      border: 1px solid #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-variant-numeric: tabular-nums;
+      color: #fff;
+    }
+    .countdown-label {
+      font-size: 10px;
+      color: #555;
+      letter-spacing: 0.2em;
+      font-family: monospace;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      font-size: 11px;
+      color: #444;
+      letter-spacing: 0.3em;
+    }
+
+    /* ── PRE-REGISTRATION ── */
+    .pre-reg {
+      min-height: 50vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      background: #ffffff;
+      border-top: 1px solid #e5e5e5;
+      padding: 80px 24px;
+    }
+
+    .pre-reg h2 {
+      font-size: 14px;
+      color: #888;
+      letter-spacing: 0.2em;
+      font-weight: normal;
+    }
+
+    .contact-email {
+      font-size: 16px;
+      color: #1a1a1a;
+      font-family: monospace;
+      letter-spacing: 0.08em;
+      border-bottom: 1px solid #bbb;
+      padding-bottom: 3px;
+      text-decoration: none;
+    }
+
+    .sns-links {
+      display: flex;
+      gap: 16px;
+    }
+    .sns-btn {
+      width: 44px;
+      height: 44px;
+      border: 1px solid #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: #888;
+      font-family: monospace;
+      cursor: pointer;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 24px;
+      text-align: center;
+      border-top: 1px solid #e5e5e5;
+      font-size: 11px;
+      color: #888;
+      font-family: monospace;
+      letter-spacing: 0.1em;
+    }
+    footer a { color: #666; text-decoration: none; }
+
+    /* ── WIREFRAME LABEL ── */
+    .wf-label {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 6px 12px;
+      font-size: 11px;
+      font-family: monospace;
+      color: #666;
+      z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wf-label">WIREFRAME / Pattern A_2: Teaser型（ライト）</div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="logo-placeholder">[PLACEHOLDER: ゲームロゴ]</div>
+
+    <h1 class="game-title">GAME TITLE</h1>
+
+    <p class="tagline">[PLACEHOLDER: キャッチコピー 1〜2行。世界観を一言で表す文章]</p>
+
+    <p class="coming-soon">── Coming Soon ──</p>
+
+    <div class="countdown">
+      <div class="countdown-unit">
+        <div class="countdown-num">00</div>
+        <div class="countdown-label">DAY</div>
+      </div>
+      <div class="countdown-unit">
+        <div class="countdown-num">00</div>
+        <div class="countdown-label">HOUR</div>
+      </div>
+      <div class="countdown-unit">
+        <div class="countdown-num">00</div>
+        <div class="countdown-label">MIN</div>
+      </div>
+      <div class="countdown-unit">
+        <div class="countdown-num">00</div>
+        <div class="countdown-label">SEC</div>
+      </div>
+    </div>
+
+    <p class="scroll-hint">▼ SCROLL</p>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="pre-reg">
+    <h2>お問い合わせ</h2>
+
+    <a class="contact-email" href="mailto:[PLACEHOLDER: contact@example.com]">[PLACEHOLDER: contact@example.com]</a>
+
+    <div class="sns-links">
+      <div class="sns-btn">X</div>
+      <div class="sns-btn">IG</div>
+      <div class="sns-btn">YT</div>
+      <div class="sns-btn">DC</div>
+      <div class="sns-btn">LINE</div>
+    </div>
+
+    <p style="font-size:11px; color:#888; font-family:monospace;">※ 開設済みSNSのみ表示</p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    © 2026 [会社名] All Rights Reserved &nbsp;｜&nbsp;
+    <a href="#">利用規約</a> &nbsp;｜&nbsp;
+    <a href="#">プライバシーポリシー</a>
+  </footer>
+
+</body>
+</html>
