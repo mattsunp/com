@@ -89,48 +89,30 @@
     .key-visual {
       width: 100%;
       aspect-ratio: 16/7;
-      background: #222;
+      background: url('../assets/images/background.png') center/cover no-repeat;
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
       overflow: hidden;
     }
-    .key-visual-placeholder {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      color: #444;
-      font-family: monospace;
-      font-size: 13px;
-    }
-    .key-visual-alt {
+    .kv-overlay {
       position: absolute;
       inset: 0;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-    }
-    .kv-left {
-      background: #2a2a3a;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .kv-right {
-      background: #1a1a2a;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 40px;
+      background: rgba(0, 0, 0, 0.4);
     }
     .kv-quote {
+      position: relative;
+      z-index: 1;
       font-size: clamp(18px, 2.5vw, 36px);
-      color: #ccc;
+      color: #fff;
       line-height: 1.5;
       font-style: italic;
+      text-align: center;
+      padding: 40px;
+      max-width: 700px;
     }
-    .kv-label { font-size: 11px; color: #333; font-family: monospace; }
+    .kv-label { font-size: 11px; color: #aaa; font-family: monospace; }
 
     /* ── FRAGMENTS ── */
     .fragments {
@@ -296,17 +278,8 @@
 
   <!-- KEY VISUAL -->
   <div class="key-visual">
-    <div class="key-visual-alt">
-      <div class="kv-left">
-        <div style="color:#444; font-family:monospace; font-size:12px; text-align:center;">
-          [PLACEHOLDER: キービジュアル左半分]<br>
-          <span style="color:#333;">なし時 → ブランドカラー</span>
-        </div>
-      </div>
-      <div class="kv-right">
-        <p class="kv-quote">"[PLACEHOLDER: 世界観を表す<br>印象的な一文]"</p>
-      </div>
-    </div>
+    <div class="kv-overlay"></div>
+    <p class="kv-quote">"[PLACEHOLDER: 世界観を表す印象的な一文]"</p>
   </div>
 
   <!-- FRAGMENTS -->

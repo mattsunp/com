@@ -21,25 +21,20 @@
       align-items: center;
       justify-content: center;
       position: relative;
-      background: linear-gradient(160deg, #1a1a2e 0%, #0a0a0a 60%);
+      background: url('../assets/images/background.png') center/cover no-repeat;
       text-align: center;
       gap: 24px;
     }
 
-    .placeholder-bg {
+    .hero::after {
+      content: '';
       position: absolute;
       inset: 0;
-      border: 2px dashed #333;
-      display: flex;
-      align-items: flex-start;
-      justify-content: flex-end;
-      padding: 16px;
+      background: rgba(0, 0, 0, 0.45);
+      pointer-events: none;
     }
-    .placeholder-bg span {
-      font-size: 11px;
-      color: #444;
-      font-family: monospace;
-    }
+
+    .hero > * { position: relative; z-index: 1; }
 
     .logo-placeholder {
       border: 2px dashed #555;
@@ -187,10 +182,6 @@
 
   <!-- HERO -->
   <section class="hero">
-    <div class="placeholder-bg">
-      <span>[PLACEHOLDER: 背景キービジュアル / なし時はグラデーションで代替]</span>
-    </div>
-
     <div class="logo-placeholder">[PLACEHOLDER: ゲームロゴ]</div>
 
     <h1 class="game-title">GAME TITLE</h1>

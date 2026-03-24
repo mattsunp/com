@@ -45,19 +45,19 @@
       height: 42vh; min-height: 220px;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       gap: 14px; text-align: center; padding-top: 56px;
-      background: #ffffff;
+      background: url('../assets/images/background.png') center/cover no-repeat;
       border-bottom: 1px solid rgba(0,0,0,0.06);
       position: relative; overflow: hidden;
     }
     .hero::before {
       content: '';
       position: absolute; inset: 0;
-      background-image:
-        linear-gradient(rgba(0,0,0,0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,0,0,0.025) 1px, transparent 1px);
-      background-size: 40px 40px;
+      background: rgba(0, 0, 0, 0.5);
       pointer-events: none;
     }
+    .hero-badge, .hero-logo-ph, .hero-title, .hero-caption { position: relative; z-index: 1; }
+    .hero-title { color: #ffffff; }
+    .hero-caption { color: rgba(255,255,255,0.7); }
     .hero-badge {
       font-size: 9px; letter-spacing: 0.6em; color: #9ca3af;
       text-transform: uppercase; font-family: monospace; position: relative;
