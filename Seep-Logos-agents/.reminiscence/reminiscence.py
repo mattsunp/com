@@ -239,6 +239,58 @@ def cmd_delete(args, conn):
     print(f"[reminiscence] #{args.id} を削除しました。")
 
 
+def cmd_inject(args, conn):
+    """UserPromptSubmit フック用: stdinからhookイベントを読み、関連記憶をadditionalContextとして返す"""
+    LOG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "inject.log")
+
+    try:
+        event = json.loads(sys.stdin.read())
+    except Exception:
+        print("{}")
+        return
+
+    prompt = event.get("prompt", "")
+    if not prompt or len(prompt.strip()) < 5:
+        print("{}")
+        return
+
+    # プロンプトの先頭100文字をクエリに使用
+    query = prompt.strip()[:100]
+
+    rows = conn.execute("""
+        SELECT m.id, m.content, m.created_at
+        FROM memories_fts f
+        JOIN memories m ON m.id = f.rowid
+        WHERE memories_fts MATCH ?
+        ORDER BY rank
+        LIMIT ?
+    """, (query, args.limit or 5)).fetchall()
+
+    # ログ記録（実測用）
+    now = datetime.datetime.now().isoformat(timespec="seconds")
+    total_chars = sum(len(r["content"]) for r in rows)
+    with open(LOG_PATH, "a", encoding="utf-8") as lf:
+        lf.write(f"{now} | hits={len(rows)} | chars={total_chars} | query={query[:50]}\n")
+
+    if not rows:
+        print("{}")
+        return
+
+    lines = ["## reminiscence: 関連する過去の記憶\n"]
+    for row in rows:
+        lines.append(f"[{row['created_at']}]\n{row['content']}\n")
+
+    context = "\n".join(lines)
+
+    output = {
+        "hookSpecificOutput": {
+            "hookEventName": "UserPromptSubmit",
+            "additionalContext": context
+        }
+    }
+    print(json.dumps(output, ensure_ascii=False))
+
+
 def main():
     parser = argparse.ArgumentParser(description="reminiscence — Seep Logos 長期記憶システム")
     sub = parser.add_subparsers(dest="command")
@@ -266,6 +318,10 @@ def main():
     p_delete = sub.add_parser("delete", help="記憶をIDで削除する")
     p_delete.add_argument("id", type=int, help="削除するメモリID")
 
+    # inject（UserPromptSubmitフック用）
+    p_inject = sub.add_parser("inject", help="UserPromptSubmitフック: 関連記憶をadditionalContextとして返す")
+    p_inject.add_argument("--limit", type=int, default=5, help="最大取得件数")
+
     args = parser.parse_args()
 
     if not args.command:
@@ -285,6 +341,8 @@ def main():
         cmd_list(args, conn)
     elif args.command == "delete":
         cmd_delete(args, conn)
+    elif args.command == "inject":
+        cmd_inject(args, conn)
 
     conn.close()
 
