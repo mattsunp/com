@@ -5,3 +5,6 @@
 # ────────────────────────────────────────
 **/_private/*
 !**/_private/.gitkeep
+
+# reminiscence — 長期記憶データベース（ローカル専用）
+.reminiscence/memory.db
