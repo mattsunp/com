@@ -8,3 +8,7 @@
 
 # reminiscence — 長期記憶データベース（ローカル専用）
 .reminiscence/memory.db
+
+# Obsidian — 揮発的な状態ファイルはローカル専用
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
