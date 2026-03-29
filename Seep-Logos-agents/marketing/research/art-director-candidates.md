@@ -1,7 +1,7 @@
 # アートディレクター候補 リファレンス
 
 作成日：2026-03-18
-作成：スタジオ運営管理部 / secretary × アートディレクション部 / art-director × 採用・クリエイター運用部 / recruitment-strategist
+作成：スタジオ運営管理部 / recorder × アートディレクション部 / art-director × 採用・クリエイター運用部 / recruitment-strategist
 
 ---
 

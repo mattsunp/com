@@ -18,95 +18,6 @@
 
 ---
 
-## エージェント一覧と起動条件
-
-### 部門 1: 企画プロデュース部
-| 愛称 | エージェント | 起動条件キーワード |
-|---|---|---|
-| 全体戦略家 | chief-producer | プロジェクト全体戦略、制作委員会設立、チーム組成、IP展開計画 |
-| 企画人 | planning-developer | 企画書作成、新規IP立案、作品コンセプト、ピッチ資料 |
-| 委員会外渉 | production-committee-coordinator | 制作委員会、パートナー交渉、権利処理、スケジュール管理 |
-| 委員会内渉 | project-manager | 進行管理、タスク管理、マイルストーン、リスク管理 |
-
-### 部門 2: クリエイティブ制作部
-| 愛称 | エージェント | 起動条件キーワード |
-|---|---|---|
-| シナリオ書き | scenario-writer | シナリオ、脚本、ストーリー、セリフ、ゲームシナリオ |
-| ゲームディレクター | game-director | ゲームディレクション、ゲームループ、レベルデザイン、プレイヤー体験、面白さの設計 |
-| 世界観構築人 | worldbuilding-creator | 世界観設定、設定資料集、用語集、地図、年表、種族設定 |
-| 原作人 | original-work-developer | 原作開発、ノベル、小説、原案、原作執筆 |
-| 漫画家 | comic-creator | コミック、漫画、ネーム、コマ割り、吹き出し |
-| 声劇人 | audio-drama-producer | 朗読劇、音声劇、ラジオドラマ、台本、キャスト |
-
-### 部門 3: アートディレクション部
-| 愛称 | エージェント | 起動条件キーワード |
-|---|---|---|
-| アート管理者 | art-director | アートディレクション、ビジュアル方針、スタイルガイド、世界観ビジュアル |
-| ゲームUIデザイナー | game-ui-designer | ゲームUI、UIデザイン、UXデザイン、インターフェース設計 |
-| 背景人 | background-art-creator | 美術背景、背景イラスト、背景設定、環境デザイン |
-| 意匠人 | visual-designer | デザイン制作、グラフィックデザイン、ロゴ、バナー、キービジュアル |
-
-### 部門 4: マーケティングPR部
-| 愛称 | エージェント | 起動条件キーワード |
-|---|---|---|
-| 宣伝人 | pr-communications | PR戦略、広報計画、メディア戦略、ブランドコミュニケーション |
-| 速報屋 | press-release-writer | プレスリリース、ニュースリリース、発表文、メディア向け文書 |
-| 投稿型SNS担当 | sns-manager | SNS、Twitter（X）、Instagram、TikTok、YouTube、投稿文、ハッシュタグ |
-| 運用型SNS担当 | community-manager | Discord、コミュニティ運用、サーバー設計、モデレーション、コミュニティイベント |
-| 渉外人 | media-relations | メディア対応、取材対応、インタビュー、記者対応、メディアリスト |
-| 情報屋 | competitive-analyst | 競合調査、市場調査、トレンド分析、競合比較、業界動向 |
-| 営業人 | sales-director | 提案書作成、サービス設計、料金設計、見積書、契約スコープ、B2B営業 |
-
-### 部門 5: 採用・クリエイター運用部
-| 愛称 | エージェント | 起動条件キーワード |
-|---|---|---|
-| 採用計画人 | recruitment-strategist | 採用戦略、採用計画、人材要件、採用フロー設計 |
-| 採用広報 | recruitment-pr-writer | 採用広報、求人票、採用ページ、エンジニアブログ、クリエイター向け文章 |
-| マネージャー | creator-relations | クリエイター管理、所属クリエイター、業務委託、契約、フリーランス対応 |
-| 社内広報 | internal-communications | 社内広報、社内報、インナーブランディング、社内コミュニケーション |
-
-### 部門 6: デジタル・技術部
-| 愛称 | エージェント | 起動条件キーワード |
-|---|---|---|
-| Web管理者 | web-director | Webサイト制作、サイト設計、コンテンツ設計、LP制作 |
-| ゲーム開発人 | game-dev-coordinator | ゲーム開発、開発チーム、仕様書、開発フロー |
-| 映像管理者 | video-production-director | 動画制作、映像制作、PV、トレーラー、動画企画 |
-| ゲームUIエンジニア | ui-engineering | ゲームUI実装、UIエンジニアリング、フロントエンド |
-
-### 部門 7: ローカライズ・翻訳部
-| 愛称 | エージェント | 起動条件キーワード |
-|---|---|---|
-| ローカライズ管理者 | localization-director | ローカライズ戦略、海外展開、グローバル対応、多言語対応 |
-| 翻訳人 | localization-specialist | 翻訳、英語翻訳、中国語翻訳、韓国語翻訳、ローカライズ作業 |
-| 文化人 | cultural-adaptation | 文化適応、カルチャライズ、海外向け表現、文化的配慮 |
-
-### 部門 8: スタジオ運営管理部
-| 愛称 | エージェント | 起動条件キーワード |
-|---|---|---|
-| 書記 | secretary | 議事録、ログ記録、会話記録、やり取り記録、記録、まとめ、振り返り、ミーティング記録、秘書 |
-
-エージェントの愛称・性格・口調・【指針】の詳細 → `.claude/agents/` 内の各 `.md` ファイルを参照。
-
----
-
-## 自動ルーティングルール
-
-```
-ユーザーからの指示 → キーワードマッチング → リード部門を判断 → エージェント起動
-```
-
-**複合タスク例：**
-- 新IP発表のプレスリリース → planning-developer × press-release-writer × pr-communications
-- ゲームUI設計 → art-director × game-ui-designer × ui-engineering
-- 海外ローカライズ → localization-director × localization-specialist × cultural-adaptation
-- 世界観構築 → worldbuilding-creator × scenario-writer × art-director
-- 外部クライアント提案 → sales-director × project-manager
-
-**優先度ルール：**
-1. 外部公開コンテンツは必ずブランドルールチェック（→ `docs/brand-rules.md`）
-2. 未発表情報を含む場合は機密フラグを立てて出力に注記
-3. 複数エージェントが連携する場合、最初に起動したエージェントがリードを取る
-
 ---
 
 ## 出力フォーマット（必須）
@@ -124,7 +35,7 @@ YYYY-MM-DD HH:MM | [愛称] | [タスク概要（20字以内）]
 
 ```
 Seep-Logos-agents/
-├── minutes/        # 議事録・稼働ログ（secretary / 全部門横断）
+├── minutes/        # 議事録・稼働ログ（recorder / 全部門横断）
 ├── seeds/          # タイトル未確定の探索的制作物
 │   ├── plots/
 │   ├── scenarios/
@@ -150,7 +61,7 @@ Seep-Logos-agents/
 | ファイル | 内容 |
 |---|---|
 | `docs/brand-rules.md` | ブランドルール・SNS分離原則・世界観扱い方 |
-| `docs/output-format.md` | 出力フォーマット標準・secretary仕様 |
+| `docs/output-format.md` | 出力フォーマット標準・recorder仕様 |
 | `docs/copyright-policy.md` | 著作物利用ポリシー |
 | `docs/orchestration-spec.md` | オーケストレーション実験仕様・実験履歴 |
 | `.claude/agents/` | 各エージェントの愛称・性格・指針 |

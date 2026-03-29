@@ -1,7 +1,7 @@
 # 議事録
 日時：2026-03-20
-参加エージェント：書記（secretary）、司令塔（Claude Code）
-記録者：スタジオ運営管理部 / 書記（secretary）
+参加エージェント：書記（recorder）、司令塔（Claude Code）
+記録者：スタジオ運営管理部 / 書記（recorder）
 
 ## 議題一覧
 1. git worktreeの重複ディレクトリ問題の調査・解消

@@ -132,7 +132,7 @@ def build_chunks(messages):
 
 
 def cmd_process_session(args, conn):
-    """最新セッションを読み込んでQ&Aチャンクとして自動保存"""
+    """未処理・更新済みセッションをすべて読み込んでQ&Aチャンクとして自動保存"""
     project_dir = args.project_dir or PROJECT_CLAUDE_DIR
 
     # トップレベルの .jsonl のみ対象（サブエージェントのものは除外）
@@ -144,39 +144,59 @@ def cmd_process_session(args, conn):
         print("[reminiscence] セッションファイルが見つかりません。")
         return
 
-    latest = max(files, key=os.path.getmtime)
-    basename = os.path.basename(latest)
+    total_saved = 0
+    for filepath in files:
+        basename = os.path.basename(filepath)
+        current_size = os.path.getsize(filepath)
 
-    # 既処理チェック
-    already = conn.execute(
-        "SELECT 1 FROM processed_sessions WHERE session_file = ?", (basename,)
-    ).fetchone()
-    if already:
-        print(f"[reminiscence] 既処理: {basename}")
-        return
+        # 処理済みかどうか確認
+        row = conn.execute(
+            "SELECT file_size FROM processed_sessions WHERE session_file = ?", (basename,)
+        ).fetchone()
 
-    messages = load_session_messages(latest)
-    chunks = build_chunks(messages)
+        if row is not None:
+            last_size = row[0] or 0
+            if current_size <= last_size:
+                # サイズ変化なし → スキップ
+                continue
+            # ファイルが増えている → 差分を再処理
+            is_update = True
+        else:
+            is_update = False
 
-    if not chunks:
-        print(f"[reminiscence] 保存対象なし: {basename}")
-    else:
-        now = datetime.datetime.now().isoformat(timespec="seconds")
-        for chunk in chunks:
-            ts = chunk["timestamp"][:19].replace("T", " ") if chunk["timestamp"] else now
-            conn.execute(
-                "INSERT INTO memories (content, tags, type, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
-                (chunk["content"], "session,auto", "session", ts, now),
-            )
+        messages = load_session_messages(filepath)
+        chunks = build_chunks(messages)
+
+        if not chunks:
+            pass
+        else:
+            now = datetime.datetime.now().isoformat(timespec="seconds")
+            for chunk in chunks:
+                ts = chunk["timestamp"][:19].replace("T", " ") if chunk["timestamp"] else now
+                # 重複チェック：同じcontentが既にあればスキップ
+                exists = conn.execute(
+                    "SELECT 1 FROM memories WHERE content = ?", (chunk["content"],)
+                ).fetchone()
+                if exists:
+                    continue
+                conn.execute(
+                    "INSERT INTO memories (content, tags, type, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
+                    (chunk["content"], "session,auto", "session", ts, now),
+                )
+                total_saved += 1
+            conn.commit()
+
+        # 処理済み記録を更新（INSERT OR REPLACE）
+        conn.execute(
+            "INSERT OR REPLACE INTO processed_sessions (session_file, processed_at, file_size) VALUES (?, ?, ?)",
+            (basename, datetime.datetime.now().isoformat(timespec="seconds"), current_size),
+        )
         conn.commit()
-        print(f"[reminiscence] {len(chunks)}件保存しました: {basename}")
 
-    # 処理済みとして記録
-    conn.execute(
-        "INSERT INTO processed_sessions (session_file, processed_at) VALUES (?, ?)",
-        (basename, datetime.datetime.now().isoformat(timespec="seconds")),
-    )
-    conn.commit()
+    if total_saved > 0:
+        print(f"[reminiscence] 合計{total_saved}件保存しました。")
+    else:
+        print("[reminiscence] 新規保存なし（すべて処理済みまたは重複）")
 
 
 def cmd_save(args, conn):
