@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pattern J: Hub & Spoke型</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, 'Helvetica Neue', sans-serif;
+      background: #0c0c14;
+      color: #d8d8e8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 32px;
+      background: rgba(12,12,20,0.95);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .nav-logo { font-size: 12px; letter-spacing: 0.28em; color: #ccc; text-transform: uppercase; }
+    .nav-links { display: flex; gap: 20px; list-style: none; align-items: center; }
+    .nav-links a { font-size: 11px; color: #666; text-decoration: none; letter-spacing: 0.12em; text-transform: uppercase; }
+    .nav-links a:hover { color: #aaa; }
+    .nav-cta {
+      padding: 8px 22px; background: #fff; color: #0c0c14;
+      font-size: 11px; letter-spacing: 0.1em; border: none; cursor: pointer; text-transform: uppercase;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      height: 70vh; padding-top: 56px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; gap: 18px;
+      position: relative;
+      background: url('../assets/images/background.png') center/cover no-repeat;
+    }
+    .hero::after { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.55); }
+    .hero > * { position: relative; z-index: 1; }
+    .logo-ph {
+      border: 2px dashed #333; padding: 12px 48px;
+      font-size: 12px; color: #555; font-family: monospace; letter-spacing: 2px;
+    }
+    .hero-title { font-size: clamp(24px, 4vw, 54px); font-weight: 200; letter-spacing: 0.2em; color: #eee; text-transform: uppercase; }
+    .hero-tagline { font-size: 13px; color: #888; max-width: 480px; line-height: 1.8; }
+    .hero-btns { display: flex; gap: 12px; }
+    .btn-outline { padding: 12px 32px; border: 1px solid #444; color: #ccc; font-size: 12px; letter-spacing: 0.1em; background: none; cursor: pointer; }
+    .btn-fill { padding: 12px 32px; background: #fff; color: #111; font-size: 12px; letter-spacing: 0.1em; border: none; cursor: pointer; }
+
+    /* ── TILES ── */
+    .tiles-section { padding: 60px 32px; background: #0c0c14; }
+    .tiles-inner { max-width: 1200px; margin: 0 auto; }
+
+    .tiles-row { display: grid; gap: 12px; margin-bottom: 12px; }
+    .tiles-row-1 { grid-template-columns: 2fr 1fr; }
+    .tiles-row-2 { grid-template-columns: 1fr 1fr 1fr; }
+    .tiles-row-3 { grid-template-columns: 1fr; }
+
+    .tile {
+      background: #111120; border: 1px solid #1a1a2a; overflow: hidden; cursor: pointer;
+      display: flex; flex-direction: column; position: relative;
+      transition: border-color 0.2s;
+    }
+    .tile:hover { border-color: #333; }
+
+    .tile-visual {
+      flex: 1;
+      background: url('../assets/images/scene.png') center/cover no-repeat;
+      min-height: 180px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .tile-visual-ph {
+      width: 100%; height: 100%; min-height: 180px;
+      background: #0d0d1e;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; color: #1e1e2e; font-family: monospace; text-align: center; line-height: 1.8;
+    }
+    .tile-info { padding: 20px 24px; border-top: 1px solid #1a1a2a; display: flex; justify-content: space-between; align-items: center; }
+    .tile-label { font-size: 10px; letter-spacing: 0.4em; color: #555; text-transform: uppercase; font-family: monospace; }
+    .tile-arrow { font-size: 13px; color: #333; }
+
+    /* 大タイル（STORY） */
+    .tile-large .tile-visual-ph { min-height: 280px; }
+    .tile-large .tile-label { font-size: 12px; color: #888; }
+
+    /* 横長タイル（SPECIAL） */
+    .tile-wide .tile-visual-ph { min-height: 100px; }
+    .tile-wide { flex-direction: row; align-items: stretch; }
+    .tile-wide .tile-visual { flex: 1; min-height: 100px; }
+    .tile-wide .tile-info { flex: 0 0 200px; border-top: none; border-left: 1px solid #1a1a2a; flex-direction: column; align-items: flex-start; gap: 8px; }
+
+    /* ── PICKUP ── */
+    .pickup { padding: 60px 32px 0; background: #0c0c14; }
+    .pickup-inner { max-width: 1200px; margin: 0 auto; }
+    .pickup-label { font-size: 10px; letter-spacing: 0.5em; color: #333; font-family: monospace; margin-bottom: 24px; text-transform: uppercase; }
+    .pickup-label::before { content: '── '; }
+    .pickup-label::after { content: ' ──'; }
+    .pickup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .pickup-card {
+      border: 1px solid #1a1a2a; padding: 24px;
+      display: flex; gap: 20px; align-items: flex-start;
+    }
+    .pickup-visual {
+      width: 80px; height: 60px; flex-shrink: 0;
+      background: #0d0d1e; border: 1px dashed #1a1a2a;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9px; color: #222; font-family: monospace;
+    }
+    .pickup-title { font-size: 13px; color: #aaa; margin-bottom: 6px; }
+    .pickup-desc { font-size: 11px; color: #555; line-height: 1.7; }
+
+    /* ── NEWS ── */
+    .news { padding: 60px 32px; background: #0a0a12; border-top: 1px solid #111118; }
+    .news-inner { max-width: 1200px; margin: 0 auto; }
+    .news-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
+    .news-header-label { font-size: 10px; letter-spacing: 0.5em; color: #444; font-family: monospace; text-transform: uppercase; }
+    .news-all { font-size: 11px; color: #555; letter-spacing: 0.1em; }
+    .news-list { border-top: 1px solid #1a1a2a; }
+    .news-item {
+      display: grid; grid-template-columns: 100px 70px 1fr 16px;
+      gap: 16px; align-items: center;
+      padding: 14px 0; border-bottom: 1px solid #1a1a2a;
+    }
+    .news-date { font-size: 11px; color: #444; font-family: monospace; }
+    .news-tag { font-size: 9px; padding: 2px 10px; border: 1px solid #1e1e2e; color: #555; letter-spacing: 0.08em; text-align: center; }
+    .news-title { font-size: 13px; color: #888; }
+    .news-arrow { font-size: 11px; color: #333; }
+
+    /* ── SNS / CTA ── */
+    .sns-cta { padding: 60px 32px; background: #0c0c14; border-top: 1px solid #111118; text-align: center; }
+    .sns-links { display: flex; gap: 10px; justify-content: center; margin-bottom: 32px; flex-wrap: wrap; }
+    .sns-btn {
+      width: 44px; height: 44px; border: 1px solid #1e1e2e;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; color: #555; font-family: monospace; cursor: pointer;
+    }
+    .contact-email {
+      font-size: 14px; color: #777; font-family: monospace;
+      border-bottom: 1px solid #333; padding-bottom: 3px; text-decoration: none;
+    }
+
+    /* ── FOOTER ── */
+    footer { background: #080810; padding: 32px; border-top: 1px solid #111118; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; }
+    .footer-nav { display: flex; gap: 20px; flex-wrap: wrap; list-style: none; margin-bottom: 20px; }
+    .footer-nav a { font-size: 11px; color: #333; text-decoration: none; letter-spacing: 0.1em; }
+    .footer-copy { font-size: 11px; color: #222; font-family: monospace; }
+
+    .wf-label {
+      position: fixed; top: 12px; left: 12px; z-index: 9999;
+      background: #111; border: 1px solid #333;
+      padding: 6px 12px; font-size: 11px; font-family: monospace; color: #888;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wf-label">WIREFRAME / Pattern J: Hub & Spoke型</div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">Game Title</div>
+    <ul class="nav-links">
+      <li><a href="#">Story</a></li>
+      <li><a href="#">Characters</a></li>
+      <li><a href="#">System</a></li>
+      <li><a href="#">Media</a></li>
+      <li><a href="#">News</a></li>
+      <li><a href="#">Goods</a></li>
+      <li><button class="nav-cta">購入する ▶</button></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="logo-ph">[PLACEHOLDER: タイトルロゴ]</div>
+    <h1 class="hero-title">Game Title</h1>
+    <p class="hero-tagline">[PLACEHOLDER: キャッチコピー 1〜2行]</p>
+    <div class="hero-btns">
+      <button class="btn-outline">▶ トレーラーを見る</button>
+      <button class="btn-fill">購入する ▶</button>
+    </div>
+  </section>
+
+  <!-- CONTENT TILES -->
+  <section class="tiles-section">
+    <div class="tiles-inner">
+      <!-- ROW 1: STORY (大) + CHARACTERS (中) -->
+      <div class="tiles-row tiles-row-1">
+        <div class="tile tile-large">
+          <div class="tile-visual">
+            <div class="tile-visual-ph">[PLACEHOLDER: ストーリービジュアル]</div>
+          </div>
+          <div class="tile-info">
+            <span class="tile-label">Story — 物語の概要を見る</span>
+            <span class="tile-arrow">→</span>
+          </div>
+        </div>
+        <div class="tile">
+          <div class="tile-visual">
+            <div class="tile-visual-ph">[PLACEHOLDER: キャラクター集合ビジュアル]</div>
+          </div>
+          <div class="tile-info">
+            <span class="tile-label">Characters</span>
+            <span class="tile-arrow">→</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROW 2: SYSTEM + MEDIA + GOODS -->
+      <div class="tiles-row tiles-row-2">
+        <div class="tile">
+          <div class="tile-visual">
+            <div class="tile-visual-ph">[PLACEHOLDER: システムビジュアル]</div>
+          </div>
+          <div class="tile-info">
+            <span class="tile-label">System</span>
+            <span class="tile-arrow">→</span>
+          </div>
+        </div>
+        <div class="tile">
+          <div class="tile-visual">
+            <div class="tile-visual-ph">[PLACEHOLDER: スクショ / PVサムネ]</div>
+          </div>
+          <div class="tile-info">
+            <span class="tile-label">Media</span>
+            <span class="tile-arrow">→</span>
+          </div>
+        </div>
+        <div class="tile">
+          <div class="tile-visual">
+            <div class="tile-visual-ph">[PLACEHOLDER: グッズビジュアル]</div>
+          </div>
+          <div class="tile-info">
+            <span class="tile-label">Goods</span>
+            <span class="tile-arrow">→</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROW 3: SPECIAL (横長) -->
+      <div class="tiles-row tiles-row-3">
+        <div class="tile tile-wide">
+          <div class="tile-visual">
+            <div class="tile-visual-ph">[PLACEHOLDER: スペシャル・コラボビジュアル]</div>
+          </div>
+          <div class="tile-info">
+            <span class="tile-label">Special / Collaboration</span>
+            <span class="tile-arrow">→</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PICKUP -->
+  <section class="pickup">
+    <div class="pickup-inner">
+      <p class="pickup-label">Pickup</p>
+      <div class="pickup-grid">
+        <div class="pickup-card">
+          <div class="pickup-visual">PU</div>
+          <div>
+            <div class="pickup-title">[PLACEHOLDER: ピックアップタイトル]</div>
+            <p class="pickup-desc">[説明文 30字以内]</p>
+          </div>
+        </div>
+        <div class="pickup-card">
+          <div class="pickup-visual">PU</div>
+          <div>
+            <div class="pickup-title">[PLACEHOLDER: ピックアップタイトル]</div>
+            <p class="pickup-desc">[説明文 30字以内]</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWS -->
+  <section class="news" id="news">
+    <div class="news-inner">
+      <div class="news-header">
+        <p class="news-header-label">News</p>
+        <span class="news-all">すべて見る →</span>
+      </div>
+      <div class="news-list">
+        <div class="news-item"><span class="news-date">2026.XX.XX</span><span class="news-tag">INFO</span><span class="news-title">記事タイトルが入ります</span><span class="news-arrow">→</span></div>
+        <div class="news-item"><span class="news-date">2026.XX.XX</span><span class="news-tag">UPDATE</span><span class="news-title">記事タイトルが入ります</span><span class="news-arrow">→</span></div>
+        <div class="news-item"><span class="news-date">2026.XX.XX</span><span class="news-tag">EVENT</span><span class="news-title">記事タイトルが入ります</span><span class="news-arrow">→</span></div>
+        <div class="news-item"><span class="news-date">2026.XX.XX</span><span class="news-tag">GOODS</span><span class="news-title">記事タイトルが入ります</span><span class="news-arrow">→</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SNS / CTA -->
+  <section class="sns-cta">
+    <div class="sns-links">
+      <div class="sns-btn">X</div>
+      <div class="sns-btn">IG</div>
+      <div class="sns-btn">YT</div>
+      <div class="sns-btn">DC</div>
+      <div class="sns-btn">LINE</div>
+    </div>
+    <a class="contact-email" href="mailto:contact@example.com">[PLACEHOLDER: contact@example.com]</a>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <ul class="footer-nav">
+        <li><a href="#">Story</a></li>
+        <li><a href="#">Characters</a></li>
+        <li><a href="#">System</a></li>
+        <li><a href="#">Media</a></li>
+        <li><a href="#">Goods</a></li>
+        <li><a href="#">Special</a></li>
+        <li><a href="#">News</a></li>
+        <li><a href="#">購入する</a></li>
+        <li><a href="#">利用規約</a></li>
+        <li><a href="#">PP</a></li>
+      </ul>
+      <p class="footer-copy">© 2026 [会社名] All Rights Reserved</p>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pattern P — Dual Column Chapter</title>
+  <style>
+    /* =============================================
+       RESET & BASE
+    ============================================= */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --centerline-color: #d4a843;
+      --centerline-glow: rgba(212, 168, 67, 0.5);
+      --centerline-glow-soft: rgba(212, 168, 67, 0.15);
+      --bg-hero: #0a0a0a;
+      --bg-ch1: #0f0f0f;
+      --bg-ch2: #131313;
+      --bg-ch3: #171717;
+      --bg-ch4: #1b1b1b;
+      --bg-epilogue: #1f1f1f;
+      --text-primary: #e8e2d9;
+      --text-secondary: rgba(232, 226, 217, 0.65);
+      --text-quote: #d4a843;
+      --font-serif: Georgia, 'Noto Serif JP', 'Times New Roman', serif;
+      --font-sans: 'Helvetica Neue', Arial, sans-serif;
+      --font-mono: 'Courier New', Courier, monospace;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg-hero);
+      color: var(--text-primary);
+      font-family: var(--font-serif);
+      overflow-x: hidden;
+      line-height: 1.8;
+    }
+
+    /* =============================================
+       CENTER LINE
+    ============================================= */
+    #centerline {
+      position: fixed;
+      left: 50%;
+      top: 0;
+      width: 2px;
+      height: 100vh;
+      transform: translateX(-50%) scaleY(0);
+      transform-origin: top center;
+      background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        var(--centerline-color) 3%,
+        var(--centerline-color) 97%,
+        transparent 100%
+      );
+      box-shadow:
+        0 0 6px var(--centerline-glow),
+        0 0 20px var(--centerline-glow-soft),
+        0 0 40px var(--centerline-glow-soft);
+      z-index: 100;
+      pointer-events: none;
+      transition: box-shadow 0.3s ease;
+    }
+
+    #centerline.chapter-hit {
+      box-shadow:
+        0 0 12px var(--centerline-glow),
+        0 0 40px var(--centerline-glow),
+        0 0 80px var(--centerline-glow-soft);
+    }
+
+    /* Endpoint node at the bottom of the centerline */
+    #centerline-endpoint {
+      position: fixed;
+      left: 50%;
+      bottom: 0;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--centerline-color);
+      transform: translateX(-50%) scale(0);
+      box-shadow: 0 0 12px var(--centerline-glow), 0 0 30px var(--centerline-glow);
+      z-index: 101;
+      pointer-events: none;
+      transition: transform 0.4s ease, opacity 0.4s ease;
+      opacity: 0;
+    }
+
+    /* =============================================
+       CHAPTER NAV (right side dot indicator)
+    ============================================= */
+    #chapter-nav {
+      position: fixed;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      z-index: 200;
+    }
+
+    .nav-dot-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(212, 168, 67, 0.5);
+      background: transparent;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .nav-dot-wrap:hover .nav-dot {
+      border-color: var(--centerline-color);
+      box-shadow: 0 0 8px var(--centerline-glow);
+    }
+
+    .nav-dot.active {
+      background: var(--centerline-color);
+      border-color: var(--centerline-color);
+      box-shadow: 0 0 10px var(--centerline-glow);
+      animation: dotPulse 1.8s ease-in-out infinite;
+    }
+
+    .nav-dot.passed {
+      background: rgba(212, 168, 67, 0.5);
+      border-color: rgba(212, 168, 67, 0.4);
+    }
+
+    .nav-connector {
+      width: 1.5px;
+      height: 24px;
+      background: rgba(212, 168, 67, 0.25);
+    }
+
+    .nav-tooltip {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(15, 15, 15, 0.92);
+      border: 1px solid rgba(212, 168, 67, 0.3);
+      color: var(--centerline-color);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      padding: 4px 10px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .nav-dot-wrap:hover .nav-tooltip {
+      opacity: 1;
+    }
+
+    @keyframes dotPulse {
+      0%, 100% { box-shadow: 0 0 6px var(--centerline-glow); }
+      50% { box-shadow: 0 0 16px var(--centerline-glow), 0 0 30px var(--centerline-glow-soft); }
+    }
+
+    /* =============================================
+       HERO SECTION
+    ============================================= */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-hero);
+      position: relative;
+      text-align: center;
+      padding: 80px 40px;
+    }
+
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      color: var(--text-primary);
+      opacity: 0;
+      transform: translateY(-20px);
+      animation: fadeInDown 0.8s ease forwards 0.3s;
+      text-shadow: 0 0 40px rgba(212, 168, 67, 0.15);
+    }
+
+    .hero-divider {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin: 32px 0;
+      opacity: 0;
+      animation: fadeIn 0.6s ease forwards 0.9s;
+    }
+
+    .hero-divider-line {
+      width: 80px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--centerline-color));
+    }
+
+    .hero-divider-line.right {
+      background: linear-gradient(to left, transparent, var(--centerline-color));
+    }
+
+    .hero-divider-node {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--centerline-color);
+      box-shadow: 0 0 10px var(--centerline-glow);
+      margin: 0 8px;
+      animation: nodeGlow 2s ease-in-out infinite 1.2s;
+    }
+
+    .hero-catchcopy {
+      font-family: var(--font-serif);
+      font-size: clamp(0.9rem, 2vw, 1.2rem);
+      color: var(--text-secondary);
+      letter-spacing: 0.15em;
+      line-height: 2.2;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeInUp 0.8s ease forwards 1.1s;
+      max-width: 480px;
+    }
+
+    .hero-scroll-cue {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      animation: fadeIn 0.6s ease forwards 1.8s;
+      cursor: pointer;
+    }
+
+    .hero-scroll-cue span {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+    }
+
+    .scroll-arrow {
+      width: 1px;
+      height: 32px;
+      background: linear-gradient(to bottom, var(--centerline-color), transparent);
+      animation: arrowPulse 1.6s ease-in-out infinite;
+    }
+
+    @keyframes arrowPulse {
+      0%, 100% { opacity: 0.4; transform: scaleY(0.8); }
+      50% { opacity: 1; transform: scaleY(1.1); }
+    }
+
+    @keyframes fadeInDown {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    @keyframes nodeGlow {
+      0%, 100% { box-shadow: 0 0 6px var(--centerline-glow); }
+      50% { box-shadow: 0 0 18px var(--centerline-glow), 0 0 30px var(--centerline-glow-soft); }
+    }
+
+    /* =============================================
+       CHAPTER SECTIONS
+    ============================================= */
+    .chapter-section {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 2px 1fr;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Column spacer aligns to centerline */
+    .chapter-centerline-col {
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Connection node that shoots out from centerline */
+    .chapter-node {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid var(--centerline-color);
+      background: var(--bg-hero);
+      opacity: 0;
+      transition: opacity 0.4s ease, box-shadow 0.4s ease;
+      z-index: 20;
+    }
+
+    .chapter-node.visible {
+      opacity: 1;
+      box-shadow: 0 0 12px var(--centerline-glow), 0 0 24px var(--centerline-glow-soft);
+    }
+
+    /* Horizontal connector lines from node */
+    .chapter-node::before,
+    .chapter-node::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      height: 1px;
+      background: var(--centerline-color);
+      transform: scaleX(0);
+      transition: transform 0.4s ease 0.2s;
+      opacity: 0.6;
+    }
+
+    .chapter-node::before {
+      right: 100%;
+      width: 24px;
+      transform-origin: right center;
+    }
+
+    .chapter-node::after {
+      left: 100%;
+      width: 24px;
+      transform-origin: left center;
+    }
+
+    .chapter-node.visible::before,
+    .chapter-node.visible::after {
+      transform: scaleX(1);
+    }
+
+    /* =============================================
+       CHAPTER COLUMNS
+    ============================================= */
+    .chapter-col {
+      padding: 80px 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Odd chapters: image left, text right */
+    .chapter-section.odd .chapter-col-left {
+      padding-right: 80px;
+    }
+
+    .chapter-section.odd .chapter-col-right {
+      padding-left: 80px;
+    }
+
+    /* Even chapters: text left, image right */
+    .chapter-section.even .chapter-col-left {
+      padding-right: 80px;
+    }
+
+    .chapter-section.even .chapter-col-right {
+      padding-left: 80px;
+    }
+
+    /* =============================================
+       IMAGE PLACEHOLDER
+    ============================================= */
+    .image-placeholder {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background:
+        linear-gradient(135deg, rgba(212, 168, 67, 0.08) 0%, transparent 60%),
+        linear-gradient(225deg, rgba(212, 168, 67, 0.05) 0%, transparent 60%);
+      border: 1px solid rgba(212, 168, 67, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .chapter-section.odd .image-placeholder {
+      transform: translateX(-40px);
+    }
+
+    .chapter-section.even .image-placeholder {
+      transform: translateX(40px);
+    }
+
+    .image-placeholder.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Decorative corner lines on placeholder */
+    .image-placeholder::before {
+      content: '';
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      border: 1px solid rgba(212, 168, 67, 0.1);
+      pointer-events: none;
+    }
+
+    /* Geometric pattern inside placeholder */
+    .placeholder-geo {
+      width: 60px;
+      height: 60px;
+      border: 1px solid rgba(212, 168, 67, 0.3);
+      transform: rotate(45deg);
+      position: relative;
+    }
+
+    .placeholder-geo::after {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      right: 8px;
+      bottom: 8px;
+      border: 1px solid rgba(212, 168, 67, 0.15);
+    }
+
+    .placeholder-label {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: rgba(212, 168, 67, 0.35);
+      text-transform: uppercase;
+    }
+
+    /* Animated scan line on placeholder */
+    .placeholder-scan {
+      position: absolute;
+      top: -2px;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(212, 168, 67, 0.5), transparent);
+      animation: scanLine 3s ease-in-out infinite;
+    }
+
+    @keyframes scanLine {
+      0% { top: -2px; opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { top: 100%; opacity: 0; }
+    }
+
+    /* =============================================
+       CHAPTER TEXT BLOCK
+    ============================================= */
+    .chapter-text-block {
+      opacity: 0;
+      transition: opacity 0.6s ease 0.2s, transform 0.6s ease 0.2s;
+    }
+
+    .chapter-section.odd .chapter-text-block {
+      transform: translateX(30px);
+    }
+
+    .chapter-section.even .chapter-text-block {
+      transform: translateX(-30px);
+    }
+
+    .chapter-text-block.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .chapter-number {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      color: var(--centerline-color);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .chapter-title-line {
+      width: 40px;
+      height: 1px;
+      background: var(--centerline-color);
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    .chapter-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.3rem, 2.5vw, 2rem);
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      color: var(--text-primary);
+      margin-bottom: 28px;
+      line-height: 1.4;
+    }
+
+    .chapter-body {
+      font-family: var(--font-serif);
+      font-size: clamp(0.9rem, 1.2vw, 1rem);
+      line-height: 2.1;
+      color: var(--text-secondary);
+      margin-bottom: 36px;
+    }
+
+    .chapter-quote {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(1rem, 1.8vw, 1.3rem);
+      color: var(--text-quote);
+      padding: 20px 32px;
+      border-left: 2px solid var(--centerline-color);
+      background: rgba(212, 168, 67, 0.04);
+      line-height: 1.8;
+      opacity: 0;
+      transition: opacity 0.6s ease 0.5s;
+    }
+
+    .chapter-section.even .chapter-quote {
+      border-left: none;
+      border-right: 2px solid var(--centerline-color);
+      text-align: right;
+    }
+
+    .chapter-quote.visible {
+      opacity: 1;
+    }
+
+    /* Right-align text for even chapters */
+    .chapter-section.even .chapter-text-block {
+      text-align: right;
+    }
+
+    .chapter-section.even .chapter-title-line {
+      margin-left: auto;
+    }
+
+    /* =============================================
+       EPILOGUE / CTA
+    ============================================= */
+    #epilogue {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-epilogue);
+      text-align: center;
+      padding: 120px 40px 80px;
+      position: relative;
+    }
+
+    .epilogue-endpoint {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--centerline-color);
+      box-shadow: 0 0 20px var(--centerline-glow), 0 0 40px var(--centerline-glow-soft);
+      margin-bottom: 48px;
+      opacity: 0;
+      transform: scale(0);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .epilogue-endpoint.visible {
+      opacity: 1;
+      transform: scale(1);
+      animation: endpointPulse 2s ease-in-out infinite 0.5s;
+    }
+
+    @keyframes endpointPulse {
+      0%, 100% {
+        box-shadow: 0 0 12px var(--centerline-glow), 0 0 24px var(--centerline-glow-soft);
+      }
+      50% {
+        box-shadow: 0 0 24px var(--centerline-glow), 0 0 60px var(--centerline-glow-soft);
+      }
+    }
+
+    .epilogue-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      color: var(--centerline-color);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .epilogue-line {
+      width: 60px;
+      height: 1px;
+      background: var(--centerline-color);
+      margin: 0 auto 40px;
+      opacity: 0.4;
+    }
+
+    .epilogue-text {
+      font-family: var(--font-serif);
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      color: var(--text-secondary);
+      line-height: 2.2;
+      max-width: 480px;
+      margin-bottom: 64px;
+    }
+
+    .cta-divider {
+      width: 60px;
+      height: 1px;
+      background: rgba(212, 168, 67, 0.3);
+      margin: 0 auto 48px;
+    }
+
+    .cta-form {
+      display: flex;
+      gap: 0;
+      margin-bottom: 24px;
+      max-width: 440px;
+      width: 100%;
+    }
+
+    .cta-input {
+      flex: 1;
+      padding: 12px 20px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(212, 168, 67, 0.25);
+      border-right: none;
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .cta-input::placeholder {
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+    }
+
+    .cta-input:focus {
+      border-color: var(--centerline-color);
+    }
+
+    .cta-button {
+      padding: 12px 24px;
+      background: var(--centerline-color);
+      border: none;
+      color: #0a0a0a;
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .cta-button:hover {
+      background: #e8bc50;
+      box-shadow: 0 0 20px var(--centerline-glow);
+    }
+
+    .cta-link {
+      display: inline-block;
+      padding: 12px 32px;
+      border: 1px solid rgba(212, 168, 67, 0.4);
+      color: var(--text-secondary);
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-decoration: none;
+      margin-bottom: 48px;
+      transition: all 0.3s ease;
+    }
+
+    .cta-link:hover {
+      border-color: var(--centerline-color);
+      color: var(--centerline-color);
+      box-shadow: 0 0 16px var(--centerline-glow-soft);
+    }
+
+    .cta-socials {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .social-icon {
+      width: 32px;
+      height: 32px;
+      border: 1px solid rgba(212, 168, 67, 0.25);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .social-icon:hover {
+      border-color: var(--centerline-color);
+      color: var(--centerline-color);
+      box-shadow: 0 0 10px var(--centerline-glow-soft);
+    }
+
+    /* =============================================
+       FOOTER
+    ============================================= */
+    footer {
+      background: #060606;
+      padding: 28px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(212, 168, 67, 0.08);
+    }
+
+    .footer-logo {
+      font-family: var(--font-serif);
+      font-size: 0.9rem;
+      letter-spacing: 0.12em;
+      color: rgba(232, 226, 217, 0.4);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-links a {
+      font-family: var(--font-sans);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: rgba(232, 226, 217, 0.3);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--centerline-color);
+    }
+
+    /* =============================================
+       RESPONSIVE
+    ============================================= */
+    @media (max-width: 768px) {
+      #chapter-nav { display: none; }
+
+      #centerline { left: 20px; }
+
+      .chapter-section {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+      }
+
+      .chapter-centerline-col { display: none; }
+
+      .chapter-col {
+        padding: 60px 28px;
+      }
+
+      .chapter-section.odd .chapter-col-left,
+      .chapter-section.odd .chapter-col-right,
+      .chapter-section.even .chapter-col-left,
+      .chapter-section.even .chapter-col-right {
+        padding: 60px 28px;
+      }
+
+      .chapter-section.even .chapter-text-block {
+        text-align: left;
+      }
+
+      .chapter-section.even .chapter-title-line {
+        margin-left: 0;
+      }
+
+      .chapter-section.even .chapter-quote {
+        border-right: none;
+        border-left: 2px solid var(--centerline-color);
+        text-align: left;
+      }
+
+      .chapter-section.odd .image-placeholder,
+      .chapter-section.even .image-placeholder {
+        transform: translateX(0);
+        transform: translateY(20px);
+      }
+
+      footer {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+      }
+
+      .footer-links {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .cta-form {
+        flex-direction: column;
+      }
+
+      .cta-input {
+        border-right: 1px solid rgba(212, 168, 67, 0.25);
+        border-bottom: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CENTER LINE -->
+  <div id="centerline"></div>
+  <div id="centerline-endpoint"></div>
+
+  <!-- CHAPTER NAV -->
+  <nav id="chapter-nav" aria-label="Chapter navigation">
+    <div class="nav-dot-wrap" onclick="scrollToSection('hero')">
+      <div class="nav-dot active" id="dot-hero">
+        <span class="nav-tooltip">OPENING</span>
+      </div>
+    </div>
+    <div class="nav-connector"></div>
+    <div class="nav-dot-wrap" onclick="scrollToSection('chapter-1')">
+      <div class="nav-dot" id="dot-chapter-1">
+        <span class="nav-tooltip">CHAPTER I</span>
+      </div>
+    </div>
+    <div class="nav-connector"></div>
+    <div class="nav-dot-wrap" onclick="scrollToSection('chapter-2')">
+      <div class="nav-dot" id="dot-chapter-2">
+        <span class="nav-tooltip">CHAPTER II</span>
+      </div>
+    </div>
+    <div class="nav-connector"></div>
+    <div class="nav-dot-wrap" onclick="scrollToSection('chapter-3')">
+      <div class="nav-dot" id="dot-chapter-3">
+        <span class="nav-tooltip">CHAPTER III</span>
+      </div>
+    </div>
+    <div class="nav-connector"></div>
+    <div class="nav-dot-wrap" onclick="scrollToSection('chapter-4')">
+      <div class="nav-dot" id="dot-chapter-4">
+        <span class="nav-tooltip">CHAPTER IV</span>
+      </div>
+    </div>
+    <div class="nav-connector"></div>
+    <div class="nav-dot-wrap" onclick="scrollToSection('epilogue')">
+      <div class="nav-dot" id="dot-epilogue">
+        <span class="nav-tooltip">EPILOGUE</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero" data-section="hero" style="background: var(--bg-hero);">
+    <h1 class="hero-title">YOUR TITLE HERE</h1>
+    <div class="hero-divider">
+      <div class="hero-divider-line"></div>
+      <div class="hero-divider-node"></div>
+      <div class="hero-divider-line right"></div>
+    </div>
+    <p class="hero-catchcopy">
+      二つの視点が、ひとつの真実へ。<br>
+      <span style="font-size: 0.85em; opacity: 0.7;">— キャッチコピーをここに —</span>
+    </p>
+    <div class="hero-scroll-cue" onclick="scrollToSection('chapter-1')">
+      <span>SCROLL</span>
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- CHAPTER 1 (odd: image left, text right) -->
+  <section id="chapter-1" data-section="chapter-1" class="chapter-section odd" style="background: var(--bg-ch1);">
+    <div class="chapter-col chapter-col-left">
+      <div class="image-placeholder" id="img-ch1">
+        <div class="placeholder-scan"></div>
+        <div class="placeholder-geo"></div>
+        <span class="placeholder-label">Image Placeholder</span>
+      </div>
+    </div>
+
+    <div class="chapter-centerline-col">
+      <div class="chapter-node" id="node-ch1"></div>
+    </div>
+
+    <div class="chapter-col chapter-col-right">
+      <div class="chapter-text-block" id="text-ch1">
+        <span class="chapter-number">Chapter I</span>
+        <div class="chapter-title-line"></div>
+        <h2 class="chapter-title">出会いの地</h2>
+        <p class="chapter-body">
+          それは、霧の深い夜明け前だった。街の外れにある古い駅舎の前で、彼女は荷物を抱えたまま立ち尽くしていた。遠くで汽笛が鳴り、やがて沈黙が戻ってきた。誰も彼女の名を知らなかった。誰も、彼女が何者であるかを問わなかった。
+        </p>
+        <p class="chapter-body">
+          しかし彼は見ていた。市場の端から、路地の影から。見ていた、というより、感じていた。何かが始まる予感を。
+        </p>
+        <blockquote class="chapter-quote" id="quote-ch1">
+          「── 霧の中では、すべてが等しく曖昧だ」
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHAPTER 2 (even: text left, image right) -->
+  <section id="chapter-2" data-section="chapter-2" class="chapter-section even" style="background: var(--bg-ch2);">
+    <div class="chapter-col chapter-col-left">
+      <div class="chapter-text-block" id="text-ch2">
+        <span class="chapter-number">Chapter II</span>
+        <div class="chapter-title-line"></div>
+        <h2 class="chapter-title">約束の言語</h2>
+        <p class="chapter-body">
+          三日後、彼らは再び出会った。偶然ではなく、必然として。市場の石畳の上で交わされた言葉は短かったが、その短さの中に長い沈黙が詰まっていた。彼女は問い、彼は答えた。答えの意味を彼女が理解したのは、それから半年後のことだった。
+        </p>
+        <p class="chapter-body">
+          約束とは、未来への呼びかけである。その声が届くかどうかは、呼びかけた者には分からない。
+        </p>
+        <blockquote class="chapter-quote" id="quote-ch2">
+          「── 言葉は橋だ。渡れるかどうかは、向こう岸が決める」
+        </blockquote>
+      </div>
+    </div>
+
+    <div class="chapter-centerline-col">
+      <div class="chapter-node" id="node-ch2"></div>
+    </div>
+
+    <div class="chapter-col chapter-col-right">
+      <div class="image-placeholder" id="img-ch2">
+        <div class="placeholder-scan"></div>
+        <div class="placeholder-geo"></div>
+        <span class="placeholder-label">Image Placeholder</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHAPTER 3 (odd: image left, text right) -->
+  <section id="chapter-3" data-section="chapter-3" class="chapter-section odd" style="background: var(--bg-ch3);">
+    <div class="chapter-col chapter-col-left">
+      <div class="image-placeholder" id="img-ch3">
+        <div class="placeholder-scan"></div>
+        <div class="placeholder-geo"></div>
+        <span class="placeholder-label">Image Placeholder</span>
+      </div>
+    </div>
+
+    <div class="chapter-centerline-col">
+      <div class="chapter-node" id="node-ch3"></div>
+    </div>
+
+    <div class="chapter-col chapter-col-right">
+      <div class="chapter-text-block" id="text-ch3">
+        <span class="chapter-number">Chapter III</span>
+        <div class="chapter-title-line"></div>
+        <h2 class="chapter-title">転換の夜</h2>
+        <p class="chapter-body">
+          嵐が来る前の静けさというものがある。それは単なる比喩ではなく、実際に空気が変わる。匂いが変わる。光の色が、わずかに。誰もそれに気づかないふりをしながら、全員が感じていた。変化の予兆を。
+        </p>
+        <p class="chapter-body">
+          夜が明けたとき、世界は同じように見えた。しかし何かが、決定的に変わっていた。
+        </p>
+        <blockquote class="chapter-quote" id="quote-ch3">
+          「── 転換点は、いつも静かに訪れる」
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHAPTER 4 (even: text left, image right) -->
+  <section id="chapter-4" data-section="chapter-4" class="chapter-section even" style="background: var(--bg-ch4);">
+    <div class="chapter-col chapter-col-left">
+      <div class="chapter-text-block" id="text-ch4">
+        <span class="chapter-number">Chapter IV</span>
+        <div class="chapter-title-line"></div>
+        <h2 class="chapter-title">光の在処</h2>
+        <p class="chapter-body">
+          終わりに近づくほど、物語は速度を上げる。人間の記憶がそのように作られているからだ。最初のページより最後のページを鮮明に覚えている。それでも、始まりがなければ終わりはない。
+        </p>
+        <p class="chapter-body">
+          彼女は振り返った。歩いてきた道の長さに、初めて気づいた。
+        </p>
+        <blockquote class="chapter-quote" id="quote-ch4">
+          「── 光は、探すものではなく、気づくものだ」
+        </blockquote>
+      </div>
+    </div>
+
+    <div class="chapter-centerline-col">
+      <div class="chapter-node" id="node-ch4"></div>
+    </div>
+
+    <div class="chapter-col chapter-col-right">
+      <div class="image-placeholder" id="img-ch4">
+        <div class="placeholder-scan"></div>
+        <div class="placeholder-geo"></div>
+        <span class="placeholder-label">Image Placeholder</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- EPILOGUE / CTA -->
+  <section id="epilogue" data-section="epilogue" style="background: var(--bg-epilogue);">
+    <div class="epilogue-endpoint" id="epilogue-endpoint"></div>
+    <p class="epilogue-label">Epilogue</p>
+    <div class="epilogue-line"></div>
+    <p class="epilogue-text">
+      この先の物語は、まだ始まっていない。<br>
+      あなたが読むとき、初めて世界は動き出す。
+    </p>
+    <div class="cta-divider"></div>
+    <form class="cta-form" onsubmit="return false;">
+      <input class="cta-input" type="email" placeholder="メールアドレスを入力">
+      <button class="cta-button" type="submit">通知を受け取る</button>
+    </form>
+    <a href="#" class="cta-link">公式サイト・詳細を見る</a>
+    <div class="cta-socials">
+      <a href="#" class="social-icon" aria-label="X (Twitter)">X</a>
+      <a href="#" class="social-icon" aria-label="Instagram">IG</a>
+      <a href="#" class="social-icon" aria-label="Discord">DC</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">YOUR TITLE &nbsp;/&nbsp; © 2026 Studio Name</div>
+    <div class="footer-links">
+      <a href="#">利用規約</a>
+      <a href="#">プライバシーポリシー</a>
+      <a href="#">お問合せ</a>
+    </div>
+  </footer>
+
+  <script>
+    // =============================================
+    // CENTER LINE — SCROLL DRIVEN DRAW ANIMATION
+    // =============================================
+    const centerLine = document.getElementById('centerline');
+    const centerLineEndpoint = document.getElementById('centerline-endpoint');
+
+    function updateCenterLine() {
+      const scrollY = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = Math.min(scrollY / docHeight, 1);
+
+      // scaleY drives the "drawing" effect from top to bottom
+      centerLine.style.transform = `translateX(-50%) scaleY(${progress})`;
+
+      // Show endpoint glow when near bottom
+      if (progress > 0.92) {
+        const epOpacity = (progress - 0.92) / 0.08;
+        centerLineEndpoint.style.opacity = epOpacity;
+        centerLineEndpoint.style.transform = `translateX(-50%) scale(${0.5 + epOpacity * 0.5})`;
+      } else {
+        centerLineEndpoint.style.opacity = 0;
+        centerLineEndpoint.style.transform = `translateX(-50%) scale(0)`;
+      }
+    }
+
+    window.addEventListener('scroll', updateCenterLine, { passive: true });
+    updateCenterLine();
+
+    // =============================================
+    // SECTION TRACKING — INTERSECTION OBSERVER
+    // =============================================
+    const sections = document.querySelectorAll('[data-section]');
+    const dots = {
+      'hero': document.getElementById('dot-hero'),
+      'chapter-1': document.getElementById('dot-chapter-1'),
+      'chapter-2': document.getElementById('dot-chapter-2'),
+      'chapter-3': document.getElementById('dot-chapter-3'),
+      'chapter-4': document.getElementById('dot-chapter-4'),
+      'epilogue': document.getElementById('dot-epilogue'),
+    };
+
+    const sectionOrder = ['hero', 'chapter-1', 'chapter-2', 'chapter-3', 'chapter-4', 'epilogue'];
+    let activeSection = 'hero';
+
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.dataset.section;
+          activeSection = id;
+          updateNavDots(id);
+        }
+      });
+    }, { threshold: 0.35 });
+
+    sections.forEach(s => sectionObserver.observe(s));
+
+    function updateNavDots(activeId) {
+      const activeIndex = sectionOrder.indexOf(activeId);
+      sectionOrder.forEach((id, idx) => {
+        const dot = dots[id];
+        if (!dot) return;
+        dot.classList.remove('active', 'passed');
+        if (idx < activeIndex) {
+          dot.classList.add('passed');
+        } else if (idx === activeIndex) {
+          dot.classList.add('active');
+        }
+      });
+    }
+
+    // =============================================
+    // CHAPTER CONTENT REVEAL — INTERSECTION OBSERVER
+    // =============================================
+    const chapterSections = document.querySelectorAll('.chapter-section');
+
+    const chapterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const section = entry.target;
+          const id = section.id;
+
+          // Trigger centerline glow pulse on chapter hit
+          centerLine.classList.add('chapter-hit');
+          setTimeout(() => centerLine.classList.remove('chapter-hit'), 800);
+
+          // Reveal node
+          const node = section.querySelector('.chapter-node');
+          if (node) node.classList.add('visible');
+
+          // Reveal image
+          const img = section.querySelector('.image-placeholder');
+          if (img) img.classList.add('visible');
+
+          // Reveal text block
+          const text = section.querySelector('.chapter-text-block');
+          if (text) text.classList.add('visible');
+
+          // Reveal quote (with longer delay, handled via CSS transition-delay)
+          const quote = section.querySelector('.chapter-quote');
+          if (quote) {
+            setTimeout(() => quote.classList.add('visible'), 500);
+          }
+        }
+      });
+    }, { threshold: 0.2 });
+
+    chapterSections.forEach(s => chapterObserver.observe(s));
+
+    // =============================================
+    // EPILOGUE ENDPOINT
+    // =============================================
+    const epilogueSection = document.getElementById('epilogue');
+    const epilogueEndpoint = document.getElementById('epilogue-endpoint');
+
+    const epilogueObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          epilogueEndpoint.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.3 });
+
+    epilogueObserver.observe(epilogueSection);
+
+    // =============================================
+    // SMOOTH SCROLL NAVIGATION
+    // =============================================
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Keyboard navigation: Space/PageDown = next chapter, PageUp = prev
+    document.addEventListener('keydown', (e) => {
+      const currentIndex = sectionOrder.indexOf(activeSection);
+      if (e.code === 'Space' || e.code === 'PageDown') {
+        e.preventDefault();
+        const nextId = sectionOrder[Math.min(currentIndex + 1, sectionOrder.length - 1)];
+        scrollToSection(nextId);
+      } else if (e.code === 'PageUp') {
+        e.preventDefault();
+        const prevId = sectionOrder[Math.max(currentIndex - 1, 0)];
+        scrollToSection(prevId);
+      }
+    });
+  </script>
+
+</body>
+</html>

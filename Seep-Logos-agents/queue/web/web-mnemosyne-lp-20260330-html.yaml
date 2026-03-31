@@ -1,0 +1,100 @@
+task_id: "web-mnemosyne-lp-20260330-html"
+status: completed
+assigned_to: ui-engineering
+created_at: "2026-03-30 17:50"
+depends_on:
+  - "queue/web/web-mnemosyne-lp-20260330-visual.yaml"
+
+instruction_ref: "queue/web/web-mnemosyne-lp-20260330.yaml"
+visual_ref: "web/instructions/web-mnemosyne-lp-20260330-visual.md"
+
+task:
+  description: >
+    MNEMOSYNE LP の HTML/CSS/JS 実装を行う。
+    足軽Aが作成したビジュアルブリーフ（visual_ref）を必ず参照し、
+    定義されたカラーパレット・タイポグラフィ・禁止要素を厳守すること。
+    素材ゼロ状態（画像ファイルなし）からテキストと幾何学・タイポグラフィのみで構築する。
+
+  template_base: "web/templates/pattern-H_dark-immersive.html"
+  template_reference_also:
+    - "web/templates/pattern-E_scrollytelling.html"
+  template_note: >
+    pattern-H を基底テンプレートとして使用する。
+    scrollytelling的なテキスト出現演出が必要なセクション（section_2_world、section_3_story）には
+    pattern-E のアプローチを参照・取り込んでよい。
+    ただし両テンプレートを機械的に合成するのではなく、MNEMOSYNEの世界観に合わせて取捨選択すること。
+
+  page_structure:
+    - id: "section-hero"
+      label: "HERO（フルスクリーン）"
+      key_copy: "忘れることは、罪か。"
+      sub_copy: "他者の記憶を消す仕事を10年続けた——そして自分の消された記憶に気づいた"
+      title_text: "MNEMOSYNE"
+      cta_button: "ウィッシュリストに追加"
+      cta_link: "#"  # 発売前フェーズ。実URLが確定次第差し替え
+      scroll_hint: true
+
+    - id: "section-world"
+      label: "WORLD（世界観紹介）"
+      opening_copy: "西暦2040年代。記憶は、整理できる時代になった。"
+      keywords_to_scatter: ["MET", "アクセス封鎖", "記憶リーク", "外在化記憶", "セクション削除"]
+
+    - id: "section-story"
+      label: "STORY（主人公紹介）"
+      character_name: "桐島セツ"
+      character_profile: "34歳。記憶整理士。10年間、他者の不要な記憶を消し続けてきた。"
+
+    - id: "section-system"
+      label: "SYSTEM（ゲームプレイ）"
+      cards:
+        - label: "整理"
+          description: "記憶を分類し、保存フォルダに格納する。"
+        - label: "保持"
+          description: "封鎖せず、そのまま残す。"
+        - label: "封鎖"
+          description: "アクセスを永久に遮断する。"
+      footer_copy: "正解はない。しかし、選択には重さがある。"
+      playtime: "プレイ時間：90〜120分"
+
+    - id: "section-cta"
+      label: "CTA（ウィッシュリスト・メール登録）"
+      headline: "記憶は、あなたが選ぶ。"
+      cta_primary_label: "Steamウィッシュリストに追加"
+      cta_primary_link: "#"
+      cta_secondary_label: "リリース通知を受け取る（メール登録）"
+      cta_secondary_type: "email_form"
+      title_reprise: "MNEMOSYNE"
+      release_note: "近日公開"
+
+  must_implement:
+    - モバイルファースト（スマートフォン縦持ち基準でレイアウト設計し、デスクトップへ拡張）
+    - セクション間のスクロールアニメーション（テキストが静かにフェードイン。ポップインやスライドは禁止）
+    - スキャンライン / ノイズテクスチャ（CSSまたはSVGフィルターで実装。画像ファイル不使用）
+    - HERO CTAボタンのゴーストスタイル（塗りつぶしなし・細ボーダー・ホバー時に淡い発光）
+    - SYSTEMセクションの3カードレイアウト（モバイル縦並び・デスクトップ横並び）
+    - CTAセクションのメール登録フォーム（フロントエンドのみ。送信処理は仮実装またはコンソールログ）
+    - Lighthouse 90以上（Performance / Accessibility / Best Practices / SEO）
+    - OGP メタタグ設置（title / description / og:image は仮置きでよい）
+
+  performance_target: "Lighthouse 90以上（Performance / Accessibility / Best Practices / SEO 全項目）"
+
+  technical_constraints:
+    - 外部依存ライブラリは最小限（フレームワーク不使用。Vanilla JS + CSS で実装）
+    - Google Fonts は使用可（ネットワーク読み込み。Noto Serif JP / Cormorant Garamond）
+    - 画像ファイル不使用（全表現をCSS・SVG・テキストで構築）
+    - アニメーションは prefers-reduced-motion を尊重すること
+    - セマンティックHTMLを使用（section / h1〜h3 / nav / main / footer）
+
+output_path: "web/output/web-mnemosyne-lp-20260330.html"
+
+completion_report:
+  status: completed
+  output_summary: >
+    MNEMOSYNE LP HTML実装完了。
+    ビジュアルブリーフ全仕様を厳守。カラーパレット（#0A0A0F / #F0EDE8 / #C8A882 等）・
+    Noto Serif JP + Cormorant Garamondタイポグラフィ・SVGノイズ+スキャンライン実装・
+    スクロールフェードイン（IntersectionObserver）・HERO/CTAゴーストボタン・
+    3カードレイアウト（モバイル縦・デスクトップ横）・メール登録フォーム（フロントのみ）・
+    OGPメタタグ・prefers-reduced-motion対応・セマンティックHTML・画像ファイル不使用。
+    出力先: web/output/web-mnemosyne-lp-20260330.html
+  completed_at: "2026-03-30 22:45"

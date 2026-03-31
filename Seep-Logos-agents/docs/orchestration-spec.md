@@ -19,15 +19,15 @@ seeds/plots/game-test-v{N}-final.md       # 最終統合成果物
 | Round 3 | 批評を踏まえた改訂稿・統合 | `v{N}-final.md` に最終成果物を収録 |
 
 ## chief-producerへの標準指示テンプレート
-オーケストレーションを依頼する際は以下を必ず含める：
+
+タスク入力は `queue/game/_template.yaml` をコピーして使用する。
 
 ```
-1. 各ラウンドの成果物を seeds/plots/game-test-v{N}-r{round}.md に保存すること
-2. スタッフィング判断を冒頭に宣言すること（招集エージェント・不足・懸念を明記）
-3. Round 1完了後にギャップ診断を行い、必要なら追加エージェントを招集すること
-4. 各エージェントの論点と決着を最終成果物に記録すること
-5. 稼働ログを minutes/agent-activity.log に追記すること
+cp queue/game/_template.yaml queue/game/game-{title}-v{N}-{YYYYMMDD}.yaml
 ```
+
+YAMLの `instruction` と `orchestration.staffing` を埋めて chief-producer に渡す。
+`rules` と `round_config` は変更不要な場合そのまま使用する。
 
 ## 動的スタッフィングのルール
 - Round 1完了後：「誰も回答できていない専門領域はないか」を必ず点検する
@@ -41,7 +41,7 @@ seeds/plots/game-test-v{N}-final.md       # 最終統合成果物
 - [ ] エージェント間の批評は実質的か（「支持する」だけでなく具体的な指摘があるか）
 - [ ] 動的スタッフィングが発動したか
 
-## 実験履歴
+## バージョン履歴
 | バージョン | 特徴 | 結果 |
 |---|---|---|
 | v1 | chief-producerが伝言係のみ | 相互批評なし。伝言係に終わった |
@@ -50,3 +50,7 @@ seeds/plots/game-test-v{N}-final.md       # 最終統合成果物
 | v4 | スタッフィング判断セクション追加 | game-directorは招集されなかった |
 | v5 | 動的招集（Round 1後にゲーム開発人を追加） | 音響設計の統一性など、質的な発見があった |
 | v6 | マインドとして行動原則に追記後のテスト | game-directorは招集されなかった。中間ファイルも保存されなかった（プロンプト仕様の欠落が原因） |
+| v7 | LETHE — game-directorをルールで強制招集 | game-director参加。3ラウンド完走。招集は強制依存（自律判断ではない） |
+| v8 | MNEMOSYNE — game-directorの自律招集を検証 | ステップ1〜4の自律判断プロセスで招集が導出された。動的スタッフィングは発生せず |
+| v9 | SANCTION — r1・r2のみ（finalなし） | 途中で停止。完走できなかった |
+| v10〜 | タスク入力をYAMLに移行（`queue/game/_template.yaml`） | 自然文指示からYAMLブリーフに切り替え。2026-04-01決定 |

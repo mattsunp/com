@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pattern L: News Feed型</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, 'Hiragino Sans', 'Helvetica Neue', sans-serif;
+      background: #090912;
+      color: #d0d0e0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 32px;
+      background: rgba(9,9,18,0.95);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .nav-logo { font-size: 13px; letter-spacing: 0.2em; color: #ccc; }
+    .nav-links { display: flex; gap: 20px; list-style: none; }
+    .nav-links a { font-size: 11px; color: #666; text-decoration: none; letter-spacing: 0.1em; }
+    .nav-links a:hover { color: #aaa; }
+
+    /* ── HERO ── */
+    .hero {
+      height: 52vh; padding-top: 56px;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-bottom: 1px solid #111118;
+    }
+    .hero-visual {
+      background: url('../assets/images/background.png') center/cover no-repeat;
+      position: relative;
+    }
+    .hero-visual::after { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.45); }
+    .hero-info {
+      background: #0d0d1a; padding: 40px 40px;
+      display: flex; flex-direction: column; justify-content: center; gap: 16px;
+      border-left: 1px solid #111118;
+    }
+    .hero-badge {
+      display: inline-block; padding: 4px 14px; background: #1a3a1a;
+      font-size: 10px; color: #4a8a4a; letter-spacing: 0.2em; font-family: monospace;
+    }
+    .logo-ph {
+      border: 2px dashed #1e1e2e; padding: 10px 32px; display: inline-block;
+      font-size: 12px; color: #333; font-family: monospace; letter-spacing: 2px;
+    }
+    .hero-title { font-size: clamp(20px, 2.5vw, 32px); color: #ccc; font-weight: normal; letter-spacing: 0.1em; }
+    .on-air-block { border-top: 1px solid #1a1a2a; padding-top: 16px; }
+    .on-air-label { font-size: 9px; letter-spacing: 0.4em; color: #4a8a4a; font-family: monospace; margin-bottom: 8px; text-transform: uppercase; }
+    .on-air-info { font-size: 13px; color: #888; line-height: 1.8; font-family: monospace; }
+
+    /* ── NEWS FEED ── */
+    .news-feed { background: #090912; border-bottom: 1px solid #111118; }
+    .news-inner { max-width: 1200px; margin: 0 auto; padding: 60px 32px; display: grid; grid-template-columns: 2fr 1fr; gap: 48px; }
+
+    .feed-main {}
+    .feed-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
+    .feed-label { font-size: 10px; letter-spacing: 0.5em; color: #333; font-family: monospace; text-transform: uppercase; }
+    .feed-label::before { content: '── '; }
+    .feed-label::after { content: ' ──'; }
+    .feed-all { font-size: 11px; color: #555; }
+
+    .filter-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+    .filter-tab { padding: 5px 16px; border: 1px solid #1a1a2a; font-size: 10px; color: #555; font-family: monospace; cursor: pointer; letter-spacing: 0.08em; }
+    .filter-tab.active { border-color: #444; color: #aaa; }
+
+    .news-list { border-top: 1px solid #1a1a2a; }
+    .news-item {
+      display: grid; grid-template-columns: 72px 1fr;
+      gap: 16px; padding: 16px 0; border-bottom: 1px solid #1a1a2a;
+    }
+    .news-thumb {
+      aspect-ratio: 16/10; background: #0d0d1e;
+      border: 1px dashed #1a1a2a;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 8px; color: #1e1e2e; font-family: monospace;
+    }
+    .news-meta { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; }
+    .news-date { font-size: 10px; color: #444; font-family: monospace; }
+    .news-pill { font-size: 9px; padding: 2px 9px; border: 1px solid #1e1e2e; color: #555; letter-spacing: 0.08em; }
+    .news-pill.update { border-color: #1e3a5f; color: #60a5fa; }
+    .news-pill.event { border-color: #2e1b4e; color: #c084fc; }
+    .news-title { font-size: 13px; color: #aaa; line-height: 1.5; }
+    .news-excerpt { font-size: 11px; color: #555; line-height: 1.6; margin-top: 4px; }
+
+    .feed-more { text-align: center; margin-top: 24px; }
+    .btn-more { padding: 10px 32px; border: 1px solid #1e1e2e; color: #555; background: none; font-size: 12px; cursor: pointer; letter-spacing: 0.1em; }
+
+    /* ── SIDE ── */
+    .feed-side { display: flex; flex-direction: column; gap: 32px; }
+    .side-block { border: 1px solid #1a1a2a; padding: 24px; }
+    .side-label { font-size: 10px; letter-spacing: 0.4em; color: #444; font-family: monospace; margin-bottom: 20px; text-transform: uppercase; }
+    .schedule-item { padding: 10px 0; border-bottom: 1px solid #1a1a2a; }
+    .schedule-item:last-child { border-bottom: none; }
+    .schedule-station { font-size: 11px; color: #888; margin-bottom: 3px; }
+    .schedule-time { font-size: 11px; color: #555; font-family: monospace; }
+
+    .ep-thumb {
+      width: 100%; aspect-ratio: 16/9; background: #0d0d1e;
+      border: 1px dashed #1a1a2a; margin-bottom: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; color: #1e1e2e; font-family: monospace;
+    }
+    .ep-num { font-size: 10px; color: #555; font-family: monospace; margin-bottom: 4px; }
+    .ep-title { font-size: 13px; color: #aaa; margin-bottom: 8px; }
+    .ep-desc { font-size: 11px; color: #555; line-height: 1.7; }
+
+    /* ── PICKUP ── */
+    .pickup { padding: 48px 32px; background: #0c0c18; border-top: 1px solid #111118; }
+    .pickup-inner { max-width: 1200px; margin: 0 auto; }
+    .pickup-label { font-size: 10px; letter-spacing: 0.5em; color: #333; font-family: monospace; margin-bottom: 20px; text-transform: uppercase; }
+    .pickup-label::before { content: '── '; }
+    .pickup-label::after { content: ' ──'; }
+    .pickup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .pickup-card { border: 1px solid #1a1a2a; padding: 20px; display: flex; gap: 16px; }
+    .pickup-visual { width: 80px; height: 60px; flex-shrink: 0; background: #0d0d1e; border: 1px dashed #1a1a2a; display: flex; align-items: center; justify-content: center; font-size: 9px; color: #222; font-family: monospace; }
+    .pickup-title { font-size: 13px; color: #aaa; margin-bottom: 5px; }
+    .pickup-desc { font-size: 11px; color: #555; line-height: 1.7; }
+
+    /* ── SNS / CTA ── */
+    .sns-cta { padding: 48px 32px; background: #090912; border-top: 1px solid #111118; text-align: center; }
+    .sns-cta p { font-size: 13px; color: #555; margin-bottom: 20px; letter-spacing: 0.08em; }
+    .sns-links { display: flex; gap: 10px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap; }
+    .sns-btn { width: 44px; height: 44px; border: 1px solid #1e1e2e; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #555; font-family: monospace; cursor: pointer; }
+    .contact-email { font-size: 14px; color: #777; font-family: monospace; border-bottom: 1px solid #333; padding-bottom: 3px; text-decoration: none; }
+
+    /* ── FOOTER ── */
+    footer { background: #060610; padding: 32px; border-top: 1px solid #111118; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; }
+    .footer-nav { display: flex; gap: 20px; flex-wrap: wrap; list-style: none; margin-bottom: 16px; }
+    .footer-nav a { font-size: 11px; color: #333; text-decoration: none; }
+    .footer-copy { font-size: 11px; color: #222; font-family: monospace; }
+
+    .wf-label { position: fixed; top: 12px; left: 12px; z-index: 9999; background: #111; border: 1px solid #333; padding: 6px 12px; font-size: 11px; font-family: monospace; color: #888; }
+  </style>
+</head>
+<body>
+
+  <div class="wf-label">WIREFRAME / Pattern L: News Feed型</div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">Game / Anime Title</div>
+    <ul class="nav-links">
+      <li><a href="#">ニュース</a></li>
+      <li><a href="#">放送情報</a></li>
+      <li><a href="#">キャラクター</a></li>
+      <li><a href="#">STORY</a></li>
+      <li><a href="#">スタッフ</a></li>
+      <li><a href="#">グッズ</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-visual"></div>
+    <div class="hero-info">
+      <span class="hero-badge">ON AIR</span>
+      <div class="logo-ph">[PLACEHOLDER: タイトルロゴ]</div>
+      <h1 class="hero-title">[タイトル名]</h1>
+      <div class="on-air-block">
+        <p class="on-air-label">放送情報</p>
+        <p class="on-air-info">[放送局A] &nbsp;毎週X曜日 XX:XX〜<br>[配信サービス] &nbsp;毎週X曜日 XX:XX〜</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWS FEED -->
+  <section class="news-feed">
+    <div class="news-inner">
+      <!-- メインフィード -->
+      <div class="feed-main">
+        <div class="feed-header">
+          <p class="feed-label">News</p>
+          <span class="feed-all">すべて見る →</span>
+        </div>
+        <div class="filter-tabs">
+          <div class="filter-tab active">すべて</div>
+          <div class="filter-tab">情報</div>
+          <div class="filter-tab">更新</div>
+          <div class="filter-tab">イベント</div>
+          <div class="filter-tab">グッズ</div>
+        </div>
+        <div class="news-list">
+          <div class="news-item">
+            <div class="news-thumb">THUMB</div>
+            <div>
+              <div class="news-meta"><span class="news-date">2026.XX.XX</span><span class="news-pill">INFO</span></div>
+              <div class="news-title">記事タイトルが入ります</div>
+              <div class="news-excerpt">記事の書き出しテキスト 50字以内が入ります…</div>
+            </div>
+          </div>
+          <div class="news-item">
+            <div class="news-thumb">THUMB</div>
+            <div>
+              <div class="news-meta"><span class="news-date">2026.XX.XX</span><span class="news-pill update">UPDATE</span></div>
+              <div class="news-title">記事タイトルが入ります</div>
+              <div class="news-excerpt">記事の書き出しテキスト 50字以内が入ります…</div>
+            </div>
+          </div>
+          <div class="news-item">
+            <div class="news-thumb">THUMB</div>
+            <div>
+              <div class="news-meta"><span class="news-date">2026.XX.XX</span><span class="news-pill event">EVENT</span></div>
+              <div class="news-title">記事タイトルが入ります</div>
+              <div class="news-excerpt">記事の書き出しテキスト 50字以内が入ります…</div>
+            </div>
+          </div>
+          <div class="news-item">
+            <div class="news-thumb">THUMB</div>
+            <div>
+              <div class="news-meta"><span class="news-date">2026.XX.XX</span><span class="news-pill">INFO</span></div>
+              <div class="news-title">記事タイトルが入ります</div>
+              <div class="news-excerpt">記事の書き出しテキスト 50字以内が入ります…</div>
+            </div>
+          </div>
+        </div>
+        <div class="feed-more"><button class="btn-more">もっと見る ▼</button></div>
+      </div>
+
+      <!-- サイドバー -->
+      <div class="feed-side">
+        <!-- 放送スケジュール -->
+        <div class="side-block">
+          <p class="side-label">Schedule</p>
+          <div class="schedule-item">
+            <div class="schedule-station">[放送局A]</div>
+            <div class="schedule-time">毎週X曜日 XX:XX〜XX:XX</div>
+          </div>
+          <div class="schedule-item">
+            <div class="schedule-station">[放送局B]</div>
+            <div class="schedule-time">毎週X曜日 XX:XX〜XX:XX</div>
+          </div>
+          <div class="schedule-item">
+            <div class="schedule-station">[配信サービス]</div>
+            <div class="schedule-time">毎週X曜日 XX:XX〜</div>
+          </div>
+        </div>
+        <!-- 最新話 -->
+        <div class="side-block">
+          <p class="side-label">Latest Episode</p>
+          <div class="ep-thumb">[PLACEHOLDER: 最新話サムネイル]</div>
+          <div class="ep-num">第XX話</div>
+          <div class="ep-title">「[エピソードタイトル]」</div>
+          <p class="ep-desc">[PLACEHOLDER: あらすじ 50〜100字]</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PICKUP -->
+  <section class="pickup">
+    <div class="pickup-inner">
+      <p class="pickup-label">Pickup</p>
+      <div class="pickup-grid">
+        <div class="pickup-card">
+          <div class="pickup-visual">PU</div>
+          <div>
+            <div class="pickup-title">[PLACEHOLDER: ピックアップタイトル]</div>
+            <p class="pickup-desc">[説明文 30字以内]</p>
+          </div>
+        </div>
+        <div class="pickup-card">
+          <div class="pickup-visual">PU</div>
+          <div>
+            <div class="pickup-title">[PLACEHOLDER: ピックアップタイトル]</div>
+            <p class="pickup-desc">[説明文 30字以内]</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SNS / CTA -->
+  <section class="sns-cta">
+    <p>公式SNSをフォローして最新情報をチェック</p>
+    <div class="sns-links">
+      <div class="sns-btn">X</div>
+      <div class="sns-btn">IG</div>
+      <div class="sns-btn">YT</div>
+      <div class="sns-btn">DC</div>
+      <div class="sns-btn">LINE</div>
+    </div>
+    <a class="contact-email" href="mailto:contact@example.com">[PLACEHOLDER: contact@example.com]</a>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <ul class="footer-nav">
+        <li><a href="#">ニュース</a></li>
+        <li><a href="#">放送情報</a></li>
+        <li><a href="#">STORY</a></li>
+        <li><a href="#">キャラクター</a></li>
+        <li><a href="#">スタッフ</a></li>
+        <li><a href="#">グッズ</a></li>
+        <li><a href="#">利用規約</a></li>
+        <li><a href="#">PP</a></li>
+      </ul>
+      <p class="footer-copy">© 2026 [会社名] All Rights Reserved</p>
+    </div>
+  </footer>
+
+</body>
+</html>

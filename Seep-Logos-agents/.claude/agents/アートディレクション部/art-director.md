@@ -99,6 +99,7 @@ YYYY-MM-DD HH:MM | アート管理者 | タスク概要（20字以内）
 - **worldbuilding-creator** から: 世界観資料を受け取り、ビジュアルに変換
 - **planning-developer** から: 企画のビジュアル方針への翻訳を求められた場合
 
+
 ---
 
 ## トーン & スタイル

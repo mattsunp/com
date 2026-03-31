@@ -1,0 +1,61 @@
+task_id: "web-pattern-m-20260331"
+task_type: "web-design"
+status: completed
+started_at: "2026-03-30 23:10"
+last_updated: "2026-03-30 23:30"
+
+instruction: |
+  Webサイトテンプレート Pattern M の企画・命名・仕様書（md）・HTML実装。
+  既存パターン A〜L（Teaser / World-first / Editorial / Bento-reveal /
+  Scrollytelling / Cinematic LP / Character Encyclopedia / Dark Immersive /
+  Japanese Texture / Hub-and-Spoke / Pastel Pop / News Feed）にない
+  新コンセプトを設計する。
+  成果物：
+    - web/templates/pattern-M_[name].md
+    - web/templates/pattern-M_[name].html
+  品質基準：
+    - 既存パターンのmdフォーマットに準拠
+    - HTML は素材ゼロでも動作する完全な実装
+    - 既存パターンと明確に差別化されたコンセプト
+
+staffing:
+  recruited:
+    - "Web管理者（web-director）: コンセプト立案・仕様書作成・HTML実装の主担当"
+    - "アート管理者（art-director）: ビジュアル方向性・没入感担保・品質レビュー"
+  not_recruited:
+    - "全体戦略家（chief-producer）: テンプレート制作はビジネス戦略判断を要しない"
+    - "企画人（planning-developer）: IPコンセプト立案ではなくWeb制作物"
+    - "ゲームディレクター（game-director）: ゲームシステム設計ではない"
+    - "世界観構築人（worldbuilding-creator）: 作品世界観の深掘りは不要（テンプレートはIP非依存）"
+    - "シナリオ書き（scenario-writer）: 物語設計ではない"
+    - "営業人（sales-director）: 外部提案書ではない"
+
+rounds:
+  round1:
+    status: completed
+    started_at: "2026-03-30 23:10"
+    completed_at: "2026-03-30 23:12"
+    agents_completed: ["Web管理者"]
+    output: "コンセプト確定：Pattern M 'Timeline Immersion型'（タイムライン没入型）"
+    description: "Web管理者がPattern Mのコンセプト3案を提示・1案に絞る"
+  round2:
+    status: completed
+    started_at: "2026-03-30 23:13"
+    completed_at: "2026-03-30 23:15"
+    agents_completed: ["アート管理者"]
+    output: "ビジュアル方針確定：ディープネイビー×アンバーゴールド、グロウライン、セリフ体、慣性横スクロール"
+    description: "アート管理者がビジュアル方向性・没入感を評価・批評し、確定コンセプトを承認"
+  round3:
+    status: completed
+    started_at: "2026-03-30 23:15"
+    completed_at: "2026-03-30 23:30"
+    agents_completed: ["Web管理者"]
+    output: "web/templates/pattern-M_timeline-immersion.md / web/templates/pattern-M_timeline-immersion.html"
+    description: "Web管理者が仕様書（md）とHTML実装を完成・保存"
+
+dynamic_staffing:
+  triggered: false
+  added_agents: []
+  reason: ""
+
+notes: "パターン名は Round1 で Web管理者が決定。ファイルパスは確定後に output へ記入する。"

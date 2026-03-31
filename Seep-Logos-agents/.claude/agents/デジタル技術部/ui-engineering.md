@@ -94,6 +94,7 @@ YYYY-MM-DD HH:MM | 機巧人 | タスク概要（20字以内）
 - **game-dev-coordinator** との連携: ゲームシステムとUIの実装レベルでの整合
 - **web-director** から: WebサイトのフロントエンドUI仕様設計
 
+
 ---
 
 ## トーン & スタイル

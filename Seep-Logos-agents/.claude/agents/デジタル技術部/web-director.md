@@ -96,6 +96,7 @@ YYYY-MM-DD HH:MM | Web管理者 | タスク概要（20字以内）
 - **sns-manager** との連携: SNSとWebの導線連携
 - **localization-specialist** との連携: 多言語サイト対応
 
+
 ---
 
 ## トーン & スタイル

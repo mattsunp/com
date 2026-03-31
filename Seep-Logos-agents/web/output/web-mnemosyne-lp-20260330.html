@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MNEMOSYNE — 忘れることは、罪か。</title>
+  <meta name="description" content="記憶整理士・桐島セツの物語。他者の記憶を消す仕事を10年続けた彼女が、自分の消された記憶に気づいたとき——。短編ADV『MNEMOSYNE』近日公開。">
+
+  <!-- OGP -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="MNEMOSYNE — 忘れることは、罪か。">
+  <meta property="og:description" content="記憶整理士・桐島セツの物語。他者の記憶を消す仕事を10年続けた彼女が、自分の消された記憶に気づいたとき——。短編ADV『MNEMOSYNE』近日公開。">
+  <meta property="og:image" content="https://seep-logos.com/ogp/mnemosyne.png">
+  <meta property="og:url" content="https://seep-logos.com/mnemosyne/">
+  <meta property="og:site_name" content="Seep Logos">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MNEMOSYNE — 忘れることは、罪か。">
+  <meta name="twitter:description" content="記憶整理士・桐島セツの物語。短編ADV『MNEMOSYNE』近日公開。">
+  <meta name="twitter:image" content="https://seep-logos.com/ogp/mnemosyne.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=JetBrains+Mono:wght@400&family=Noto+Serif+JP:wght@100;200;300&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── RESET & ROOT ── */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-main: #0A0A0F;
+      --bg-card: #0F0F14;
+      --text-main: #F0EDE8;
+      --text-sub: #8B8680;
+      --accent-blue: #4A7C9E;
+      --accent-amber: #C8A882;
+      --font-jp: 'Noto Serif JP', serif;
+      --font-en: 'Cormorant Garamond', Georgia, serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-jp);
+      background: var(--bg-main);
+      color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE (CSS + SVG, no image files) ── */
+    .noise-overlay {
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+      background-size: 256px 256px;
+      opacity: 0.05;
+    }
+
+    /* scanline pseudo-overlay */
+    .scanline-overlay {
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background-image: repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent 3px,
+        rgba(240, 237, 232, 0.012) 3px,
+        rgba(240, 237, 232, 0.012) 4px
+      );
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      background: rgba(10, 10, 15, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(240, 237, 232, 0.04);
+    }
+
+    @media (min-width: 768px) {
+      nav { padding: 0 48px; }
+    }
+
+    .nav-logo {
+      font-family: var(--font-en);
+      font-weight: 300;
+      font-size: 13px;
+      letter-spacing: 0.35em;
+      color: var(--text-sub);
+      text-transform: uppercase;
+    }
+
+    .nav-wishlist {
+      font-family: var(--font-en);
+      font-weight: 300;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      color: var(--accent-amber);
+      border: 1px solid rgba(200, 168, 130, 0.35);
+      padding: 7px 16px;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: border-color 0.4s ease, color 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .nav-wishlist:hover {
+      border-color: rgba(200, 168, 130, 0.8);
+      box-shadow: 0 0 8px rgba(200, 168, 130, 0.15);
+    }
+
+    /* ── HERO ── */
+    #section-hero {
+      position: relative;
+      height: 100vh;
+      min-height: 600px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 24px;
+      overflow: hidden;
+    }
+
+    #section-hero .noise-overlay,
+    #section-hero .scanline-overlay {
+      position: absolute;
+      inset: 0;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    .hero-copy {
+      font-family: var(--font-jp);
+      font-weight: 200;
+      font-size: clamp(32px, 9vw, 88px);
+      color: var(--text-main);
+      letter-spacing: 0.1em;
+      line-height: 1.4;
+    }
+
+    .hero-title {
+      font-family: var(--font-en);
+      font-weight: 300;
+      font-size: clamp(14px, 3vw, 22px);
+      color: var(--text-sub);
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      margin-top: 20px;
+    }
+
+    .hero-sub {
+      font-family: var(--font-jp);
+      font-weight: 100;
+      font-size: clamp(13px, 2vw, 16px);
+      color: var(--text-sub);
+      letter-spacing: 0.07em;
+      line-height: 2.0;
+      max-width: 480px;
+      margin-top: 48px;
+    }
+
+    .hero-cta {
+      display: inline-block;
+      margin-top: 56px;
+      font-family: var(--font-en);
+      font-weight: 300;
+      font-size: clamp(11px, 1.8vw, 13px);
+      letter-spacing: 0.18em;
+      color: var(--accent-amber);
+      border: 1px solid rgba(200, 168, 130, 0.5);
+      padding: 14px 40px;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: border-color 0.4s ease, box-shadow 0.4s ease, color 0.4s ease;
+    }
+
+    .hero-cta:hover {
+      border-color: rgba(200, 168, 130, 0.9);
+      box-shadow: 0 0 16px rgba(200, 168, 130, 0.12);
+      color: rgba(200, 168, 130, 1.0);
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 48px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      animation: breathe 2.4s ease-in-out infinite;
+    }
+
+    .scroll-hint-line {
+      width: 1px;
+      height: 40px;
+      background: var(--text-sub);
+      opacity: 0.4;
+    }
+
+    .scroll-hint-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--text-sub);
+      letter-spacing: 0.3em;
+      text-transform: lowercase;
+      opacity: 0.4;
+    }
+
+    @keyframes breathe {
+      0%, 100% { opacity: 0.35; }
+      50% { opacity: 0.85; }
+    }
+
+    /* ── SECTIONS COMMON ── */
+    main > section {
+      position: relative;
+      border-top: 1px solid rgba(240, 237, 232, 0.04);
+    }
+
+    .section-inner {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 80px 24px;
+    }
+
+    @media (min-width: 768px) {
+      .section-inner {
+        padding: 100px 40px;
+      }
+    }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.5em;
+      color: var(--text-sub);
+      text-transform: uppercase;
+      margin-bottom: 48px;
+      opacity: 0.5;
+    }
+
+    /* ── SCROLL FADE ANIMATION ── */
+    .fade-in {
+      opacity: 0;
+      transition: opacity 0.9s ease-out;
+    }
+
+    .fade-in.is-visible {
+      opacity: 1;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fade-in {
+        opacity: 1;
+        transition: none;
+      }
+    }
+
+    /* ── WORLD SECTION ── */
+    #section-world {
+      background: var(--bg-main);
+    }
+
+    .world-layout {
+      display: block;
+    }
+
+    @media (min-width: 768px) {
+      .world-layout {
+        display: grid;
+        grid-template-columns: 70% 30%;
+        gap: 48px;
+        align-items: start;
+      }
+    }
+
+    .world-text-block h2 {
+      font-family: var(--font-jp);
+      font-weight: 200;
+      font-size: clamp(18px, 3vw, 28px);
+      color: var(--text-main);
+      letter-spacing: 0.08em;
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+
+    .world-body {
+      font-family: var(--font-jp);
+      font-weight: 200;
+      font-size: 15px;
+      color: var(--text-sub);
+      line-height: 2.1;
+      letter-spacing: 0.06em;
+    }
+
+    .world-body p + p {
+      margin-top: 24px;
+    }
+
+    .world-fragments {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    @media (min-width: 768px) {
+      .world-fragments {
+        margin-top: 0;
+        padding-top: 4px;
+      }
+    }
+
+    .fragment {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent-blue);
+      letter-spacing: 0.05em;
+      line-height: 1.6;
+      opacity: 0.75;
+    }
+
+    .fragment-label {
+      font-size: 9px;
+      opacity: 0.4;
+      display: block;
+      margin-bottom: 4px;
+      letter-spacing: 0.1em;
+    }
+
+    .fragment-value {
+      display: block;
+    }
+
+    .fragment-sep {
+      width: 100%;
+      height: 1px;
+      background: rgba(74, 124, 158, 0.18);
+      margin-top: 12px;
+    }
+
+    /* ── STORY SECTION ── */
+    #section-story {
+      background: var(--bg-main);
+    }
+
+    .story-inner {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 80px 24px;
+      position: relative;
+    }
+
+    @media (min-width: 768px) {
+      .story-inner {
+        padding: 100px 40px;
+      }
+    }
+
+    /* shadow silhouette */
+    .story-shadow {
+      position: absolute;
+      right: -40px;
+      top: 0;
+      bottom: 0;
+      width: 220px;
+      background: radial-gradient(ellipse at center, rgba(15, 15, 20, 0.55) 0%, transparent 70%);
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    @media (min-width: 768px) {
+      .story-shadow {
+        right: -80px;
+        width: 300px;
+      }
+    }
+
+    .story-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .story-name-block {
+      margin-top: 60px;
+      margin-bottom: 48px;
+    }
+
+    .story-name {
+      font-family: var(--font-jp);
+      font-weight: 100;
+      font-size: clamp(24px, 5vw, 36px);
+      color: var(--text-main);
+      letter-spacing: 0.12em;
+      line-height: 1.5;
+    }
+
+    .story-profile {
+      font-family: var(--font-jp);
+      font-weight: 200;
+      font-size: 15px;
+      color: var(--text-sub);
+      line-height: 2.1;
+      letter-spacing: 0.06em;
+      margin-top: 40px;
+    }
+
+    .story-profile p + p {
+      margin-top: 20px;
+    }
+
+    .story-question {
+      margin-top: 48px;
+      font-family: var(--font-jp);
+      font-weight: 100;
+      font-size: clamp(13px, 2vw, 16px);
+      color: rgba(240, 237, 232, 0.45);
+      line-height: 2.2;
+      letter-spacing: 0.08em;
+      border-left: 1px solid rgba(200, 168, 130, 0.3);
+      padding-left: 20px;
+    }
+
+    /* ── SYSTEM SECTION ── */
+    #section-system {
+      background: var(--bg-main);
+    }
+
+    .system-intro {
+      font-family: var(--font-jp);
+      font-weight: 200;
+      font-size: 15px;
+      color: var(--text-sub);
+      line-height: 2.0;
+      letter-spacing: 0.06em;
+      margin-bottom: 48px;
+    }
+
+    .system-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    @media (min-width: 768px) {
+      .system-cards {
+        flex-direction: row;
+        gap: 24px;
+      }
+    }
+
+    .system-card {
+      flex: 1;
+      background: var(--bg-card);
+      border: 1px solid rgba(139, 134, 128, 0.32);
+      padding: 32px 28px;
+      border-radius: 0;
+    }
+
+    .system-card-title {
+      font-family: var(--font-jp);
+      font-weight: 200;
+      font-size: 20px;
+      color: var(--text-main);
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+    }
+
+    .system-card-line {
+      width: 28px;
+      height: 1px;
+      background: var(--accent-blue);
+      margin-bottom: 16px;
+    }
+
+    .system-card-desc {
+      font-family: var(--font-jp);
+      font-weight: 100;
+      font-size: 14px;
+      color: var(--text-sub);
+      line-height: 2.0;
+      letter-spacing: 0.05em;
+    }
+
+    .system-footer {
+      margin-top: 48px;
+    }
+
+    .system-footer-copy {
+      font-family: var(--font-jp);
+      font-weight: 200;
+      font-size: 15px;
+      color: var(--text-main);
+      letter-spacing: 0.08em;
+      line-height: 1.9;
+    }
+
+    .system-playtime {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-sub);
+      letter-spacing: 0.1em;
+      margin-top: 16px;
+      opacity: 0.6;
+    }
+
+    /* ── CTA SECTION ── */
+    #section-cta {
+      background: var(--bg-main);
+    }
+
+    .cta-inner {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 100px 24px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (min-width: 768px) {
+      .cta-inner {
+        padding: 120px 40px 100px;
+      }
+    }
+
+    .cta-headline {
+      font-family: var(--font-jp);
+      font-weight: 200;
+      font-size: clamp(22px, 4vw, 34px);
+      color: var(--text-main);
+      letter-spacing: 0.1em;
+      line-height: 1.6;
+    }
+
+    .cta-title-reprise {
+      font-family: var(--font-en);
+      font-weight: 300;
+      font-size: clamp(13px, 2vw, 16px);
+      color: var(--text-sub);
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      margin-top: 20px;
+      display: block;
+    }
+
+    .cta-primary {
+      display: inline-block;
+      margin-top: 48px;
+      font-family: var(--font-en);
+      font-weight: 300;
+      font-size: clamp(11px, 1.8vw, 13px);
+      letter-spacing: 0.18em;
+      color: var(--accent-amber);
+      border: 1px solid rgba(200, 168, 130, 0.5);
+      padding: 16px 48px;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: border-color 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .cta-primary:hover {
+      border-color: rgba(200, 168, 130, 0.9);
+      box-shadow: 0 0 20px rgba(200, 168, 130, 0.12);
+    }
+
+    /* Email form */
+    .cta-email-block {
+      margin-top: 40px;
+    }
+
+    .cta-email-label {
+      font-family: var(--font-jp);
+      font-weight: 200;
+      font-size: 13px;
+      color: var(--text-sub);
+      letter-spacing: 0.08em;
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    .cta-email-form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    @media (min-width: 480px) {
+      .cta-email-form {
+        flex-direction: row;
+        justify-content: center;
+      }
+    }
+
+    .cta-email-input {
+      background: transparent;
+      border: 1px solid rgba(139, 134, 128, 0.35);
+      color: var(--text-main);
+      font-family: var(--font-jp);
+      font-weight: 200;
+      font-size: 14px;
+      padding: 12px 20px;
+      letter-spacing: 0.05em;
+      outline: none;
+      width: 100%;
+      max-width: 280px;
+      transition: border-color 0.3s ease;
+    }
+
+    .cta-email-input::placeholder {
+      color: rgba(139, 134, 128, 0.45);
+      font-size: 12px;
+    }
+
+    .cta-email-input:focus {
+      border-color: rgba(139, 134, 128, 0.7);
+    }
+
+    .cta-email-submit {
+      background: transparent;
+      border: 1px solid rgba(200, 168, 130, 0.4);
+      color: var(--accent-amber);
+      font-family: var(--font-en);
+      font-weight: 300;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      padding: 13px 28px;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: border-color 0.4s ease, box-shadow 0.4s ease;
+      white-space: nowrap;
+    }
+
+    .cta-email-submit:hover {
+      border-color: rgba(200, 168, 130, 0.8);
+      box-shadow: 0 0 12px rgba(200, 168, 130, 0.1);
+    }
+
+    .cta-release-note {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-sub);
+      letter-spacing: 0.2em;
+      margin-top: 48px;
+      opacity: 0.45;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 28px 24px;
+      border-top: 1px solid rgba(240, 237, 232, 0.04);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-sub);
+      letter-spacing: 0.1em;
+      flex-wrap: wrap;
+      gap: 8px;
+      opacity: 0.5;
+    }
+
+    @media (min-width: 768px) {
+      footer { padding: 28px 48px; }
+    }
+
+    footer a {
+      color: var(--text-sub);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: var(--text-main);
+    }
+
+    /* ── FORM SUCCESS MESSAGE ── */
+    .form-success {
+      display: none;
+      font-family: var(--font-jp);
+      font-weight: 200;
+      font-size: 13px;
+      color: rgba(200, 168, 130, 0.7);
+      letter-spacing: 0.08em;
+      margin-top: 12px;
+    }
+
+    .form-success.is-visible {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav aria-label="サイトナビゲーション">
+    <span class="nav-logo" aria-label="サイト名">MNEMOSYNE</span>
+    <a href="#" class="nav-wishlist" aria-label="Steamウィッシュリストに追加">Wishlist</a>
+  </nav>
+
+  <main>
+
+    <!-- HERO -->
+    <section id="section-hero" aria-label="ヒーロー">
+      <div class="noise-overlay" aria-hidden="true"></div>
+      <div class="scanline-overlay" aria-hidden="true"></div>
+      <div class="hero-content">
+        <h1 class="hero-copy">忘れることは、罪か。</h1>
+        <p class="hero-title" aria-label="タイトル">MNEMOSYNE</p>
+        <p class="hero-sub">他者の記憶を消す仕事を10年続けた——<br>そして自分の消された記憶に気づいた</p>
+        <a href="#" class="hero-cta" aria-label="Steamウィッシュリストに追加">ウィッシュリストに追加</a>
+      </div>
+      <div class="scroll-hint" aria-hidden="true">
+        <span class="scroll-hint-line"></span>
+        <span class="scroll-hint-label">scroll</span>
+      </div>
+    </section>
+
+    <!-- WORLD -->
+    <section id="section-world" aria-label="世界観">
+      <div class="section-inner">
+        <p class="section-label" aria-hidden="true">World</p>
+        <div class="world-layout">
+          <div class="world-text-block fade-in">
+            <h2>西暦2040年代。<br>記憶は、整理できる時代になった。</h2>
+            <div class="world-body">
+              <p>MET（Memory Externalization Technology）の普及により、人は不要な記憶を外部デバイスに移し、管理できるようになった。苦しい過去も、消したい感情も——整理すれば、生きていける。</p>
+              <p>その技術が社会に定着した今、「記憶整理士」という職業が生まれた。依頼人の精神的負荷を軽減するため、他者の記憶を専門的に消去する者たちだ。</p>
+              <p>だが、整理された記憶はどこへ行くのか。誰も問わない。問う必要がない、と思われていた。</p>
+            </div>
+          </div>
+          <aside class="world-fragments fade-in" aria-label="システム断片情報">
+            <div class="fragment">
+              <span class="fragment-label">SYSTEM</span>
+              <span class="fragment-value">MET v4.2</span>
+              <div class="fragment-sep"></div>
+            </div>
+            <div class="fragment">
+              <span class="fragment-label">STATUS</span>
+              <span class="fragment-value">ACCESS: BLOCKED</span>
+              <div class="fragment-sep"></div>
+            </div>
+            <div class="fragment">
+              <span class="fragment-label">ALERT</span>
+              <span class="fragment-value">MEMORY LEAK<br>DETECTED</span>
+              <div class="fragment-sep"></div>
+            </div>
+            <div class="fragment">
+              <span class="fragment-label">TECH</span>
+              <span class="fragment-value">外在化記憶<br>SECTOR: DELETED</span>
+              <div class="fragment-sep"></div>
+            </div>
+            <div class="fragment">
+              <span class="fragment-label">LOG</span>
+              <span class="fragment-value">アクセス封鎖<br>timestamp: —</span>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- STORY -->
+    <section id="section-story" aria-label="ストーリー・主人公紹介">
+      <div class="story-inner">
+        <div class="story-shadow" aria-hidden="true"></div>
+        <div class="story-content">
+          <p class="section-label" aria-hidden="true">Story</p>
+          <div class="story-name-block fade-in">
+            <h2 class="story-name">桐島　セツ</h2>
+          </div>
+          <div class="story-profile fade-in">
+            <p>34歳。記憶整理士。10年間、他者の不要な記憶を消し続けてきた。</p>
+            <p>彼女は優秀だった。感情を挟まず、的確に処理し、依頼人に感謝され、また新しい依頼を受ける。それを繰り返すうちに、自分の中に空白が生まれていることに気づかなかった。</p>
+            <p>ある日、担当した案件のデータに、自分の名前があった。</p>
+          </div>
+          <blockquote class="story-question fade-in">
+            <p>誰が、何を、消したのか。<br>——そして、なぜ彼女は覚えていないのか。</p>
+          </blockquote>
+        </div>
+      </div>
+    </section>
+
+    <!-- SYSTEM -->
+    <section id="section-system" aria-label="ゲームシステム">
+      <div class="section-inner">
+        <p class="section-label" aria-hidden="true">System</p>
+        <div class="system-intro fade-in">
+          <p>あなたは記憶の断片を受け取る。<br>整理するか、保持するか、封鎖するか。</p>
+        </div>
+        <div class="system-cards">
+          <article class="system-card fade-in" aria-label="整理">
+            <h3 class="system-card-title">整理</h3>
+            <div class="system-card-line" aria-hidden="true"></div>
+            <p class="system-card-desc">記憶を分類し、保存フォルダに格納する。</p>
+          </article>
+          <article class="system-card fade-in" aria-label="保持">
+            <h3 class="system-card-title">保持</h3>
+            <div class="system-card-line" aria-hidden="true"></div>
+            <p class="system-card-desc">封鎖せず、そのまま残す。</p>
+          </article>
+          <article class="system-card fade-in" aria-label="封鎖">
+            <h3 class="system-card-title">封鎖</h3>
+            <div class="system-card-line" aria-hidden="true"></div>
+            <p class="system-card-desc">アクセスを永久に遮断する。</p>
+          </article>
+        </div>
+        <div class="system-footer fade-in">
+          <p class="system-footer-copy">正解はない。しかし、選択には重さがある。</p>
+          <p class="system-playtime">プレイ時間：90〜120分</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section id="section-cta" aria-label="ウィッシュリスト登録">
+      <div class="cta-inner">
+        <div class="noise-overlay" aria-hidden="true"></div>
+        <div class="scanline-overlay" aria-hidden="true"></div>
+        <div style="position: relative; z-index: 1;">
+          <h2 class="cta-headline fade-in">記憶は、あなたが選ぶ。</h2>
+          <span class="cta-title-reprise fade-in">MNEMOSYNE</span>
+          <div class="fade-in">
+            <a href="#" class="cta-primary" aria-label="Steamウィッシュリストに追加">Steamウィッシュリストに追加</a>
+          </div>
+          <div class="cta-email-block fade-in">
+            <label class="cta-email-label" for="email-input">リリース通知をメールで受け取る</label>
+            <form class="cta-email-form" id="notify-form" novalidate aria-label="メール通知登録フォーム">
+              <input
+                type="email"
+                id="email-input"
+                name="email"
+                class="cta-email-input"
+                placeholder="your@email.com"
+                autocomplete="email"
+                aria-label="メールアドレス"
+                required
+              >
+              <button type="submit" class="cta-email-submit" aria-label="通知を受け取る">通知を受け取る</button>
+            </form>
+            <p class="form-success" id="form-success" role="status" aria-live="polite">
+              登録を受け付けました。リリース時にお知らせします。
+            </p>
+          </div>
+          <p class="cta-release-note" aria-label="発売時期">近日公開</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>MNEMOSYNE</span>
+    <span>
+      &copy; 2026 Seep Logos
+      &nbsp;｜&nbsp;
+      <a href="#">プライバシーポリシー</a>
+      &nbsp;｜&nbsp;
+      <a href="#">利用規約</a>
+    </span>
+  </footer>
+
+  <script>
+    // ── SCROLL FADE IN ──
+    (function () {
+      var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReduced) return;
+
+      var targets = document.querySelectorAll('.fade-in');
+      if (!('IntersectionObserver' in window)) {
+        targets.forEach(function (el) { el.classList.add('is-visible'); });
+        return;
+      }
+
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.12,
+        rootMargin: '0px 0px -40px 0px'
+      });
+
+      targets.forEach(function (el) { observer.observe(el); });
+    })();
+
+    // ── EMAIL FORM (front-end only) ──
+    (function () {
+      var form = document.getElementById('notify-form');
+      var success = document.getElementById('form-success');
+      if (!form) return;
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var emailInput = document.getElementById('email-input');
+        var email = emailInput ? emailInput.value.trim() : '';
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          emailInput && emailInput.focus();
+          return;
+        }
+        console.log('[MNEMOSYNE] Email registration (front-end only):', email);
+        form.style.display = 'none';
+        success && success.classList.add('is-visible');
+      });
+    })();
+  </script>
+
+</body>
+</html>

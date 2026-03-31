@@ -1,0 +1,55 @@
+task_id: "game-{title}-v{N}-{YYYYMMDD}"
+status: pending  # pending / in_progress / completed
+version: {N}
+created_at: "YYYY-MM-DD HH:MM"
+created_by: producer
+
+instruction:
+  title: ""
+  concept_seed: >
+    企画の核となるアイデア・問い・世界観の種を記述する。
+    1〜3文程度。
+  theme: ""
+  target_audience: >
+    想定するプレイヤー層・感情的訴求の方向性を記述する。
+  constraints:
+    - ""
+
+orchestration:
+  lead: chief-producer
+  rounds: 3  # 標準は3ラウンド。変更する場合は理由を notes に記載
+  staffing:
+    required:
+      - chief-producer
+      - planning-developer
+      - worldbuilding-creator
+      - scenario-writer
+      - game-director
+    optional: []
+    notes: >
+      game-director が不要と判断する場合は、その理由を成果物の冒頭に明示すること。
+      理由を言語化できない場合は招集する。
+
+round_config:
+  r1:
+    task: "各エージェントが初稿を独立に生成"
+    output: "seeds/plots/game-test-v{N}-r1.md"
+    gap_check: true  # Round 1完了後にギャップ診断を必ず行う
+  r2:
+    task: "全エージェントが他エージェントの初稿を相互批評"
+    output: "seeds/plots/game-test-v{N}-r2.md"
+  r3:
+    task: "批評を踏まえた改訂稿・統合"
+    output: "seeds/plots/game-test-v{N}-final.md"
+
+deliverables:
+  - "seeds/plots/game-test-v{N}-r1.md"
+  - "seeds/plots/game-test-v{N}-r2.md"
+  - "seeds/plots/game-test-v{N}-final.md"
+
+rules:
+  - スタッフィング判断を成果物の冒頭に宣言すること（招集エージェント・不足・懸念を明記）
+  - Round 1完了後にギャップ診断を行い、必要なら追加エージェントを動的招集すること
+  - 動的招集した場合は成果物に「動的スタッフィングの記録」セクションを追記すること
+  - 各エージェントの論点と決着を最終成果物に記録すること
+  - 稼働ログを minutes/agent-activity.log に追記すること

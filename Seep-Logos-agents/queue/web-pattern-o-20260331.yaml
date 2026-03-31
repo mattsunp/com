@@ -1,0 +1,50 @@
+task_id: "web-pattern-o-20260331"
+task_type: "web-design"
+status: completed
+started_at: "2026-03-31 00:00"
+last_updated: "2026-03-31 00:25"
+
+instruction: |
+  Webサイトテンプレート Pattern O「カードカルーセル型」の企画・設計・実装。
+  更新頻度の高いコンテンツ（ニュース・新キャラ・イベント）をカード＋カルーセルで表示。
+  運営者が「カードを追加するだけ」で反映される設計。複数カテゴリの切り替えあり。
+  Pattern L（News Feed）との差別化：回遊体験・インタラクション密度を核にする。
+
+staffing:
+  recruited:
+    - "Web管理者（web-director）: 仕様書設計・ページ構成・UX設計"
+    - "アート管理者（art-director）: ビジュアル方針・カラーパレット・スタイル定義"
+    - "ゲームUIデザイナー（game-ui-designer）: カルーセルUXフロー・カテゴリ切り替えインタラクション設計"
+    - "ゲームUIエンジニア（ui-engineering）: HTML/CSS/JS実装"
+  not_recruited:
+    - "シナリオ書き（scenario-writer）: テキストはプレースホルダーで代替"
+    - "宣伝人（pr-communications）: 外部発信ではなくテンプレート制作のため不要"
+    - "ゲームディレクター（game-director）: ゲーム面白さ判断ではなくWebテンプレートのため対象外"
+    - "全体戦略家（chief-producer）: ビジネス戦略ではなくテンプレート実装のため対象外"
+
+rounds:
+  round1:
+    status: completed
+    started_at: "2026-03-31 00:00"
+    completed_at: "2026-03-31 00:10"
+    agents_completed: ["Web管理者", "アート管理者", "ゲームUIデザイナー"]
+    output: "web/templates/pattern-O_card-carousel.md"
+  round2:
+    status: completed
+    started_at: "2026-03-31 00:10"
+    completed_at: "2026-03-31 00:25"
+    agents_completed: ["ゲームUIエンジニア"]
+    output: "web/templates/pattern-O_card-carousel.html"
+  round3:
+    status: completed
+    started_at: "2026-03-31 00:25"
+    completed_at: "2026-03-31 00:25"
+    agents_completed: ["指揮者"]
+    output: ""
+
+dynamic_staffing:
+  triggered: false
+  added_agents: []
+  reason: ""
+
+notes: "Pattern N が欠番のため Pattern O は M の次番として正当。L（News Feed）との差別化が設計の主軸。"

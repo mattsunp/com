@@ -1,0 +1,51 @@
+task_id: "web-pattern-p-20260331"
+task_type: "web-design"
+status: completed
+started_at: "2026-03-31 11:45"
+last_updated: "2026-03-31 11:50"
+
+instruction: |
+  WebサイトテンプレートPattern Pを企画・設計・実装する。
+  コンセプト：中央線交互レイアウト型チャプタースクロール。
+  画面中央の縦センターラインがスクロール連動で「描かれていく」演出。
+  左右交互に画像プレースホルダーとテキストが展開される。
+  成果物：仕様書md + HTML実装（外部素材ゼロ）
+
+staffing:
+  recruited:
+    - "Web管理者（web-director）: Pattern P仕様書設計・構成定義"
+    - "アート管理者（art-director）: センターライン演出・カラー・没入感ビジュアル方針"
+    - "ゲームUIエンジニア（ui-engineering）: HTML実装（スクロール連動演出含む）"
+  not_recruited:
+    - "ゲームUIデザイナー（game-ui-designer）: WebテンプレートでありゲームUI専門は不要。アート管理者で上位方針を代替"
+    - "意匠人（visual-designer）: ロゴ・バナー制作フェーズではない"
+
+rounds:
+  round1:
+    status: completed
+    started_at: "2026-03-31 11:45"
+    completed_at: "2026-03-31 11:50"
+    agents_completed:
+      - "Web管理者"
+      - "アート管理者"
+      - "ゲームUIエンジニア"
+    output: "web/templates/pattern-P_dual-column-chapter.md / web/templates/pattern-P_dual-column-chapter.html"
+  round2:
+    status: pending
+    started_at: ""
+    completed_at: ""
+    agents_completed: []
+    output: ""
+  round3:
+    status: pending
+    started_at: ""
+    completed_at: ""
+    agents_completed: []
+    output: ""
+
+dynamic_staffing:
+  triggered: false
+  added_agents: []
+  reason: ""
+
+notes: "Pattern NのChapter Scroll（1カラム縦積み）と差別化。2カラム交互レイアウト＋センターラインで「展覧会を歩く」没入体験を提供。"

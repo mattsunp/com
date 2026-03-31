@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pattern I_2: Japanese Texture型（ライト）</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root { --accent: #c0392b; --gold: #8a6e30; }
+
+    body {
+      font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'Georgia', serif;
+      background: #faf6f0;
+      color: #2a1e12;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px;
+      background: rgba(250,246,240,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(138,110,48,0.2);
+    }
+    .nav-logo { font-size: 16px; letter-spacing: 0.2em; color: var(--gold); }
+    .nav-links { display: flex; gap: 28px; list-style: none; align-items: center; }
+    .nav-links a { font-size: 13px; color: #8a7a6a; text-decoration: none; letter-spacing: 0.15em; }
+    .nav-reg {
+      font-size: 12px; color: var(--gold); letter-spacing: 0.2em;
+      border: 1px solid rgba(138,110,48,0.4); padding: 7px 18px;
+      background: rgba(138,110,48,0.04);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      height: 100vh; position: relative;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; gap: 32px;
+      background: url('../assets/images/background.png') center/cover no-repeat;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: rgba(0,0,0,0.48); pointer-events: none;
+    }
+    /* 和紙テクスチャオーバーレイ */
+    .hero::after {
+      content: ''; position: absolute; inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(138,110,48,0.01) 2px, rgba(138,110,48,0.01) 4px);
+      pointer-events: none;
+    }
+    .hero > * { position: relative; z-index: 1; }
+
+    /* 縦書きキャッチコピー */
+    .hero-vertical {
+      writing-mode: vertical-rl;
+      font-size: clamp(16px, 2vw, 22px);
+      color: #d8c8b0;
+      letter-spacing: 0.3em;
+      line-height: 2;
+      position: absolute; right: 80px; top: 50%; transform: translateY(-50%);
+    }
+    .logo-ph {
+      border: 1px solid rgba(138,110,48,0.35); padding: 16px 56px;
+      font-size: 24px; color: var(--gold); letter-spacing: 0.3em;
+    }
+    .hero-title {
+      font-size: clamp(28px, 5vw, 60px);
+      font-weight: normal; letter-spacing: 0.3em; color: #f0e8d8;
+    }
+    .hero-divider {
+      width: 120px; height: 1px; background: var(--gold); opacity: 0.5; margin: 0 auto;
+    }
+    .hero-tagline { font-size: 14px; color: #c0b09a; letter-spacing: 0.15em; }
+
+    /* ── SECTION COMMON ── */
+    section { border-top: 1px solid rgba(138,110,48,0.12); }
+    .section-inner { max-width: 1100px; margin: 0 auto; padding: 100px 40px; }
+    .section-label {
+      font-size: 16px; letter-spacing: 0.4em; color: var(--gold);
+      font-weight: normal; margin-bottom: 48px; opacity: 0.8;
+    }
+    .gold-line { width: 40px; height: 1px; background: var(--gold); opacity: 0.4; margin: 12px 0 40px; }
+
+    /* ── WORLD ── */
+    .world { background: #f5f0e8; }
+    .world-inner {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start;
+    }
+    .world-visual {
+      aspect-ratio: 3/4; background: #ede8e0;
+      border: 1px solid rgba(138,110,48,0.18);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; color: #c8bfb0; font-family: monospace;
+    }
+    /* 縦書きテキスト */
+    .world-text-vert {
+      writing-mode: vertical-rl;
+      font-size: 15px; line-height: 2.2; color: #6a5040;
+      height: 100%; padding: 20px 0;
+    }
+    .world-keywords { margin-top: 40px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .kw-tag {
+      border: 1px solid rgba(138,110,48,0.3); padding: 5px 14px;
+      font-size: 12px; color: rgba(110,80,30,0.65); letter-spacing: 0.1em;
+    }
+
+    /* ── CHARACTERS ── */
+    .characters { background: #faf6f0; }
+    .char-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .char-card {
+      border: 1px solid rgba(138,110,48,0.14); overflow: hidden; cursor: pointer;
+    }
+    .char-visual {
+      aspect-ratio: 2/3; background: #f0ede6;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 12px;
+    }
+    .char-silhouette { width: 70px; height: 120px; background: #d8d0c4; border-radius: 35px 35px 0 0; }
+    .char-ph-label { font-size: 9px; color: #c0b8ac; font-family: monospace; text-align: center; line-height: 1.7; }
+    .char-info { padding: 20px 24px; border-top: 1px solid rgba(138,110,48,0.1); background: #fff; }
+    .char-name { font-size: 15px; color: #2a1e12; letter-spacing: 0.2em; margin-bottom: 6px; }
+    .char-role { font-size: 11px; color: #8a7060; letter-spacing: 0.1em; }
+
+    /* ── STORY ── */
+    .story { background: #f5f0e8; }
+    .story-visual {
+      width: 100%; aspect-ratio: 16/7;
+      background: #e8e4da; border: 1px solid rgba(138,110,48,0.12);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; color: #c0b8ac; font-family: monospace; margin-bottom: 40px;
+    }
+    .story-text { max-width: 720px; }
+    .story-text h2 { font-size: 22px; color: #2a1e12; font-weight: normal; margin-bottom: 20px; letter-spacing: 0.2em; }
+    .story-text p { font-size: 15px; line-height: 2.2; color: #6a5a4a; }
+
+    /* ── NEWS / CTA ── */
+    .news-cta { background: #faf6f0; }
+    .news-list { border-top: 1px solid rgba(138,110,48,0.12); margin-bottom: 64px; }
+    .news-item {
+      display: flex; gap: 20px; align-items: center;
+      padding: 16px 0; border-bottom: 1px solid rgba(138,110,48,0.08);
+    }
+    .news-date { font-size: 12px; color: #8a7a6a; font-family: monospace; min-width: 90px; }
+    .news-title { font-size: 14px; color: #5a4a3a; }
+    .news-arrow { font-size: 11px; color: #c0b09a; margin-left: auto; }
+
+    .cta-block { text-align: center; }
+    .cta-block p { font-size: 14px; color: #6a5a4a; margin-bottom: 24px; letter-spacing: 0.1em; }
+    .contact-email {
+      display: block; font-size: 15px; color: #2a1e12; font-family: monospace;
+      border-bottom: 1px solid rgba(138,110,48,0.3); padding-bottom: 3px;
+      text-decoration: none; margin-bottom: 28px;
+    }
+    .sns-links { display: flex; gap: 12px; justify-content: center; }
+    .sns-btn {
+      width: 44px; height: 44px; border: 1px solid rgba(138,110,48,0.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; color: rgba(110,80,30,0.5); font-family: monospace; cursor: pointer;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 28px 40px; border-top: 1px solid rgba(138,110,48,0.12);
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 12px; color: #8a7a6a; letter-spacing: 0.1em;
+      flex-wrap: wrap; gap: 8px; background: #f5f0e8;
+    }
+    footer a { color: #6a5a4a; text-decoration: none; }
+
+    .wf-label {
+      position: fixed; top: 12px; left: 12px; z-index: 9999;
+      background: #faf6f0; border: 1px solid rgba(138,110,48,0.3);
+      padding: 6px 12px; font-size: 11px; font-family: monospace; color: rgba(110,80,30,0.65);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wf-label">WIREFRAME / Pattern I_2: Japanese Texture型（ライト）</div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">[タイトル]</div>
+    <ul class="nav-links">
+      <li><a href="#">世界</a></li>
+      <li><a href="#">登場人物</a></li>
+      <li><a href="#">新着情報</a></li>
+      <li><div class="nav-reg">登録する</div></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="logo-ph">[PLACEHOLDER: タイトルロゴ（筆文字推奨）]</div>
+    <h1 class="hero-title">作　品　名</h1>
+    <div class="hero-divider"></div>
+    <p class="hero-tagline">[PLACEHOLDER: キャッチコピー（横書き）]</p>
+    <!-- 縦書きキャッチ -->
+    <p class="hero-vertical">[PLACEHOLDER: 縦書きキャッチコピー<br>一文・詩的な表現]</p>
+  </section>
+
+  <!-- WORLD -->
+  <section class="world">
+    <div class="section-inner">
+      <p class="section-label">世　界</p>
+      <div class="gold-line"></div>
+      <div class="world-inner">
+        <div class="world-visual">[PLACEHOLDER: 世界観ビジュアル 水墨調・地図・風景]</div>
+        <div>
+          <p class="world-text-vert">[PLACEHOLDER: 世界観テキスト縦書き 200〜300字。和的世界観の舞台・時代・雰囲気を説明する。断片的・詩的でも機能する。]</p>
+          <div class="world-keywords">
+            <span class="kw-tag">[キーワード1]</span>
+            <span class="kw-tag">[キーワード2]</span>
+            <span class="kw-tag">[キーワード3]</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHARACTERS -->
+  <section class="characters">
+    <div class="section-inner">
+      <p class="section-label">登　場　人　物</p>
+      <div class="gold-line"></div>
+      <div class="char-grid">
+        <div class="char-card">
+          <div class="char-visual">
+            <div class="char-silhouette"></div>
+            <div class="char-ph-label">[PLACEHOLDER:<br>キャラ立ち絵（和装）]</div>
+          </div>
+          <div class="char-info">
+            <div class="char-name">[名　前]</div>
+            <div class="char-role">[肩書き・役割]</div>
+          </div>
+        </div>
+        <div class="char-card">
+          <div class="char-visual">
+            <div class="char-silhouette"></div>
+            <div class="char-ph-label">[PLACEHOLDER:<br>キャラ立ち絵（和装）]</div>
+          </div>
+          <div class="char-info">
+            <div class="char-name">[名　前]</div>
+            <div class="char-role">[肩書き・役割]</div>
+          </div>
+        </div>
+        <div class="char-card">
+          <div class="char-visual">
+            <div class="char-silhouette"></div>
+            <div class="char-ph-label">[PLACEHOLDER:<br>キャラ立ち絵（和装）]</div>
+          </div>
+          <div class="char-info">
+            <div class="char-name">[名　前]</div>
+            <div class="char-role">[肩書き・役割]</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STORY -->
+  <section class="story">
+    <div class="section-inner">
+      <p class="section-label">物　語</p>
+      <div class="gold-line"></div>
+      <div class="story-visual">[PLACEHOLDER: キーシーンビジュアル フルワイド]</div>
+      <div class="story-text">
+        <h2>[PLACEHOLDER: 物語タイトル]</h2>
+        <p>[PLACEHOLDER: あらすじテキスト 200〜300字。和的な文体・語り口で記述する。]</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWS / CTA -->
+  <section class="news-cta">
+    <div class="section-inner">
+      <p class="section-label">新　着　情　報</p>
+      <div class="gold-line"></div>
+      <div class="news-list">
+        <div class="news-item">
+          <span class="news-date">2026.XX.XX</span>
+          <span class="news-title">記事タイトルが入ります</span>
+          <span class="news-arrow">→</span>
+        </div>
+        <div class="news-item">
+          <span class="news-date">2026.XX.XX</span>
+          <span class="news-title">記事タイトルが入ります</span>
+          <span class="news-arrow">→</span>
+        </div>
+      </div>
+      <div class="cta-block">
+        <p>続報を受け取る</p>
+        <a class="contact-email" href="mailto:contact@example.com">[PLACEHOLDER: contact@example.com]</a>
+        <div class="sns-links">
+          <div class="sns-btn">X</div>
+          <div class="sns-btn">IG</div>
+          <div class="sns-btn">YT</div>
+          <div class="sns-btn">DC</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>[タイトル]</span>
+    <span>© 2026 [会社名] &nbsp;｜&nbsp; <a href="#">利用規約</a> &nbsp;｜&nbsp; <a href="#">プライバシーポリシー</a></span>
+  </footer>
+
+</body>
+</html>

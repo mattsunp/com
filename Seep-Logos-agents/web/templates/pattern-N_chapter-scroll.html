@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pattern N — Chapter Scroll | Seep Logos</title>
+  <style>
+    /* ─────────────────────────────────────────
+       リセット・ベース
+    ───────────────────────────────────────── */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --color-bg-0:     #0d0d0d;
+      --color-bg-1:     #111111;
+      --color-bg-2:     #161616;
+      --color-bg-3:     #1a1a1a;
+      --color-bg-4:     #1e1e1e;
+      --color-bg-5:     #242424;
+      --color-text:     #e8e3da;
+      --color-text-dim: #7a7570;
+      --color-accent:   #c8b87a;
+      --color-dot-done: #c8b87a;
+      --color-dot-idle: transparent;
+      --font-serif:     Georgia, "游明朝", "Noto Serif JP", "Times New Roman", serif;
+      --font-sans:      "Helvetica Neue", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+      --font-mono:      "Courier New", Courier, monospace;
+      --max-text:       660px;
+      --side-pad:       clamp(1.5rem, 5vw, 4rem);
+      --transition-std: 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      background-color: var(--color-bg-0);
+      color: var(--color-text);
+      font-family: var(--font-serif);
+      line-height: 2;
+      overflow-x: hidden;
+    }
+
+    ::selection {
+      background: var(--color-accent);
+      color: #0d0d0d;
+    }
+
+    /* ─────────────────────────────────────────
+       チャプター NAV（右端固定）
+    ───────────────────────────────────────── */
+    .chapter-nav {
+      position: fixed;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      z-index: 100;
+      padding: 0.5rem 0;
+    }
+
+    .chapter-nav__dot {
+      position: relative;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1.5px solid var(--color-accent);
+      background: var(--color-dot-idle);
+      cursor: pointer;
+      transition: background var(--transition-std), transform 0.3s ease, box-shadow 0.3s ease;
+      outline: none;
+    }
+
+    .chapter-nav__dot:hover,
+    .chapter-nav__dot:focus {
+      transform: scale(1.4);
+    }
+
+    .chapter-nav__dot.is-done {
+      background: var(--color-dot-done);
+    }
+
+    .chapter-nav__dot.is-active {
+      background: var(--color-accent);
+      box-shadow: 0 0 8px 2px rgba(200, 184, 122, 0.5);
+      animation: dot-pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes dot-pulse {
+      0%, 100% { box-shadow: 0 0 6px 2px rgba(200, 184, 122, 0.4); }
+      50%       { box-shadow: 0 0 14px 4px rgba(200, 184, 122, 0.7); }
+    }
+
+    .chapter-nav__tooltip {
+      position: absolute;
+      right: calc(100% + 0.75rem);
+      top: 50%;
+      transform: translateY(-50%);
+      white-space: nowrap;
+      font-family: var(--font-sans);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      color: var(--color-accent);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .chapter-nav__dot:hover .chapter-nav__tooltip,
+    .chapter-nav__dot:focus .chapter-nav__tooltip {
+      opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      .chapter-nav { display: none; }
+    }
+
+    /* ─────────────────────────────────────────
+       プログレスバー（最上部）
+    ───────────────────────────────────────── */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--color-accent) 0%, rgba(200,184,122,0.4) 100%);
+      z-index: 200;
+      transition: width 0.1s linear;
+    }
+
+    /* ─────────────────────────────────────────
+       共通セクション構造
+    ───────────────────────────────────────── */
+    .section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: clamp(4rem, 10vh, 8rem) var(--side-pad);
+      transition: background-color 1s ease;
+    }
+
+    .section__inner {
+      max-width: var(--max-text);
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* フェードイン共通 */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(1.5rem);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .fade-in.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .fade-in--delay1 { transition-delay: 0.2s; }
+    .fade-in--delay2 { transition-delay: 0.4s; }
+    .fade-in--delay3 { transition-delay: 0.6s; }
+    .fade-in--delay4 { transition-delay: 0.8s; }
+
+    /* ─────────────────────────────────────────
+       PROLOGUE
+    ───────────────────────────────────────── */
+    #prologue {
+      background-color: var(--color-bg-0);
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #prologue::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 40%, rgba(200,184,122,0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .prologue__label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--color-text-dim);
+      margin-bottom: 2rem;
+    }
+
+    .prologue__title {
+      font-family: var(--font-serif);
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      line-height: 1.2;
+      color: var(--color-text);
+      margin-bottom: 1.5rem;
+    }
+
+    .prologue__rule {
+      width: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+      margin: 2rem auto;
+      transition: width 1s ease 0.6s;
+    }
+
+    .prologue__rule.is-visible {
+      width: 120px;
+    }
+
+    .prologue__opening {
+      font-family: var(--font-serif);
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: var(--color-text);
+      line-height: 2.2;
+      font-style: italic;
+      max-width: 520px;
+      margin: 0 auto 3rem;
+    }
+
+    .prologue__scroll-cue {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-sans);
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: var(--color-text-dim);
+      animation: cue-float 2.5s ease-in-out infinite;
+    }
+
+    .prologue__scroll-cue::after {
+      content: "";
+      display: block;
+      width: 1px;
+      height: 2.5rem;
+      background: linear-gradient(to bottom, var(--color-text-dim), transparent);
+    }
+
+    @keyframes cue-float {
+      0%, 100% { transform: translateY(0); opacity: 0.6; }
+      50%       { transform: translateY(6px); opacity: 1; }
+    }
+
+    /* ─────────────────────────────────────────
+       CHAPTER 共通
+    ───────────────────────────────────────── */
+    .chapter {
+      position: relative;
+    }
+
+    .chapter__number {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--color-accent);
+      margin-bottom: 0.75rem;
+    }
+
+    .chapter__rule {
+      width: 2.5rem;
+      height: 1px;
+      background: var(--color-accent);
+      margin-bottom: 1.5rem;
+      transform-origin: left;
+      transform: scaleX(0);
+      transition: transform 0.8s ease;
+    }
+
+    .chapter__rule.is-visible {
+      transform: scaleX(1);
+    }
+
+    .chapter__title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+      font-weight: 400;
+      line-height: 1.4;
+      color: var(--color-text);
+      margin-bottom: 2.5rem;
+      letter-spacing: 0.02em;
+    }
+
+    .chapter__body {
+      font-family: var(--font-serif);
+      font-size: clamp(0.95rem, 1.5vw, 1.0625rem);
+      line-height: 2.1;
+      color: var(--color-text);
+      margin-bottom: 3rem;
+    }
+
+    .chapter__body p + p {
+      margin-top: 1.5em;
+    }
+
+    .chapter__quote {
+      margin: 3rem 0;
+      padding: 0 clamp(1.5rem, 5vw, 3.5rem);
+      border-left: 2px solid var(--color-accent);
+      font-family: var(--font-serif);
+      font-size: clamp(1.15rem, 2.5vw, 1.5rem);
+      font-style: italic;
+      line-height: 1.8;
+      color: var(--color-text);
+      position: relative;
+    }
+
+    .chapter__quote::before {
+      content: "\201C";
+      position: absolute;
+      top: -0.5rem;
+      left: 0.75rem;
+      font-size: 3rem;
+      color: var(--color-accent);
+      opacity: 0.4;
+      line-height: 1;
+      font-style: normal;
+    }
+
+    /* ─────────────────────────────────────────
+       EPILOGUE / CTA
+    ───────────────────────────────────────── */
+    #epilogue {
+      text-align: center;
+    }
+
+    .epilogue__label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--color-text-dim);
+      margin-bottom: 2rem;
+    }
+
+    .epilogue__closing {
+      font-family: var(--font-serif);
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      font-style: italic;
+      line-height: 2.2;
+      color: var(--color-text);
+      max-width: 540px;
+      margin: 0 auto 3.5rem;
+    }
+
+    .epilogue__divider {
+      width: 80px;
+      height: 1px;
+      background: var(--color-accent);
+      margin: 2.5rem auto;
+      opacity: 0.5;
+    }
+
+    .cta-form {
+      display: flex;
+      gap: 0.75rem;
+      max-width: 440px;
+      margin: 0 auto 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .cta-form__input {
+      flex: 1 1 240px;
+      padding: 0.75rem 1.25rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(200,184,122,0.3);
+      border-radius: 2px;
+      color: var(--color-text);
+      font-family: var(--font-sans);
+      font-size: 0.875rem;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .cta-form__input::placeholder {
+      color: var(--color-text-dim);
+    }
+
+    .cta-form__input:focus {
+      border-color: var(--color-accent);
+    }
+
+    .cta-form__button {
+      padding: 0.75rem 1.75rem;
+      background: var(--color-accent);
+      border: none;
+      border-radius: 2px;
+      color: #0d0d0d;
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      transition: opacity 0.3s ease, transform 0.2s ease;
+    }
+
+    .cta-form__button:hover {
+      opacity: 0.85;
+      transform: translateY(-1px);
+    }
+
+    .cta-link {
+      display: inline-block;
+      margin-top: 0.75rem;
+      padding: 0.7rem 2rem;
+      border: 1px solid rgba(200,184,122,0.4);
+      border-radius: 2px;
+      color: var(--color-accent);
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-decoration: none;
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+
+    .cta-link:hover {
+      background: rgba(200,184,122,0.08);
+      border-color: var(--color-accent);
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+
+    .social-links a {
+      font-family: var(--font-sans);
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: var(--color-text-dim);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.3s ease;
+    }
+
+    .social-links a:hover {
+      color: var(--color-accent);
+    }
+
+    /* ─────────────────────────────────────────
+       FOOTER
+    ───────────────────────────────────────── */
+    .site-footer {
+      padding: 2rem var(--side-pad);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      background-color: #0a0a0a;
+    }
+
+    .site-footer__logo {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      color: var(--color-text-dim);
+      letter-spacing: 0.1em;
+    }
+
+    .site-footer__links {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .site-footer__links a {
+      font-family: var(--font-sans);
+      font-size: 0.7rem;
+      color: var(--color-text-dim);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color 0.3s ease;
+    }
+
+    .site-footer__links a:hover {
+      color: var(--color-text);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- プログレスバー -->
+  <div class="progress-bar" id="progressBar" role="progressbar" aria-hidden="true"></div>
+
+  <!-- チャプター NAV（右端固定ドット） -->
+  <nav class="chapter-nav" aria-label="チャプターナビゲーション" id="chapterNav">
+    <!-- JS で生成 -->
+  </nav>
+
+  <!-- ─── PROLOGUE ─── -->
+  <section class="section" id="prologue" data-chapter="PROLOGUE">
+    <div class="section__inner">
+      <p class="prologue__label fade-in">Seep Logos Creative Studio</p>
+      <h1 class="prologue__title fade-in fade-in--delay1">
+        世界は、言葉から<br>始まる。
+      </h1>
+      <div class="prologue__rule fade-in fade-in--delay2"></div>
+      <p class="prologue__opening fade-in fade-in--delay3">
+        ——あの夜、すべての記録が焼かれた。<br>
+        残ったのは、一冊の手帳と、<br>
+        誰も読んだことのない物語だけだった。
+      </p>
+      <div class="prologue__scroll-cue fade-in fade-in--delay4" aria-hidden="true">
+        続きを読む
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CHAPTER I ─── -->
+  <section class="section" id="chapter-1" data-chapter="CHAPTER I" style="background-color: var(--color-bg-1);">
+    <div class="section__inner">
+      <p class="chapter__number fade-in">Chapter I</p>
+      <div class="chapter__rule fade-in fade-in--delay1"></div>
+      <h2 class="chapter__title fade-in fade-in--delay1">滅びの前夜</h2>
+      <div class="chapter__body fade-in fade-in--delay2">
+        <p>
+          帝国暦四百十二年。大陸の中心に位置する王都カーネリアは、その名の通り血のような夕陽に染まっていた。石畳の街路には、かつて商人たちの笑い声が溢れていた。しかし今、広場を歩くのは武装した兵士と、何かに急かされるように俯く市民たちだけだった。
+        </p>
+        <p>
+          王宮の最上階、司書長ミレイアは古文書の山を前に独りでいた。彼女の役職は名目上、書庫の管理だ。だが真の使命は別にある——この国に伝わる「禁忌の記録」を、いかなる手段を使っても後世へ伝えること。
+        </p>
+      </div>
+      <blockquote class="chapter__quote fade-in fade-in--delay3">
+        書かれなかった歴史は、なかったことにされる。<br>
+        だから私は書き続ける。誰も読まなくても。
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- ─── CHAPTER II ─── -->
+  <section class="section" id="chapter-2" data-chapter="CHAPTER II" style="background-color: var(--color-bg-2);">
+    <div class="section__inner">
+      <p class="chapter__number fade-in">Chapter II</p>
+      <div class="chapter__rule fade-in fade-in--delay1"></div>
+      <h2 class="chapter__title fade-in fade-in--delay1">消された名前</h2>
+      <div class="chapter__body fade-in fade-in--delay2">
+        <p>
+          ミレイアが司書長に就任したのは十九歳のときだった。先代の司書長——彼女の師——は、ある晩突然姿を消した。残されたのは小さな鍵と、「全部を残せ」という走り書きだけだった。
+        </p>
+        <p>
+          それから八年。彼女は王宮の地下書庫に第三の収蔵室を作った。公式目録には存在しない、鍵のかかった空間。そこには帝国の建国から現在にいたるまでの「消された記録」が、羊皮紙と銅板と石版に刻まれて眠っている。
+        </p>
+        <p>
+          問題は、王がその存在に気づき始めたことだった。
+        </p>
+      </div>
+      <blockquote class="chapter__quote fade-in fade-in--delay3">
+        権力は記録を恐れる。それは過去が未来を<br>
+        縛るからではない——記録が、嘘を照らすからだ。
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- ─── CHAPTER III ─── -->
+  <section class="section" id="chapter-3" data-chapter="CHAPTER III" style="background-color: var(--color-bg-3);">
+    <div class="section__inner">
+      <p class="chapter__number fade-in">Chapter III</p>
+      <div class="chapter__rule fade-in fade-in--delay1"></div>
+      <h2 class="chapter__title fade-in fade-in--delay1">選択の夜</h2>
+      <div class="chapter__body fade-in fade-in--delay2">
+        <p>
+          「司書長、今夜は書庫に近づかないように」と若い衛兵がミレイアに耳打ちした。その目に宿っていたのは命令ではなく、恐れだった。彼もまた、何かを知っているのだ。
+        </p>
+        <p>
+          深夜、松明の灯りが消えた廊下をミレイアは一人歩いた。地下への石段を降り始めたとき、背後で足音がした。振り返ると、見慣れない黒い外套の人物が立っていた。手には一冊の古い本。それは——五十年前に「処分された」はずの禁書だった。
+        </p>
+      </div>
+      <blockquote class="chapter__quote fade-in fade-in--delay3">
+        記録は保存のためだけにあるのではない。<br>
+        それはいつか、誰かの手に届くために存在する。
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- ─── CHAPTER IV ─── -->
+  <section class="section" id="chapter-4" data-chapter="CHAPTER IV" style="background-color: var(--color-bg-4);">
+    <div class="section__inner">
+      <p class="chapter__number fade-in">Chapter IV</p>
+      <div class="chapter__rule fade-in fade-in--delay1"></div>
+      <h2 class="chapter__title fade-in fade-in--delay1">外套の男</h2>
+      <div class="chapter__body fade-in fade-in--delay2">
+        <p>
+          男は名乗らなかった。ただ、「あなたが集めているものを、もっと遠くへ運ぶ方法がある」と言った。声は低く、どこか遠い場所の訛りが混じっていた。
+        </p>
+        <p>
+          ミレイアは黙って男の顔を見た。彼の目には疲労と、それよりも深い場所にある確信があった。同じ顔を、彼女は知っている。師が消えた夜、走り書きを残したとき、きっとこんな顔をしていたのだろう——そう思った。
+        </p>
+        <p>
+          「いつ？」とミレイアは訊いた。答えは短かった。「今夜」。
+        </p>
+      </div>
+      <blockquote class="chapter__quote fade-in fade-in--delay3">
+        信じることと、信じて行動することの間には、<br>
+        深い川が流れている。
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- ─── EPILOGUE / CTA ─── -->
+  <section class="section" id="epilogue" data-chapter="EPILOGUE" style="background-color: var(--color-bg-5);">
+    <div class="section__inner" style="text-align: center;">
+      <p class="epilogue__label fade-in">Epilogue</p>
+      <p class="epilogue__closing fade-in fade-in--delay1">
+        この物語の続きは、まだ書かれていない。<br>
+        ——いや、正確には、まだ誰にも届いていない。
+      </p>
+      <div class="epilogue__divider fade-in fade-in--delay2"></div>
+
+      <form class="cta-form fade-in fade-in--delay2" onsubmit="handleSubmit(event)">
+        <input
+          class="cta-form__input"
+          type="email"
+          placeholder="メールアドレスを入力"
+          aria-label="メールアドレス"
+          required
+        >
+        <button class="cta-form__button" type="submit">続報を受け取る</button>
+      </form>
+
+      <div class="fade-in fade-in--delay3">
+        <a href="#" class="cta-link">公式サイト・詳細を見る</a>
+      </div>
+
+      <div class="social-links fade-in fade-in--delay4">
+        <a href="#" aria-label="X（Twitter）">X</a>
+        <a href="#" aria-label="Instagram">Instagram</a>
+        <a href="#" aria-label="Discord">Discord</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer class="site-footer">
+    <div class="site-footer__logo">
+      [TITLE] &nbsp;·&nbsp; &copy; <span id="footerYear"></span> Seep Logos
+    </div>
+    <nav class="site-footer__links" aria-label="フッターナビゲーション">
+      <a href="#">利用規約</a>
+      <a href="#">プライバシーポリシー</a>
+      <a href="#">お問合せ</a>
+    </nav>
+  </footer>
+
+  <script>
+    (() => {
+      'use strict';
+
+      /* ── フッター年号 ── */
+      document.getElementById('footerYear').textContent = new Date().getFullYear();
+
+      /* ── チャプターデータ収集 ── */
+      const sections = Array.from(document.querySelectorAll('[data-chapter]'));
+
+      /* ── NAV ドット生成 ── */
+      const nav = document.getElementById('chapterNav');
+      sections.forEach((sec, i) => {
+        const label = sec.dataset.chapter;
+        const dot   = document.createElement('button');
+        dot.className          = 'chapter-nav__dot';
+        dot.setAttribute('aria-label', label + ' へ移動');
+        dot.setAttribute('data-index', i);
+
+        const tip = document.createElement('span');
+        tip.className   = 'chapter-nav__tooltip';
+        tip.textContent = label;
+        dot.appendChild(tip);
+
+        dot.addEventListener('click', () => {
+          sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+        nav.appendChild(dot);
+      });
+
+      const dots = Array.from(nav.querySelectorAll('.chapter-nav__dot'));
+
+      /* ── IntersectionObserver: フェードイン ── */
+      const fadeEls = document.querySelectorAll('.fade-in');
+      const fadeObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            /* 区切り線の専用クラス */
+            if (entry.target.classList.contains('prologue__rule')) {
+              entry.target.classList.add('is-visible');
+            }
+            if (entry.target.classList.contains('chapter__rule')) {
+              entry.target.classList.add('is-visible');
+            }
+            fadeObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+
+      fadeEls.forEach(el => fadeObserver.observe(el));
+
+      /* ── IntersectionObserver: アクティブチャプター追跡 ── */
+      let activeIndex = 0;
+
+      const sectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const idx = sections.indexOf(entry.target);
+            if (idx !== -1) {
+              activeIndex = idx;
+              updateDots(idx);
+            }
+          }
+        });
+      }, { threshold: 0.4 });
+
+      sections.forEach(sec => sectionObserver.observe(sec));
+
+      function updateDots(activeIdx) {
+        dots.forEach((dot, i) => {
+          dot.classList.remove('is-active', 'is-done');
+          if (i < activeIdx)  dot.classList.add('is-done');
+          if (i === activeIdx) dot.classList.add('is-active');
+        });
+      }
+
+      /* ── プログレスバー ── */
+      const progressBar = document.getElementById('progressBar');
+
+      function updateProgress() {
+        const scrollTop  = window.scrollY || document.documentElement.scrollTop;
+        const docHeight  = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        progressBar.style.width = pct.toFixed(1) + '%';
+      }
+
+      window.addEventListener('scroll', updateProgress, { passive: true });
+      updateProgress();
+
+      /* ── キーボードナビゲーション（PageDown/Space → 次章、PageUp → 前章） ── */
+      window.addEventListener('keydown', (e) => {
+        if (e.code === 'PageDown' || (e.code === 'Space' && !e.shiftKey)) {
+          const next = sections[activeIndex + 1];
+          if (next) {
+            e.preventDefault();
+            next.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+        if (e.code === 'PageUp' || (e.code === 'Space' && e.shiftKey)) {
+          const prev = sections[activeIndex - 1];
+          if (prev) {
+            e.preventDefault();
+            prev.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+      });
+
+      /* ── CTA フォーム送信（デモ） ── */
+      window.handleSubmit = function(e) {
+        e.preventDefault();
+        const btn = e.target.querySelector('.cta-form__button');
+        btn.textContent = '登録しました';
+        btn.disabled    = true;
+        btn.style.opacity = '0.6';
+      };
+
+    })();
+  </script>
+</body>
+</html>

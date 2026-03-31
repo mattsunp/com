@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pattern K: Pastel Pop型</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --main: #6c3fd5;
+      --accent: #ff6b9d;
+      --bg: #1a1030;
+    }
+
+    body {
+      font-family: -apple-system, 'Hiragino Sans', 'Helvetica Neue', sans-serif;
+      background: var(--bg);
+      color: #e8e0f8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 32px;
+      background: rgba(26,16,48,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(108,63,213,0.2);
+    }
+    .nav-logo { font-size: 14px; letter-spacing: 0.15em; color: #c8b0f8; font-weight: 700; }
+    .nav-links { display: flex; gap: 24px; list-style: none; align-items: center; }
+    .nav-links a { font-size: 12px; color: #8878b8; text-decoration: none; letter-spacing: 0.08em; }
+    .nav-cta {
+      padding: 8px 22px; border-radius: 24px; background: var(--accent); color: #fff;
+      font-size: 12px; letter-spacing: 0.05em; border: none; cursor: pointer; font-weight: 700;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh; padding-top: 56px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; gap: 24px;
+      position: relative;
+      background: url('../assets/images/background.png') center/cover no-repeat;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: rgba(26,16,48,0.6); pointer-events: none;
+    }
+    /* パーティクル風装飾 */
+    .hero::after {
+      content: '✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧';
+      position: absolute; top: 15%; left: 0; right: 0;
+      text-align: center; font-size: 18px; color: rgba(255,107,157,0.15);
+      letter-spacing: 3em; pointer-events: none;
+    }
+    .hero > * { position: relative; z-index: 1; }
+
+    .char-group {
+      width: 100%; max-width: 700px;
+      aspect-ratio: 16/9; background: rgba(108,63,213,0.1);
+      border: 2px dashed rgba(108,63,213,0.2); border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; color: rgba(108,63,213,0.3); font-family: monospace; text-align: center; line-height: 1.8;
+    }
+    .logo-ph {
+      border: 2px dashed rgba(255,107,157,0.3); padding: 12px 48px; border-radius: 12px;
+      font-size: 14px; color: rgba(255,107,157,0.4); font-family: monospace; letter-spacing: 2px;
+    }
+    .hero-title {
+      font-size: clamp(26px, 5vw, 60px);
+      font-weight: 800; letter-spacing: 0.05em; color: #fff;
+    }
+    .hero-tagline { font-size: 14px; color: #9888c8; max-width: 440px; line-height: 1.8; }
+    .hero-cta {
+      padding: 16px 48px; border-radius: 32px; background: var(--accent); color: #fff;
+      font-size: 15px; font-weight: 700; letter-spacing: 0.05em; border: none; cursor: pointer;
+      box-shadow: 0 8px 24px rgba(255,107,157,0.25);
+    }
+
+    /* ── SECTION COMMON ── */
+    .section-inner { max-width: 1100px; margin: 0 auto; padding: 80px 32px; }
+    .section-label {
+      font-size: 20px; font-weight: 800; color: #c8b0f8;
+      letter-spacing: 0.05em; margin-bottom: 40px; text-align: center;
+    }
+
+    /* ── CHARACTERS ── */
+    .characters { background: #160c2e; border-top: 1px solid rgba(108,63,213,0.15); }
+    .char-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .char-card {
+      border-radius: 16px; overflow: hidden; cursor: pointer; border: 1px solid rgba(108,63,213,0.15);
+    }
+    .char-visual {
+      aspect-ratio: 2/3;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 10px;
+    }
+    /* 各カードごとに異なる背景色 */
+    .char-card:nth-child(1) .char-visual { background: #2a1040; }
+    .char-card:nth-child(2) .char-visual { background: #0e2040; }
+    .char-card:nth-child(3) .char-visual { background: #2a1028; }
+    .char-card:nth-child(4) .char-visual { background: #102430; }
+    .char-silhouette { width: 60px; height: 100px; background: rgba(255,255,255,0.06); border-radius: 30px 30px 0 0; }
+    .char-ph-label { font-size: 9px; color: rgba(255,255,255,0.15); font-family: monospace; text-align: center; line-height: 1.7; }
+    .char-info { padding: 14px 16px; background: rgba(0,0,0,0.3); }
+    .char-name { font-size: 13px; color: #c8b0f8; font-weight: 700; margin-bottom: 3px; }
+    .char-role { font-size: 10px; color: #6858a8; }
+    .char-more { text-align: center; margin-top: 24px; }
+    .btn-more {
+      padding: 10px 32px; border-radius: 24px; border: 2px solid rgba(108,63,213,0.4);
+      color: #9888c8; font-size: 13px; background: none; cursor: pointer; letter-spacing: 0.05em;
+    }
+
+    /* ── STORY ── */
+    .story { background: #1a1030; border-top: 1px solid rgba(108,63,213,0.15); }
+    .story-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; max-width: 1100px; margin: 0 auto; padding: 80px 32px; }
+    .story-visual {
+      aspect-ratio: 4/3; border-radius: 16px; background: #160c2e;
+      border: 2px dashed rgba(108,63,213,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; color: rgba(108,63,213,0.2); font-family: monospace;
+    }
+    .story-text h2 { font-size: 22px; font-weight: 800; color: #c8b0f8; margin-bottom: 16px; }
+    .story-text p { font-size: 14px; line-height: 2; color: #7868a8; }
+
+    /* ── GAMEPLAY ── */
+    .gameplay { background: #160c2e; border-top: 1px solid rgba(108,63,213,0.15); }
+    .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .feature-card {
+      border-radius: 16px; padding: 28px; border: 1px solid rgba(108,63,213,0.15);
+      background: rgba(108,63,213,0.05);
+    }
+    .feature-num { font-size: 32px; font-weight: 800; color: rgba(255,107,157,0.3); margin-bottom: 8px; }
+    .feature-title { font-size: 15px; font-weight: 700; color: #c8b0f8; margin-bottom: 8px; }
+    .feature-text { font-size: 13px; color: #6858a8; line-height: 1.8; }
+
+    /* ── NEWS / CTA ── */
+    .news-cta { background: #1a1030; border-top: 1px solid rgba(108,63,213,0.15); }
+    .news-list { border-top: 1px solid rgba(108,63,213,0.1); margin-bottom: 48px; }
+    .news-item { display: flex; gap: 16px; align-items: center; padding: 14px 0; border-bottom: 1px solid rgba(108,63,213,0.08); }
+    .news-date { font-size: 11px; color: #4838a8; font-family: monospace; min-width: 90px; }
+    .news-title { font-size: 13px; color: #8878c8; }
+
+    .cta-block { text-align: center; }
+    .cta-block p { font-size: 15px; font-weight: 700; color: #c8b0f8; margin-bottom: 20px; }
+    .contact-email {
+      display: block; font-size: 14px; color: #8878c8; font-family: monospace;
+      border-bottom: 1px solid rgba(108,63,213,0.3); padding-bottom: 3px;
+      text-decoration: none; margin-bottom: 24px;
+    }
+    .sns-links { display: flex; gap: 10px; justify-content: center; }
+    .sns-btn {
+      width: 44px; height: 44px; border-radius: 12px; border: 1px solid rgba(108,63,213,0.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; color: #6858a8; font-family: monospace; cursor: pointer;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 24px 32px; border-top: 1px solid rgba(108,63,213,0.1);
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 11px; color: #4838a8; flex-wrap: wrap; gap: 8px;
+    }
+    footer a { color: #5848b8; text-decoration: none; }
+
+    .wf-label {
+      position: fixed; top: 12px; left: 12px; z-index: 9999;
+      background: #160c2e; border: 1px solid rgba(108,63,213,0.3);
+      padding: 6px 12px; font-size: 11px; font-family: monospace; color: #9888c8;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wf-label">WIREFRAME / Pattern K: Pastel Pop型（ダーク）</div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">Game Title ✦</div>
+    <ul class="nav-links">
+      <li><a href="#">キャラクター</a></li>
+      <li><a href="#">ストーリー</a></li>
+      <li><a href="#">あそびかた</a></li>
+      <li><a href="#">ニュース</a></li>
+      <li><button class="nav-cta">はじめる ▶</button></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="char-group">[PLACEHOLDER: キャラクター集合ビジュアル（元気・笑顔）]</div>
+    <div class="logo-ph">[PLACEHOLDER: タイトルロゴ（丸みあり推奨）]</div>
+    <h1 class="hero-title">Game Title！</h1>
+    <p class="hero-tagline">[PLACEHOLDER: キャッチコピー 1〜2行。例：「みんなと冒険しよう！」]</p>
+    <button class="hero-cta">今すぐはじめる ▶</button>
+  </section>
+
+  <!-- CHARACTERS -->
+  <section class="characters" id="characters">
+    <div class="section-inner">
+      <p class="section-label">✦ キャラクター ✦</p>
+      <div class="char-grid">
+        <div class="char-card">
+          <div class="char-visual">
+            <div class="char-silhouette"></div>
+            <div class="char-ph-label">[PLACEHOLDER:<br>キャラ①立ち絵]</div>
+          </div>
+          <div class="char-info">
+            <div class="char-name">[キャラ名]</div>
+            <div class="char-role">[一言紹介]</div>
+          </div>
+        </div>
+        <div class="char-card">
+          <div class="char-visual">
+            <div class="char-silhouette"></div>
+            <div class="char-ph-label">[PLACEHOLDER:<br>キャラ②立ち絵]</div>
+          </div>
+          <div class="char-info">
+            <div class="char-name">[キャラ名]</div>
+            <div class="char-role">[一言紹介]</div>
+          </div>
+        </div>
+        <div class="char-card">
+          <div class="char-visual">
+            <div class="char-silhouette"></div>
+            <div class="char-ph-label">[PLACEHOLDER:<br>キャラ③立ち絵]</div>
+          </div>
+          <div class="char-info">
+            <div class="char-name">[キャラ名]</div>
+            <div class="char-role">[一言紹介]</div>
+          </div>
+        </div>
+        <div class="char-card">
+          <div class="char-visual">
+            <div class="char-silhouette"></div>
+            <div class="char-ph-label">[PLACEHOLDER:<br>キャラ④立ち絵]</div>
+          </div>
+          <div class="char-info">
+            <div class="char-name">[キャラ名]</div>
+            <div class="char-role">[一言紹介]</div>
+          </div>
+        </div>
+      </div>
+      <div class="char-more"><button class="btn-more">もっと見る ▼</button></div>
+    </div>
+  </section>
+
+  <!-- STORY -->
+  <section class="story" id="story">
+    <div class="story-inner">
+      <div class="story-visual">[PLACEHOLDER: ストーリービジュアル（冒険感・仲間感）]</div>
+      <div class="story-text">
+        <p class="section-label" style="text-align:left;">ストーリー</p>
+        <h2>[PLACEHOLDER: ストーリータイトル]</h2>
+        <p>[PLACEHOLDER: あらすじ 200字以内。やさしい語り口。例：「不思議な力を手に入れた少女が仲間たちと旅に出る物語。」]</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- GAMEPLAY -->
+  <section class="gameplay" id="gameplay">
+    <div class="section-inner">
+      <p class="section-label">あそびかた</p>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-num">01</div>
+          <div class="feature-title">[特徴①見出し]</div>
+          <p class="feature-text">[PLACEHOLDER: 説明テキスト 50字]</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-num">02</div>
+          <div class="feature-title">[特徴②見出し]</div>
+          <p class="feature-text">[PLACEHOLDER: 説明テキスト 50字]</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-num">03</div>
+          <div class="feature-title">[特徴③見出し]</div>
+          <p class="feature-text">[PLACEHOLDER: 説明テキスト 50字]</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-num">04</div>
+          <div class="feature-title">[特徴④見出し]</div>
+          <p class="feature-text">[PLACEHOLDER: 説明テキスト 50字]</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWS / CTA -->
+  <section class="news-cta">
+    <div class="section-inner">
+      <p class="section-label">ニュース</p>
+      <div class="news-list">
+        <div class="news-item"><span class="news-date">2026.XX.XX</span><span class="news-title">記事タイトルが入ります</span></div>
+        <div class="news-item"><span class="news-date">2026.XX.XX</span><span class="news-title">記事タイトルが入ります</span></div>
+      </div>
+      <div class="cta-block">
+        <p>最新情報はこちらから！✦</p>
+        <a class="contact-email" href="mailto:contact@example.com">[PLACEHOLDER: contact@example.com]</a>
+        <div class="sns-links">
+          <div class="sns-btn">X</div>
+          <div class="sns-btn">IG</div>
+          <div class="sns-btn">YT</div>
+          <div class="sns-btn">LINE</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <ul style="display:flex; gap:16px; list-style:none;">
+      <li><a href="#">キャラクター</a></li>
+      <li><a href="#">ストーリー</a></li>
+      <li><a href="#">ニュース</a></li>
+      <li><a href="#">利用規約</a></li>
+      <li><a href="#">PP</a></li>
+    </ul>
+    <span>© 2026 [会社名] All Rights Reserved</span>
+  </footer>
+
+</body>
+</html>

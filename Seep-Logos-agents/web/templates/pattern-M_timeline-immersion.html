@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pattern M: Timeline Immersion型</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --navy-deepest: #050810;
+      --navy-deep:    #0a0e1a;
+      --navy-mid:     #0d1520;
+      --slate-mid:    #111827;
+      --slate-light:  #151e2d;
+      --gold:         #c8952a;
+      --gold-bright:  #e8b84b;
+      --gold-glow:    rgba(200,149,42,0.4);
+      --text-primary: #d4c9a8;
+      --text-sub:     #8a9bb0;
+      --text-dim:     #4a5568;
+      --nav-width:    72px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Georgia', '游明朝', 'YuMincho', 'Hiragino Mincho ProN', serif;
+      background: var(--navy-deep);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ─── SIDE NAV ─── */
+    .side-nav {
+      position: fixed;
+      left: 0; top: 0; bottom: 0;
+      width: var(--nav-width);
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 0;
+      background: rgba(5,8,16,0.88);
+      backdrop-filter: blur(16px);
+      border-right: 1px solid rgba(200,149,42,0.15);
+    }
+
+    .nav-logo {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      text-align: center;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(200,149,42,0.2);
+      width: 100%;
+      text-align: center;
+    }
+
+    .nav-era-list {
+      list-style: none;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 16px 0;
+    }
+
+    .nav-era-item a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      text-decoration: none;
+      padding: 8px 6px;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+    .nav-era-item a:hover { background: rgba(200,149,42,0.1); }
+    .nav-era-item a.active { background: rgba(200,149,42,0.15); }
+
+    .nav-era-num {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      font-family: 'Georgia', serif;
+    }
+    .nav-era-dot {
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--text-dim);
+      transition: background 0.2s, transform 0.2s;
+    }
+    .nav-era-item a.active .nav-era-dot,
+    .nav-era-item a:hover .nav-era-dot {
+      background: var(--gold);
+      transform: scale(1.5);
+    }
+
+    .nav-cta-btn {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      border: 1px solid var(--gold);
+      background: transparent;
+      color: var(--gold);
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+      transition: background 0.2s, color 0.2s;
+      font-family: inherit;
+    }
+    .nav-cta-btn:hover {
+      background: var(--gold);
+      color: var(--navy-deepest);
+    }
+
+    /* ─── MAIN WRAPPER ─── */
+    .main-wrapper {
+      margin-left: var(--nav-width);
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 28px;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 30% 60%, rgba(200,149,42,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse at 70% 30%, rgba(10,30,60,0.8) 0%, transparent 70%),
+        linear-gradient(160deg, var(--navy-deepest) 0%, var(--navy-deep) 60%, #0c1228 100%);
+    }
+
+    /* 星フィールド */
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        radial-gradient(1px 1px at 15% 20%, rgba(200,149,42,0.6) 0%, transparent 100%),
+        radial-gradient(1px 1px at 40% 70%, rgba(200,149,42,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 65% 35%, rgba(200,149,42,0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 80% 80%, rgba(200,149,42,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 25% 85%, rgba(200,180,120,0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 55% 10%, rgba(200,180,120,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 90% 50%, rgba(200,149,42,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 10% 55%, rgba(200,149,42,0.4) 0%, transparent 100%),
+        radial-gradient(2px 2px at 70% 60%, rgba(232,184,75,0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 35% 45%, rgba(200,149,42,0.3) 0%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .hero-label {
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      color: var(--gold);
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.2s;
+    }
+
+    .hero-title {
+      font-size: clamp(28px, 5vw, 56px);
+      letter-spacing: 0.12em;
+      color: var(--text-primary);
+      line-height: 1.3;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.4s;
+    }
+    .hero-title span { color: var(--gold-bright); }
+
+    .hero-tagline {
+      font-size: clamp(13px, 1.5vw, 16px);
+      color: var(--text-sub);
+      letter-spacing: 0.08em;
+      line-height: 1.8;
+      max-width: 500px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.65s;
+    }
+
+    .hero-scroll-hint {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 1s;
+    }
+    .hero-scroll-hint span {
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      color: var(--text-dim);
+    }
+    .scroll-arrow {
+      display: flex; gap: 4px; align-items: center;
+    }
+    .scroll-arrow i {
+      display: block;
+      width: 8px; height: 1px;
+      background: var(--gold);
+      animation: arrowPulse 1.6s ease infinite;
+    }
+    .scroll-arrow i:nth-child(2) { animation-delay: 0.15s; }
+    .scroll-arrow i:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes arrowPulse {
+      0%, 100% { opacity: 0.2; transform: translateX(0); }
+      50%       { opacity: 1;   transform: translateX(4px); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── TIMELINE STAGE ─── */
+    .timeline-stage {
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* グロウライン */
+    .glow-track {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(200,149,42,0.3) 10%,
+        var(--gold) var(--progress, 20%),
+        rgba(200,149,42,0.15) calc(var(--progress, 20%) + 5%),
+        transparent 100%
+      );
+      transform: translateY(-50%);
+      pointer-events: none;
+      z-index: 10;
+      transition: background 0.1s;
+    }
+    .glow-track::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: var(--progress, 20%);
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: var(--gold-bright);
+      box-shadow: 0 0 16px 6px var(--gold-glow), 0 0 32px 10px rgba(200,149,42,0.2);
+      transform: translate(-50%, -50%);
+      transition: left 0.1s;
+    }
+
+    .timeline-scroll {
+      display: flex;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      cursor: grab;
+    }
+    .timeline-scroll:active { cursor: grabbing; }
+    .timeline-scroll::-webkit-scrollbar { display: none; }
+
+    /* ─── ERA SECTION ─── */
+    .era {
+      min-width: 100vw;
+      min-height: 100vh;
+      padding: 80px 80px 80px 64px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 32px;
+      position: relative;
+      flex-shrink: 0;
+      transition: background 0.6s ease;
+    }
+
+    .era-01 { background: linear-gradient(135deg, #050810 0%, #080c18 100%); }
+    .era-02 { background: linear-gradient(135deg, #0a0e1a 0%, #0c1220 100%); }
+    .era-03 { background: linear-gradient(135deg, #0d1520 0%, #101825 100%); }
+    .era-04 { background: linear-gradient(135deg, #111827 0%, #131c2c 100%); }
+    .era-05 { background: linear-gradient(135deg, #151e2d 0%, #182232 100%); }
+
+    /* 各ERAの装飾背景 */
+    .era::before {
+      content: attr(data-num);
+      position: absolute;
+      right: 40px; bottom: 30px;
+      font-size: clamp(80px, 12vw, 160px);
+      font-weight: 700;
+      letter-spacing: -0.05em;
+      color: rgba(200,149,42,0.04);
+      line-height: 1;
+      pointer-events: none;
+      font-family: 'Georgia', serif;
+    }
+
+    .era-label {
+      font-size: 11px;
+      letter-spacing: 0.45em;
+      color: var(--gold);
+      text-transform: uppercase;
+      opacity: 0;
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      transform: translateY(16px);
+    }
+
+    .era-visual {
+      width: 100%;
+      max-width: 560px;
+      aspect-ratio: 16/9;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid rgba(200,149,42,0.2);
+      flex-shrink: 0;
+    }
+    .era-visual-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .era-visual-placeholder::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: inherit;
+    }
+    .era-01 .era-visual-placeholder { background: radial-gradient(ellipse at 30% 50%, #1a0f2e 0%, #050810 100%); }
+    .era-02 .era-visual-placeholder { background: radial-gradient(ellipse at 40% 50%, #0f1a2e 0%, #0a0e1a 100%); }
+    .era-03 .era-visual-placeholder { background: radial-gradient(ellipse at 50% 50%, #1a1010 0%, #0d1520 100%); }
+    .era-04 .era-visual-placeholder { background: radial-gradient(ellipse at 60% 50%, #101a20 0%, #111827 100%); }
+    .era-05 .era-visual-placeholder { background: radial-gradient(ellipse at 70% 50%, #0f1a1a 0%, #151e2d 100%); }
+
+    .visual-placeholder-label {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: rgba(200,149,42,0.3);
+      text-align: center;
+      z-index: 1;
+    }
+
+    /* ERA幾何学装飾（素材なし時の演出） */
+    .era-geo {
+      position: absolute;
+      border: 1px solid rgba(200,149,42,0.12);
+    }
+    .era-geo-1 { width: 200px; height: 200px; border-radius: 50%; top: 20%; left: 30%; transform: translate(-50%,-50%); }
+    .era-geo-2 { width: 120px; height: 120px; border-radius: 50%; top: 65%; left: 55%; transform: translate(-50%,-50%); }
+    .era-cross {
+      position: absolute;
+      width: 1px; height: 40px;
+      background: rgba(200,149,42,0.2);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .era-cross::after {
+      content: '';
+      display: block;
+      width: 40px; height: 1px;
+      background: rgba(200,149,42,0.2);
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .era-content {
+      max-width: 520px;
+      opacity: 0;
+      transition: opacity 0.6s ease 0.2s, transform 0.6s ease 0.2s;
+      transform: translateY(20px);
+    }
+
+    .era-title {
+      font-size: clamp(20px, 2.8vw, 34px);
+      letter-spacing: 0.1em;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+    .era-title span { color: var(--gold-bright); }
+
+    .era-desc {
+      font-size: clamp(12px, 1.1vw, 14px);
+      line-height: 2.0;
+      color: var(--text-sub);
+      letter-spacing: 0.04em;
+    }
+
+    /* イベントカード */
+    .era-events {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      opacity: 0;
+      transition: opacity 0.6s ease 0.4s, transform 0.6s ease 0.4s;
+      transform: translateY(20px);
+    }
+
+    .event-card {
+      border: 1px solid rgba(200,149,42,0.2);
+      border-radius: 6px;
+      padding: 12px 16px;
+      min-width: 160px;
+      max-width: 220px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.2s, transform 0.2s;
+      background: rgba(5,8,16,0.4);
+    }
+    .event-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-2px);
+    }
+    .event-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: rgba(200,149,42,0);
+      transition: background 0.2s;
+    }
+    .event-card:hover::before { background: rgba(200,149,42,0.04); }
+
+    .event-icon {
+      font-size: 18px;
+      margin-bottom: 6px;
+      display: block;
+      color: var(--gold);
+    }
+    .event-title {
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .event-detail {
+      font-size: 11px;
+      color: var(--text-dim);
+      line-height: 1.7;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, opacity 0.3s ease;
+      opacity: 0;
+    }
+    .event-card:hover .event-detail,
+    .event-card.open .event-detail {
+      max-height: 80px;
+      opacity: 1;
+    }
+
+    /* 表示トリガー */
+    .era.visible .era-label,
+    .era.visible .era-content,
+    .era.visible .era-events {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── CTA SECTION ─── */
+    .cta-section {
+      min-width: 100vw;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      text-align: center;
+      padding: 80px 64px;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg,
+        var(--navy-deepest) 0%,
+        #0a0e1a 25%,
+        #0d1520 50%,
+        #111827 75%,
+        #151e2d 100%
+      );
+    }
+
+    /* 全ERA融合グラデーション演出 */
+    .cta-section::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(200,149,42,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 50%, rgba(200,149,42,0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 20%, rgba(200,149,42,0.05) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .cta-label {
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    .cta-title {
+      font-size: clamp(24px, 4vw, 48px);
+      letter-spacing: 0.12em;
+      color: var(--text-primary);
+      line-height: 1.4;
+    }
+    .cta-title span { color: var(--gold-bright); }
+
+    .cta-tagline {
+      font-size: 14px;
+      color: var(--text-sub);
+      letter-spacing: 0.08em;
+      line-height: 1.9;
+      max-width: 400px;
+    }
+
+    .cta-email-form {
+      display: flex;
+      gap: 0;
+      border: 1px solid rgba(200,149,42,0.4);
+      border-radius: 4px;
+      overflow: hidden;
+      max-width: 400px;
+      width: 100%;
+    }
+    .cta-email-input {
+      flex: 1;
+      padding: 14px 18px;
+      background: rgba(5,8,16,0.6);
+      border: none;
+      color: var(--text-primary);
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      letter-spacing: 0.04em;
+    }
+    .cta-email-input::placeholder { color: var(--text-dim); }
+    .cta-email-btn {
+      padding: 14px 24px;
+      background: var(--gold);
+      border: none;
+      color: var(--navy-deepest);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.2s;
+    }
+    .cta-email-btn:hover { background: var(--gold-bright); }
+
+    .cta-buttons {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .cta-btn-primary {
+      padding: 14px 36px;
+      border: 1px solid var(--gold);
+      background: transparent;
+      color: var(--gold);
+      font-size: 13px;
+      letter-spacing: 0.15em;
+      cursor: pointer;
+      font-family: inherit;
+      border-radius: 2px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .cta-btn-primary:hover {
+      background: var(--gold);
+      color: var(--navy-deepest);
+    }
+    .cta-btn-secondary {
+      padding: 14px 36px;
+      border: 1px solid rgba(200,149,42,0.3);
+      background: transparent;
+      color: var(--text-sub);
+      font-size: 13px;
+      letter-spacing: 0.15em;
+      cursor: pointer;
+      font-family: inherit;
+      border-radius: 2px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .cta-btn-secondary:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .cta-sns {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    .cta-sns a {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .cta-sns a:hover { color: var(--gold); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      margin-left: var(--nav-width);
+      padding: 28px 48px;
+      border-top: 1px solid rgba(200,149,42,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--navy-deepest);
+    }
+    .footer-logo {
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+    }
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+    .footer-links a {
+      font-size: 11px;
+      color: var(--text-dim);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-copy {
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 0.06em;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      :root { --nav-width: 52px; }
+
+      .side-nav { width: 52px; }
+      .nav-logo { font-size: 8px; letter-spacing: 0.1em; }
+
+      .era { padding: 60px 28px 60px 20px; }
+      .era::before { right: 10px; bottom: 10px; font-size: 60px; }
+
+      .era-visual { max-width: 100%; }
+
+      .cta-section { padding: 60px 28px; }
+      .cta-email-form { flex-direction: column; border-radius: 4px; }
+      .cta-email-btn { padding: 12px; }
+
+      footer {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+        padding: 24px;
+      }
+      .footer-links { flex-wrap: wrap; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── SIDE NAV ─── -->
+  <nav class="side-nav">
+    <div class="nav-logo">M</div>
+    <ul class="nav-era-list">
+      <li class="nav-era-item">
+        <a href="#era-01" data-era="0" class="active">
+          <span class="nav-era-num">I</span>
+          <span class="nav-era-dot"></span>
+        </a>
+      </li>
+      <li class="nav-era-item">
+        <a href="#era-02" data-era="1">
+          <span class="nav-era-num">II</span>
+          <span class="nav-era-dot"></span>
+        </a>
+      </li>
+      <li class="nav-era-item">
+        <a href="#era-03" data-era="2">
+          <span class="nav-era-num">III</span>
+          <span class="nav-era-dot"></span>
+        </a>
+      </li>
+      <li class="nav-era-item">
+        <a href="#era-04" data-era="3">
+          <span class="nav-era-num">IV</span>
+          <span class="nav-era-dot"></span>
+        </a>
+      </li>
+      <li class="nav-era-item">
+        <a href="#era-05" data-era="4">
+          <span class="nav-era-num">V</span>
+          <span class="nav-era-dot"></span>
+        </a>
+      </li>
+      <li class="nav-era-item">
+        <a href="#cta" data-era="5">
+          <span class="nav-era-num" style="font-size:8px; letter-spacing:0.05em;">CTA</span>
+          <span class="nav-era-dot"></span>
+        </a>
+      </li>
+    </ul>
+    <button class="nav-cta-btn" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">
+      登録
+    </button>
+  </nav>
+
+  <!-- ─── MAIN WRAPPER ─── -->
+  <div class="main-wrapper">
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+      <div class="hero-label">PLACEHOLDER: SERIES TITLE</div>
+      <h1 class="hero-title">
+        <span>PLACEHOLDER:</span><br>タイトルロゴ・作品名
+      </h1>
+      <p class="hero-tagline">
+        PLACEHOLDER: キャッチコピー 1〜2行<br>
+        すべての始まりを、旅せよ。
+      </p>
+      <div class="hero-scroll-hint">
+        <span>スクロールして時代を旅する</span>
+        <div class="scroll-arrow">
+          <i></i><i></i><i></i>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIMELINE STAGE -->
+    <div class="timeline-stage" id="timeline-stage">
+
+      <!-- グロウライン -->
+      <div class="glow-track" id="glow-track" style="--progress: 0%"></div>
+
+      <!-- 横スクロールコンテナ -->
+      <div class="timeline-scroll" id="timeline-scroll">
+
+        <!-- ERA 01 -->
+        <section class="era era-01" id="era-01" data-num="I" data-era-index="0">
+          <div class="era-label">PLACEHOLDER: 時代区分 ── 第一紀元 / 創世の時代</div>
+          <div class="era-visual">
+            <div class="era-visual-placeholder">
+              <div class="era-geo era-geo-1"></div>
+              <div class="era-geo era-geo-2"></div>
+              <div class="era-cross"></div>
+              <span class="visual-placeholder-label">PLACEHOLDER<br>時代のビジュアル素材</span>
+            </div>
+          </div>
+          <div class="era-content">
+            <h2 class="era-title">PLACEHOLDER: 時代タイトル<br><span>「神々の黄昏」</span></h2>
+            <p class="era-desc">
+              PLACEHOLDER: 時代説明テキスト（100〜200字）<br>
+              世界が生まれたばかりの時代。星々が意志を持ち、大地が声で語りかけた。
+              神と人の間に境界はなく、すべてのものが同じ光のもとに在った。
+              しかし、ある一つの問いが世界を二つに裂いた。
+            </p>
+          </div>
+          <div class="era-events">
+            <div class="event-card" onclick="this.classList.toggle('open')">
+              <span class="event-icon">&#9670;</span>
+              <div class="event-title">PLACEHOLDER: イベント名①</div>
+              <div class="event-detail">PLACEHOLDER: 詳細説明（50〜100字）。重要な出来事の背景・影響を記述する。</div>
+            </div>
+            <div class="event-card" onclick="this.classList.toggle('open')">
+              <span class="event-icon">&#9632;</span>
+              <div class="event-title">PLACEHOLDER: イベント名②</div>
+              <div class="event-detail">PLACEHOLDER: 詳細説明（50〜100字）。この時代を象徴する事件や人物について記述する。</div>
+            </div>
+            <div class="event-card" onclick="this.classList.toggle('open')">
+              <span class="event-icon">&#9675;</span>
+              <div class="event-title">PLACEHOLDER: イベント名③</div>
+              <div class="event-detail">PLACEHOLDER: 詳細説明（50〜100字）。関連キャラクター名・地名を含めると世界観が深まる。</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ERA 02 -->
+        <section class="era era-02" id="era-02" data-num="II" data-era-index="1">
+          <div class="era-label">PLACEHOLDER: 時代区分 ── 第二紀元 / 建国の時代</div>
+          <div class="era-visual">
+            <div class="era-visual-placeholder">
+              <div class="era-geo era-geo-1"></div>
+              <div class="era-geo era-geo-2"></div>
+              <div class="era-cross"></div>
+              <span class="visual-placeholder-label">PLACEHOLDER<br>時代のビジュアル素材</span>
+            </div>
+          </div>
+          <div class="era-content">
+            <h2 class="era-title">PLACEHOLDER: 時代タイトル<br><span>「王国の礎」</span></h2>
+            <p class="era-desc">
+              PLACEHOLDER: 時代説明テキスト（100〜200字）<br>
+              人の手によって初めての国が築かれた時代。石と鉄と誓いで積み上げられた城壁は、
+              今なお年表の証人として残る。英雄の名が歴史に刻まれ、後の世代の夢となった。
+            </p>
+          </div>
+          <div class="era-events">
+            <div class="event-card" onclick="this.classList.toggle('open')">
+              <span class="event-icon">&#9670;</span>
+              <div class="event-title">PLACEHOLDER: イベント名①</div>
+              <div class="event-detail">PLACEHOLDER: 詳細説明（50〜100字）。この時代の建国・拡張に関わる重要事件を記述する。</div>
+            </div>
+            <div class="event-card" onclick="this.classList.toggle('open')">
+              <span class="event-icon">&#9632;</span>
+              <div class="event-title">PLACEHOLDER: イベント名②</div>
+              <div class="event-detail">PLACEHOLDER: 詳細説明（50〜100字）。英雄・王・指導者に関するエピソードを記述する。</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ERA 03 -->
+        <section class="era era-03" id="era-03" data-num="III" data-era-index="2">
+          <div class="era-label">PLACEHOLDER: 時代区分 ── 第三紀元 / 動乱の時代</div>
+          <div class="era-visual">
+            <div class="era-visual-placeholder">
+              <div class="era-geo era-geo-1"></div>
+              <div class="era-geo era-geo-2"></div>
+              <div class="era-cross"></div>
+              <span class="visual-placeholder-label">PLACEHOLDER<br>時代のビジュアル素材</span>
+            </div>
+          </div>
+          <div class="era-content">
+            <h2 class="era-title">PLACEHOLDER: 時代タイトル<br><span>「百年戦争」</span></h2>
+            <p class="era-desc">
+              PLACEHOLDER: 時代説明テキスト（100〜200字）<br>
+              栄光は長く続かなかった。外敵の侵攻と内なる裏切りが重なり、
+              世界は再び混沌へと沈んだ。それでも人々は諦めず、廃墟の中に希望の種を蒔き続けた。
+            </p>
+          </div>
+          <div class="era-events">
+            <div class="event-card" onclick="this.classList.toggle('open')">
+              <span class="event-icon">&#9670;</span>
+              <div class="event-title">PLACEHOLDER: イベント名①</div>
+              <div class="event-detail">PLACEHOLDER: 詳細説明（50〜100字）。戦争・動乱の転換点となった出来事を記述する。</div>
+            </div>
+            <div class="event-card" onclick="this.classList.toggle('open')">
+              <span class="event-icon">&#9632;</span>
+              <div class="event-title">PLACEHOLDER: イベント名②</div>
+              <div class="event-detail">PLACEHOLDER: 詳細説明（50〜100字）。裏切りや英雄の死など感情的な頂点となる場面を記述する。</div>
+            </div>
+            <div class="event-card" onclick="this.classList.toggle('open')">
+              <span class="event-icon">&#9675;</span>
+              <div class="event-title">PLACEHOLDER: イベント名③</div>
+              <div class="event-detail">PLACEHOLDER: 詳細説明（50〜100字）。この時代が次の時代へ与えた影響・伏線を記述する。</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ERA 04 -->
+        <section class="era era-04" id="era-04" data-num="IV" data-era-index="3">
+          <div class="era-label">PLACEHOLDER: 時代区分 ── 第四紀元 / 再建の時代</div>
+          <div class="era-visual">
+            <div class="era-visual-placeholder">
+              <div class="era-geo era-geo-1"></div>
+              <div class="era-geo era-geo-2"></div>
+              <div class="era-cross"></div>
+              <span class="visual-placeholder-label">PLACEHOLDER<br>時代のビジュアル素材</span>
+            </div>
+          </div>
+          <div class="era-content">
+            <h2 class="era-title">PLACEHOLDER: 時代タイトル<br><span>「新秩序の夜明け」</span></h2>
+            <p class="era-desc">
+              PLACEHOLDER: 時代説明テキスト（100〜200字）<br>
+              廃墟から新しい文明が芽吹いた。古い盟約は破られ、新しい契約が世界を繋ぎ直した。
+              科学と魔術が交差し、人々は初めて「進歩」という言葉に希望を見出した。
+            </p>
+          </div>
+          <div class="era-events">
+            <div class="event-card" onclick="this.classList.toggle('open')">
+              <span class="event-icon">&#9670;</span>
+              <div class="event-title">PLACEHOLDER: イベント名①</div>
+              <div class="event-detail">PLACEHOLDER: 詳細説明（50〜100字）。再建・復興を象徴する出来事や発明・発見を記述する。</div>
+            </div>
+            <div class="event-card" onclick="this.classList.toggle('open')">
+              <span class="event-icon">&#9632;</span>
+              <div class="event-title">PLACEHOLDER: イベント名②</div>
+              <div class="event-detail">PLACEHOLDER: 詳細説明（50〜100字）。新しい勢力や組織の台頭を記述する。</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ERA 05 -->
+        <section class="era era-05" id="era-05" data-num="V" data-era-index="4">
+          <div class="era-label">PLACEHOLDER: 時代区分 ── 第五紀元 / 現在・物語の舞台</div>
+          <div class="era-visual">
+            <div class="era-visual-placeholder">
+              <div class="era-geo era-geo-1"></div>
+              <div class="era-geo era-geo-2"></div>
+              <div class="era-cross"></div>
+              <span class="visual-placeholder-label">PLACEHOLDER<br>時代のビジュアル素材</span>
+            </div>
+          </div>
+          <div class="era-content">
+            <h2 class="era-title">PLACEHOLDER: 時代タイトル<br><span>「そして、今日。」</span></h2>
+            <p class="era-desc">
+              PLACEHOLDER: 時代説明テキスト（100〜200字）<br>
+              あなたが出会う世界は、この長い歴史の果てに在る。
+              五つの時代を旅した今、物語の扉がいよいよ開かれる。
+              主人公の名前はまだ知らない。けれど、その足跡はすでに始まっている。
+            </p>
+          </div>
+          <div class="era-events">
+            <div class="event-card" onclick="this.classList.toggle('open')">
+              <span class="event-icon">&#9670;</span>
+              <div class="event-title">PLACEHOLDER: イベント名①</div>
+              <div class="event-detail">PLACEHOLDER: 詳細説明（50〜100字）。物語開始直前の世界状況・伏線となる出来事を記述する。</div>
+            </div>
+            <div class="event-card" onclick="this.classList.toggle('open')">
+              <span class="event-icon">&#9632;</span>
+              <div class="event-title">PLACEHOLDER: イベント名②</div>
+              <div class="event-detail">PLACEHOLDER: 詳細説明（50〜100字）。主人公の登場・物語の発端となるイベントを記述する。</div>
+            </div>
+            <div class="event-card" onclick="this.classList.toggle('open')">
+              <span class="event-icon">&#9675;</span>
+              <div class="event-title">PLACEHOLDER: イベント名③</div>
+              <div class="event-detail">PLACEHOLDER: 詳細説明（50〜100字）。CTAへの橋渡しとなる「未解決の謎」を示唆する。</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="cta-section" id="cta">
+          <div class="cta-label">Journey's End — And Your Beginning</div>
+          <h2 class="cta-title">
+            PLACEHOLDER: タイトルロゴ<br>
+            <span>この先の物語は、</span>あなたが決める。
+          </h2>
+          <p class="cta-tagline">
+            PLACEHOLDER: キャッチコピー（締め）<br>
+            五つの時代を旅した先に、あなたを待つ物語がある。
+          </p>
+          <div class="cta-email-form">
+            <input class="cta-email-input" type="email" placeholder="メールアドレスを入力">
+            <button class="cta-email-btn">登録する</button>
+          </div>
+          <div class="cta-buttons">
+            <button class="cta-btn-primary">今すぐ購入</button>
+            <button class="cta-btn-secondary">トレーラーを見る</button>
+          </div>
+          <div class="cta-sns">
+            <a href="#">X (Twitter)</a>
+            <a href="#">Instagram</a>
+            <a href="#">YouTube</a>
+            <a href="#">Discord</a>
+          </div>
+        </section>
+
+      </div><!-- /timeline-scroll -->
+    </div><!-- /timeline-stage -->
+
+  </div><!-- /main-wrapper -->
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">PLACEHOLDER: LOGO</div>
+    <ul class="footer-links">
+      <li><a href="#">利用規約</a></li>
+      <li><a href="#">プライバシーポリシー</a></li>
+      <li><a href="#">お問い合わせ</a></li>
+    </ul>
+    <div class="footer-copy">© 2026 PLACEHOLDER: 会社名</div>
+  </footer>
+
+  <script>
+    // ─── 横スクロール：マウスホイールを横変換 ───
+    const timelineScroll = document.getElementById('timeline-scroll');
+    const glowTrack = document.getElementById('glow-track');
+
+    timelineScroll.addEventListener('wheel', function(e) {
+      if (e.deltaY !== 0) {
+        e.preventDefault();
+        this.scrollLeft += e.deltaY * 1.2;
+      }
+    }, { passive: false });
+
+    // ─── 横スクロール：ドラッグ ───
+    let isDragging = false;
+    let startX = 0;
+    let scrollStart = 0;
+
+    timelineScroll.addEventListener('mousedown', function(e) {
+      isDragging = true;
+      startX = e.clientX;
+      scrollStart = this.scrollLeft;
+    });
+    document.addEventListener('mousemove', function(e) {
+      if (!isDragging) return;
+      const dx = e.clientX - startX;
+      timelineScroll.scrollLeft = scrollStart - dx;
+    });
+    document.addEventListener('mouseup', function() { isDragging = false; });
+
+    // ─── タッチ対応 ───
+    let touchStartX = 0;
+    let touchScrollStart = 0;
+    timelineScroll.addEventListener('touchstart', function(e) {
+      touchStartX = e.touches[0].clientX;
+      touchScrollStart = this.scrollLeft;
+    }, { passive: true });
+    timelineScroll.addEventListener('touchmove', function(e) {
+      const dx = e.touches[0].clientX - touchStartX;
+      this.scrollLeft = touchScrollStart - dx;
+    }, { passive: true });
+
+    // ─── グロウライン更新 ───
+    function updateGlow() {
+      const scrollEl = timelineScroll;
+      const maxScroll = scrollEl.scrollWidth - scrollEl.clientWidth;
+      const ratio = maxScroll > 0 ? scrollEl.scrollLeft / maxScroll : 0;
+      const pct = Math.min(100, Math.max(0, ratio * 100)).toFixed(1);
+      glowTrack.style.setProperty('--progress', pct + '%');
+    }
+    timelineScroll.addEventListener('scroll', updateGlow, { passive: true });
+
+    // ─── ERA 表示トリガー（Intersection Observer） ───
+    const eras = document.querySelectorAll('.era');
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          // NAVアクティブ更新
+          const idx = parseInt(entry.target.dataset.eraIndex);
+          updateNavActive(idx);
+        }
+      });
+    }, {
+      root: timelineScroll,
+      threshold: 0.4
+    });
+    eras.forEach(function(era) { observer.observe(era); });
+
+    // ─── NAVアクティブ状態 ───
+    function updateNavActive(activeIdx) {
+      document.querySelectorAll('.nav-era-item a').forEach(function(a, idx) {
+        a.classList.toggle('active', idx === activeIdx);
+      });
+    }
+
+    // ─── NAVクリック：指定ERAへスクロール ───
+    document.querySelectorAll('.nav-era-item a').forEach(function(a) {
+      a.addEventListener('click', function(e) {
+        e.preventDefault();
+        const href = this.getAttribute('href');
+        const target = document.querySelector(href);
+        if (!target) return;
+
+        // ERAはtimeline-scroll内にあるため、scrollLeft計算
+        if (target.closest('#timeline-scroll')) {
+          const targetLeft = target.offsetLeft;
+          timelineScroll.scrollTo({ left: targetLeft, behavior: 'smooth' });
+        } else {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+
+    // ─── キーボード操作（←→） ───
+    document.addEventListener('keydown', function(e) {
+      const eraWidth = window.innerWidth;
+      if (e.key === 'ArrowRight') {
+        timelineScroll.scrollBy({ left: eraWidth, behavior: 'smooth' });
+      } else if (e.key === 'ArrowLeft') {
+        timelineScroll.scrollBy({ left: -eraWidth, behavior: 'smooth' });
+      }
+    });
+
+    // ─── HEROスクロール：タイムライン開始へ ───
+    document.querySelector('.hero-scroll-hint').addEventListener('click', function() {
+      const timelineStage = document.getElementById('timeline-stage');
+      timelineStage.scrollIntoView({ behavior: 'smooth' });
+      // 少し遅延後、横スクロールをERA01の先頭に
+      setTimeout(function() {
+        timelineScroll.scrollTo({ left: 0, behavior: 'smooth' });
+      }, 500);
+    });
+    document.querySelector('.hero-scroll-hint').style.cursor = 'pointer';
+
+    // 初期グロウ設定
+    updateGlow();
+  </script>
+
+</body>
+</html>

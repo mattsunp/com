@@ -1,0 +1,48 @@
+task_id: "web-pattern-n-20260331"
+task_type: "web-design"
+status: completed
+started_at: "2026-03-31 11:00"
+last_updated: "2026-03-31 11:30"
+
+instruction: |
+  Webサイトテンプレート Pattern N「チャプタースクロール型」の企画・設計・実装。
+  絵本のように物語を順番に見せていくテンプレート。素材ゼロでテキストと構成だけで
+  世界観が伝わる設計。Pattern E（Scrollytelling）との差別化：EはJS演出トリガー中心、
+  NはチャプターUI・テキスト読解体験中心。
+
+staffing:
+  recruited:
+    - "Web管理者（web-director）: 仕様設計・ページ構成・md作成"
+    - "アート管理者（art-director）: テキスト優先ビジュアル方針・タイポグラフィ監修"
+    - "ゲームUIエンジニア（ui-engineering）: HTMLインラインCSS+JS完結実装"
+  not_recruited:
+    - "意匠人（visual-designer）: 素材ゼロ設計のためグラフィック制作不要"
+    - "シナリオ書き（scenario-writer）: プレースホルダーテキストは仕様書範囲内で処理"
+    - "ゲームディレクター（game-director）: Web設計タスクのためゲームループ専門性不要"
+
+rounds:
+  round1:
+    status: completed
+    started_at: "2026-03-31 11:00"
+    completed_at: "2026-03-31 11:10"
+    agents_completed: ["Web管理者", "アート管理者"]
+    output: "web/templates/pattern-N_chapter-scroll.md"
+  round2:
+    status: completed
+    started_at: "2026-03-31 11:10"
+    completed_at: "2026-03-31 11:30"
+    agents_completed: ["ゲームUIエンジニア"]
+    output: "web/templates/pattern-N_chapter-scroll.html"
+  round3:
+    status: completed
+    started_at: "2026-03-31 11:30"
+    completed_at: "2026-03-31 11:30"
+    agents_completed: ["指揮者"]
+    output: "完了：md + html 両ファイル出力済み"
+
+dynamic_staffing:
+  triggered: false
+  added_agents: []
+  reason: ""
+
+notes: "Pattern E差別化最重要。チャプターUI・テキスト読解体験中心で設計。"

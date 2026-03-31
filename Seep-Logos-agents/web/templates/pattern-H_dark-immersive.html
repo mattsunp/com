@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pattern H: Dark Immersive型</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root { --accent: #00e5cc; }
+
+    body {
+      font-family: -apple-system, 'Helvetica Neue', sans-serif;
+      background: #000;
+      color: #c8c8d8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 52px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(0,229,204,0.08);
+    }
+    .nav-logo { font-size: 11px; letter-spacing: 0.4em; color: var(--accent); text-transform: uppercase; opacity: 0.7; }
+    .nav-reg {
+      font-size: 10px; letter-spacing: 0.25em; color: var(--accent);
+      border: 1px solid rgba(0,229,204,0.3); padding: 7px 18px; text-transform: uppercase;
+      background: rgba(0,229,204,0.04);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      height: 100vh; position: relative;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; gap: 24px;
+      background: url('../assets/images/background.png') center/cover no-repeat;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: rgba(0,0,0,0.7); pointer-events: none;
+    }
+    /* noise overlay */
+    .hero::after {
+      content: ''; position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; opacity: 0.4;
+    }
+    .hero > * { position: relative; z-index: 1; }
+
+    .logo-ph {
+      border: 1px solid rgba(0,229,204,0.2); padding: 14px 52px;
+      font-size: 11px; color: rgba(0,229,204,0.3); font-family: monospace; letter-spacing: 3px;
+    }
+    .hero-title {
+      font-size: clamp(28px, 5vw, 68px);
+      font-weight: 100; letter-spacing: 0.35em; color: #e0e0f0; text-transform: uppercase;
+    }
+    .hero-tagline {
+      font-size: 13px; color: #555; letter-spacing: 0.12em;
+      max-width: 460px; line-height: 1.9; font-family: monospace;
+    }
+    .hero-badge {
+      font-size: 9px; letter-spacing: 0.6em; color: var(--accent);
+      text-transform: uppercase; font-family: monospace; opacity: 0.6;
+    }
+    .scroll-hint { position: absolute; bottom: 36px; font-size: 9px; color: #2a2a3a; letter-spacing: 0.4em; }
+
+    /* ── SECTION COMMON ── */
+    section { border-top: 1px solid rgba(255,255,255,0.04); }
+    .section-inner { max-width: 1100px; margin: 0 auto; padding: 100px 40px; }
+    .section-label {
+      font-size: 9px; letter-spacing: 0.6em; color: var(--accent);
+      text-transform: uppercase; font-family: monospace; margin-bottom: 48px; opacity: 0.6;
+    }
+    .section-label::before { content: '── '; }
+    .section-label::after { content: ' ──'; }
+
+    /* ── WORLD ── */
+    .world { background: #030308; }
+    .world-inner {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+    }
+    .world-visual {
+      aspect-ratio: 4/3; background: #08080f;
+      border: 1px solid rgba(0,229,204,0.08);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; color: #1a1a2a; font-family: monospace;
+    }
+    .world-text h2 { font-size: 26px; color: #aaa; font-weight: 100; margin-bottom: 20px; letter-spacing: 0.1em; }
+    .world-text p { font-size: 14px; line-height: 2.1; color: #555; }
+    .world-tags { margin-top: 24px; display: flex; gap: 8px; flex-wrap: wrap; }
+    .tag {
+      border: 1px solid rgba(0,229,204,0.15); padding: 5px 14px;
+      font-size: 10px; color: rgba(0,229,204,0.4); letter-spacing: 0.1em; font-family: monospace;
+    }
+
+    /* ── CHARACTERS ── */
+    .characters { background: #000; }
+    .char-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(255,255,255,0.04); }
+    .char-card {
+      background: #000; padding: 0; overflow: hidden; cursor: pointer;
+    }
+    .char-visual {
+      aspect-ratio: 2/3; background: #050510;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 12px; position: relative;
+    }
+    .char-silhouette { width: 70px; height: 120px; background: #0d0d20; border-radius: 35px 35px 0 0; }
+    .char-ph-label { font-size: 9px; color: #1a1a2a; font-family: monospace; text-align: center; }
+    .char-locked {
+      position: absolute; inset: 0; background: #030308;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 8px;
+    }
+    .lock-icon { font-size: 18px; color: #1a1a2a; }
+    .lock-label { font-size: 9px; color: #1e1e2e; font-family: monospace; letter-spacing: 0.2em; }
+    .char-info { padding: 20px 24px; border-top: 1px solid rgba(0,229,204,0.06); }
+    .char-name { font-size: 13px; color: #888; letter-spacing: 0.1em; margin-bottom: 4px; }
+    .char-role { font-size: 9px; color: #333; font-family: monospace; }
+
+    /* ── SYSTEM ── */
+    .system { background: #030308; }
+    .system-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .system-card {
+      border: 1px solid rgba(0,229,204,0.07); padding: 28px 24px;
+    }
+    .system-visual {
+      aspect-ratio: 16/9; background: #06060f;
+      border: 1px dashed rgba(0,229,204,0.1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; color: #1a1a2a; font-family: monospace; margin-bottom: 20px;
+    }
+    .system-title { font-size: 14px; color: #aaa; letter-spacing: 0.08em; margin-bottom: 10px; }
+    .system-text { font-size: 12px; color: #444; line-height: 1.8; }
+
+    /* ── NEWS / CTA ── */
+    .news-cta { background: #000; }
+    .news-cta-inner { max-width: 800px; margin: 0 auto; padding: 100px 40px; }
+    .news-list { border-top: 1px solid rgba(255,255,255,0.04); margin-bottom: 64px; }
+    .news-item {
+      display: flex; gap: 20px; align-items: center;
+      padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .news-date { font-size: 11px; color: #333; font-family: monospace; min-width: 90px; }
+    .news-title { font-size: 13px; color: #666; }
+    .news-arrow { font-size: 11px; color: #333; margin-left: auto; }
+
+    .cta-block { text-align: center; }
+    .cta-block p { font-size: 13px; color: #444; margin-bottom: 24px; letter-spacing: 0.08em; }
+    .contact-email {
+      display: block; font-size: 15px; color: #666; font-family: monospace;
+      border-bottom: 1px solid #222; padding-bottom: 3px; text-decoration: none; margin-bottom: 28px;
+    }
+    .sns-links { display: flex; gap: 12px; justify-content: center; }
+    .sns-btn {
+      width: 44px; height: 44px; border: 1px solid rgba(0,229,204,0.12);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; color: rgba(0,229,204,0.3); font-family: monospace; cursor: pointer;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 24px 40px; border-top: 1px solid rgba(255,255,255,0.04);
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 10px; color: #222; font-family: monospace; letter-spacing: 0.1em;
+      flex-wrap: wrap; gap: 8px;
+    }
+    footer a { color: #2a2a3a; text-decoration: none; }
+
+    .wf-label {
+      position: fixed; top: 12px; left: 12px; z-index: 9999;
+      background: #000; border: 1px solid rgba(0,229,204,0.2);
+      padding: 6px 12px; font-size: 11px; font-family: monospace; color: rgba(0,229,204,0.5);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wf-label">WIREFRAME / Pattern H: Dark Immersive型</div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">Game Title</div>
+    <div class="nav-reg">登録する</div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <p class="hero-badge">Now Revealing</p>
+    <div class="logo-ph">[PLACEHOLDER: タイトルロゴ（アクセントカラー発光）]</div>
+    <h1 class="hero-title">Game Title</h1>
+    <p class="hero-tagline">[PLACEHOLDER: キャッチコピー。細いフォント・トラッキング広め]</p>
+    <p class="scroll-hint">▼ scroll</p>
+  </section>
+
+  <!-- WORLD -->
+  <section class="world">
+    <div class="section-inner">
+      <div class="world-inner">
+        <div class="world-visual">[PLACEHOLDER: 世界観ビジュアル / なし時：幾何学図形]</div>
+        <div class="world-text">
+          <p class="section-label">World</p>
+          <h2>[PLACEHOLDER: 世界観タイトル]</h2>
+          <p>[PLACEHOLDER: 世界観テキスト 200〜300字。SF・ディストピア・サイバーパンク的な断片的描写。「西暦2XXX年──」などの書き出しが効果的。]</p>
+          <div class="world-tags">
+            <span class="tag">[キーワード1]</span>
+            <span class="tag">[キーワード2]</span>
+            <span class="tag">[キーワード3]</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHARACTERS -->
+  <section class="characters">
+    <div class="section-inner" style="padding-bottom:0;">
+      <p class="section-label" style="text-align:center;">Characters</p>
+    </div>
+    <div style="max-width:1100px; margin:0 auto; padding: 0 40px 100px;">
+      <div class="char-grid">
+        <div class="char-card">
+          <div class="char-visual">
+            <div class="char-silhouette"></div>
+            <div class="char-ph-label">[PLACEHOLDER: キャラ立ち絵]</div>
+          </div>
+          <div class="char-info">
+            <div class="char-name">[キャラクター名]</div>
+            <div class="char-role">[肩書き]</div>
+          </div>
+        </div>
+        <div class="char-card">
+          <div class="char-visual">
+            <div class="char-silhouette"></div>
+            <div class="char-ph-label">[PLACEHOLDER: キャラ立ち絵]</div>
+          </div>
+          <div class="char-info">
+            <div class="char-name">[キャラクター名]</div>
+            <div class="char-role">[肩書き]</div>
+          </div>
+        </div>
+        <div class="char-card">
+          <div class="char-visual">
+            <div class="char-locked">
+              <div class="lock-icon">🔒</div>
+              <div class="lock-label">近日公開</div>
+            </div>
+          </div>
+          <div class="char-info">
+            <div class="char-name">？？？</div>
+            <div class="char-role">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SYSTEM -->
+  <section class="system">
+    <div class="section-inner">
+      <p class="section-label">System</p>
+      <div class="system-grid">
+        <div class="system-card">
+          <div class="system-visual">[PLACEHOLDER: システムビジュアル]</div>
+          <div class="system-title">[システム①見出し]</div>
+          <p class="system-text">[PLACEHOLDER: 説明テキスト]</p>
+        </div>
+        <div class="system-card">
+          <div class="system-visual">[PLACEHOLDER: システムビジュアル]</div>
+          <div class="system-title">[システム②見出し]</div>
+          <p class="system-text">[PLACEHOLDER: 説明テキスト]</p>
+        </div>
+        <div class="system-card">
+          <div class="system-visual">[PLACEHOLDER: システムビジュアル]</div>
+          <div class="system-title">[システム③見出し]</div>
+          <p class="system-text">[PLACEHOLDER: 説明テキスト]</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWS / CTA -->
+  <section class="news-cta">
+    <div class="news-cta-inner">
+      <p class="section-label">News</p>
+      <div class="news-list">
+        <div class="news-item">
+          <span class="news-date">2026.XX.XX</span>
+          <span class="news-title">記事タイトルが入ります</span>
+          <span class="news-arrow">→</span>
+        </div>
+        <div class="news-item">
+          <span class="news-date">2026.XX.XX</span>
+          <span class="news-title">記事タイトルが入ります</span>
+          <span class="news-arrow">→</span>
+        </div>
+      </div>
+      <div class="cta-block">
+        <p>最新情報を受け取る</p>
+        <a class="contact-email" href="mailto:contact@example.com">[PLACEHOLDER: contact@example.com]</a>
+        <div class="sns-links">
+          <div class="sns-btn">X</div>
+          <div class="sns-btn">IG</div>
+          <div class="sns-btn">YT</div>
+          <div class="sns-btn">DC</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Game Title</span>
+    <span>© 2026 [会社名] &nbsp;｜&nbsp; <a href="#">利用規約</a> &nbsp;｜&nbsp; <a href="#">PP</a></span>
+  </footer>
+
+</body>
+</html>
