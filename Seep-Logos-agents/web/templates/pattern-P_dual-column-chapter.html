@@ -376,20 +376,20 @@
 
     /* Odd chapters: image left, text right */
     .chapter-section.odd .chapter-col-left {
-      padding-right: 80px;
+      padding-right: 40px;
     }
 
     .chapter-section.odd .chapter-col-right {
-      padding-left: 80px;
+      padding-left: 40px;
     }
 
     /* Even chapters: text left, image right */
     .chapter-section.even .chapter-col-left {
-      padding-right: 80px;
+      padding-right: 40px;
     }
 
     .chapter-section.even .chapter-col-right {
-      padding-left: 80px;
+      padding-left: 40px;
     }
 
     /* =============================================
@@ -817,6 +817,28 @@
         border-right: none;
         border-left: 2px solid var(--centerline-color);
         text-align: left;
+      }
+
+      /* Ch2, Ch4: 画像→テキストの順に並べ替え（Chapter1と同じ順序に） */
+      .chapter-section.even .chapter-col-right {
+        order: 1;
+      }
+      .chapter-section.even .chapter-col-left {
+        order: 2;
+      }
+
+      /* 画像・テキストの左端をセンターラインに揃える */
+      .chapter-section.odd .chapter-col-left,
+      .chapter-section.odd .chapter-col-right,
+      .chapter-section.even .chapter-col-left,
+      .chapter-section.even .chapter-col-right {
+        padding-left: 28px;
+      }
+
+      /* モバイルでは横スライドアニメーションの初期オフセットを無効化 */
+      .chapter-section.odd .chapter-text-block,
+      .chapter-section.even .chapter-text-block {
+        transform: translateX(0);
       }
 
       .chapter-section.odd .image-placeholder,
