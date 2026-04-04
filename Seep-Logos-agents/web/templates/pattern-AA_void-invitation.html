@@ -470,13 +470,57 @@
     }
 
     /* ─────────────────────────────────────────
-       モバイル対応
+       モバイル対応 (< 768px)
     ───────────────────────────────────────── */
-    @media (max-width: 768px) {
+    @media (max-width: 767px) {
+      /* iOS Safari: 100vh はアドレスバーを無視するため svh で上書き */
+      #hero,
+      #gate {
+        min-height: 100svh;
+      }
+
+      /* Hero内部の余白を圧縮 */
+      .hero-inner {
+        gap: 32px;
+      }
+
+      .hero-sub {
+        max-width: 100%;
+      }
+
+      /* Scene break: 45vh → 高さを比例縮小 */
+      .scene-break {
+        height: 40vw;
+        max-height: 260px;
+      }
+
+      /* Signal: letter-spacing・余白を縮小 */
       .signal-fragment {
         letter-spacing: 0.2em;
       }
 
+      .signal-intro {
+        margin-bottom: 48px;
+      }
+
+      .signal-coord {
+        margin-top: 48px;
+      }
+
+      /* Echo: ヘッダー余白・カード余白を縮小 */
+      .echo-header {
+        margin-bottom: 48px;
+      }
+
+      .echo-focus {
+        padding: 32px 24px;
+      }
+
+      .echo-focus + .echo-focus {
+        margin-top: 48px;
+      }
+
+      /* 共通: text-wrap フル幅化、セクション余白縮小 */
       .text-wrap {
         max-width: 100%;
         padding: 0 var(--side-pad);
@@ -485,22 +529,21 @@
       #signal,
       #echo,
       #gate {
-        padding-top: 80px;
-        padding-bottom: 80px;
+        padding-top: 64px;
+        padding-bottom: 64px;
       }
 
-      .signal-fragment + .signal-fragment,
-      .echo-focus + .echo-focus {
-        margin-top: 60px;
+      .signal-fragment + .signal-fragment {
+        margin-top: 48px;
       }
 
-      .echo-focus {
-        padding: 32px 24px;
-      }
-
+      /* Gate CTA: タッチターゲット確保 */
       .gate-cta {
         min-width: 200px;
-        width: auto;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
       }
     }
   </style>

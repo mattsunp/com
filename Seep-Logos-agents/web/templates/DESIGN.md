@@ -1,211 +1,277 @@
-# Design System: Seep Logos — Web Visual Standard
+# デザインシステム: Seep Logos — Web ビジュアル標準
 
-## 1. Overview & Creative North Star
+## 1. 概要とクリエイティブの羅針盤
 
-**Creative North Star: "Seep" — 世界が染み込む空間**
+**クリエイティブの羅針盤: "Seep" — 世界が染み込む空間**
 
-This design system embodies the philosophy of **Seep (浸透)**: the boundary between the fictional world and reality is not a wall, but a breath. The viewer is drawn in without noticing. We reject "web-native" layouts in favor of **cinematic editorial verticality**—the user is not browsing information, they are uncovering a world.
+このデザインシステムは **Seep（浸透）** の哲学を体現する。虚構の世界と現実の境界は壁ではなく、息吹のようなものだ。見る者は気づかないうちに引き込まれる。私たちは「Webらしいレイアウト」を拒否し、**映画的・編集的な縦軸構造**を選ぶ。ユーザーは情報を閲覧するのではなく、世界を発掘している。
 
-**The single immersion test:** Before any visual decision, ask: *Does this help the viewer disappear into the world, or does it remind them they are looking at a website?* If the latter, reject it.
+**唯一の没入テスト:** ビジュアルに関するあらゆる判断の前に問う。*「これは見る者を世界に消えさせるか、それともWebサイトを見ていることを思い出させるか？」* 後者なら、却下。
 
-**Studio identity is spatial, not chromatic.** Seep Logos has no universal accent color. Our identity is expressed through darkness, intentional silence, and the quality of emergence—light appearing from void. Accent colors belong to each IP.
+**スタジオのアイデンティティは色ではなく空間である。** Seep Logos にはスタジオ共通のアクセントカラーは存在しない。アイデンティティは暗さ、意図的な沈黙、そして出現の質——虚空から光が生まれる——によって表現される。アクセントカラーは各IPに属するものだ。
 
 ---
 
-## 2. Colors & Surface Philosophy
+## 2. カラーとサーフェスの哲学
 
-The palette is built on depth and controlled illumination. Background is not a flat color—it is a void from which light emerges.
+パレットは奥行きと制御された光の演出で構成される。背景は単なる平坦な色ではなく、光が浮かび上がる虚空である。
 
-### Studio Defaults (IP-Agnostic)
+### スタジオデフォルト（IP非依存）
 
-| Token | Value | Description |
+| トークン | 値 | 説明 |
 |---|---|---|
-| `background` | `#080810` | Deep night. Blue-black void. The base of all immersion. |
-| `surface` | `#0f0f17` | Section background. Slightly lifted from background. |
-| `surface_container` | `#1a1a2a` | Cards, panels. Closest layer to the viewer. |
-| `on_surface` | `#e8e3da` | Primary text. Warm white—never cold. |
-| `on_surface_dim` | `#888899` | Secondary text. Captions, dates, metadata. |
-| `on_surface_muted` | `#555566` | Labels, tags, inactive states. |
+| `background` | `#080810` | 深い夜。青みがかった黒の虚空。没入の基盤。 |
+| `surface` | `#0f0f17` | セクション背景。backgroundよりわずかに浮いている。 |
+| `surface_container` | `#1a1a2a` | カード、パネル。見る者に最も近いレイヤー。 |
+| `on_surface` | `#e8e3da` | 主要テキスト。温かみのある白——冷たくしない。 |
+| `on_surface_dim` | `#888899` | 補助テキスト。キャプション、日付、メタデータ。 |
+| `on_surface_muted` | `#555566` | ラベル、タグ、非アクティブ状態。 |
 
-### IP-Specific Accent (Define Per Project)
+### IPごとのアクセントカラー（プロジェクトごとに定義する）
 
 ```
---accent: [IP-specific value]
---accent-glow: [IP-specific value at 30% opacity]
+--accent: [IP固有の値]
+--accent-glow: [IP固有の値、透明度30%]
 ```
 
-**Do not define a studio-wide accent.** Choose based on the IP's emotional truth:
+**スタジオ共通のアクセントカラーを定義してはならない。** IPの感情的な真実に基づいて選ぶ：
 
-| Accent family | Emotional register | Example IPs |
+| アクセント系統 | 感情的なトーン | 例 |
 |---|---|---|
-| Gold `#c8b87a`–`#d4a843` | Epic, historical, weight | Dark fantasy, historical |
-| Cyan `#00e5cc` | Sci-fi, mechanical, precision | Tech, mecha |
-| Purple + Hot Pink `#6c3fd5` + `#ff6b9d` | Pop, character-driven | Gacha, cute |
-| None (monochrome) | Minimal, teaser, editorial | Announcement sites |
+| ゴールド `#c8b87a`–`#d4a843` | 叙事詩的、歴史的、重厚感 | ダークファンタジー、歴史もの |
+| シアン `#00e5cc` | SF、機械的、精密 | テック、メカ |
+| パープル＋ホットピンク `#6c3fd5` + `#ff6b9d` | ポップ、キャラクター主導 | ガチャ、かわいい系 |
+| なし（モノクローム） | ミニマル、ティザー、エディトリアル | 告知サイト |
 
-### The "No-Line" Rule
+### 「ノーライン」ルール
 
-**Explicit prohibition:** Do not use 1px solid borders to define sections.
-- Separate content through **background shifts** between surface tokens.
-- If a container edge is absolutely required for accessibility, use `rgba(255,255,255,0.08)`.
-- A hard border is a **seam**. A seam breaks immersion.
+**明示的な禁止事項:** セクションを区切るために 1px のソリッドボーダーを使用しない。
+- コンテンツの分離はサーフェストークン間の**背景色の変化**で行う。
+- コンテナの境界線がアクセシビリティ上どうしても必要な場合のみ `rgba(255,255,255,0.08)` を使用する。
+- 硬い境界線は**縫い目**である。縫い目は没入を破壊する。
 
 ---
 
-## 3. Typography
+## 3. タイポグラフィ
 
-Typography is the voice of the world. We use a **three-layer system** that separates narrative voice, functional voice, and technical voice.
+タイポグラフィは世界の声である。**3レイヤーシステム**を用いて、物語の声・機能の声・技術の声を分離する。
 
-| Layer | Font | Use cases |
+| レイヤー | フォント | 用途 |
 |---|---|---|
-| **Narrative voice** | Georgia, Yu Mincho, Hiragino Mincho (Serif) | Hero titles, chapter headings, world-lore text, anything meant to be *read as story* |
-| **Functional voice** | -apple-system, Helvetica Neue (Sans-serif) | Navigation, buttons, card headings, UI labels |
-| **Technical voice** | monospace (Courier New) | Dates, tags, numbering, metadata, code |
+| **物語の声** | Georgia, 游明朝, ヒラギノ明朝（セリフ） | ヒータイトル、章見出し、世界観テキスト、*物語として読まれる*あらゆるテキスト |
+| **機能の声** | -apple-system, Helvetica Neue（サンセリフ） | ナビゲーション、ボタン、カード見出し、UIラベル |
+| **技術の声** | monospace（Courier New） | 日付、タグ、番号、メタデータ、コード |
 
-**The rule:** Every piece of text belongs to exactly one layer. Never mix layers within a single element. Never use Serif for UI labels. Never use monospace for narrative text unless it is an intentional world-aesthetic choice.
+**ルール:** すべてのテキストはいずれか1つのレイヤーに必ず属する。単一要素内でレイヤーを混在させない。UIラベルにセリフを使わない。意図的な世界観表現でない限り、物語テキストにmonospaceを使わない。
 
-### Scale & Spacing
+### スケールとスペーシング
 
-| Element | Size | Letter-spacing |
+| 要素 | サイズ | 字間 |
 |---|---|---|
-| Hero title | `clamp(2rem, 8vw, 6rem)` | Normal to slightly tight |
-| Section heading | `clamp(1.4rem, 3vw, 2.8rem)` | Normal |
-| Body | `15–16px` | Normal |
-| Labels & tags | `9–11px` | `0.2–0.6em` (uppercase recommended) |
+| ヒータイトル | `clamp(2rem, 8vw, 6rem)` | 通常〜やや詰め |
+| セクション見出し | `clamp(1.4rem, 3vw, 2.8rem)` | 通常 |
+| 本文 | `15–16px` | 通常 |
+| ラベル・タグ | `9–11px` | `0.2–0.6em`（大文字推奨） |
 
 ---
 
-## 4. Elevation & Depth
+## 4. 奥行きと深度
 
-Elevation is an **atmospheric effect**, not a structural one. We do not use drop shadows. Depth is created by tonal layering.
+奥行きは**構造的なものではなく、大気的な効果**である。ドロップシャドウは使用しない。深度はトーンのレイヤリングで表現する。
 
-**The Depth Stack:**
-- *Lowest:* `background` (`#080810`) — the void beneath everything
-- *Mid:* `surface` (`#0f0f17`) — the general page body
-- *High:* `surface_container` (`#1a1a2a`) — interactive elements, cards
+**深度スタック:**
+- *最下層:* `background`（`#080810`）——すべての下にある虚空
+- *中層:* `surface`（`#0f0f17`）——ページ本体の一般領域
+- *上層:* `surface_container`（`#1a1a2a`）——インタラクティブ要素、カード
 
-**Ambient glow (floating elements only):** `box-shadow: 0 0 40px rgba(accent, 0.15)`. This mimics light wrapping around objects in a dark room. Use sparingly—maximum one element per section.
+**アンビエントグロー（浮遊要素のみ）:** `box-shadow: 0 0 40px rgba(accent, 0.15)`。暗い部屋で物体に光が回り込む様子を模倣する。控えめに使用すること——1セクションにつき最大1要素まで。
 
-**Ghost border fallback:** If a container edge is required, use `1px solid rgba(255,255,255,0.08)`. Never 100% opaque.
+**ゴーストボーダーの代替:** コンテナの境界線が必要な場合は `1px solid rgba(255,255,255,0.08)` を使用する。完全な不透明度は禁止。
 
 ---
 
-## 5. Components
+## 5. コンポーネント
 
-### Buttons
+### ボタン
 
-| Type | Style |
+| 種別 | スタイル |
 |---|---|
-| Primary | Rectangular (`border-radius: 0`). Background: `accent`. Text: dark. Hover: outer glow `0 0 15px rgba(accent, 0.4)`. |
-| Secondary | No background. Ghost border `rgba(255,255,255,0.15)`. Text: `accent`. |
-| Tertiary | Text only in `on_surface_dim`. Hover: underline expands from center. |
+| プライマリ | 矩形（`border-radius: 0`）。背景: `accent`。テキスト: 暗色。ホバー: 外側グロー `0 0 15px rgba(accent, 0.4)`。 |
+| セカンダリ | 背景なし。ゴーストボーダー `rgba(255,255,255,0.15)`。テキスト: `accent`。 |
+| ターシャリー | `on_surface_dim` のテキストのみ。ホバー: アンダーラインが中心から展開。 |
 
-**Roundedness:** `0px` for all serious/epic IP aesthetics. `8–12px` only for pop/character-driven IPs (K-pattern equivalent).
+**角丸:** シリアス/叙事詩系IPはすべて `0px`。ポップ/キャラクター主導のIPのみ `8–12px`（Kパターン相当）。
 
-### Cards & Information Panels
+### カードと情報パネル
 
-- **Forbid divider lines** within cards.
-- Separate internal sections with vertical white space (`40–80px`).
-- Hover: `background` shifts to `surface_container`, optional scale `1.02`.
-- Never scale beyond `1.03`—larger scales break the spatial hierarchy.
+- カード内部の**仕切り線を禁止**する。
+- 内部セクションの区切りは縦方向の余白（`40–80px`）で行う。
+- ホバー: `background` が `surface_container` に変化し、オプションで `scale(1.02)`。
+- `1.03` を超えるスケールは禁止——それ以上は空間的ヒエラルキーを破壊する。
 
-### Decorative Separators
+### 装飾的セパレーター
 
-Instead of lines, use a 1px tall gradient fading to `0%` opacity at both ends. Optional: a 4px `accent`-colored diamond at center. This is a signature element of the N and P patterns.
+線の代わりに、両端で透明度 `0%` にフェードする高さ 1px のグラデーションを使用する。オプション: 中心に 4px の `accent` カラーのひし形を配置。これはNパターンとPパターンのシグネチャ要素である。
 
-### Scroll Navigation
+### スクロールナビゲーション
 
-Vertical progress indicators on the right edge: `accent` color for active state, `surface_container` for track. Chapter-based. Used in chapter-scroll and dual-column patterns.
+右端に縦方向プログレスインジケーター: アクティブ状態は `accent` カラー、トラックは `surface_container`。チャプター単位。チャプタースクロールパターンおよびデュアルカラムパターンで使用。
 
 ---
 
-## 6. Animation
+## 6. アニメーション
 
-Animation is the **physical law of this world**. Timing communicates weight and deliberateness.
+アニメーションはこの世界の**物理法則**である。タイミングは重みと意図を伝える。
 
-### Timing Reference
+### タイミング基準
 
-| Duration | Feel | Use |
+| 時間 | 印象 | 用途 |
 |---|---|---|
-| `0.2s` | Sharp, decisive, mechanical | Micro-interactions, toggle states |
-| `0.4s` | Responsive, light | Button hovers, quick feedback |
-| `0.7s` | Considered, breathing | Section reveals (default) |
-| `0.9s` | Weighty, ceremonial | Hero entrances, major transitions |
+| `0.2s` | 鋭く、決定的、機械的 | マイクロインタラクション、トグル状態 |
+| `0.4s` | レスポンシブ、軽快 | ボタンホバー、即時フィードバック |
+| `0.7s` | 思慮深く、呼吸するような | セクションリビール（デフォルト） |
+| `0.9s` | 重厚で、儀式的 | ヒーエントランス、主要なトランジション |
 
-**Default range for game/anime IPs: `0.7–0.9s`.** The world does not rush.
+**ゲーム/アニメIPのデフォルト範囲: `0.7–0.9s`。** この世界は急がない。
 
-### Scroll Reveal (Standard)
+### スクロールリビール（標準）
 
 ```css
-/* Apply to all major content blocks */
+/* すべての主要コンテンツブロックに適用 */
 initial:  opacity: 0; transform: translateY(20px);
 final:    opacity: 1; transform: translateY(0);
 duration: 0.7s–0.9s;
 easing:   ease  or  cubic-bezier(0.4, 0, 0.2, 1);
-delay:    stagger 0.1s–0.8s between elements
-trigger:  IntersectionObserver (do not re-animate on scroll-up)
+delay:    要素間を 0.1s–0.8s でずらす（スタッガー）
+trigger:  IntersectionObserver（上スクロール時は再アニメーション不可）
 ```
 
-### Hover Effects
+### ホバーエフェクト
 
-- Border color transition: `0.2–0.3s ease`
-- Glow: `box-shadow 0.3s ease`
-- Scale (if used): `transform 0.3s ease`, max `scale(1.02)`
+- ボーダーカラーのトランジション: `0.2–0.3s ease`
+- グロー: `box-shadow 0.3s ease`
+- スケール（使用する場合）: `transform 0.3s ease`、最大 `scale(1.02)`
 
-### Prohibitions
+### 禁止事項
 
-- No bounce / spring animations (`cubic-bezier` with overshoot values)
-- No simultaneous animation on all elements—**static elements give moving elements meaning**
-- No autoplay animations that loop indefinitely on hero sections
-
----
-
-## 7. Silence & Negative Space
-
-Negative space is a **primary design element**, not empty space.
-
-- Section gaps: `60–100px` minimum. This is the breath between chapters.
-- Text margins: Proportional to the weight of the words. A lone sentence in wide space carries more weight than a paragraph surrounded by content.
-- Hero internal space communicates the scale of the world. Filling the hero is a mistake.
-
-**The Seep principle:** A boundary that is felt but not seen. Space is how we achieve this.
+- バウンス・スプリングアニメーション禁止（オーバーシュート値の `cubic-bezier`）
+- すべての要素を同時にアニメーションさせない——**静止する要素が、動く要素に意味を与える**
+- ヒーセクションで無限ループする自動再生アニメーション禁止
 
 ---
 
-## 8. Do's and Don'ts
+## 7. 沈黙とネガティブスペース
 
-### Do:
-- **Do** use intentional asymmetry. Overlap character art across two surface layers to break the grid feel.
-- **Do** stagger reveal animations. Content uncovering in sequence feels like a story being told.
-- **Do** use Serif (Georgia) for any text meant to be experienced as narrative, even at small sizes.
-- **Do** let the footer remain in the world. A "normal" footer breaks immersion at the final moment.
-- **Do** choose accent color from the IP's emotional truth, not from what "looks cool."
+ネガティブスペースは**主要なデザイン要素**であり、空白ではない。
 
-### Don't:
-- **Don't** use white backgrounds or light grey backgrounds. They destroy immersion unconditionally.
-- **Don't** use pure white (`#ffffff`) for text. Use `on_surface` (`#e8e3da`)—warm white stays in the world.
-- **Don't** use drop shadows. They look cheap in a high-end dark theme. Use tonal layering and ambient glow.
-- **Don't** animate everything. When all elements move, nothing moves.
-- **Don't** use rounded corners unless the IP explicitly requires warmth and approachability.
-- **Don't** use more than two font families on a single page.
-- **Don't** fix an accent color in a shared template. Accent belongs to the IP, not the studio.
-- **Don't** use Bootstrap-style generic components. Every component should feel like it belongs to this world.
+- セクション間隔: 最小 `60–100px`。これが章と章の間の息吹である。
+- テキストの余白: 言葉の重みに比例させる。広い空間に置かれた一文は、コンテンツに囲まれた段落よりも重みを持つ。
+- ヒーの内部空間は世界のスケールを伝える。ヒーを埋めることは失敗である。
+
+**Seepの原則:** 感じられるが見えない境界。空間こそがそれを実現する手段である。
 
 ---
 
-## 9. Agent Prompt Guide
+## 8. レスポンシブ対応
 
-When an AI agent is building a page using this design system:
+レスポンシブデザインは**必須**。すべてのページはデスクトップとモバイルの両方に対応しなければならない。没入の基準はどちらにも等しく適用される。
 
-1. **Start with darkness.** Background is `#080810`. Do not negotiate this.
-2. **The accent color must be provided by the project brief.** If not provided, ask. Do not invent one.
-3. **Typography is a three-layer decision.** Identify which layer each text element belongs to before assigning a font.
-4. **Test immersion, not aesthetics.** The question is not "does this look good" but "does this disappear the viewer into the world."
-5. **Silence is intentional.** Do not fill space. Space is the breath of the Seep philosophy.
-6. **Reference patterns in `web/templates/`** for structural precedents. Pattern A/N/O/P are the primary editorial references.
-7. **When in doubt, do less.** A restrained choice that maintains atmosphere beats a bold choice that breaks it.
+### ブレークポイント
+
+| 名称 | 範囲 | 対象 |
+|---|---|---|
+| `mobile` | `< 768px` | スマートフォン（縦向き優先） |
+| `tablet` | `768px – 1023px` | タブレット、大型スマートフォン横向き |
+| `desktop` | `≥ 1024px` | ラップトップ以上 |
+
+```css
+@media (max-width: 767px)  { /* mobile  */ }
+@media (min-width: 768px) and (max-width: 1023px) { /* tablet  */ }
+@media (min-width: 1024px) { /* desktop */ }
+```
+
+### グリッドとレイアウトの変化
+
+| 要素 | デスクトップ | タブレット | モバイル |
+|---|---|---|---|
+| 複数カラムグリッド | 2〜3カラム | 2カラム | 1カラム |
+| ヒーの高さ | `100vh` | `100vh` | `100svh`（セーフエリア考慮） |
+| セクションパディング | `80–120px 0` | `60–80px 0` | `48–64px 0` |
+| コンテンツ最大幅 | `1200px` 中央寄せ | 全幅 `+ 48px マージン` | 全幅 `+ 24px マージン` |
+
+### タイポグラフィのスケーリング
+
+タイポグラフィはすでに `clamp()` を使用している——以下の範囲が適用されていることを確認する：
+
+| 要素 | デスクトップ | モバイルの最小値 |
+|---|---|---|
+| ヒータイトル | `clamp(2rem, 8vw, 6rem)` | 最小 `2rem`（32px） |
+| セクション見出し | `clamp(1.4rem, 3vw, 2.8rem)` | 最小 `1.4rem`（22px） |
+| 本文 | `15–16px` | `15px`（これ以上小さくしない） |
+| ラベル・タグ | `9–11px` | 最小 `10px` |
+
+### タッチターゲット
+
+- すべてのインタラクティブ要素: **最小 44 × 44px** のタップ領域（Apple HIG 基準）
+- ボタン: `min-height: 44px`、`padding: 12px 24px`
+- ナビゲーションリンク: `padding: 12px 16px` でタップ領域を確保
+- ホバー状態にコア機能を依存させない——ホバーはデスクトップ専用
+
+### モバイルのナビゲーション
+
+- 縦方向スクロールプログレスインジケーター（右端）: **モバイルでは非表示**
+- デスクトップのナビゲーションバー: **ハンバーガーに折りたたむか、完全に非表示**（パターンAAはナビゲーション自体がないためモバイル対応がデフォルト）
+- スティッキーヘッダー: 透明で非侵略的な場合のみモバイルで許可
+
+### モバイルのネガティブスペース
+
+モバイルでネガティブスペースをなくさない——比例して縮小する：
+- デスクトップのセクション間隔 `80–100px` → モバイル `48–64px`
+- ヒーの内部空間は**維持する**。ヒーを圧縮すると映画的な感覚が失われる。
+- 3要素以上を並べるときは呼吸のための間隔（最小 `32px`）を必ず入れる
+
+### 画像の扱い
+
+- `width: 100%` と `max-width` 制約を使用し、固定ピクセル幅は使わない
+- 背景画像: `background-size: cover`、モバイルで主要な被写体が切り取られないよう `background-position: center top`（縦長アートの場合）
+- シーン区切り画像（`scene.png` 等）: モバイルでも透明度とフェード挙動を維持。必要であれば高さを縮小する（`max-height: 60vw`）
+
+---
+
+## 9. やること・やらないこと
+
+### やること:
+- **やる:** 意図的な非対称を使う。キャラクターアートを2つのサーフェスレイヤーにまたがって配置し、グリッドらしさを崩す。
+- **やる:** リビールアニメーションをずらす。順番にコンテンツが現れることで、物語が語られているように感じさせる。
+- **やる:** 物語として体験させたいテキストには、小さいサイズであってもセリフ体（Georgia）を使う。
+- **やる:** フッターも世界の中に留める。「普通の」フッターは最後の瞬間に没入を壊す。
+- **やる:** アクセントカラーは「カッコよく見えるから」ではなく、IPの感情的な真実から選ぶ。
+
+### やらないこと:
+- **やらない:** 白背景や明るいグレー背景。これらは無条件に没入を破壊する。
+- **やらない:** 純白（`#ffffff`）のテキスト。`on_surface`（`#e8e3da`）——温かみのある白が世界に留まる。
+- **やらない:** ドロップシャドウ。ハイエンドのダークテーマでは安っぽく見える。トーンレイヤリングとアンビエントグローを使う。
+- **やらない:** すべてをアニメーションさせる。すべてが動くと、何も動いていないのと同じになる。
+- **やらない:** IPが明示的に温かさや親しみやすさを求めない限り、角丸を使わない。
+- **やらない:** 1ページに3つ以上のフォントファミリーを使用する。
+- **やらない:** 共有テンプレートにアクセントカラーを固定する。アクセントはIPのものであり、スタジオのものではない。
+- **やらない:** Bootstrap的な汎用コンポーネントを使う。すべてのコンポーネントはその世界に属しているように感じさせる。
+
+---
+
+## 10. エージェントへのプロンプトガイド
+
+AIエージェントがこのデザインシステムを使用してページを構築する際:
+
+1. **暗さから始める。** 背景は `#080810`。これは交渉しない。
+2. **アクセントカラーはプロジェクトブリーフから提供されなければならない。** 提供されていない場合は尋ねる。発明しない。
+3. **タイポグラフィは3レイヤーの判断。** フォントを割り当てる前に、各テキスト要素がどのレイヤーに属するかを明確にする。
+4. **美しさではなく没入をテストする。** 問いは「これは良く見えるか」ではなく「これは見る者を世界に消えさせるか」である。
+5. **沈黙は意図的なものだ。** 空間を埋めない。空間はSeep哲学の息吹である。
+6. **`web/templates/` のパターンを構造的な先例として参照する。** パターン A/N/O/P が主要なエディトリアル参考である。
+7. **迷ったら、やることを減らす。** 雰囲気を維持する控えめな選択は、それを壊す大胆な選択に勝る。
 
 ---
 
 *Seep Logos Creative Studio | Web Visual Standard v1.0 | 2026-04-04*
-*Values extracted from: pattern-A, A_2, N, O, P | Governed by: `docs/visual-style-guide.md` (philosophy)*
+*参照元パターン: pattern-A, A_2, N, O, P | 哲学的基盤: `docs/visual-style-guide.md`*
