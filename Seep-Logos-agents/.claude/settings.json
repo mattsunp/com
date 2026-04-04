@@ -1,2 +1,15 @@
 {
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /Users/matsuura-hisashi/com/Seep-Logos-agents/.reminiscence/context-watch.py"
+          }
+        ]
+      }
+    ]
+  }
 }
