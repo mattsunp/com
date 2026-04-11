@@ -6,6 +6,9 @@
 **/_private/*
 !**/_private/.gitkeep
 
+# Claude Code ローカル設定（個人専用・git管理外）
+.claude/settings.local.json
+
 # reminiscence — 長期記憶データベース（ローカル専用）
 .reminiscence/memory.db
 

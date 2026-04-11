@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>pattern-AE: timeline-cards | Seep Logos</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #080810;
+      --surface:      #0f0f17;
+      --surface-cont: #1a1a2a;
+      --text:         #e8e3da;
+      --text-dim:     #888899;
+      --text-muted:   #555566;
+      /* IP Placeholder: 年表・タクティカル = steel blue。歴史・作戦系ゲーム向け */
+      --accent:       #7ab0c8;
+      --accent-glow:  rgba(122, 176, 200, 0.22);
+
+      --font-serif: Georgia, "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", serif;
+      --font-sans:  -apple-system, "Helvetica Neue", "Hiragino Kaku Gothic ProN", sans-serif;
+      --font-mono:  "Courier New", Courier, monospace;
+
+      --side-pad: clamp(1.5rem, 5vw, 4rem);
+      --card-w: 280px;
+      --card-gap: 32px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ─── HEADER ─── */
+    .site-header {
+      padding: 72px var(--side-pad) 40px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .site-header .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.45em;
+      color: var(--accent);
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 1.25rem;
+      opacity: 0;
+      animation: rise 0.7s ease 0.2s forwards;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .site-header h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.8rem, 5vw, 3.6rem);
+      font-weight: normal;
+      color: var(--text);
+      line-height: 1.25;
+      opacity: 0;
+      animation: rise 0.9s ease 0.5s forwards;
+    }
+
+    .site-header p {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      color: var(--text-dim);
+      margin-top: 1.25rem;
+      max-width: 520px;
+      line-height: 1.9;
+      opacity: 0;
+      animation: rise 0.7s ease 0.9s forwards;
+    }
+
+    /* ─── タイムラインプログレスバー ─── */
+    /* 上部固定: スクロール位置を時間軸として表示 */
+    .timeline-progress-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 12px var(--side-pad);
+      background: rgba(8,8,16,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .timeline-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1300px;
+      margin: 0 auto 8px;
+    }
+
+    .era-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+
+    .era-counter {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+    }
+
+    .progress-track {
+      max-width: 1300px;
+      margin: 0 auto;
+      height: 2px;
+      background: var(--surface-cont);
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), rgba(122,176,200,0.4));
+      width: 0%;
+      transition: width 0.15s ease;
+    }
+
+    /* エポックマーカー */
+    .epoch-marker {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 6px;
+      height: 6px;
+      background: var(--surface-cont);
+      border: 1px solid var(--text-muted);
+    }
+
+    .epoch-marker.passed {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    /* ─── 横スクロールコンテナ ─── */
+    .timeline-outer {
+      overflow-x: auto;
+      overflow-y: visible;
+      cursor: grab;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: var(--surface-cont) transparent;
+      padding: 40px 0 20px;
+    }
+
+    .timeline-outer::-webkit-scrollbar { height: 4px; }
+    .timeline-outer::-webkit-scrollbar-track { background: transparent; }
+    .timeline-outer::-webkit-scrollbar-thumb { background: var(--surface-cont); }
+
+    .timeline-outer.grabbing { cursor: grabbing; }
+
+    .timeline-inner {
+      display: flex;
+      align-items: flex-start;
+      padding: 0 var(--side-pad);
+      width: max-content;
+      gap: 0;
+    }
+
+    /* ─── エポック区切り ─── */
+    .epoch-section {
+      position: relative;
+    }
+
+    .epoch-header {
+      padding: 0 var(--card-gap) 24px;
+      position: relative;
+    }
+
+    .epoch-title {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.5em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .epoch-name {
+      font-family: var(--font-serif);
+      font-size: 18px;
+      color: var(--text-dim);
+      font-weight: normal;
+    }
+
+    /* エポック間のグラデーション仕切り */
+    .epoch-divider {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, var(--accent-glow), transparent);
+    }
+
+    /* カードグループ */
+    .card-group {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--card-gap);
+      padding: 0 var(--card-gap) 60px;
+    }
+
+    /* ─── カード ─── */
+    .timeline-card {
+      width: var(--card-w);
+      flex-shrink: 0;
+      background: var(--surface);
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+    }
+
+    .timeline-card:hover {
+      transform: translateY(-4px);
+    }
+
+    /* カード上部のアクセントライン — 重要度を幅で表現 */
+    .timeline-card::before {
+      content: '';
+      display: block;
+      height: 2px;
+      background: var(--accent);
+      transform-origin: left;
+      transform: scaleX(0);
+      transition: transform 0.4s ease;
+    }
+
+    .timeline-card:hover::before,
+    .timeline-card.featured::before {
+      transform: scaleX(1);
+    }
+
+    .timeline-card.featured {
+      background: var(--surface-cont);
+    }
+
+    .card-timestamp {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      color: var(--accent);
+      padding: 14px 20px 0;
+      display: block;
+    }
+
+    .card-type-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.35em;
+      color: var(--text-muted);
+      padding: 4px 20px 0;
+      text-transform: uppercase;
+      display: block;
+    }
+
+    .card-title {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      font-weight: normal;
+      color: var(--text);
+      padding: 10px 20px 0;
+      line-height: 1.45;
+    }
+
+    .card-body {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      padding: 10px 20px 20px;
+    }
+
+    /* シグナルバー — ゲームの通信強度表示を想起させる */
+    .card-signal {
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+      padding: 0 20px 16px;
+    }
+
+    .signal-bar {
+      width: 4px;
+      background: var(--text-muted);
+      opacity: 0.3;
+    }
+
+    .signal-bar.active {
+      background: var(--accent);
+      opacity: 1;
+    }
+
+    .signal-bar:nth-child(1) { height: 6px; }
+    .signal-bar:nth-child(2) { height: 10px; }
+    .signal-bar:nth-child(3) { height: 14px; }
+    .signal-bar:nth-child(4) { height: 18px; }
+    .signal-bar:nth-child(5) { height: 22px; }
+
+    /* ─── フッター ─── */
+    .footer {
+      padding: 60px var(--side-pad);
+      text-align: center;
+    }
+
+    .footer-text {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.35em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    /* ─── モバイル: 横スクロール → 縦スクロールグリッド ─── */
+    @media (max-width: 767px) {
+      .timeline-outer {
+        overflow-x: hidden;
+        padding: 20px 0;
+      }
+
+      .timeline-inner {
+        flex-direction: column;
+        width: auto;
+        padding: 0 var(--side-pad);
+        gap: 0;
+      }
+
+      .epoch-section { width: 100%; }
+
+      .card-group {
+        flex-direction: column;
+        gap: 16px;
+        padding: 0 0 40px;
+      }
+
+      .timeline-card { width: 100%; }
+
+      .epoch-divider { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <span class="eyebrow">// world chronology</span>
+    <h1>歴史は繰り返す。<br>ただし、毎回形を変えて。</h1>
+    <p>この世界で起きたすべての出来事が、時間軸に沿って記録されている。スクロールして旅せよ。</p>
+  </header>
+
+  <!-- タイムラインプログレス (sticky) -->
+  <div class="timeline-progress-wrap">
+    <div class="timeline-meta">
+      <span class="era-label" id="eraLabel">— Era I: 起源</span>
+      <span class="era-counter" id="eraCounter">01 / 03</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+      <div class="epoch-marker" style="left: 33%" id="mark1"></div>
+      <div class="epoch-marker" style="left: 66%" id="mark2"></div>
+    </div>
+  </div>
+
+  <!-- 横スクロール本体 -->
+  <div class="timeline-outer" id="timelineOuter">
+    <div class="timeline-inner">
+
+      <!-- Era I -->
+      <div class="epoch-section" data-era="Era I: 起源" data-num="01">
+        <div class="epoch-header">
+          <span class="epoch-title">Era I</span>
+          <span class="epoch-name">起源 — Origins</span>
+        </div>
+        <div class="card-group">
+
+          <div class="timeline-card featured">
+            <span class="card-timestamp">Year 0001</span>
+            <span class="card-type-label">Critical Event</span>
+            <h3 class="card-title">第一の光が降りた日</h3>
+            <p class="card-body">記録された最古の異変。すべての歴史はここから始まる。</p>
+            <div class="card-signal">
+              <div class="signal-bar active"></div>
+              <div class="signal-bar active"></div>
+              <div class="signal-bar active"></div>
+              <div class="signal-bar active"></div>
+              <div class="signal-bar active"></div>
+            </div>
+          </div>
+
+          <div class="timeline-card">
+            <span class="card-timestamp">Year 0043</span>
+            <span class="card-type-label">Settlement</span>
+            <h3 class="card-title">最初の都市が建てられた</h3>
+            <p class="card-body">光の降下点を中心に、人々は集まり始めた。</p>
+            <div class="card-signal">
+              <div class="signal-bar active"></div>
+              <div class="signal-bar active"></div>
+              <div class="signal-bar active"></div>
+              <div class="signal-bar"></div>
+              <div class="signal-bar"></div>
+            </div>
+          </div>
+
+          <div class="timeline-card">
+            <span class="card-timestamp">Year 0112</span>
+            <span class="card-type-label">Discovery</span>
+            <h3 class="card-title">地下回廊の発見</h3>
+            <p class="card-body">都市建設中に、誰が作ったとも知れない回廊が現れた。</p>
+            <div class="card-signal">
+              <div class="signal-bar active"></div>
+              <div class="signal-bar active"></div>
+              <div class="signal-bar"></div>
+              <div class="signal-bar"></div>
+              <div class="signal-bar"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Era II -->
+      <div class="epoch-section" data-era="Era II: 拡張" data-num="02">
+        <div class="epoch-header">
+          <div class="epoch-divider"></div>
+          <span class="epoch-title">Era II</span>
+          <span class="epoch-name">拡張 — Expansion</span>
+        </div>
+        <div class="card-group">
+
+          <div class="timeline-card featured">
+            <span class="card-timestamp">Year 0340</span>
+            <span class="card-type-label">Critical Event</span>
+            <h3 class="card-title">大分裂: 二つの王国</h3>
+            <p class="card-body">光の解釈をめぐる対立が頂点に達し、大陸は二分された。</p>
+            <div class="card-signal">
+              <div class="signal-bar active"></div>
+              <div class="signal-bar active"></div>
+              <div class="signal-bar active"></div>
+              <div class="signal-bar active"></div>
+              <div class="signal-bar active"></div>
+            </div>
+          </div>
+
+          <div class="timeline-card">
+            <span class="card-timestamp">Year 0411</span>
+            <span class="card-type-label">War</span>
+            <h3 class="card-title">七十年戦争の開始</h3>
+            <p class="card-body">どちらの王国も、相手が先に仕掛けたと主張している。</p>
+            <div class="card-signal">
+              <div class="signal-bar active"></div>
+              <div class="signal-bar active"></div>
+              <div class="signal-bar active"></div>
+              <div class="signal-bar active"></div>
+              <div class="signal-bar"></div>
+            </div>
+          </div>
+
+          <div class="timeline-card">
+            <span class="card-timestamp">Year 0480</span>
+            <span class="card-type-label">Treaty</span>
+            <h3 class="card-title">冬の和約</h3>
+            <p class="card-body">戦争は終わった。しかし恨みは終わらなかった。</p>
+            <div class="card-signal">
+              <div class="signal-bar active"></div>
+              <div class="signal-bar active"></div>
+              <div class="signal-bar"></div>
+              <div class="signal-bar"></div>
+              <div class="signal-bar"></div>
+            </div>
+          </div>
+
+          <div class="timeline-card">
+            <span class="card-timestamp">Year 0501</span>
+            <span class="card-type-label">Anomaly</span>
+            <h3 class="card-title">第二の光</h3>
+            <p class="card-body">和約の締結から21年後。歴史は、繰り返すことを示した。</p>
+            <div class="card-signal">
+              <div class="signal-bar active"></div>
+              <div class="signal-bar active"></div>
+              <div class="signal-bar active"></div>
+              <div class="signal-bar active"></div>
+              <div class="signal-bar active"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Era III -->
+      <div class="epoch-section" data-era="Era III: 現在" data-num="03">
+        <div class="epoch-header">
+          <div class="epoch-divider"></div>
+          <span class="epoch-title">Era III</span>
+          <span class="epoch-name">現在 — Now</span>
+        </div>
+        <div class="card-group">
+
+          <div class="timeline-card featured">
+            <span class="card-timestamp">Year 0891</span>
+            <span class="card-type-label">Current</span>
+            <h3 class="card-title">物語が始まる</h3>
+            <p class="card-body">これより先は、記録されていない。あなたが歴史を作る。</p>
+            <div class="card-signal">
+              <div class="signal-bar active"></div>
+              <div class="signal-bar"></div>
+              <div class="signal-bar"></div>
+              <div class="signal-bar"></div>
+              <div class="signal-bar"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p class="footer-text">Seep Logos &mdash; pattern-AE: timeline-cards</p>
+  </footer>
+
+  <script>
+    // ─── 横スクロールのドラッグ操作 ───
+    const outer = document.getElementById('timelineOuter');
+    let isDown = false, startX, scrollLeft;
+
+    outer.addEventListener('mousedown', e => {
+      isDown = true;
+      outer.classList.add('grabbing');
+      startX = e.pageX - outer.offsetLeft;
+      scrollLeft = outer.scrollLeft;
+    });
+
+    outer.addEventListener('mouseleave', () => { isDown = false; outer.classList.remove('grabbing'); });
+    outer.addEventListener('mouseup',    () => { isDown = false; outer.classList.remove('grabbing'); });
+
+    outer.addEventListener('mousemove', e => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - outer.offsetLeft;
+      outer.scrollLeft = scrollLeft - (x - startX) * 1.2;
+    });
+
+    // ─── スクロール位置によるプログレス + エポック表示 ───
+    const fill     = document.getElementById('progressFill');
+    const eraLabel = document.getElementById('eraLabel');
+    const eraCount = document.getElementById('eraCounter');
+    const mark1    = document.getElementById('mark1');
+    const mark2    = document.getElementById('mark2');
+    const sections = document.querySelectorAll('.epoch-section');
+
+    outer.addEventListener('scroll', () => {
+      const maxScroll = outer.scrollWidth - outer.clientWidth;
+      const progress  = maxScroll > 0 ? outer.scrollLeft / maxScroll : 0;
+      fill.style.width = (progress * 100) + '%';
+
+      // どのセクションが最も画面左端に近いかを判定
+      let currentSection = sections[0];
+      sections.forEach(sec => {
+        const rect = sec.getBoundingClientRect();
+        if (rect.left <= outer.getBoundingClientRect().left + outer.clientWidth * 0.5) {
+          currentSection = sec;
+        }
+      });
+
+      eraLabel.textContent = '— ' + currentSection.dataset.era;
+      eraCount.textContent  = currentSection.dataset.num + ' / 03';
+
+      // エポックマーカーの通過判定
+      mark1.classList.toggle('passed', progress >= 0.33);
+      mark2.classList.toggle('passed', progress >= 0.66);
+    }, { passive: true });
+  </script>
+</body>
+</html>

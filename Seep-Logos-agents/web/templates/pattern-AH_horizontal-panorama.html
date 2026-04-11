@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>pattern-AH: horizontal-panorama | Seep Logos</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #080810;
+      --surface:      #0f0f17;
+      --surface-cont: #1a1a2a;
+      --text:         #e8e3da;
+      --text-dim:     #888899;
+      --text-muted:   #555566;
+      /* IP Placeholder: 世界探索・マップ = sage green。自然・旅・フィールドゲーム向け */
+      --accent:       #7ab898;
+      --accent-glow:  rgba(122,184,152,0.22);
+
+      --font-serif: Georgia, "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", serif;
+      --font-sans:  -apple-system, "Helvetica Neue", "Hiragino Kaku Gothic ProN", sans-serif;
+      --font-mono:  "Courier New", Courier, monospace;
+
+      /* ゾーンの幅 */
+      --zone-w: 100vw;
+      --num-zones: 4;
+    }
+
+    html {
+      /* 縦スクロール量を横移動に変換するため、bodyを高く設定 */
+      height: calc(var(--num-zones) * 100vh);
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-serif);
+      line-height: 1.8;
+      overflow-x: hidden;
+      /* スクロールはhtmlで管理 */
+    }
+
+    /* ─── 固定表示ウィンドウ ─── */
+    .panorama-viewport {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ─── 横スクロールトラック ─── */
+    .panorama-track {
+      display: flex;
+      width: calc(var(--zone-w) * var(--num-zones));
+      height: 100vh;
+      will-change: transform;
+      transition: transform 0.05s linear;
+    }
+
+    /* ─── ゾーン共通 ─── */
+    .zone {
+      width: var(--zone-w);
+      height: 100vh;
+      flex-shrink: 0;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 clamp(2rem, 6vw, 6rem) clamp(64px, 8vh, 100px);
+    }
+
+    /* ゾーンごとの背景 — 色のトーンで地域感を出す */
+    .zone-0 { background: linear-gradient(160deg, #0a0e14 0%, #080810 100%); }
+    .zone-1 { background: linear-gradient(160deg, #080e0c 0%, #060c0a 100%); }
+    .zone-2 { background: linear-gradient(160deg, #0e0c08 0%, #100e08 100%); }
+    .zone-3 { background: linear-gradient(160deg, #0c0810 0%, #0a0810 100%); }
+
+    /* 遠景グラデーション — 地平線的な大気表現 */
+    .zone-horizon {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 40%;
+      background: radial-gradient(ellipse at 50% -20%,
+        rgba(122,184,152,0.06) 0%,
+        transparent 60%
+      );
+      pointer-events: none;
+    }
+
+    /* 地面レイヤー */
+    .zone-ground {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 30%;
+      background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
+      pointer-events: none;
+    }
+
+    /* ゾーン番号と名称 — 右上固定のコーナーラベル */
+    .zone-index {
+      position: absolute;
+      top: 32px;
+      right: clamp(2rem, 5vw, 5rem);
+      text-align: right;
+    }
+
+    .zone-num {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.4em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .zone-region {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+    }
+
+    /* ゾーンコンテンツ */
+    .zone-content {
+      position: relative;
+      z-index: 2;
+      max-width: 540px;
+    }
+
+    .zone-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.45em;
+      color: var(--accent);
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 1.25rem;
+    }
+
+    .zone-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.8rem, 4vw, 3.2rem);
+      font-weight: normal;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 1.25rem;
+    }
+
+    .zone-desc {
+      font-family: var(--font-serif);
+      font-size: 14px;
+      color: var(--text-dim);
+      line-height: 2;
+      max-width: 440px;
+    }
+
+    /* 装飾オブジェクト — 各ゾーンに固有の図形 */
+    .zone-deco {
+      position: absolute;
+      pointer-events: none;
+    }
+
+    /* ゾーン0: 入り口の光柱 */
+    .zone-0 .zone-deco {
+      top: 10%;
+      right: 15%;
+      width: 1px;
+      height: 60vh;
+      background: linear-gradient(to bottom,
+        var(--accent-glow),
+        rgba(122,184,152,0.08) 50%,
+        transparent
+      );
+    }
+
+    /* ゾーン1: 水平線 */
+    .zone-1 .zone-deco {
+      top: 35%;
+      left: 10%;
+      right: 20%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(122,184,152,0.15), transparent);
+    }
+
+    /* ゾーン2: 古代遺跡的な矩形 */
+    .zone-2 .zone-deco {
+      top: 15%;
+      right: 12%;
+      width: 120px;
+      height: 200px;
+      border: 1px solid rgba(122,184,152,0.08);
+    }
+
+    /* ゾーン3: 到達点の円 */
+    .zone-3 .zone-deco {
+      top: 50%;
+      right: 10%;
+      transform: translateY(-50%);
+      width: 160px;
+      height: 160px;
+      border: 1px solid rgba(122,184,152,0.12);
+      border-radius: 50%;
+    }
+
+    /* ─── 固定UI: 左上ゾーン情報 ─── */
+    .fixed-ui {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      pointer-events: none;
+    }
+
+    .zone-indicator {
+      padding: 20px clamp(1.5rem, 4vw, 4rem);
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .indicator-zone-name {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      transition: color 0.4s ease;
+    }
+
+    /* ─── 横方向プログレスバー ─── */
+    .h-progress-wrap {
+      position: fixed;
+      bottom: 32px;
+      left: clamp(1.5rem, 4vw, 4rem);
+      right: clamp(1.5rem, 4vw, 4rem);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      pointer-events: none;
+    }
+
+    .h-progress-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .h-progress-track {
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.06);
+      position: relative;
+    }
+
+    .h-progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--accent), rgba(122,184,152,0.3));
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    /* ゾーンドット */
+    .zone-dots {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .zone-dot {
+      width: 4px;
+      height: 4px;
+      background: var(--text-muted);
+      opacity: 0.3;
+      transition: opacity 0.3s ease, background 0.3s ease;
+    }
+
+    .zone-dot.active {
+      background: var(--accent);
+      opacity: 1;
+    }
+
+    /* ─── モバイル: 縦スクロールへフォールバック ─── */
+    @media (max-width: 767px) {
+      html { height: auto; }
+
+      .panorama-viewport {
+        position: static;
+        height: auto;
+        overflow: visible;
+      }
+
+      .panorama-track {
+        flex-direction: column;
+        width: 100%;
+        height: auto;
+        transform: none !important;
+        transition: none !important;
+      }
+
+      .zone {
+        width: 100%;
+        height: 100svh;
+        justify-content: flex-end;
+      }
+
+      .fixed-ui { display: none; }
+
+      .h-progress-wrap {
+        position: static;
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 固定UI -->
+  <div class="fixed-ui">
+    <div class="zone-indicator">
+      <span class="indicator-zone-name" id="zoneNameDisplay">— Zone 00: 入り口</span>
+    </div>
+  </div>
+
+  <!-- 横プログレス -->
+  <div class="h-progress-wrap">
+    <span class="h-progress-label">position</span>
+    <div class="h-progress-track">
+      <div class="h-progress-fill" id="hProgressFill"></div>
+    </div>
+    <div class="zone-dots">
+      <div class="zone-dot active" data-zone="0"></div>
+      <div class="zone-dot" data-zone="1"></div>
+      <div class="zone-dot" data-zone="2"></div>
+      <div class="zone-dot" data-zone="3"></div>
+    </div>
+  </div>
+
+  <!-- メインビューポート -->
+  <div class="panorama-viewport">
+    <div class="panorama-track" id="panoramaTrack">
+
+      <!-- Zone 0: 入り口 -->
+      <div class="zone zone-0" data-zone-name="Zone 00: 入り口">
+        <div class="zone-horizon"></div>
+        <div class="zone-ground"></div>
+        <div class="zone-deco"></div>
+        <div class="zone-index">
+          <span class="zone-num">// 00</span>
+          <span class="zone-region">Gateway</span>
+        </div>
+        <div class="zone-content">
+          <span class="zone-label">// Zone 00</span>
+          <h2 class="zone-title">旅は、ここから始まる</h2>
+          <p class="zone-desc">スクロールすることで、世界を横断する。それぞれの場所に、固有の物語が眠っている。</p>
+        </div>
+      </div>
+
+      <!-- Zone 1: 平原 -->
+      <div class="zone zone-1" data-zone-name="Zone 01: 広大な平原">
+        <div class="zone-horizon"></div>
+        <div class="zone-ground"></div>
+        <div class="zone-deco"></div>
+        <div class="zone-index">
+          <span class="zone-num">// 01</span>
+          <span class="zone-region">Highlands</span>
+        </div>
+        <div class="zone-content">
+          <span class="zone-label">// Zone 01</span>
+          <h2 class="zone-title">終わりのない草原</h2>
+          <p class="zone-desc">どこまで歩いても地平線は逃げる。それでも歩く。向こうに何かがあると、体が知っているから。</p>
+        </div>
+      </div>
+
+      <!-- Zone 2: 遺跡 -->
+      <div class="zone zone-2" data-zone-name="Zone 02: 古代遺跡">
+        <div class="zone-horizon"></div>
+        <div class="zone-ground"></div>
+        <div class="zone-deco"></div>
+        <div class="zone-index">
+          <span class="zone-num">// 02</span>
+          <span class="zone-region">Ruins</span>
+        </div>
+        <div class="zone-content">
+          <span class="zone-label">// Zone 02</span>
+          <h2 class="zone-title">残骸は語りかける</h2>
+          <p class="zone-desc">かつてここに都市があった。証拠はまだ残っている。石の中に、消えた人々の意志が刻まれている。</p>
+        </div>
+      </div>
+
+      <!-- Zone 3: 到達点 -->
+      <div class="zone zone-3" data-zone-name="Zone 03: 終点">
+        <div class="zone-horizon"></div>
+        <div class="zone-ground"></div>
+        <div class="zone-deco"></div>
+        <div class="zone-index">
+          <span class="zone-num">// 03</span>
+          <span class="zone-region">Terminus</span>
+        </div>
+        <div class="zone-content">
+          <span class="zone-label">// Zone 03</span>
+          <h2 class="zone-title">ここが、目的地だったのか</h2>
+          <p class="zone-desc">到達してみると、終点は始点に似ていた。旅の意味は、目的地にあるのではなく、歩いた距離の中にある。</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // ─── 縦スクロール → 横移動の変換 ───
+    // モバイル判定: 横移動ロジックを無効化
+    const isMobile = () => window.innerWidth <= 767;
+
+    const track = document.getElementById('panoramaTrack');
+    const fill  = document.getElementById('hProgressFill');
+    const zoneName = document.getElementById('zoneNameDisplay');
+    const dots  = document.querySelectorAll('.zone-dot');
+    const zones = document.querySelectorAll('.zone');
+
+    function updatePanorama() {
+      if (isMobile()) return;
+
+      const scrollY   = window.scrollY;
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const progress  = maxScroll > 0 ? Math.min(scrollY / maxScroll, 1) : 0;
+
+      // 横移動: トラック全幅 - ビューポート幅 × progress
+      const totalWidth  = window.innerWidth * zones.length;
+      const maxTranslate = totalWidth - window.innerWidth;
+      const translateX  = progress * maxTranslate;
+
+      track.style.transform = `translateX(-${translateX}px)`;
+
+      // プログレスバー
+      fill.style.width = (progress * 100) + '%';
+
+      // 現在ゾーン
+      const zoneIndex = Math.min(Math.floor(progress * zones.length), zones.length - 1);
+      const currentZone = zones[zoneIndex];
+      if (currentZone) {
+        zoneName.textContent = '— ' + currentZone.dataset.zoneName;
+      }
+
+      // ゾーンドット
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === zoneIndex);
+      });
+    }
+
+    window.addEventListener('scroll', updatePanorama, { passive: true });
+    window.addEventListener('resize', () => {
+      // リサイズ時にリセット
+      if (isMobile()) {
+        track.style.transform = '';
+      }
+    });
+
+    // 初期化
+    updatePanorama();
+  </script>
+</body>
+</html>

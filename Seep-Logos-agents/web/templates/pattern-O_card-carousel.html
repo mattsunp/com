@@ -115,6 +115,7 @@
       background:
         radial-gradient(ellipse 80% 60% at 50% 0%, rgba(108,99,255,0.18) 0%, transparent 70%),
         radial-gradient(ellipse 60% 40% at 80% 80%, rgba(180,110,255,0.10) 0%, transparent 60%),
+        url('../assets/images/background.png') center/cover no-repeat,
         var(--bg);
     }
     .hero-noise {
@@ -756,6 +757,7 @@
       date: '2026.03.30',
       title: '[PLACEHOLDER] 第3キャラクター公開',
       body: '[PLACEHOLDER] 新キャラクターの情報をここに入力します。設定・プロフィール・CV等の概要が入ります。詳細はリンク先にて。',
+      image: '../assets/images/scene.png',
       isNew: true,
       link: '#'
     },
@@ -941,7 +943,7 @@
       el.setAttribute('tabindex', '0');
       el.innerHTML = `
         <div class="card-img" style="background:${color}20; border-bottom: 1px solid ${color}30;">
-          <span>${catLabel.charAt(0)}</span>
+          ${card.image ? `<img src="${card.image}" alt="${card.title}">` : `<span>${catLabel.charAt(0)}</span>`}
         </div>
         <div class="card-body">
           <div class="card-meta">

@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>pattern-AI: kinetic-manifest | Seep Logos</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #080810;
+      --text:         #e8e3da;
+      --text-dim:     #888899;
+      --text-muted:   #555566;
+      /* IP Placeholder: 宣言・マニフェスト = bright gold。力強い主張 */
+      --accent:       #e0c078;
+      --accent-glow:  rgba(224,192,120,0.25);
+
+      --font-serif: Georgia, "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", serif;
+      --font-sans:  -apple-system, "Helvetica Neue", "Hiragino Kaku Gothic ProN", sans-serif;
+      --font-mono:  "Courier New", Courier, monospace;
+    }
+
+    html {
+      /* スクロール量 = キネティックステージ数 × 100vh */
+      height: calc(9 * 100vh);
+      scroll-behavior: auto; /* キネティック制御のためsmoothを無効化 */
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-serif);
+      line-height: 1;
+      overflow-x: hidden;
+    }
+
+    /* ─── ステージ（固定ビューポート） ─── */
+    .manifest-stage {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* ─── ステップ共通 ─── */
+    /* 各ステップは独立したキネティック演出を持つ */
+    .manifest-step {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: clamp(2rem, 6vw, 6rem);
+      opacity: 0;
+      pointer-events: none;
+      /* 各ステップに独自のtransitionを持たせる（JSで上書き） */
+    }
+
+    .manifest-step.enter  { opacity: 1; pointer-events: auto; }
+    .manifest-step.exit   { opacity: 0; pointer-events: none; }
+
+    /* ─── Step 0: 序章 — タイプライター ─── */
+    /* 世界が始まる前の静寂 */
+    .step-0 .pre-text {
+      font-family: var(--font-mono);
+      font-size: clamp(10px, 1.5vw, 13px);
+      letter-spacing: 0.5em;
+      color: var(--text-muted);
+      text-align: center;
+      text-transform: uppercase;
+      overflow: hidden;
+      white-space: nowrap;
+      width: 0;
+      animation: none;
+    }
+
+    .step-0.enter .pre-text {
+      animation: typewrite 1.2s steps(30) 0.3s forwards;
+    }
+
+    @keyframes typewrite {
+      from { width: 0; }
+      to   { width: 100%; }
+    }
+
+    /* ─── Step 1: 大宣言 — 降下 ─── */
+    /* 一語が上空から落ちてくる */
+    .step-1 .big-word {
+      font-family: var(--font-serif);
+      font-size: clamp(4rem, 16vw, 12rem);
+      font-weight: normal;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      text-align: center;
+    }
+
+    .step-1.enter .big-word {
+      animation: drop-in 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+    }
+
+    .step-1.exit .big-word {
+      animation: dissolve-up 0.5s ease forwards;
+    }
+
+    @keyframes drop-in {
+      from { opacity: 0; transform: translateY(-40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes dissolve-up {
+      from { opacity: 1; transform: translateY(0); }
+      to   { opacity: 0; transform: translateY(-20px); }
+    }
+
+    /* ─── Step 2: 分裂 — 一語が左右に割れる ─── */
+    .step-2 {
+      flex-direction: row;
+      gap: clamp(2rem, 6vw, 8rem);
+    }
+
+    .step-2 .word-left,
+    .step-2 .word-right {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 7vw, 6rem);
+      font-weight: normal;
+      color: var(--text);
+      opacity: 0;
+    }
+
+    .step-2.enter .word-left {
+      animation: slide-from-right 0.7s cubic-bezier(0.4,0,0.2,1) 0.1s forwards;
+    }
+
+    .step-2.enter .word-right {
+      animation: slide-from-left 0.7s cubic-bezier(0.4,0,0.2,1) 0.1s forwards;
+    }
+
+    @keyframes slide-from-right {
+      from { opacity: 0; transform: translateX(60px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes slide-from-left {
+      from { opacity: 0; transform: translateX(-60px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    /* ─── Step 3: 収束 — 複数の語が中央に集まる ─── */
+    .step-3 {
+      flex-direction: column;
+      gap: 0.2em;
+    }
+
+    .step-3 .converge-word {
+      font-family: var(--font-serif);
+      font-size: clamp(1.4rem, 4vw, 3.5rem);
+      font-weight: normal;
+      color: var(--text-dim);
+      text-align: center;
+      opacity: 0;
+    }
+
+    .step-3 .converge-word.main {
+      color: var(--text);
+      font-size: clamp(2rem, 6vw, 5rem);
+    }
+
+    .step-3.enter .converge-word:nth-child(1) { animation: rise 0.6s ease 0.0s forwards; }
+    .step-3.enter .converge-word:nth-child(2) { animation: rise 0.7s ease 0.15s forwards; }
+    .step-3.enter .converge-word:nth-child(3) { animation: rise 0.8s ease 0.30s forwards; }
+    .step-3.enter .converge-word:nth-child(4) { animation: rise 0.7s ease 0.20s forwards; }
+    .step-3.enter .converge-word:nth-child(5) { animation: rise 0.6s ease 0.05s forwards; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── Step 4: アクセント宣言 ─── */
+    /* 黄金色のテキスト、左揃え */
+    .step-4 {
+      align-items: flex-start;
+      padding-left: clamp(3rem, 10vw, 14rem);
+    }
+
+    .step-4 .accent-line {
+      font-family: var(--font-serif);
+      font-size: clamp(1.6rem, 4.5vw, 4rem);
+      font-weight: normal;
+      color: var(--accent);
+      line-height: 1.3;
+      opacity: 0;
+    }
+
+    .step-4 .accent-sub {
+      font-family: var(--font-mono);
+      font-size: clamp(10px, 1.5vw, 13px);
+      letter-spacing: 0.4em;
+      color: var(--text-muted);
+      margin-top: 1.5rem;
+      text-transform: uppercase;
+      opacity: 0;
+    }
+
+    .step-4.enter .accent-line { animation: rise 0.9s ease 0.1s forwards; }
+    .step-4.enter .accent-sub  { animation: rise 0.7s ease 0.6s forwards; }
+
+    /* ─── Step 5: モノクローム宣言 ─── */
+    /* 一文が、中央に大きく。ゲームのオープニングタイトル的 */
+    .step-5 {
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .step-5 .manifest-line {
+      font-family: var(--font-serif);
+      font-size: clamp(1.2rem, 3vw, 2.6rem);
+      font-weight: normal;
+      color: var(--text-dim);
+      text-align: center;
+      max-width: 720px;
+      opacity: 0;
+      line-height: 1.5;
+    }
+
+    .step-5.enter .manifest-line:nth-child(1) { animation: rise 0.8s ease 0.0s forwards; }
+    .step-5.enter .manifest-line:nth-child(2) { animation: rise 0.8s ease 0.2s forwards; }
+    .step-5.enter .manifest-line:nth-child(3) { animation: rise 0.8s ease 0.4s forwards; color: var(--text); }
+
+    /* ─── Step 6: 空白 — 沈黙 ─── */
+    /* 何も表示しない。これ自体がデザイン */
+    .step-6 .silence {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.6em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      opacity: 0;
+    }
+
+    .step-6.enter .silence {
+      animation: pulse-fade 2s ease 0.5s forwards;
+    }
+
+    @keyframes pulse-fade {
+      0%   { opacity: 0; }
+      40%  { opacity: 0.5; }
+      100% { opacity: 0.5; }
+    }
+
+    /* ─── Step 7: 結語 ─── */
+    .step-7 {
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .step-7 .final-word {
+      font-family: var(--font-serif);
+      font-size: clamp(3rem, 10vw, 8rem);
+      font-weight: normal;
+      color: var(--text);
+      opacity: 0;
+      letter-spacing: 0.06em;
+    }
+
+    .step-7 .final-sub {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      color: var(--accent);
+      text-transform: uppercase;
+      opacity: 0;
+    }
+
+    .step-7.enter .final-word { animation: drop-in 0.9s cubic-bezier(0.22,0.61,0.36,1) forwards; }
+    .step-7.enter .final-sub  { animation: rise 0.7s ease 0.6s forwards; }
+
+    /* ─── Step 8: 終幕 ─── */
+    .step-8 {
+      background: #000;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .step-8 .end-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.5em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      opacity: 0;
+    }
+
+    .step-8.enter .end-label { animation: rise 0.7s ease 0.3s forwards; }
+
+    /* ─── スクロールプログレス（右端縦バー） ─── */
+    .scroll-progress-track {
+      position: fixed;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 120px;
+      width: 1px;
+      background: rgba(255,255,255,0.06);
+      z-index: 300;
+    }
+
+    .scroll-progress-fill {
+      width: 100%;
+      background: var(--accent);
+      height: 0%;
+      transition: height 0.15s ease;
+      transform-origin: top;
+    }
+
+    /* ステップドット */
+    .step-dots {
+      position: fixed;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 300;
+    }
+
+    .step-dot {
+      width: 4px;
+      height: 4px;
+      background: var(--text-muted);
+      opacity: 0.3;
+      transition: opacity 0.3s ease, background 0.3s ease;
+    }
+
+    .step-dot.active {
+      background: var(--accent);
+      opacity: 1;
+    }
+
+    /* ─── モバイル: キネティック → 縦スクロールリスト ─── */
+    @media (max-width: 767px) {
+      html { height: auto; }
+
+      .manifest-stage {
+        position: static;
+        display: block;
+      }
+
+      .manifest-step {
+        position: static;
+        opacity: 1;
+        pointer-events: auto;
+        min-height: 60vh;
+        padding: 48px 24px;
+      }
+
+      .step-2 { flex-direction: column; }
+
+      .step-4 {
+        align-items: center;
+        padding-left: 24px;
+      }
+
+      /* すべてのアニメーションをリセット */
+      .manifest-step * {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+        width: auto !important;
+      }
+
+      .step-dots,
+      .scroll-progress-track { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ステップドット（右端） -->
+  <div class="step-dots" id="stepDots">
+    <!-- JSで生成 -->
+  </div>
+
+  <!-- キネティックステージ -->
+  <div class="manifest-stage" id="manifestStage">
+
+    <!-- Step 0: 静寂の始まり -->
+    <div class="manifest-step step-0" data-step="0">
+      <div class="pre-text">// initializing world — please stand by</div>
+    </div>
+
+    <!-- Step 1: 最初の言葉 -->
+    <div class="manifest-step step-1" data-step="1">
+      <div class="big-word">世界</div>
+    </div>
+
+    <!-- Step 2: 分裂 -->
+    <div class="manifest-step step-2" data-step="2">
+      <div class="word-left">あなたと</div>
+      <div class="word-right">私の間</div>
+    </div>
+
+    <!-- Step 3: 収束 -->
+    <div class="manifest-step step-3" data-step="3">
+      <div class="converge-word">どこから来て</div>
+      <div class="converge-word">どこへ向かうか</div>
+      <div class="converge-word main">わからなくていい</div>
+      <div class="converge-word">ただ</div>
+      <div class="converge-word">今がある</div>
+    </div>
+
+    <!-- Step 4: アクセント宣言 -->
+    <div class="manifest-step step-4" data-step="4">
+      <div class="accent-line">
+        これは、ゲームではない。<br>
+        ここは、世界だ。
+      </div>
+      <div class="accent-sub">— seep logos manifesto</div>
+    </div>
+
+    <!-- Step 5: 複数行マニフェスト -->
+    <div class="manifest-step step-5" data-step="5">
+      <div class="manifest-line">私たちは娯楽を作っているのではない。</div>
+      <div class="manifest-line">受け手が消えていく場所を作っている。</div>
+      <div class="manifest-line">自分と世界の境が、薄れる場所を。</div>
+    </div>
+
+    <!-- Step 6: 沈黙 -->
+    <div class="manifest-step step-6" data-step="6">
+      <div class="silence">— silence —</div>
+    </div>
+
+    <!-- Step 7: 結語 -->
+    <div class="manifest-step step-7" data-step="7">
+      <div class="final-word">没入</div>
+      <div class="final-sub">immersion — that is all</div>
+    </div>
+
+    <!-- Step 8: 終幕 -->
+    <div class="manifest-step step-8" data-step="8">
+      <div class="end-label">Seep Logos &mdash; pattern-AI: kinetic-manifest</div>
+    </div>
+
+  </div>
+
+  <script>
+    const isMobile = () => window.innerWidth <= 767;
+
+    const steps = document.querySelectorAll('.manifest-step');
+    const dotsWrap = document.getElementById('stepDots');
+    const numSteps = steps.length;
+
+    // ─── ステップドット生成 ───
+    steps.forEach((_, i) => {
+      const dot = document.createElement('div');
+      dot.className = 'step-dot';
+      dot.dataset.step = i;
+      dotsWrap.appendChild(dot);
+    });
+
+    const dots = dotsWrap.querySelectorAll('.step-dot');
+
+    let currentStep = -1;
+
+    function activateStep(index) {
+      if (index === currentStep) return;
+
+      steps.forEach((step, i) => {
+        const wasActive = step.classList.contains('enter');
+        step.classList.remove('enter', 'exit');
+
+        if (i === index) {
+          step.classList.add('enter');
+        } else if (wasActive && i < index) {
+          step.classList.add('exit');
+        }
+      });
+
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+      });
+
+      currentStep = index;
+    }
+
+    function onScroll() {
+      if (isMobile()) return;
+
+      const scrollY   = window.scrollY;
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const progress  = maxScroll > 0 ? scrollY / maxScroll : 0;
+
+      // どのステップかを算出
+      const stepIndex = Math.min(Math.floor(progress * numSteps), numSteps - 1);
+      activateStep(stepIndex);
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    // 初期化
+    if (!isMobile()) {
+      activateStep(0);
+    }
+  </script>
+</body>
+</html>

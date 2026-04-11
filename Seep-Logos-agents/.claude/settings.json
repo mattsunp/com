@@ -1,4 +1,11 @@
 {
+  "permissions": {
+    "allow": [                                                                                                     
+      "Bash(git status)",
+      "Bash(git diff *)",                                                                                          
+      "Bash(git log *)"
+    ]
+  },
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -7,6 +14,24 @@
           {
             "type": "command",
             "command": "python3 /Users/matsuura-hisashi/com/Seep-Logos-agents/.reminiscence/context-watch.py"
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /Users/matsuura-hisashi/com/Seep-Logos-agents/.reminiscence/reminiscence.py inject"
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /Users/matsuura-hisashi/com/Seep-Logos-agents/.reminiscence/reminiscence.py process-session"
           }
         ]
       }

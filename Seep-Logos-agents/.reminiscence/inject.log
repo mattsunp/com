@@ -262,3 +262,155 @@
 2026-04-04T20:20:26 | hits=0 | chars=0 | query=セッションの前半が見れなくなってしまうのなんとかならない？２回くらい指示するとそれより前の会話が見れ
 2026-04-04T20:22:58 | hits=0 | chars=0 | query=①やったあと、②にしたいけど、あなたがいう7トピックをどこかセッション外に一時的にメモとかしてくれな
 2026-04-04T20:31:57 | hits=0 | chars=0 | query=トピックが累積してセッションの表示量に悪影響を与えているなら一旦整理したいけど、どう思う？
+2026-04-04T20:41:12 | hits=0 | chars=0 | query=vscodeでいまそうかしているけど、ソース管理でのコミットや同期はgithub用って理解で合ってる
+2026-04-04T20:42:17 | hits=0 | chars=0 | query=このリポジトリはローカルにあるものを参照しているから、かならずしもgithubに同期しなくてもいいよ
+2026-04-04T20:43:22 | hits=0 | chars=0 | query=別PCでのアクセスもリモートコントロールなので、githubに同期する意味が、今はあまりないんだよね
+2026-04-04T20:48:35 | hits=0 | chars=0 | query=なるほど。Cmd+sで点が消えました。cmd+sと同じ効果が出るメニューはvscodeのインターフェ
+2026-04-04T20:50:22 | hits=0 | chars=0 | query=なるほど、理解できました。
+2026-04-04T20:52:47 | hits=0 | chars=0 | query=1やるけど、なにか懸念ある？
+2026-04-04T20:53:45 | hits=0 | chars=0 | query=そんなに邪魔にならないならとりあえず残しておきたいけど、どうですか？
+2026-04-04T21:33:34 | hits=0 | chars=0 | query=今日、用語集を作ったと思うんだけど、どこにあるんだっけ？
+2026-04-04T21:35:32 | hits=0 | chars=0 | query=docsについて、どのmdがなんのマニュアルなのかが一目でわかるインデックスの役割のmdを作りたいと
+2026-04-04T21:38:56 | hits=0 | chars=0 | query=記録して締めよう
+2026-04-04T21:45:46 | hits=0 | chars=0 | query=ポリシーって、どういうものとして認識している？
+2026-04-04T21:46:22 | hits=0 | chars=0 | query=一般的な用語としてのポリシー法海について聞いてます
+2026-04-04T21:47:36 | hits=0 | chars=0 | query=私がSeepLogosに課したい意思統一はポリシーで合ってるかな？
+2026-04-04T21:48:05 | hits=0 | chars=0 | query=行動指針かな
+2026-04-04T21:50:42 | hits=0 | chars=0 | query=クライアントや、エージェントにとっての私など、相手がいて、相手の望む何かを作る場合に大切なのは、質問
+2026-04-04T21:52:11 | hits=0 | chars=0 | query=「穴埋め」をするのではなく、仮説や仮定を予め持ってから質問し、相手の言葉を真摯に受け止めて仮で持って
+2026-04-04T21:53:29 | hits=0 | chars=0 | query=現況で言うと、webディレクターやwebデザイナーは特にこういったマインドをインプットして欲しい。行
+2026-04-04T22:03:24 | hits=1 | chars=305 | query=記録しよう
+2026-04-04T22:05:34 | hits=0 | chars=0 | query=やや遅めに再設定してみてくれる？
+2026-04-05T20:36:30 | hits=0 | chars=0 | query=最近でやり残しているタスクあったっけ？
+2026-04-05T20:37:17 | hits=0 | chars=0 | query=シナリオ書きとゲームディレクターも天才化設計しよう
+2026-04-05T20:43:34 | hits=0 | chars=0 | query=claude codeの公式プラグインだ。確認してみて
+2026-04-05T20:46:10 | hits=0 | chars=0 | query=プラグインはトークンの消費が激しくなるからなるべく入れたくないんだよ。ただ、有用なものは取り入れたい
+2026-04-05T20:48:07 | hits=0 | chars=0 | query=ん。クローズにしよう。いったん記録して、そのあといちどクリーンかける。
+2026-04-05T20:53:09 | hits=0 | chars=0 | query=いまトピックたまってないよね？
+2026-04-05T20:53:29 | hits=0 | chars=0 | query=最近のタスクで残ってるやつある？
+2026-04-05T21:37:01 | hits=0 | chars=0 | query=記録して。クリアするから。
+2026-04-06T00:18:21 | hits=0 | chars=0 | query=別のところでclaudeを使って有意義な会話をしたセッションがあるんだけど、これを参考資料としてとっ
+2026-04-06T00:19:01 | hits=0 | chars=0 | query=ここに貼るから全文残しておいてくれる？
+2026-04-06T00:19:11 | hits=0 | chars=0 | query=Genspark Clause価格戦略の背景と経営実態の考察
+共有
+genspark clawについ
+2026-04-06T00:22:49 | hits=0 | chars=0 | query=確認したんだけど、随所で要約しているよね？
+2026-04-06T00:25:52 | hits=0 | chars=0 | query=私が「全文」と言う時は、一言一句変更しないで、という形で捉えてください。これは強く覚えておいて欲しい
+2026-04-06T00:25:53 | hits=0 | chars=0 | query=その上で、あなたのQ＆A形式の整理版は見やすくなるので、別途ファイルを作成して欲しい。
+2026-04-06T00:38:27 | hits=0 | chars=0 | query=メモリーの強く記録って、具体的にはどこに書かれてるとか確認できるかな。
+2026-04-06T00:43:48 | hits=0 | chars=0 | query=このmemoryの中のファイルって、もちろん重要なのでちゃんと覚えておいては欲しいけど、増えると守ら
+2026-04-06T00:44:59 | hits=0 | chars=0 | query=このmemory内のmdの中身は、私が直接編集しない方がいいとかある？
+2026-04-06T23:03:29 | hits=0 | chars=0 | query=注意点のやつ、具体的に例示してみて
+2026-04-07T23:36:52 | hits=0 | chars=0 | query=MOMORYのSNSのルールについてみてたんだけど、rulesかskillsでいい気がしたけど、その
+2026-04-07T23:38:05 | hits=0 | chars=0 | query=なんのエラー？
+2026-04-07T23:39:46 | hits=0 | chars=0 | query=MEMORYのSNSについての部分を見てたんだけど、これってrulesかskillsでもいいように感
+2026-04-07T23:40:19 | hits=0 | chars=0 | query=話できる？
+2026-04-07T23:44:03 | hits=0 | chars=0 | query=claude code logout
+2026-04-07T23:44:14 | hits=0 | chars=0 | query=claude logout
+2026-04-07T23:47:20 | hits=0 | chars=0 | query=話できる？
+2026-04-09T11:41:50 | hits=0 | chars=0 | query=記録してから続けましょう
+2026-04-09T11:45:34 | hits=0 | chars=0 | query=まずは1を進めてみたい
+2026-04-09T11:46:20 | hits=5 | chars=1280 | query="settings" OR "json" OR "設定" OR "見直し"
+2026-04-09T11:48:07 | hits=5 | chars=1639 | query="保存" OR "トークナイズ" OR "tags" OR "追加" OR "する" OR "トー"
+2026-04-09T11:51:16 | hits=5 | chars=1088 | query="忘れ" OR "よう" OR "打っ" OR "おき" OR "一括" OR "処理" OR "時
+2026-04-09T11:51:57 | hits=1 | old=0 | chars=199 | query="settings" OR "json" OR "設定" OR "見直し"
+2026-04-09T11:52:36 | hits=5 | old=0 | chars=1082 | query="記録" OR "セッション" OR "新しく" OR "する"
+2026-04-09T16:03:24 | hits=5 | old=0 | chars=1082 | query="セッション" OR "なに"
+2026-04-09T16:04:13 | hits=5 | old=0 | chars=1514 | query="reminiscence" OR "想定" OR "通り" OR "稼働" OR "いる" OR 
+2026-04-09T16:05:57 | hits=5 | old=0 | chars=1666 | query="setting" OR "json" OR "入れる" OR "こと"
+2026-04-09T16:06:14 | hits=5 | old=0 | chars=291 | query="やっ" OR "ください"
+2026-04-09T16:08:13 | hits=5 | old=0 | chars=382 | query="reminiscence" OR "想定" OR "通り" OR "動い" OR "いる" OR 
+2026-04-09T16:10:20 | hits=5 | old=0 | chars=403 | query="参考" OR "資料" OR "これ" OR "欲しい"
+2026-04-09T16:10:28 | hits=5 | old=0 | chars=1041 | query="Claude" OR "Code" OR "精度" OR "100" OR "する" OR "フォ
+2026-04-09T16:13:41 | hits=0 | old=0 | chars=0 | query="showThinkingSummaries" OR "true" OR "effortLevel"
+2026-04-09T16:15:16 | hits=5 | old=0 | chars=3744 | query="あなた" OR "提案" OR "グローバル" OR "seep" OR "logos" OR "
+2026-04-09T16:17:52 | hits=5 | old=0 | chars=1666 | query="手動" OR "入れよ" OR "思う" OR "いま" OR "setting" OR "jso
+2026-04-09T16:19:05 | hits=3 | old=0 | chars=1415 | query="書い" OR "あっ" OR "てる" OR "もらっ" OR "いい"
+2026-04-09T16:20:27 | hits=5 | old=0 | chars=1450 | query="allow" OR "スペース" OR "ふたつ" OR "削る" OR "であっ" OR "てる
+2026-04-09T16:21:33 | hits=0 | old=0 | chars=0 | query="これ"
+2026-04-09T16:22:08 | hits=0 | old=0 | chars=0 | query="これ"
+2026-04-09T16:22:43 | hits=0 | old=0 | chars=0 | query="これ"
+2026-04-09T16:24:30 | hits=0 | old=0 | chars=0 | query="いま" OR "やり" OR "残し" OR "てる" OR "こと"
+2026-04-09T16:26:31 | hits=5 | old=0 | chars=1076 | query="システム" OR "インフラ" OR "やる" OR "確認" OR "一つ" OR "やり" O
+2026-04-09T16:27:32 | hits=5 | old=0 | chars=2535 | query="トークナイズ" OR "判断" OR "入っ"
+2026-04-09T16:31:25 | hits=5 | old=0 | chars=592 | query="提案" OR "もの" OR "あなた" OR "判断" OR "疑問符" OR "つけ" OR 
+2026-04-09T16:33:02 | hits=0 | old=0 | chars=0 | query="遡及" OR "処理" OR "行う" OR "認識" OR "いい" OR "今後" OR "毎
+2026-04-09T16:33:18 | hits=5 | old=0 | chars=291 | query="両方" OR "やっ" OR "ください"
+2026-04-09T16:35:54 | hits=5 | old=0 | chars=1542 | query="検証" OR "テスト" OR "いい"
+2026-04-09T16:36:54 | hits=5 | old=0 | chars=2121 | query="reminiscence" OR "あなた" OR "長期" OR "記憶" OR "有用" OR
+2026-04-09T16:38:14 | hits=5 | old=0 | chars=947 | query="記録" OR "セッション" OR "改めよ"
+2026-04-09T16:41:11 | hits=0 | old=0 | chars=0 | query="残っ" OR "てる" OR "すくっ" OR "あっ"
+2026-04-09T16:52:17 | hits=5 | old=0 | chars=1023 | query="残っ" OR "てる" OR "タスク" OR "あり"
+2026-04-09T18:30:39 | hits=0 | old=0 | chars=0 | query="うごい"
+2026-04-09T18:30:56 | hits=5 | old=0 | chars=1023 | query="残っ" OR "いる" OR "タスク" OR "なん"
+2026-04-09T18:31:47 | hits=5 | old=0 | chars=941 | query="ほか" OR "直近" OR "セッション" OR "残っ" OR "検討" OR "事案" OR
+2026-04-09T18:33:02 | hits=5 | old=0 | chars=2758 | query="deny" OR "allow" OR "優先" OR "順位" OR "仕様" OR "確認" 
+2026-04-09T18:34:45 | hits=5 | old=0 | chars=3305 | query="memory" OR "reminiscence" OR "settings" OR "local
+2026-04-09T18:41:36 | hits=5 | old=0 | chars=2254 | query="git" OR "管理" OR "プロジェクト" OR "コピー" OR "する" OR "コミッ
+2026-04-09T18:43:50 | hits=5 | old=0 | chars=1455 | query="削除" OR "対策" OR "git" OR "管理" OR "容認" OR "ファイル" OR
+2026-04-09T18:45:47 | hits=5 | old=0 | chars=1050 | query="一つ" OR "いう" OR "削除" OR "する" OR "ケース" OR "あなた" OR 
+2026-04-09T18:49:00 | hits=5 | old=0 | chars=1904 | query="root" OR "claude" OR "setting" OR "json" OR "対応" 
+2026-04-09T18:50:40 | hits=5 | old=0 | chars=2399 | query="それ" OR "claude" OR "以下" OR "全て" OR "ファイル" OR "削除"
+2026-04-09T18:52:15 | hits=5 | old=0 | chars=2153 | query="claude" OR "全体" OR "保護" OR "いい" OR "影響" OR "ある" O
+2026-04-09T18:54:46 | hits=0 | old=0 | chars=0 | query="showThinkingSummaries" OR "":" OR "true" OR "effo
+2026-04-09T18:55:45 | hits=0 | old=0 | chars=0 | query="showThinkingSummaries" OR "":" OR "true" OR "effo
+2026-04-09T18:56:05 | hits=5 | old=0 | chars=431 | query="clear" OR "する"
+2026-04-10T16:20:50 | hits=5 | old=0 | chars=2482 | query="web" OR "テンプレート" OR "増やし" OR "いき" OR "AA" OR "AB"
+2026-04-10T16:27:32 | hits=5 | old=0 | chars=1306 | query="行く" OR "相談" OR "クライアント" OR "提案" OR "する" OR "デザイン"
+2026-04-10T16:29:11 | hits=5 | old=0 | chars=1347 | query="一方" OR "差別" OR "意識" OR "すぎる" OR "あまり" OR "奇抜" OR 
+2026-04-10T16:29:56 | hits=5 | old=0 | chars=816 | query="ゲーム" OR "中心" OR "置い" OR "ください"
+2026-04-10T16:56:00 | hits=5 | old=0 | chars=915 | query="index" OR "html" OR "ディレクトリ" OR "入っ" OR "てる" OR "
+2026-04-10T23:16:27 | hits=5 | old=0 | chars=2631 | query="今日" OR "昨日" OR "話題" OR "なっ" OR "claude" OR "トピック"
+2026-04-10T23:24:06 | hits=5 | old=0 | chars=844 | query="https" OR "://" OR "gist" OR "github" OR "com" OR
+2026-04-10T23:26:00 | hits=5 | old=0 | chars=1176 | query="たち" OR "考え方" OR "活用" OR "できる" OR "部分" OR "ある"
+2026-04-10T23:29:20 | hits=1 | old=0 | chars=834 | query="wiki" OR "CMS" OR "思っ" OR "場合" OR "wiki" OR "意味" 
+2026-04-10T23:32:14 | hits=5 | old=0 | chars=2127 | query="注意" OR "現状" OR "reminiscence" OR "ソース" OR "機能" OR
+2026-04-10T23:34:49 | hits=1 | old=0 | chars=1107 | query="reminiscenece" OR "置き換える"
+2026-04-10T23:40:36 | hits=5 | old=0 | chars=2048 | query="ログ" OR "全文" OR "エビデンス" OR "なり" OR "価値" OR "生まれる" 
+2026-04-10T23:44:02 | hits=5 | old=0 | chars=1442 | query="rreminiscence" OR "全文" OR "データ" OR "残す" OR "こと" O
+2026-04-10T23:47:22 | hits=5 | old=0 | chars=2149 | query="これ" OR "どこ" OR "memory" OR "ディレクトリ" OR "こと" OR "言
+2026-04-10T23:49:10 | hits=5 | old=0 | chars=1541 | query="reminiscence" OR "seep" OR "logos" OR "agents" OR
+2026-04-10T23:50:30 | hits=0 | old=0 | chars=0 | query="やっ"
+2026-04-10T23:56:43 | hits=0 | old=0 | chars=0 | query="showThinkingSummaries" OR "":" OR "true" OR "effo
+2026-04-10T23:58:01 | hits=0 | old=0 | chars=0 | query="showThinkingSummaries" OR "":" OR "true" OR "effo
+2026-04-10T23:58:57 | hits=0 | old=0 | chars=0 | query="showThinkingSummaries" OR "":" OR "true" OR "effo
+2026-04-10T23:59:30 | hits=5 | old=0 | chars=365 | query="OK" OR "保存" OR "問題" OR "ファイル" OR "くれる"
+2026-04-10T23:59:47 | hits=0 | old=0 | chars=0 | query="記録" OR "しよ"
+2026-04-11T00:03:08 | hits=5 | old=0 | chars=2840 | query="セッション" OR "作っ" OR "digest" OR "機能" OR "いる" OR "検証
+2026-04-11T00:05:04 | hits=5 | old=0 | chars=2682 | query="stop" OR "hook" OR "追加"
+2026-04-11T00:06:50 | hits=5 | old=0 | chars=2538 | query="seep" OR "logos" OR "setting" OR "json" OR "かい"
+2026-04-11T00:07:43 | hits=5 | old=0 | chars=1751 | query="さっき" OR "PC" OR "root" OR "あなた" OR "言わ" OR "stop"
+2026-04-11T00:08:40 | hits=5 | old=0 | chars=996 | query="さっき" OR "検証" OR "戻る" OR "あなた" OR "グローバル" OR "stop
+2026-04-11T00:09:00 | hits=1 | old=0 | chars=173 | query="ある" OR "関わら" OR "機能" OR "いっ" OR "なっ" OR "てる"
+2026-04-11T00:12:01 | hits=0 | old=0 | chars=0 | query="これ" OR "叱責" OR "いる" OR "わけ" OR "なく" OR "対策" OR "講
+2026-04-11T00:14:38 | hits=5 | old=0 | chars=3692 | query="作っ" OR "構造" OR "ダイジェスト" OR "記載" OR "ルール" OR "あなた"
+2026-04-11T00:16:47 | hits=5 | old=0 | chars=3258 | query="あなた" OR "構造" OR "ダイジェスト" OR "同様" OR "system" OR "
+2026-04-11T00:20:16 | hits=5 | old=0 | chars=2896 | query="セッション" OR "開始" OR "無闇" OR "読み" OR "行く" OR "余計" OR
+2026-04-11T00:21:07 | hits=5 | old=0 | chars=281 | query="両方" OR "やっ" OR "ください"
+2026-04-11T00:22:31 | hits=5 | old=0 | chars=1968 | query="つぎ" OR "recorder" OR "議事" OR "作成" OR "reminiscenc
+2026-04-11T00:25:51 | hits=5 | old=0 | chars=1802 | query="あなた" OR "過去" OR "質問" OR "確率" OR "minutes" OR "読み"
+2026-04-11T00:28:53 | hits=5 | old=0 | chars=3237 | query="reminiscence" OR "minutes" OR "セッション" OR "それぞれ" O
+2026-04-11T00:33:17 | hits=5 | old=0 | chars=1982 | query="ところ" OR "minutes" OR "読み" OR "行く" OR "こと" OR "ある"
+2026-04-11T00:35:38 | hits=5 | old=0 | chars=3608 | query="LLM" OR "抽出" OR "ステップ" OR "なん"
+2026-04-11T00:42:21 | hits=5 | old=0 | chars=811 | query="従量課" OR "API" OR "以前" OR "言っ" OR "通り" OR "当面" OR 
+2026-04-11T09:17:22 | hits=1 | old=0 | chars=1008 | query="言葉" OR "意味" OR "理解" OR "でき" OR "空白" OR "許容" OR "す
+2026-04-11T09:23:55 | hits=5 | old=0 | chars=2120 | query="minutes" OR "今後" OR "運用" OR "必須" OR "プロセス" OR "決め
+2026-04-11T09:29:07 | hits=5 | old=0 | chars=2028 | query="議事" OR "自動" OR "リズム" OR "悪く" OR "なる" OR "ところ" OR 
+2026-04-11T09:31:04 | hits=5 | old=0 | chars=281 | query="４つ" OR "変更" OR "全て" OR "進め" OR "ください"
+2026-04-11T09:32:56 | hits=2 | old=0 | chars=602 | query="議事" OR "作成" OR "時間" OR "短く" OR "する" OR "プロセス" OR 
+2026-04-11T09:33:54 | hits=0 | old=0 | chars=0 | query="それ" OR "やっ"
+2026-04-11T10:47:02 | hits=5 | old=0 | chars=3326 | query="claude" OR "直接" OR "早い"
+2026-04-11T10:48:19 | hits=0 | old=0 | chars=0 | query="ここ" OR "最近" OR "ぎだいにあがったけど" OR "対応" OR "着手" OR "も
+2026-04-11T10:52:23 | hits=5 | old=0 | chars=1336 | query="タスク"
+2026-04-11T10:57:16 | hits=5 | old=0 | chars=3455 | query="改善" OR "検討" OR "タスク" OR "残し" OR "おき" OR "エージェント" 
+2026-04-11T10:58:51 | hits=0 | old=0 | chars=0 | query="続け" OR "検討" OR "いき"
+2026-04-11T11:01:04 | hits=0 | old=0 | chars=0 | query="対応" OR "済み" OR "いい"
+2026-04-11T11:02:35 | hits=2 | old=0 | chars=893 | query="commit" OR "いい" OR "思う" OR "毎回" OR "commit"
+2026-04-11T11:05:13 | hits=5 | old=0 | chars=2061 | query="ここ" OR "確認" OR "構造" OR "ダイジェスト" OR "作っ" OR "目的" O
+2026-04-11T11:06:40 | hits=5 | old=0 | chars=459 | query="確認" OR "検討" OR "当時" OR "あなた" OR "提案" OR "出し" OR "
+2026-04-11T11:11:37 | hits=5 | old=0 | chars=2378 | query="なん" OR "ため" OR "ダイジェスト" OR "作っ" OR "本来" OR "あなた" 
+2026-04-11T11:14:29 | hits=5 | old=0 | chars=2955 | query="reminicence" OR "上流" OR "置い" OR "minutes" OR "dig
+2026-04-11T11:17:14 | hits=5 | old=0 | chars=2293 | query="タイミング" OR "一緒" OR "通り" OR "一つ" OR "確認" OR "いい" OR
+2026-04-11T11:19:04 | hits=5 | old=0 | chars=1564 | query="反映" OR "いき" OR "確認" OR "あなた" OR "提案" OR "よう" OR "
+2026-04-11T11:22:15 | hits=5 | old=0 | chars=2510 | query="運用" OR "あなた" OR "system" OR "state" OR "md" OR "参
+2026-04-11T11:26:40 | hits=5 | old=0 | chars=2138 | query="system" OR "state" OR "md" OR "状態" OR "記述" OR "方法

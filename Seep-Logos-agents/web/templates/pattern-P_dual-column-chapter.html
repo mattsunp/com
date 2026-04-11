@@ -192,6 +192,20 @@
       padding: 80px 40px;
     }
 
+    #hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url('../assets/images/background.png') center/cover no-repeat;
+      opacity: 0.25;
+      z-index: 0;
+    }
+
+    #hero > * {
+      position: relative;
+      z-index: 1;
+    }
+
     .hero-title {
       font-family: var(--font-serif);
       font-size: clamp(2.5rem, 6vw, 5rem);
@@ -936,9 +950,7 @@
   <section id="chapter-1" data-section="chapter-1" class="chapter-section odd" style="background: var(--bg-ch1);">
     <div class="chapter-col chapter-col-left">
       <div class="image-placeholder" id="img-ch1">
-        <div class="placeholder-scan"></div>
-        <div class="placeholder-geo"></div>
-        <span class="placeholder-label">Image Placeholder</span>
+        <img src="../assets/images/scene.png" alt="" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
       </div>
     </div>
 

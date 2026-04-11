@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>pattern-AB: fractured-signal | Seep Logos</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #080810;
+      --surface:      #0f0f17;
+      --surface-cont: #1a1a2a;
+      --text:         #e8e3da;
+      --text-dim:     #888899;
+      --text-muted:   #555566;
+      /* IP Placeholder: ダーク系ゲーム = amber/gold。IPごとに上書きすること */
+      --accent:       #c8b87a;
+      --accent-glow:  rgba(200, 184, 122, 0.22);
+
+      --font-serif: Georgia, "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", serif;
+      --font-sans:  -apple-system, "Helvetica Neue", "Hiragino Kaku Gothic ProN", sans-serif;
+      --font-mono:  "Courier New", Courier, monospace;
+
+      --max-content: 1100px;
+      --side-pad: clamp(1.5rem, 5vw, 4rem);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-serif);
+      line-height: 1.8;
+      overflow-x: hidden;
+    }
+
+    /* CRTスキャンライン — 全画面固定。ノイズ感を演出するが存在を主張しない */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 2px,
+        rgba(0,0,0,0.06) 2px,
+        rgba(0,0,0,0.06) 4px
+      );
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    /* レターボックス — 映画アスペクト比のフレーミング */
+    .letterbox-top,
+    .letterbox-bottom {
+      position: fixed;
+      left: 0; right: 0;
+      background: #000;
+      z-index: 200;
+      pointer-events: none;
+    }
+    .letterbox-top    { top: 0;    height: clamp(20px, 3.5vw, 52px); }
+    .letterbox-bottom { bottom: 0; height: clamp(20px, 3.5vw, 52px); }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(72px, 10vw, 140px) var(--side-pad);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* 水平方向の干渉ライン — JSで位置をランダムに変える */
+    .interference-line {
+      position: absolute;
+      left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        var(--accent) 15%,
+        rgba(200,184,122,0.4) 50%,
+        var(--accent) 85%,
+        transparent 100%
+      );
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.1s ease;
+    }
+
+    .signal-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fade-in 0.4s ease 1.2s forwards;
+    }
+
+    @keyframes fade-in { to { opacity: 1; } }
+
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 7vw, 5.5rem);
+      font-weight: normal;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      text-align: center;
+      color: var(--text);
+      max-width: 860px;
+    }
+
+    /* デコード中の文字 — ノイズ状態 */
+    .decode-char.noise {
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    /* デコード完了の文字 — 0.12s で切り替わる */
+    .decode-char {
+      display: inline-block;
+      transition: color 0.12s ease;
+    }
+
+    .hero-subtitle {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.3em;
+      color: var(--accent);
+      text-align: center;
+      margin-top: 2.5rem;
+      opacity: 0;
+      animation: fade-in 0.7s ease 3.8s forwards;
+    }
+
+    .scroll-cue {
+      position: absolute;
+      bottom: clamp(48px, 7vw, 80px);
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      animation: fade-in 0.7s ease 4.2s forwards;
+    }
+
+    .scroll-cue span {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.35em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 36px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+      animation: pulse-down 2.2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-down {
+      0%, 100% { opacity: 0.25; transform: scaleY(1) translateY(0); }
+      50%       { opacity: 1;    transform: scaleY(1.15) translateY(4px); }
+    }
+
+    /* ─── グリッチセパレーター ─── */
+    .glitch-sep {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent-glow), transparent);
+    }
+
+    /* ─── トランスミッションセクション ─── */
+    .transmission {
+      padding: 80px var(--side-pad);
+    }
+
+    .transmission:nth-child(even) {
+      background: var(--surface);
+    }
+
+    .tx-inner {
+      max-width: var(--max-content);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .tx-meta {
+      position: sticky;
+      top: 30%;
+    }
+
+    .tx-id {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+
+    .tx-status {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+    }
+
+    .tx-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      flex-shrink: 0;
+      animation: blink 1.4s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    .tx-content h2 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.3rem, 2.5vw, 2rem);
+      font-weight: normal;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      line-height: 1.4;
+    }
+
+    .tx-content p {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      color: var(--text-dim);
+      line-height: 2;
+      margin-bottom: 1.5rem;
+    }
+
+    .tx-content p:last-of-type { margin-bottom: 0; }
+
+    /* ログパネル — ゲームのコンソール画面を想起させる */
+    .log-panel {
+      background: var(--surface-cont);
+      padding: 1.25rem 1.5rem;
+      margin-top: 2rem;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 2;
+      color: var(--text-muted);
+    }
+
+    .log-panel .log-active {
+      color: var(--accent);
+    }
+
+    .log-panel .log-dim {
+      color: var(--text-muted);
+    }
+
+    /* ─── フッター ─── */
+    .footer {
+      padding: 60px var(--side-pad) calc(clamp(20px, 3.5vw, 52px) + 40px);
+      text-align: center;
+      background: var(--bg);
+    }
+
+    .footer-text {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.35em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    /* ─── スクロールリビール ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-d1 { transition-delay: 0.1s; }
+    .reveal-d2 { transition-delay: 0.25s; }
+
+    /* ─── モバイル ─── */
+    @media (max-width: 767px) {
+      .tx-inner {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .tx-meta {
+        position: static;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+      }
+
+      .transmission {
+        padding: 60px var(--side-pad);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="letterbox-top"></div>
+  <div class="letterbox-bottom"></div>
+
+  <!-- ヒーロー -->
+  <section class="hero">
+    <div class="interference-line" id="iLine"></div>
+
+    <div class="signal-label">// signal intercepted — origin unknown</div>
+
+    <h1 class="hero-title" id="decodeTitle" aria-label="世界は、まだ続いている">
+      <!-- JSでデコードアニメーションを注入 -->
+    </h1>
+
+    <p class="hero-subtitle">TRANSMISSION ID: 00-XXXX &mdash; DECODING IN PROGRESS</p>
+
+    <div class="scroll-cue">
+      <span>scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <div class="glitch-sep"></div>
+
+  <!-- T-001 -->
+  <section class="transmission">
+    <div class="tx-inner">
+      <div class="tx-meta">
+        <span class="tx-id">// T-001</span>
+        <div class="tx-status"><div class="tx-dot"></div>受信中</div>
+      </div>
+      <div class="tx-content reveal">
+        <h2>最初の信号が届いたのは、誰も気にしていない夜だった</h2>
+        <p>ノイズの向こうに、かすかな構造があった。ランダムではない。意図がある。誰かが——あるいは何かが——こちらへ送り続けている。</p>
+        <p>この信号を解読することが、すべての始まりだ。</p>
+        <div class="log-panel">
+          <div class="log-active">[03:47:12] SIGNAL DETECTED &mdash; FREQ: 847.3 MHz</div>
+          <div class="log-dim">[03:47:18] DECODING LAYER 1&hellip; &#x2588;&#x2588;&#x2588;&#x2588;&#x2588;&#x2591;&#x2591;&#x2591;&#x2591;&#x2591; 52%</div>
+          <div class="log-dim">[03:47:31] ANOMALY: origin timestamp predates all known records</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="glitch-sep"></div>
+
+  <!-- T-002 -->
+  <section class="transmission">
+    <div class="tx-inner">
+      <div class="tx-meta">
+        <span class="tx-id">// T-002</span>
+        <div class="tx-status"><div class="tx-dot"></div>解析中</div>
+      </div>
+      <div class="tx-content reveal reveal-d1">
+        <h2>パターンは繰り返す。しかし、毎回わずかに変容する</h2>
+        <p>七回目の受信で、初めて「目的地」に類する座標が浮かび上がった。静止したデータではない——これは、招待状だ。</p>
+        <p>応答するかどうかは、あなたが決める。</p>
+        <div class="log-panel">
+          <div class="log-active">[03:51:04] COORDINATE EXTRACTED &mdash; [REDACTED]</div>
+          <div class="log-dim">[03:51:09] CROSS-REF: no match in known databases</div>
+          <div class="log-dim">[03:51:22] RECOMMENDATION: further analysis required</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="glitch-sep"></div>
+
+  <!-- T-003 -->
+  <section class="transmission">
+    <div class="tx-inner">
+      <div class="tx-meta">
+        <span class="tx-id">// T-003</span>
+        <div class="tx-status"><div class="tx-dot" style="animation-duration:2.5s"></div>待機中</div>
+      </div>
+      <div class="tx-content reveal reveal-d1">
+        <h2>最後の断片だけが、まだ届いていない</h2>
+        <p>信号はここで途切れる。次の送信は——あなたが応答したときだ。</p>
+        <div class="log-panel">
+          <div class="log-dim">[03:55:00] PARTIAL DATA RECEIVED</div>
+          <div class="log-active">[03:55:00] AWAITING RESPONSE&hellip;</div>
+          <div class="log-dim">[--:--:--] &#x258c;</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p class="footer-text">Seep Logos &mdash; pattern-AB: fractured-signal</p>
+  </footer>
+
+  <script>
+    // ─── デコードアニメーション ───
+    // 汎用typewriterではなく「ノイズ文字から実文字へ変化」する受信表現
+    const targetText = '世界は、まだ続いている';
+    const noiseChars = '█▓▒░▄▀│┤╡╣║╗╛┐└┴┬─┼╠═╬╧╤╙╘╒╓╫╪';
+    const el = document.getElementById('decodeTitle');
+
+    // ノイズ文字で初期化
+    el.innerHTML = targetText.split('').map((ch, i) => {
+      const isPunctuation = ch === '、' || ch === '。' || ch === '・';
+      if (isPunctuation) {
+        return `<span class="decode-char" data-target="${ch}">${ch}</span>`;
+      }
+      const nch = noiseChars[Math.floor(Math.random() * noiseChars.length)];
+      return `<span class="decode-char noise" data-target="${ch}">${nch}</span>`;
+    }).join('');
+
+    const charEls = el.querySelectorAll('.decode-char');
+
+    function decodeChar(charEl) {
+      let flickers = Math.floor(Math.random() * 4) + 2;
+      const interval = setInterval(() => {
+        charEl.textContent = noiseChars[Math.floor(Math.random() * noiseChars.length)];
+        flickers--;
+        if (flickers <= 0) {
+          clearInterval(interval);
+          charEl.textContent = charEl.dataset.target;
+          charEl.classList.remove('noise');
+        }
+      }, 70);
+    }
+
+    // 左から右へ、間隔は一定ではなく人間的なランダム幅
+    charEls.forEach((c, i) => {
+      if (c.classList.contains('noise')) {
+        const baseDelay = 1600 + i * 110;
+        const jitter = Math.random() * 150;
+        setTimeout(() => decodeChar(c), baseDelay + jitter);
+      }
+    });
+
+    // ─── 干渉ライン ───
+    // ランダムな位置・間隔で水平ラインが一瞬現れる
+    const iLine = document.getElementById('iLine');
+
+    function flashInterference() {
+      const y = 10 + Math.random() * 80;
+      iLine.style.top = y + '%';
+      iLine.style.opacity = (0.15 + Math.random() * 0.5).toString();
+      const duration = 80 + Math.random() * 180;
+      setTimeout(() => { iLine.style.opacity = '0'; }, duration);
+      const nextDelay = 1800 + Math.random() * 5000;
+      setTimeout(flashInterference, nextDelay);
+    }
+
+    setTimeout(flashInterference, 3200);
+
+    // ─── スクロールリビール ───
+    const reveals = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.12 });
+    reveals.forEach(r => io.observe(r));
+  </script>
+</body>
+</html>

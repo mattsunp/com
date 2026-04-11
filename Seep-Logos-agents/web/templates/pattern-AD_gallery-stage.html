@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>pattern-AD: gallery-stage | Seep Logos</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #080810;
+      --surface:      #0f0f17;
+      --surface-cont: #1a1a2a;
+      --text:         #e8e3da;
+      --text-dim:     #888899;
+      --text-muted:   #555566;
+      /* IP Placeholder: キャラクター選択 = warm gold stage light */
+      --accent:       #c8a060;
+      --accent-glow:  rgba(200, 160, 96, 0.28);
+
+      --font-serif: Georgia, "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", serif;
+      --font-sans:  -apple-system, "Helvetica Neue", "Hiragino Kaku Gothic ProN", sans-serif;
+      --font-mono:  "Courier New", Courier, monospace;
+
+      --max-content: 1200px;
+      --side-pad: clamp(1.5rem, 5vw, 4rem);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ─── NAV ─── */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--side-pad);
+      z-index: 100;
+      transition: background 0.4s ease, backdrop-filter 0.4s ease;
+    }
+
+    .nav.scrolled {
+      background: rgba(8,8,16,0.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .nav-logo {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.35em;
+      color: var(--text);
+      text-transform: uppercase;
+    }
+
+    .nav-logo em {
+      color: var(--accent);
+      font-style: normal;
+    }
+
+    .nav-right {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      padding: 120px var(--side-pad) 80px;
+      text-align: center;
+      position: relative;
+    }
+
+    .hero-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: appear 0.7s ease 0.3s forwards;
+    }
+
+    @keyframes appear {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 6vw, 4.5rem);
+      font-weight: normal;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 1.25rem;
+      opacity: 0;
+      animation: appear 0.9s ease 0.7s forwards;
+    }
+
+    .hero-desc {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      color: var(--text-dim);
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.9;
+      opacity: 0;
+      animation: appear 0.7s ease 1.2s forwards;
+    }
+
+    /* ─── STAGE AREA ─── */
+    /* 舞台床: 画面下部へのグラデーション */
+    .stage-wrap {
+      position: relative;
+      padding: 60px var(--side-pad) 0;
+      overflow: hidden;
+    }
+
+    .stage-floor {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 200px;
+      background: linear-gradient(to bottom,
+        transparent,
+        rgba(8,8,16,0.6) 60%,
+        var(--bg) 100%
+      );
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* 上部スポットライト — 選択カードの上から光 */
+    .stage-spotlight {
+      position: absolute;
+      top: 0;
+      width: 300px;
+      height: 400px;
+      background: radial-gradient(ellipse at 50% 0%,
+        rgba(200,160,96,0.12) 0%,
+        transparent 70%
+      );
+      pointer-events: none;
+      z-index: 1;
+      transition: left 0.5s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
+      opacity: 0;
+    }
+
+    /* ─── カードグリッド (3D perspective) ─── */
+    .stage-scene {
+      perspective: 1400px;
+      perspective-origin: 50% 20%;
+      position: relative;
+      z-index: 3;
+    }
+
+    .card-track {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      align-items: flex-end;
+      padding: 20px 0 80px;
+      transform-style: preserve-3d;
+    }
+
+    /* 両端のカードを後方に傾ける — 舞台的な弧 */
+    .card-track .stage-card:nth-child(1) { transform: rotateY(16deg) translateZ(-60px); }
+    .card-track .stage-card:nth-child(2) { transform: rotateY(8deg)  translateZ(-20px); }
+    .card-track .stage-card:nth-child(3) { transform: rotateY(0deg)  translateZ(0px); }
+    .card-track .stage-card:nth-child(4) { transform: rotateY(-8deg) translateZ(-20px); }
+    .card-track .stage-card:nth-child(5) { transform: rotateY(-16deg) translateZ(-60px); }
+
+    .stage-card {
+      width: 200px;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition:
+        transform 0.5s cubic-bezier(0.4,0,0.2,1),
+        box-shadow 0.5s ease;
+      transform-style: preserve-3d;
+      position: relative;
+    }
+
+    /* アクティブカード: 前に飛び出す */
+    .stage-card.active {
+      transform: rotateY(0deg) translateZ(80px) !important;
+    }
+
+    .card-image {
+      width: 100%;
+      aspect-ratio: 2/3;
+      background: var(--surface-cont);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* カード内の装飾グラデーション — キャラクターアートの代替 */
+    .card-image-inner {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg,
+        rgba(200,160,96,0.06) 0%,
+        transparent 50%,
+        rgba(8,8,16,0.4) 100%
+      );
+    }
+
+    .card-image-bg {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-icon {
+      font-family: var(--font-mono);
+      font-size: 48px;
+      color: var(--text-muted);
+      opacity: 0.3;
+      user-select: none;
+    }
+
+    /* アクティブ時: カード上部からスポットライト効果 */
+    .card-image::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      height: 60%;
+      background: radial-gradient(ellipse at 50% 0%,
+        rgba(200,160,96,0.18) 0%,
+        transparent 70%
+      );
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      z-index: 1;
+    }
+
+    .stage-card.active .card-image::before {
+      opacity: 1;
+    }
+
+    /* カード下部の境界線 — アクティブ時にアクセントで光る */
+    .card-image::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transition: transform 0.4s ease;
+    }
+
+    .stage-card.active .card-image::after,
+    .stage-card:hover .card-image::after {
+      transform: scaleX(1);
+    }
+
+    .card-info {
+      padding: 16px 0 0;
+      text-align: center;
+    }
+
+    .card-name {
+      font-family: var(--font-serif);
+      font-size: 14px;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .card-role {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .stage-card.active .card-name { color: var(--accent); }
+
+    /* ─── 詳細パネル ─── */
+    .detail-panel {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 60px var(--side-pad) 100px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      pointer-events: none;
+    }
+
+    .detail-panel.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .detail-header {
+      display: flex;
+      align-items: baseline;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .detail-name {
+      font-family: var(--font-serif);
+      font-size: clamp(1.6rem, 4vw, 2.8rem);
+      font-weight: normal;
+      color: var(--text);
+    }
+
+    .detail-id {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+
+    .detail-sep {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, var(--accent-glow), transparent);
+      margin-bottom: 2rem;
+    }
+
+    .detail-body {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      color: var(--text-dim);
+      line-height: 2;
+    }
+
+    .detail-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: rgba(255,255,255,0.04);
+      margin-top: 2.5rem;
+    }
+
+    .stat-cell {
+      background: var(--surface);
+      padding: 16px 20px;
+    }
+
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-family: var(--font-serif);
+      font-size: 18px;
+      color: var(--accent);
+    }
+
+    /* ─── フッター ─── */
+    .footer {
+      padding: 60px var(--side-pad);
+      text-align: center;
+      background: var(--bg);
+    }
+
+    .footer-text {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.35em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    /* ─── モバイル ─── */
+    @media (max-width: 767px) {
+      /* モバイルでは3D perspectiveをリセットし縦スクロールのグリッドへ */
+      .stage-scene { perspective: none; }
+
+      .card-track {
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: stretch;
+        gap: 16px;
+        padding-bottom: 40px;
+      }
+
+      .card-track .stage-card {
+        width: 140px;
+        transform: none !important;
+      }
+
+      .stage-card.active {
+        transform: none !important;
+        outline: 1px solid var(--accent);
+      }
+
+      .detail-stats {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav" id="nav">
+    <div class="nav-logo">Seep <em>Logos</em></div>
+    <div class="nav-right">gallery-stage</div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-label">// character select</div>
+    <h1>舞台に立つ者を選べ</h1>
+    <p class="hero-desc">それぞれが固有の物語を背負っている。あなたが選ぶことで、その物語が動き始める。</p>
+  </section>
+
+  <div class="stage-wrap">
+    <div class="stage-spotlight" id="spotlight"></div>
+    <div class="stage-floor"></div>
+
+    <div class="stage-scene">
+      <div class="card-track" id="cardTrack">
+
+        <div class="stage-card" data-id="0" data-name="アンナ・フォルク" data-role="Strategist" data-desc="前線を見たことがない者が、最も冷静に判断できる。彼女はそう信じていた——最初のうちは。" data-s1="戦略" data-v1="91" data-s2="判断速度" data-v2="S+" data-s3="戦闘" data-v3="C">
+          <div class="card-image">
+            <div class="card-image-inner"></div>
+            <div class="card-image-bg"><span class="card-icon">◈</span></div>
+          </div>
+          <div class="card-info">
+            <div class="card-name">アンナ・フォルク</div>
+            <div class="card-role">Strategist</div>
+          </div>
+        </div>
+
+        <div class="stage-card" data-id="1" data-name="レイ・クルス" data-role="Vanguard" data-desc="誰よりも早く動き、誰よりも多くを失った。それでも彼は前へ進む。止まり方を知らないから。" data-s1="突破力" data-v1="98" data-s2="判断速度" data-v2="A" data-s3="生存率" data-v3="B-">
+          <div class="card-image">
+            <div class="card-image-inner"></div>
+            <div class="card-image-bg"><span class="card-icon">◆</span></div>
+          </div>
+          <div class="card-info">
+            <div class="card-name">レイ・クルス</div>
+            <div class="card-role">Vanguard</div>
+          </div>
+        </div>
+
+        <div class="stage-card" data-id="2" data-name="ユラ・ヴァン" data-role="Archivist" data-desc="世界が何度壊れても、記録だけは残る。彼女が守っているのは、過去ではなく次の世界の種だ。" data-s1="記録精度" data-v1="100" data-s2="判断速度" data-v2="B+" data-s3="解析" data-v3="S">
+          <div class="card-image">
+            <div class="card-image-inner"></div>
+            <div class="card-image-bg"><span class="card-icon">◉</span></div>
+          </div>
+          <div class="card-info">
+            <div class="card-name">ユラ・ヴァン</div>
+            <div class="card-role">Archivist</div>
+          </div>
+        </div>
+
+        <div class="stage-card" data-id="3" data-name="カイン" data-role="Enforcer" data-desc="名前だけが残った。それ以前のすべては消去された——本人が自ら望んで。" data-s1="制圧力" data-v1="95" data-s2="判断速度" data-v2="S" data-s3="情報" data-v3="???">
+          <div class="card-image">
+            <div class="card-image-inner"></div>
+            <div class="card-image-bg"><span class="card-icon">▣</span></div>
+          </div>
+          <div class="card-info">
+            <div class="card-name">カイン</div>
+            <div class="card-role">Enforcer</div>
+          </div>
+        </div>
+
+        <div class="stage-card" data-id="4" data-name="ソル" data-role="Unknown" data-desc="どこから来たのか、なぜここにいるのか、誰も知らない。それでもチームは彼女を信頼している。理由は説明できない。" data-s1="能力" data-v1="???" data-s2="判断速度" data-v2="???" data-s3="正体" data-v3="???">
+          <div class="card-image">
+            <div class="card-image-inner"></div>
+            <div class="card-image-bg"><span class="card-icon">◎</span></div>
+          </div>
+          <div class="card-info">
+            <div class="card-name">ソル</div>
+            <div class="card-role">Unknown</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 詳細パネル -->
+  <div class="detail-panel" id="detailPanel">
+    <div class="detail-header">
+      <h2 class="detail-name" id="detailName">—</h2>
+      <span class="detail-id" id="detailRole">—</span>
+    </div>
+    <div class="detail-sep"></div>
+    <p class="detail-body" id="detailDesc">カードを選択してください</p>
+    <div class="detail-stats" id="detailStats">
+      <div class="stat-cell"><span class="stat-label" id="sl1">—</span><span class="stat-value" id="sv1">—</span></div>
+      <div class="stat-cell"><span class="stat-label" id="sl2">—</span><span class="stat-value" id="sv2">—</span></div>
+      <div class="stat-cell"><span class="stat-label" id="sl3">—</span><span class="stat-value" id="sv3">—</span></div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p class="footer-text">Seep Logos &mdash; pattern-AD: gallery-stage</p>
+  </footer>
+
+  <script>
+    // ─── ナビスクロール ───
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    }, { passive: true });
+
+    // ─── カード選択 ───
+    const cards = document.querySelectorAll('.stage-card');
+    const panel = document.getElementById('detailPanel');
+    const spotlight = document.getElementById('spotlight');
+
+    function activateCard(card) {
+      cards.forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+
+      // スポットライトをカード中央に移動
+      const rect = card.getBoundingClientRect();
+      const stageWrap = document.querySelector('.stage-wrap');
+      const wrapRect = stageWrap.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2 - wrapRect.left - 150; // 150 = spotlight幅/2
+      spotlight.style.left = centerX + 'px';
+      spotlight.style.opacity = '1';
+
+      // 詳細パネル更新
+      document.getElementById('detailName').textContent  = card.dataset.name;
+      document.getElementById('detailRole').textContent  = card.dataset.role;
+      document.getElementById('detailDesc').textContent  = card.dataset.desc;
+      document.getElementById('sl1').textContent = card.dataset.s1;
+      document.getElementById('sv1').textContent = card.dataset.v1;
+      document.getElementById('sl2').textContent = card.dataset.s2;
+      document.getElementById('sv2').textContent = card.dataset.v2;
+      document.getElementById('sl3').textContent = card.dataset.s3;
+      document.getElementById('sv3').textContent = card.dataset.v3;
+
+      panel.classList.remove('visible');
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => { panel.classList.add('visible'); });
+      });
+    }
+
+    cards.forEach(card => {
+      card.addEventListener('click', () => activateCard(card));
+    });
+
+    // デフォルト選択
+    setTimeout(() => activateCard(cards[2]), 800);
+  </script>
+</body>
+</html>

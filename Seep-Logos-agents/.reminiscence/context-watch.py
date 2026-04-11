@@ -14,8 +14,11 @@ PROJECT_CLAUDE_DIR = os.path.expanduser(
 )
 
 # ユーザー発言ターン数の警告閾値
-WARN_THRESHOLD = 20   # 注意（そろそろ長い）
-ALERT_THRESHOLD = 35  # 強い警告（分断リスク高）
+WARN_THRESHOLD = 35   # 注意（そろそろ長い）
+ALERT_THRESHOLD = 55  # 強い警告（分断リスク高）
+
+# 警告済み状態を記録するファイル
+WARNED_STATE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".context-watch-state")
 
 
 def count_user_turns(session_file):
@@ -37,6 +40,31 @@ def count_user_turns(session_file):
     return count
 
 
+def load_warned_state(session_id):
+    """セッションごとの警告済みレベルを読み込む"""
+    try:
+        with open(WARNED_STATE_FILE, encoding="utf-8") as f:
+            state = json.load(f)
+        return state.get(session_id, 0)
+    except Exception:
+        return 0
+
+
+def save_warned_state(session_id, level):
+    """セッションごとの警告済みレベルを保存する"""
+    try:
+        try:
+            with open(WARNED_STATE_FILE, encoding="utf-8") as f:
+                state = json.load(f)
+        except Exception:
+            state = {}
+        state[session_id] = level
+        with open(WARNED_STATE_FILE, "w", encoding="utf-8") as f:
+            json.dump(state, f, ensure_ascii=False)
+    except Exception:
+        pass
+
+
 def main():
     try:
         event = json.loads(sys.stdin.read())
@@ -55,18 +83,21 @@ def main():
         return
 
     turns = count_user_turns(session_file)
+    warned_level = load_warned_state(session_id)
 
-    if turns >= ALERT_THRESHOLD:
+    if turns >= ALERT_THRESHOLD and warned_level < 2:
         message = (
             f"⚠️ [context-watch] 会話が{turns}ターンに達しています。"
             "コンテキスト圧縮による分断リスクが高い状態です。"
             "現在のトピックの決定事項を書記（recorder）に記録することを強く推奨します。"
         )
-    elif turns >= WARN_THRESHOLD:
+        save_warned_state(session_id, 2)
+    elif turns >= WARN_THRESHOLD and warned_level < 1:
         message = (
             f"📝 [context-watch] 会話が{turns}ターンになっています。"
             "節目のトピックが完了していれば、書記（recorder）に記録しておくと安全です。"
         )
+        save_warned_state(session_id, 1)
     else:
         print("{}")
         return

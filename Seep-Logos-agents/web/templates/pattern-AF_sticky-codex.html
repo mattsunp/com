@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>pattern-AF: sticky-codex | Seep Logos</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #080810;
+      --surface:      #0f0f17;
+      --surface-cont: #1a1a2a;
+      --text:         #e8e3da;
+      --text-dim:     #888899;
+      --text-muted:   #555566;
+      /* IP Placeholder: 百科事典・設定資料 = golden parchment */
+      --accent:       #c8a060;
+      --accent-glow:  rgba(200, 160, 96, 0.20);
+
+      --font-serif: Georgia, "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", serif;
+      --font-sans:  -apple-system, "Helvetica Neue", "Hiragino Kaku Gothic ProN", sans-serif;
+      --font-mono:  "Courier New", Courier, monospace;
+
+      --index-w: 260px;
+      --side-pad: clamp(1.5rem, 4vw, 3.5rem);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-serif);
+      line-height: 1.8;
+      overflow-x: hidden;
+    }
+
+    /* ─── トップヘッダー ─── */
+    .codex-header {
+      background: var(--surface);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      padding: 16px var(--side-pad);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .codex-title {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.35em;
+      color: var(--text);
+      text-transform: uppercase;
+    }
+
+    .codex-title em {
+      color: var(--accent);
+      font-style: normal;
+    }
+
+    .codex-version {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      color: var(--text-muted);
+    }
+
+    /* ─── メインレイアウト: 左index固定 + 右本文スクロール ─── */
+    .codex-body {
+      display: grid;
+      grid-template-columns: var(--index-w) 1fr;
+      min-height: calc(100vh - 49px);
+      align-items: start;
+    }
+
+    /* ─── 左カラム: 索引 ─── */
+    .codex-index {
+      position: sticky;
+      top: 49px; /* headerの高さ */
+      height: calc(100vh - 49px);
+      background: var(--surface);
+      border-right: 1px solid rgba(255,255,255,0.04);
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: thin;
+      scrollbar-color: var(--surface-cont) transparent;
+    }
+
+    .codex-index::-webkit-scrollbar { width: 3px; }
+    .codex-index::-webkit-scrollbar-thumb { background: var(--surface-cont); }
+
+    .index-section {
+      padding: 24px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .index-section:last-child { border-bottom: none; }
+
+    .index-category {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.5em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      padding: 0 20px 12px;
+      display: block;
+    }
+
+    .index-item {
+      display: flex;
+      align-items: center;
+      padding: 8px 20px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      position: relative;
+    }
+
+    .index-item:hover {
+      background: var(--surface-cont);
+    }
+
+    /* アクティブエントリ: 左にアクセントバー + テキスト色変更 */
+    .index-item.active {
+      background: var(--surface-cont);
+    }
+
+    .index-item.active::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 2px;
+      background: var(--accent);
+    }
+
+    .index-item-id {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+      width: 36px;
+      flex-shrink: 0;
+    }
+
+    .index-item.active .index-item-id {
+      color: var(--accent);
+    }
+
+    .index-item-name {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      color: var(--text-dim);
+      line-height: 1.3;
+    }
+
+    .index-item.active .index-item-name {
+      color: var(--text);
+    }
+
+    /* 現在位置インジケーター — 矢印 */
+    .index-item .index-arrow {
+      margin-left: auto;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--accent);
+      opacity: 0;
+      transform: translateX(-4px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .index-item.active .index-arrow {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* ─── 右カラム: エントリー本文 ─── */
+    .codex-content {
+      padding: 0;
+    }
+
+    .codex-entry {
+      padding: 64px var(--side-pad);
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      position: relative;
+    }
+
+    .codex-entry:nth-child(even) {
+      background: rgba(15,15,23,0.5);
+    }
+
+    /* エントリーID — モノスペース、右上 */
+    .entry-id {
+      position: absolute;
+      top: 24px;
+      right: var(--side-pad);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      color: var(--text-muted);
+    }
+
+    .entry-category-tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.4em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      padding: 3px 8px;
+      border: 1px solid var(--accent-glow);
+    }
+
+    .entry-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.4rem, 2.5vw, 2rem);
+      font-weight: normal;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 1.5rem;
+    }
+
+    /* 区切りグラデーション */
+    .entry-rule {
+      width: 120px;
+      height: 1px;
+      background: linear-gradient(90deg, var(--accent-glow), transparent);
+      margin-bottom: 1.5rem;
+    }
+
+    .entry-body {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      color: var(--text-dim);
+      line-height: 2;
+      max-width: 680px;
+      margin-bottom: 2rem;
+    }
+
+    .entry-body p { margin-bottom: 1.25rem; }
+    .entry-body p:last-child { margin-bottom: 0; }
+
+    /* データパネル — ゲームの能力値表を想起 */
+    .entry-data {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 1px;
+      background: rgba(255,255,255,0.04);
+      max-width: 680px;
+      margin-top: 2rem;
+    }
+
+    .data-cell {
+      background: var(--bg);
+      padding: 12px 16px;
+    }
+
+    .data-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.35em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .data-value {
+      font-family: var(--font-serif);
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .data-value.classified {
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.15em;
+    }
+
+    /* ─── フッター ─── */
+    .footer {
+      padding: 60px var(--side-pad);
+      text-align: center;
+      background: var(--bg);
+    }
+
+    .footer-text {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.35em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    /* ─── モバイル: 索引を上部タブ形式へ ─── */
+    @media (max-width: 767px) {
+      .codex-body {
+        grid-template-columns: 1fr;
+      }
+
+      .codex-index {
+        position: static;
+        height: auto;
+        max-height: 220px;
+        border-right: none;
+        border-bottom: 1px solid rgba(255,255,255,0.04);
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: none;
+      }
+
+      .codex-index::-webkit-scrollbar { display: none; }
+
+      .index-section {
+        border-bottom: none;
+        border-right: 1px solid rgba(255,255,255,0.04);
+        padding: 16px 0;
+        flex-shrink: 0;
+        min-width: 160px;
+      }
+
+      .index-item.active::before {
+        top: auto;
+        bottom: 0;
+        left: 0; right: 0;
+        width: auto;
+        height: 2px;
+      }
+
+      .codex-entry {
+        padding: 48px var(--side-pad);
+      }
+
+      .entry-id {
+        position: static;
+        display: block;
+        margin-bottom: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="codex-header">
+    <div class="codex-title">World <em>Codex</em></div>
+    <div class="codex-version">Rev. 4.1.2 — Classified</div>
+  </header>
+
+  <div class="codex-body">
+
+    <!-- 左: 索引 -->
+    <nav class="codex-index" id="codexIndex">
+
+      <div class="index-section">
+        <span class="index-category">Geography</span>
+        <div class="index-item active" data-target="entry-001">
+          <span class="index-item-id">001</span>
+          <span class="index-item-name">光降下点</span>
+          <span class="index-arrow">›</span>
+        </div>
+        <div class="index-item" data-target="entry-002">
+          <span class="index-item-id">002</span>
+          <span class="index-item-name">中央回廊</span>
+          <span class="index-arrow">›</span>
+        </div>
+        <div class="index-item" data-target="entry-003">
+          <span class="index-item-id">003</span>
+          <span class="index-item-name">境界領域</span>
+          <span class="index-arrow">›</span>
+        </div>
+      </div>
+
+      <div class="index-section">
+        <span class="index-category">Factions</span>
+        <div class="index-item" data-target="entry-004">
+          <span class="index-item-id">004</span>
+          <span class="index-item-name">光の守護者</span>
+          <span class="index-arrow">›</span>
+        </div>
+        <div class="index-item" data-target="entry-005">
+          <span class="index-item-id">005</span>
+          <span class="index-item-name">影の民</span>
+          <span class="index-arrow">›</span>
+        </div>
+      </div>
+
+      <div class="index-section">
+        <span class="index-category">Anomalies</span>
+        <div class="index-item" data-target="entry-006">
+          <span class="index-item-id">006</span>
+          <span class="index-item-name">第二の光</span>
+          <span class="index-arrow">›</span>
+        </div>
+      </div>
+
+    </nav>
+
+    <!-- 右: エントリー本文 -->
+    <main class="codex-content">
+
+      <div class="codex-entry" id="entry-001">
+        <span class="entry-id">GEO-001</span>
+        <span class="entry-category-tag">Geography</span>
+        <h2 class="entry-title">光降下点</h2>
+        <div class="entry-rule"></div>
+        <div class="entry-body">
+          <p>世界の中心に位置する直径約300メートルの円形空白地帯。あらゆる測定器がここで正常に動作しない。光が最初に降下したとされる地点であり、現在も年に数回、同様の現象が観測される。</p>
+          <p>降下点から1キロメートル以内では方位磁針が機能せず、電子機器の誤作動が報告されている。人間の生理的影響については現在も調査中。</p>
+        </div>
+        <div class="entry-data">
+          <div class="data-cell"><span class="data-label">座標</span><span class="data-value">38°N / 145°E</span></div>
+          <div class="data-cell"><span class="data-label">直径</span><span class="data-value">312 m</span></div>
+          <div class="data-cell"><span class="data-label">立入制限</span><span class="data-value">Level 4</span></div>
+          <div class="data-cell"><span class="data-label">研究状況</span><span class="data-value">進行中</span></div>
+        </div>
+      </div>
+
+      <div class="codex-entry" id="entry-002">
+        <span class="entry-id">GEO-002</span>
+        <span class="entry-category-tag">Geography</span>
+        <h2 class="entry-title">中央回廊</h2>
+        <div class="entry-rule"></div>
+        <div class="entry-body">
+          <p>光降下点の地下200メートルに存在する人工構造物。発見時から現在に至るまで、誰が何のために建設したか判明していない。全長は未確定。現在確認されている区間は8.3キロメートル。</p>
+          <p>回廊内の壁面には記号が刻まれており、既知のいかなる文字体系とも一致しない。解読作業は進行中。</p>
+        </div>
+        <div class="entry-data">
+          <div class="data-cell"><span class="data-label">深度</span><span class="data-value">200–340 m</span></div>
+          <div class="data-cell"><span class="data-label">確認長</span><span class="data-value">8.3 km</span></div>
+          <div class="data-cell"><span class="data-label">建設者</span><span class="data-value classified">[UNKNOWN]</span></div>
+          <div class="data-cell"><span class="data-label">立入制限</span><span class="data-value">Level 5</span></div>
+        </div>
+      </div>
+
+      <div class="codex-entry" id="entry-003">
+        <span class="entry-id">GEO-003</span>
+        <span class="entry-category-tag">Geography</span>
+        <h2 class="entry-title">境界領域</h2>
+        <div class="entry-rule"></div>
+        <div class="entry-body">
+          <p>二王国の接する地帯。正式な国境線は引かれていない。冬の和約以降、双方が自国領だと主張し続けている曖昧な地帯で、幅は場所によって1キロメートルから30キロメートルに及ぶ。</p>
+        </div>
+        <div class="entry-data">
+          <div class="data-cell"><span class="data-label">延長</span><span class="data-value">約1,200 km</span></div>
+          <div class="data-cell"><span class="data-label">幅</span><span class="data-value">1–30 km</span></div>
+          <div class="data-cell"><span class="data-label">帰属</span><span class="data-value classified">[CONTESTED]</span></div>
+        </div>
+      </div>
+
+      <div class="codex-entry" id="entry-004">
+        <span class="entry-id">FAC-001</span>
+        <span class="entry-category-tag">Factions</span>
+        <h2 class="entry-title">光の守護者</h2>
+        <div class="entry-rule"></div>
+        <div class="entry-body">
+          <p>光降下点を守護することを使命とする組織。設立から700年以上が経過し、現在も活動している。構成員数は非公開。指導部の実態は外部から確認できない。</p>
+          <p>公式には宗教組織だが、軍事的な能力を保持していることが複数の証言から示唆されている。</p>
+        </div>
+        <div class="entry-data">
+          <div class="data-cell"><span class="data-label">設立</span><span class="data-value">Year 0089</span></div>
+          <div class="data-cell"><span class="data-label">構成員</span><span class="data-value classified">[CLASSIFIED]</span></div>
+          <div class="data-cell"><span class="data-label">本部</span><span class="data-value">降下点北区</span></div>
+        </div>
+      </div>
+
+      <div class="codex-entry" id="entry-005">
+        <span class="entry-id">FAC-002</span>
+        <span class="entry-category-tag">Factions</span>
+        <h2 class="entry-title">影の民</h2>
+        <div class="entry-rule"></div>
+        <div class="entry-body">
+          <p>境界領域に居住する人々の総称。特定の組織ではなく、複数のコミュニティの集合体。どちらの王国にも属さず、独自の文化と規律を持つ。外部からの研究者を受け入れた記録はない。</p>
+        </div>
+        <div class="entry-data">
+          <div class="data-cell"><span class="data-label">人口推計</span><span class="data-value">12,000–40,000</span></div>
+          <div class="data-cell"><span class="data-label">言語</span><span class="data-value classified">[UNVERIFIED]</span></div>
+          <div class="data-cell"><span class="data-label">外交関係</span><span class="data-value">なし</span></div>
+        </div>
+      </div>
+
+      <div class="codex-entry" id="entry-006">
+        <span class="entry-id">ANO-001</span>
+        <span class="entry-category-tag">Anomalies</span>
+        <h2 class="entry-title">第二の光</h2>
+        <div class="entry-rule"></div>
+        <div class="entry-body">
+          <p>Year 0501に観測された光降下事象。第一の光（Year 0001）と同じメカニズムによるものと推定されているが、降下点が異なる。新しい降下点は境界領域の中心部。</p>
+          <p>この事象以降、境界領域での異変報告が増加している。守護者と影の民の双方が、それぞれ独自の解釈をしている。</p>
+        </div>
+        <div class="entry-data">
+          <div class="data-cell"><span class="data-label">発生年</span><span class="data-value">Year 0501</span></div>
+          <div class="data-cell"><span class="data-label">降下点</span><span class="data-value">境界領域中心部</span></div>
+          <div class="data-cell"><span class="data-label">原因</span><span class="data-value classified">[UNKNOWN]</span></div>
+          <div class="data-cell"><span class="data-label">調査状況</span><span class="data-value">機密指定</span></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <footer class="footer">
+    <p class="footer-text">Seep Logos &mdash; pattern-AF: sticky-codex</p>
+  </footer>
+
+  <script>
+    // ─── 索引のアクティブ追跡 ───
+    // スクロールで現在表示中のエントリーを索引でハイライト
+    const entries  = document.querySelectorAll('.codex-entry');
+    const indexItems = document.querySelectorAll('.index-item');
+
+    const entryObserver = new IntersectionObserver((observations) => {
+      // 最も上に表示されているエントリーをアクティブとする
+      let topEntry = null;
+      let topY = Infinity;
+
+      observations.forEach(obs => {
+        if (obs.isIntersecting) {
+          const y = obs.boundingClientRect.top;
+          if (y >= 0 && y < topY) {
+            topY = y;
+            topEntry = obs.target;
+          }
+        }
+      });
+
+      if (topEntry) {
+        const targetId = topEntry.id;
+        indexItems.forEach(item => {
+          const isActive = item.dataset.target === targetId;
+          item.classList.toggle('active', isActive);
+        });
+      }
+    }, {
+      threshold: 0,
+      rootMargin: '-49px 0px -60% 0px'
+    });
+
+    entries.forEach(e => entryObserver.observe(e));
+
+    // ─── 索引クリックでスクロール ───
+    indexItems.forEach(item => {
+      item.addEventListener('click', () => {
+        const target = document.getElementById(item.dataset.target);
+        if (target) {
+          // headerの高さ分オフセット
+          const top = target.getBoundingClientRect().top + window.scrollY - 49;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -12,6 +12,23 @@ import json
 import os
 import sys
 
+try:
+    from janome.tokenizer import Tokenizer as JanomeTokenizer
+    _janome = JanomeTokenizer()
+    def tokenize_ja(text):
+        """日本語テキストを形態素解析して名詞・動詞・形容詞のみ返す"""
+        tokens = []
+        for token in _janome.tokenize(text):
+            pos = token.part_of_speech.split(',')[0]
+            if pos in ('名詞', '動詞', '形容詞'):
+                surface = token.surface
+                if len(surface) >= 2:
+                    tokens.append(surface)
+        return tokens
+except ImportError:
+    def tokenize_ja(text):
+        return []
+
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "memory.db")
 PROJECT_CLAUDE_DIR = os.path.expanduser(
     "~/.claude/projects/-Users-matsuura-hisashi-com-Seep-Logos-agents"
@@ -179,9 +196,15 @@ def cmd_process_session(args, conn):
                 ).fetchone()
                 if exists:
                     continue
+                tokens = tokenize_ja(chunk["content"])
+                if tokens:
+                    unique_tokens = list(dict.fromkeys(tokens[:20]))
+                    tags_str = "session,auto," + ",".join(unique_tokens)
+                else:
+                    tags_str = "session,auto"
                 conn.execute(
                     "INSERT INTO memories (content, tags, type, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
-                    (chunk["content"], "session,auto", "session", ts, now),
+                    (chunk["content"], tags_str, "session", ts, now),
                 )
                 total_saved += 1
             conn.commit()
@@ -259,6 +282,149 @@ def cmd_delete(args, conn):
     print(f"[reminiscence] #{args.id} を削除しました。")
 
 
+def cmd_retokenize(args, conn):
+    """既存レコードの tags に Janome トークンを追加する（一回限りの遡及処理）"""
+    rows = conn.execute(
+        "SELECT id, content FROM memories WHERE tags = 'session,auto' OR tags = ''"
+    ).fetchall()
+
+    if not rows:
+        print("[reminiscence] 遡及処理の対象レコードがありません。")
+        return
+
+    updated = 0
+    now = datetime.datetime.now().isoformat(timespec="seconds")
+    for row in rows:
+        tokens = tokenize_ja(row["content"])
+        if not tokens:
+            continue
+        unique_tokens = list(dict.fromkeys(tokens[:20]))
+        new_tags = "session,auto," + ",".join(unique_tokens)
+        conn.execute(
+            "UPDATE memories SET tags = ?, updated_at = ? WHERE id = ?",
+            (new_tags, now, row["id"])
+        )
+        updated += 1
+
+    conn.commit()
+    print(f"[reminiscence] {updated}件のレコードを遡及更新しました（対象: {len(rows)}件）。")
+
+
+def cmd_digest(args, conn):
+    """reminiscence DBからdocs/digest/に週次ダイジェストMarkdownを生成する"""
+    import collections
+
+    PROJECT_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+    DIGEST_DIR = os.path.join(PROJECT_ROOT, "docs", "digest")
+    os.makedirs(DIGEST_DIR, exist_ok=True)
+
+    days = getattr(args, 'days', 90)
+    cutoff = (datetime.datetime.now() - datetime.timedelta(days=days)).isoformat(timespec="seconds")
+
+    rows = conn.execute("""
+        SELECT id, content, tags, created_at
+        FROM memories
+        WHERE created_at >= ?
+        ORDER BY created_at ASC
+    """, (cutoff,)).fetchall()
+
+    if not rows:
+        print("[digest] 対象レコードがありません。")
+        return
+
+    # ISO週でグループ化（例: 2026-W15）
+    weeks = collections.defaultdict(list)
+    for row in rows:
+        try:
+            dt = datetime.datetime.fromisoformat(row['created_at'])
+            week_key = dt.strftime("%Y-W%W")
+        except Exception:
+            week_key = "unknown"
+        weeks[week_key].append(row)
+
+    generated = []
+    for week_key in sorted(weeks.keys()):
+        records = weeks[week_key]
+
+        # 週の日付範囲
+        dates = []
+        for r in records:
+            try:
+                dates.append(datetime.datetime.fromisoformat(r['created_at']))
+            except Exception:
+                pass
+        if dates:
+            range_str = f"{min(dates).strftime('%Y-%m-%d')} 〜 {max(dates).strftime('%Y-%m-%d')}"
+        else:
+            range_str = week_key
+
+        # 頻出トークン（上位10）— 記号・助動詞・超頻出語を除外
+        STOPWORDS = {
+            'する', 'いる', 'ある', 'なる', 'れる', 'られる', 'させる',
+            'なっ', 'し', 'でき', 'くれ', 'もら', 'おり', 'いっ',
+            'こと', 'もの', 'ため', 'よう', 'とき', 'あなた', 'これ', 'それ',
+            'session', 'auto',
+        }
+        token_counter = collections.Counter()
+        for r in records:
+            for tag in (r['tags'] or '').split(','):
+                tag = tag.strip()
+                # ASCII記号・数字のみのトークンを除外、ストップワード除外
+                if (tag
+                        and tag not in STOPWORDS
+                        and len(tag) >= 2
+                        and not all(c in '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~0123456789' for c in tag)):
+                    token_counter[tag] += 1
+        top_tokens = [t for t, _ in token_counter.most_common(10)]
+
+        # 日別グループ
+        day_groups = collections.defaultdict(list)
+        for r in records:
+            try:
+                day_key = datetime.datetime.fromisoformat(r['created_at']).strftime("%Y-%m-%d")
+            except Exception:
+                day_key = "unknown"
+            day_groups[day_key].append(r)
+
+        lines = [
+            f"# Digest: {week_key} ({range_str})",
+            "",
+            f"**レコード数:** {len(records)}件",
+        ]
+        if top_tokens:
+            lines.append(f"**頻出キーワード:** {', '.join(top_tokens)}")
+        lines += ["", "---", ""]
+
+        for day_key in sorted(day_groups.keys()):
+            lines.append(f"## {day_key}")
+            lines.append("")
+            for r in day_groups[day_key]:
+                ts = r['created_at'][:16]
+                lines.append(f"[{ts}]")
+                lines.append(r['content'])
+                lines.append("")
+
+        filepath = os.path.join(DIGEST_DIR, f"{week_key}.md")
+        with open(filepath, 'w', encoding='utf-8') as f:
+            f.write('\n'.join(lines))
+        generated.append(week_key)
+
+    # _index.md 更新
+    index_lines = [
+        "# docs/digest インデックス",
+        "",
+        "reminiscence DB から自動生成された週次ダイジェスト。エージェントの知識参照先。",
+        "",
+    ]
+    for week_key in sorted(generated, reverse=True):
+        index_lines.append(f"- [{week_key}]({week_key}.md)")
+
+    with open(os.path.join(DIGEST_DIR, "_index.md"), 'w', encoding='utf-8') as f:
+        f.write('\n'.join(index_lines))
+
+    print(f"[digest] {len(generated)}週分のダイジェストを生成しました → docs/digest/")
+
+
 def cmd_inject(args, conn):
     """UserPromptSubmit フック用: stdinからhookイベントを読み、関連記憶をadditionalContextとして返す"""
     LOG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "inject.log")
@@ -274,33 +440,75 @@ def cmd_inject(args, conn):
         print("{}")
         return
 
-    # プロンプトの先頭100文字をクエリに使用
-    query = prompt.strip()[:100]
+    # 形態素解析でキーワード抽出、なければ先頭100文字をそのまま使用
+    raw_query = prompt.strip()[:200]
+    tokens = tokenize_ja(raw_query)
+    if tokens:
+        # FTS5 の OR 検索で複数キーワードをマッチ
+        query = " OR ".join(f'"{t}"' for t in tokens[:10])
+    else:
+        query = raw_query[:100]
 
-    rows = conn.execute("""
-        SELECT m.id, m.content, m.created_at
-        FROM memories_fts f
-        JOIN memories m ON m.id = f.rowid
-        WHERE memories_fts MATCH ?
-        ORDER BY rank
-        LIMIT ?
-    """, (query, args.limit or 5)).fetchall()
+    cutoff = (datetime.datetime.now() - datetime.timedelta(days=7)).isoformat(timespec="seconds")
+    search_all = getattr(args, 'all', False)
 
-    # ログ記録（実測用）
+    try:
+        if search_all:
+            rows = conn.execute("""
+                SELECT m.id, m.content, m.created_at
+                FROM memories_fts f
+                JOIN memories m ON m.id = f.rowid
+                WHERE memories_fts MATCH ?
+                ORDER BY rank
+                LIMIT ?
+            """, (query, args.limit or 5)).fetchall()
+        else:
+            rows = conn.execute("""
+                SELECT m.id, m.content, m.created_at
+                FROM memories_fts f
+                JOIN memories m ON m.id = f.rowid
+                WHERE memories_fts MATCH ?
+                  AND m.created_at >= ?
+                ORDER BY rank
+                LIMIT ?
+            """, (query, cutoff, args.limit or 5)).fetchall()
+    except Exception:
+        rows = []
+
+    # 7日以内にヒットなし → 古いデータにあるか確認
+    old_count = 0
+    if not rows and not search_all:
+        try:
+            old_count = conn.execute("""
+                SELECT COUNT(*) FROM memories_fts f
+                JOIN memories m ON m.id = f.rowid
+                WHERE memories_fts MATCH ?
+                  AND m.created_at < ?
+            """, (query, cutoff)).fetchone()[0]
+        except Exception:
+            old_count = 0
+
+    # ログ記録
     now = datetime.datetime.now().isoformat(timespec="seconds")
     total_chars = sum(len(r["content"]) for r in rows)
     with open(LOG_PATH, "a", encoding="utf-8") as lf:
-        lf.write(f"{now} | hits={len(rows)} | chars={total_chars} | query={query[:50]}\n")
+        lf.write(f"{now} | hits={len(rows)} | old={old_count} | chars={total_chars} | query={query[:50]}\n")
 
-    if not rows:
+    if not rows and old_count == 0:
         print("{}")
         return
 
-    lines = ["## reminiscence: 関連する過去の記憶\n"]
-    for row in rows:
-        lines.append(f"[{row['created_at']}]\n{row['content']}\n")
-
-    context = "\n".join(lines)
+    if not rows and old_count > 0:
+        context = (
+            f"📦 [reminiscence] 7日以内の関連記憶はありません。"
+            f"古いデータに{old_count}件の関連記憶があります。"
+            f"参照が必要であれば明示してください。"
+        )
+    else:
+        lines = ["## reminiscence: 関連する過去の記憶（7日以内）\n"]
+        for row in rows:
+            lines.append(f"[{row['created_at']}]\n{row['content']}\n")
+        context = "\n".join(lines)
 
     output = {
         "hookSpecificOutput": {
@@ -338,9 +546,17 @@ def main():
     p_delete = sub.add_parser("delete", help="記憶をIDで削除する")
     p_delete.add_argument("id", type=int, help="削除するメモリID")
 
+    # retokenize（一回限りの遡及処理）
+    sub.add_parser("retokenize", help="既存レコードのtagsにJanomeトークンを追加する（一回限りの遡及処理）")
+
+    # digest（docs/digest/へのMarkdown生成）
+    p_digest = sub.add_parser("digest", help="DBからdocs/digest/に週次ダイジェストを生成する")
+    p_digest.add_argument("--days", type=int, default=90, help="対象期間（日数、デフォルト90日）")
+
     # inject（UserPromptSubmitフック用）
     p_inject = sub.add_parser("inject", help="UserPromptSubmitフック: 関連記憶をadditionalContextとして返す")
     p_inject.add_argument("--limit", type=int, default=5, help="最大取得件数")
+    p_inject.add_argument("--all", action="store_true", help="7日以上前の記憶も含めて検索する")
 
     args = parser.parse_args()
 
@@ -361,6 +577,10 @@ def main():
         cmd_list(args, conn)
     elif args.command == "delete":
         cmd_delete(args, conn)
+    elif args.command == "retokenize":
+        cmd_retokenize(args, conn)
+    elif args.command == "digest":
+        cmd_digest(args, conn)
     elif args.command == "inject":
         cmd_inject(args, conn)
 

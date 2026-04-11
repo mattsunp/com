@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>pattern-AG: split-diorama | Seep Logos</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      /* 左世界: 冷色 — 現実・都市・機械的 */
+      --left-bg:    #08100f;
+      --left-surf:  #0d1a18;
+      --left-text:  #d8e8e4;
+      --left-dim:   #7899a4;
+      --left-muted: #3a5560;
+      --left-accent: #4ab8a0;
+      --left-glow:   rgba(74,184,160,0.20);
+
+      /* 右世界: 暖色 — 異界・自然・有機的 */
+      --right-bg:    #100a08;
+      --right-surf:  #1a120d;
+      --right-text:  #e8ddd4;
+      --right-dim:   #a47860;
+      --right-muted: #604838;
+      --right-accent: #c88060;
+      --right-glow:   rgba(200,128,96,0.20);
+
+      --font-serif: Georgia, "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", serif;
+      --font-sans:  -apple-system, "Helvetica Neue", "Hiragino Kaku Gothic ProN", sans-serif;
+      --font-mono:  "Courier New", Courier, monospace;
+
+      --side-pad: clamp(2rem, 4vw, 5rem);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: #080808;
+      color: var(--left-text);
+      font-family: var(--font-serif);
+      line-height: 1.8;
+      overflow-x: hidden;
+    }
+
+    /* ─── ヘッダー: 中央分割線を演出 ─── */
+    .site-header {
+      position: relative;
+      padding: 72px 0 60px;
+      text-align: center;
+    }
+
+    .header-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.5em;
+      color: rgba(255,255,255,0.3);
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: emerge 0.7s ease 0.3s forwards;
+    }
+
+    @keyframes emerge {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .header-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.8rem, 5vw, 3.6rem);
+      font-weight: normal;
+      line-height: 1.2;
+      opacity: 0;
+      animation: emerge 0.9s ease 0.6s forwards;
+    }
+
+    /* タイトルを左右の色で二分する */
+    .header-title .left-word  { color: var(--left-text); }
+    .header-title .right-word { color: var(--right-text); }
+    .header-title .sep        { color: rgba(255,255,255,0.25); margin: 0 0.5em; }
+
+    .header-desc {
+      font-family: var(--font-serif);
+      font-size: 14px;
+      color: rgba(255,255,255,0.35);
+      max-width: 480px;
+      margin: 1.5rem auto 0;
+      line-height: 1.9;
+      opacity: 0;
+      animation: emerge 0.7s ease 1.1s forwards;
+    }
+
+    /* ─── 分割線 ─── */
+    /* 画面中央を縦走する仕切り — scrollで輝度が変わる */
+    .center-divide {
+      position: fixed;
+      left: 50%;
+      top: 0;
+      width: 1px;
+      height: 100vh;
+      transform: translateX(-50%);
+      background: linear-gradient(to bottom,
+        transparent 0%,
+        rgba(255,255,255,0.08) 10%,
+        rgba(255,255,255,0.08) 90%,
+        transparent 100%
+      );
+      z-index: 50;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+
+    /* チャプター境界で輝く — JSで制御 */
+    .center-divide.pulse {
+      background: linear-gradient(to bottom,
+        transparent 0%,
+        rgba(255,255,255,0.25) 10%,
+        rgba(255,255,255,0.25) 90%,
+        transparent 100%
+      );
+    }
+
+    /* ─── チャプター共通 ─── */
+    .chapter {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 80vh;
+      position: relative;
+    }
+
+    /* ─── 左パネル ─── */
+    .panel-left {
+      background: var(--left-bg);
+      padding: 80px var(--side-pad) 80px calc(var(--side-pad) + 2vw);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+
+    .panel-right {
+      background: var(--right-bg);
+      padding: 80px calc(var(--side-pad) + 2vw) 80px var(--side-pad);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* 左パネル内側グロー — 右端から逆光 */
+    .panel-left::after {
+      content: '';
+      position: absolute;
+      right: 0; top: 0; bottom: 0;
+      width: 80px;
+      background: linear-gradient(to left, var(--left-glow), transparent);
+      pointer-events: none;
+    }
+
+    .panel-right::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 80px;
+      background: linear-gradient(to right, var(--right-glow), transparent);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* ─── チャプターラベル ─── */
+    .panel-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    .panel-left  .panel-label { color: var(--left-accent); }
+    .panel-right .panel-label { color: var(--right-accent); }
+
+    /* ─── 見出し ─── */
+    .panel-left h2 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.3rem, 2.5vw, 2rem);
+      font-weight: normal;
+      color: var(--left-text);
+      line-height: 1.4;
+      margin-bottom: 1.5rem;
+    }
+
+    .panel-right h2 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.3rem, 2.5vw, 2rem);
+      font-weight: normal;
+      color: var(--right-text);
+      line-height: 1.4;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ─── 本文 ─── */
+    .panel-left p {
+      font-family: var(--font-serif);
+      font-size: 14px;
+      color: var(--left-dim);
+      line-height: 2;
+      margin-bottom: 1.25rem;
+    }
+
+    .panel-right p {
+      font-family: var(--font-serif);
+      font-size: 14px;
+      color: var(--right-dim);
+      line-height: 2;
+      margin-bottom: 1.25rem;
+    }
+
+    .panel-left p:last-child,
+    .panel-right p:last-child { margin-bottom: 0; }
+
+    /* ─── メタデータ ─── */
+    .panel-meta {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .meta-row {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+
+    .panel-left  .meta-key   { color: var(--left-muted); letter-spacing: 0.2em; }
+    .panel-right .meta-key   { color: var(--right-muted); letter-spacing: 0.2em; }
+    .panel-left  .meta-value { color: var(--left-text); }
+    .panel-right .meta-value { color: var(--right-text); }
+
+    /* ─── チャプター境界マーカー ─── */
+    /* 両世界が交差する瞬間を示す水平帯 */
+    .chapter-boundary {
+      position: relative;
+      height: 48px;
+      background: linear-gradient(180deg, #080808, #080808);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .boundary-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.6em;
+      color: rgba(255,255,255,0.2);
+      text-transform: uppercase;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* 境界の左右からグラデーション */
+    .chapter-boundary::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 50%;
+      transform: translateY(-50%);
+      width: 45%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--left-glow));
+    }
+
+    .chapter-boundary::after {
+      content: '';
+      position: absolute;
+      right: 0; top: 50%;
+      transform: translateY(-50%);
+      width: 45%;
+      height: 1px;
+      background: linear-gradient(to left, transparent, var(--right-glow));
+    }
+
+    /* ─── スクロールリビール ─── */
+    .reveal-left, .reveal-right {
+      opacity: 0;
+    }
+
+    .reveal-left {
+      transform: translateX(-12px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .reveal-right {
+      transform: translateX(12px);
+      transition: opacity 0.8s ease 0.12s, transform 0.8s ease 0.12s;
+    }
+
+    .reveal-left.visible,
+    .reveal-right.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* ─── フッター ─── */
+    .footer {
+      padding: 60px 0;
+      text-align: center;
+      background: #080808;
+      position: relative;
+    }
+
+    .footer-text {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.35em;
+      color: rgba(255,255,255,0.2);
+      text-transform: uppercase;
+    }
+
+    /* ─── モバイル: 2カラム → 縦スタック ─── */
+    @media (max-width: 767px) {
+      .center-divide { display: none; }
+
+      .chapter {
+        grid-template-columns: 1fr;
+      }
+
+      .panel-left, .panel-right {
+        padding: 56px var(--side-pad);
+      }
+
+      .panel-left::after,
+      .panel-right::before {
+        display: none;
+      }
+
+      /* モバイルでは境界をグラデーション帯で表現 */
+      .panel-left  { border-bottom: 1px solid rgba(74,184,160,0.15); }
+      .panel-right { border-bottom: 1px solid rgba(200,128,96,0.15); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 固定分割線 -->
+  <div class="center-divide" id="centerDivide"></div>
+
+  <!-- ヘッダー -->
+  <header class="site-header">
+    <div class="header-eyebrow">// parallel worlds</div>
+    <h2 class="header-title">
+      <span class="left-word">こちら</span>
+      <span class="sep">|</span>
+      <span class="right-word">あちら</span>
+    </h2>
+    <p class="header-desc">二つの世界は同じ時を生きている。しかし見えているものは、まったく違う。</p>
+  </header>
+
+  <!-- Chapter 1 -->
+  <section class="chapter" data-chapter="1">
+
+    <div class="panel-left">
+      <span class="panel-label reveal-left">// World A — Ch. 1</span>
+      <h2 class="reveal-left">都市は眠らない</h2>
+      <p class="reveal-left">照明が消えたことがない。機械の唸りが、夜の代わりだ。ここでは、暗闇は非効率の象徴だった。</p>
+      <p class="reveal-left">人々は効率を信仰した。余白を憎んだ。沈黙を恐れた。</p>
+      <div class="panel-meta reveal-left">
+        <div class="meta-row"><span class="meta-key">TIME</span><span class="meta-value">03:47 — never dark</span></div>
+        <div class="meta-row"><span class="meta-key">TEMP</span><span class="meta-value">22.0°C (controlled)</span></div>
+      </div>
+    </div>
+
+    <div class="panel-right">
+      <span class="panel-label reveal-right">// World B — Ch. 1</span>
+      <h2 class="reveal-right">森は呼吸している</h2>
+      <p class="reveal-right">夜になると、すべてが静かになる。静かさは、この世界では贈り物だった。暗闇は恐れるものではなく、眠るためにある。</p>
+      <p class="reveal-right">人々は季節を聞いた。根に問いかけた。答えは、いつも遅れてやってきた。</p>
+      <div class="panel-meta reveal-right">
+        <div class="meta-row"><span class="meta-key">TIME</span><span class="meta-value">03:47 — moonset</span></div>
+        <div class="meta-row"><span class="meta-key">TEMP</span><span class="meta-value">8.3°C (natural)</span></div>
+      </div>
+    </div>
+
+  </section>
+
+  <div class="chapter-boundary">
+    <span class="boundary-label">— chapter II —</span>
+  </div>
+
+  <!-- Chapter 2 -->
+  <section class="chapter" data-chapter="2">
+
+    <div class="panel-left">
+      <span class="panel-label reveal-left">// World A — Ch. 2</span>
+      <h2 class="reveal-left">そして、亀裂が入った</h2>
+      <p class="reveal-left">機械は止まらない。だが、ある朝、誰かが気づいた。機械のすべてが、何かを模倣しているということに。</p>
+      <p class="reveal-left">模倣の元は、どこにあるのか。誰も聞いたことがなかった問いが、空中に漂い始めた。</p>
+    </div>
+
+    <div class="panel-right">
+      <span class="panel-label reveal-right">// World B — Ch. 2</span>
+      <h2 class="reveal-right">そして、光が射した</h2>
+      <p class="reveal-right">森の奥深く、誰も踏み入ったことのない場所に、異質な光が現れた。根や葉や水ではない。どこか遠くの何かからの光。</p>
+      <p class="reveal-right">古老は言った。「あれは、別の世界の声だ」と。</p>
+    </div>
+
+  </section>
+
+  <div class="chapter-boundary">
+    <span class="boundary-label">— chapter III —</span>
+  </div>
+
+  <!-- Chapter 3: 収束 -->
+  <section class="chapter" data-chapter="3">
+
+    <div class="panel-left">
+      <span class="panel-label reveal-left">// World A — Ch. 3</span>
+      <h2 class="reveal-left">機械は「向こう側」を夢見ていた</h2>
+      <p class="reveal-left">答えは、最初からあった。すべての機械は、有機体を模倣して設計されていた。人間が忘れた何かを、機械は覚え続けていた。</p>
+    </div>
+
+    <div class="panel-right">
+      <span class="panel-label reveal-right">// World B — Ch. 3</span>
+      <h2 class="reveal-right">森は「向こう側」を知っていた</h2>
+      <p class="reveal-right">根はすでにつながっていた。光の下で、二つの世界の土壌は、見えない糸で編まれていた。ただ、誰も気づいていなかっただけだ。</p>
+    </div>
+
+  </section>
+
+  <footer class="footer">
+    <p class="footer-text">Seep Logos &mdash; pattern-AG: split-diorama</p>
+  </footer>
+
+  <script>
+    // ─── スクロールリビール ───
+    const revealEls = document.querySelectorAll('.reveal-left, .reveal-right');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) e.target.classList.add('visible');
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(el => io.observe(el));
+
+    // ─── 章境界でセンターラインをパルス ───
+    const boundaries = document.querySelectorAll('.chapter-boundary');
+    const divide = document.getElementById('centerDivide');
+
+    const boundaryObs = new IntersectionObserver((entries) => {
+      const anyVisible = entries.some(e => e.isIntersecting);
+      divide.classList.toggle('pulse', anyVisible);
+    }, { threshold: 0.5 });
+
+    boundaries.forEach(b => boundaryObs.observe(b));
+  </script>
+</body>
+</html>
