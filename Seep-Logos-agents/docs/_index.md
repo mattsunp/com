@@ -12,6 +12,7 @@
 | `docs/copyright-policy.md` | 著作物利用ポリシー |
 | `docs/orchestration-spec.md` | オーケストレーション実験仕様・実験履歴 |
 | `docs/visual-style-guide.md` | Web ビジュアルスタイルガイド（16パターン、パターン選定ガイド） |
+| `docs/web-designer-manual.md` | Webデザイナー業務マニュアル（DESIGN.md 作成・ワークフロー・チェックリスト） |
 | `docs/agent-genius-design.md` | エージェント天才化設計マニュアル・進捗管理 |
 | `docs/glossary.md` | 用語集・辞書（定義・調査済みの言葉を随時蓄積） |
 | `docs/orchestration-queue-schema.md` | オーケストレーションキュースキーマ定義 |
