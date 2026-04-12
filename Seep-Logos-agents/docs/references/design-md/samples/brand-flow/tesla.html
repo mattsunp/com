@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tesla — Design Reference</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#3E6AE1;
+  --white:#FFFFFF;
+  --carbon:#171A20;
+  --graphite:#393C41;
+  --pewter:#5C5E62;
+  --silver:#8E8E8E;
+  --cloud:#EEEEEE;
+  --ash:#F4F4F4;
+  --ease:.33s cubic-bezier(0.5,0,0,0.75);
+}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,'Arial',sans-serif;background:var(--white);color:var(--carbon);font-size:14px;line-height:1.43;padding-bottom:56px}
+
+/* ─── NAV ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:56px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;
+  background:rgba(255,255,255,0.85);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+.nav-brand{font-size:13px;font-weight:700;letter-spacing:4px;color:var(--carbon);text-transform:uppercase;text-decoration:none}
+.nav-center{display:flex;gap:2px;list-style:none}
+.nav-center a{display:flex;align-items:center;height:32px;padding:0 16px;font-size:14px;font-weight:500;color:var(--carbon);text-decoration:none;border-radius:4px;transition:background-color var(--ease)}
+.nav-center a:hover{background:rgba(0,0,0,0.05)}
+.nav-right{display:flex;gap:4px;list-style:none}
+.nav-right a{display:flex;align-items:center;justify-content:center;width:32px;height:32px;font-size:16px;color:var(--carbon);text-decoration:none;border-radius:4px;transition:background-color var(--ease)}
+.nav-right a:hover{background:rgba(0,0,0,0.05)}
+
+/* ─── BUTTONS ─── */
+.btn-primary{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:196px;min-height:40px;
+  background:var(--blue);color:var(--white);
+  font-size:14px;font-weight:500;border:3px solid transparent;border-radius:4px;
+  text-decoration:none;transition:background-color var(--ease);cursor:pointer;
+}
+.btn-primary:hover{background:#2d55cc}
+.btn-secondary{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:196px;min-height:40px;
+  background:rgba(255,255,255,0.85);color:var(--graphite);
+  font-size:14px;font-weight:500;border:3px solid transparent;border-radius:4px;
+  text-decoration:none;transition:background-color var(--ease);cursor:pointer;
+}
+.btn-secondary:hover{background:var(--white)}
+.btn-pair{display:flex;gap:12px;justify-content:center}
+
+/* ─── HERO SECTIONS (100vh each) ─── */
+.hero{
+  width:100%;height:100vh;
+  position:relative;overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+  padding:80px 24px 40px;
+}
+.hero-dark{background:var(--carbon)}
+.hero-light{background:var(--ash)}
+.hero-mid{background:#1e2530}
+.hero-energy{background:linear-gradient(170deg,#0a0e14 0%,#0d1620 50%,#0e1e30 100%)}
+
+.hero-top{text-align:center}
+.hero-model{font-size:40px;font-weight:500;color:var(--white);line-height:1.2;display:block}
+.hero-model.dark-title{color:var(--carbon)}
+.hero-sub{font-size:22px;font-weight:400;color:var(--blue);display:block;margin-top:6px}
+.hero-sub.dark-sub{color:var(--pewter)}
+
+/* Car visual area */
+.car-stage{
+  width:100%;max-width:900px;flex:1;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.car-emoji{font-size:140px;line-height:1;filter:drop-shadow(0 20px 60px rgba(0,0,0,0.5));display:block;text-align:center}
+.car-ground{
+  position:absolute;bottom:0;left:10%;right:10%;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.15),transparent);
+}
+.car-ground-dark{
+  position:absolute;bottom:0;left:10%;right:10%;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(0,0,0,0.1),transparent);
+}
+
+/* Spec chips on hero */
+.spec-strip{
+  display:flex;gap:48px;justify-content:center;
+  margin-bottom:16px;
+}
+.spec-chip{text-align:center}
+.spec-num{font-size:32px;font-weight:500;color:var(--white)}
+.spec-num.dark-num{color:var(--carbon)}
+.spec-label{font-size:11px;font-weight:400;color:rgba(255,255,255,0.6);margin-top:2px}
+.spec-label.dark-label{color:var(--pewter)}
+
+/* Dots */
+.dots{display:flex;gap:8px;justify-content:center;margin-top:16px}
+.dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.35)}
+.dot.on{background:var(--white)}
+.dot-dark{background:rgba(0,0,0,0.2)}
+.dot-dark.on{background:var(--carbon)}
+
+/* ─── ENERGY SECTION ─── */
+.powerwall-visual{
+  width:100%;max-width:700px;
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;
+  margin:0 auto;
+}
+.pw-unit{
+  background:linear-gradient(145deg,#1a2840,#0d1a2c);
+  border:1px solid rgba(62,106,225,0.2);
+  border-radius:8px;padding:24px;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+}
+.pw-icon{font-size:48px}
+.pw-label{font-size:14px;font-weight:500;color:rgba(255,255,255,0.85)}
+.pw-desc{font-size:12px;color:rgba(255,255,255,0.45);text-align:center;line-height:1.5}
+.pw-stat{font-size:24px;font-weight:500;color:var(--blue)}
+
+/* ─── VEHICLE LINEUP ─── */
+.lineup{background:var(--white);padding:72px 24px 80px}
+.lineup-title{font-size:28px;font-weight:500;color:var(--carbon);text-align:center;margin-bottom:40px}
+.lineup-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:24px;
+  max-width:1100px;margin:0 auto;
+}
+.lineup-card{text-align:center;padding:16px 8px}
+.lineup-car{font-size:72px;display:block;margin-bottom:12px;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.1))}
+.lineup-name{font-size:17px;font-weight:500;color:var(--carbon);margin-bottom:4px}
+.lineup-range{font-size:13px;color:var(--pewter);margin-bottom:12px}
+.lineup-links{display:flex;gap:16px;justify-content:center}
+.lineup-links a{font-size:13px;font-weight:400;color:var(--pewter);text-decoration:none}
+.lineup-links a:hover{text-decoration:underline}
+
+/* ─── CHARGING SECTION ─── */
+.charging-section{
+  background:var(--ash);padding:80px 24px;
+  display:flex;flex-direction:column;align-items:center;gap:40px;
+}
+.charging-title{font-size:36px;font-weight:500;color:var(--carbon);text-align:center}
+.charging-sub{font-size:14px;color:var(--pewter);text-align:center;max-width:520px;line-height:1.6}
+.supercharger-map{
+  width:100%;max-width:800px;height:280px;
+  background:linear-gradient(135deg,#e8ecf4,#d8dce8,#c8ccd8);
+  border-radius:8px;position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.map-overlay{
+  position:absolute;inset:0;
+  background:radial-gradient(circle at 30% 40%,rgba(62,106,225,0.15) 0%,transparent 50%),
+             radial-gradient(circle at 70% 60%,rgba(62,106,225,0.1) 0%,transparent 40%);
+}
+.map-dot{
+  position:absolute;width:12px;height:12px;border-radius:50%;
+  background:var(--blue);box-shadow:0 0 0 4px rgba(62,106,225,0.25);
+}
+.map-label{font-size:13px;color:var(--pewter);font-weight:500;z-index:2}
+.charging-stats{display:flex;gap:64px;justify-content:center}
+.chg-stat-num{font-size:40px;font-weight:500;color:var(--carbon)}
+.chg-stat-label{font-size:13px;color:var(--pewter);margin-top:4px}
+
+/* ─── FOOTER ─── */
+footer{background:var(--white);padding:48px 24px;border-top:1px solid var(--cloud)}
+.footer-inner{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;max-width:1100px;margin:0 auto}
+.footer-col h4{font-size:13px;font-weight:500;color:var(--carbon);margin-bottom:12px}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.footer-col a{font-size:13px;color:var(--pewter);text-decoration:none}
+.footer-col a:hover{color:var(--carbon)}
+.footer-bottom{text-align:center;margin-top:32px;font-size:12px;color:var(--silver)}
+
+/* ─── CHAT BAR ─── */
+.chat-bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  background:var(--white);border-top:1px solid var(--cloud);
+  height:56px;display:flex;align-items:center;gap:12px;padding:0 24px;
+}
+.chat-icon{font-size:18px}
+.chat-label{font-size:14px;font-weight:500;color:var(--carbon)}
+.chat-input{flex:1;border:none;outline:none;font-size:14px;color:var(--carbon);background:transparent}
+.chat-input::placeholder{color:var(--silver)}
+.chat-cta{font-size:14px;font-weight:500;color:var(--blue);text-decoration:none;white-space:nowrap}
+
+@media(max-width:768px){
+  .nav-center{display:none}
+  .hero-model{font-size:28px}
+  .btn-pair{flex-direction:column;align-items:center}
+  .spec-strip{gap:24px}
+  .spec-num{font-size:24px}
+  .lineup-grid{grid-template-columns:1fr 1fr}
+  .footer-inner{grid-template-columns:1fr 1fr}
+  .powerwall-visual{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="#">TESLA</a>
+  <ul class="nav-center">
+    <li><a href="#">Vehicles</a></li>
+    <li><a href="#">Energy</a></li>
+    <li><a href="#">Charging</a></li>
+    <li><a href="#">Discover</a></li>
+    <li><a href="#">Shop</a></li>
+  </ul>
+  <ul class="nav-right">
+    <li><a href="#">?</a></li>
+    <li><a href="#">🌐</a></li>
+    <li><a href="#">👤</a></li>
+  </ul>
+</nav>
+
+<!-- HERO 1 — Model Y -->
+<section class="hero hero-dark">
+  <div class="hero-top">
+    <span class="hero-model">Model Y</span>
+    <span class="hero-sub">0% APR Available</span>
+  </div>
+  <div class="car-stage">
+    <span class="car-emoji">🚙</span>
+    <div class="car-ground"></div>
+  </div>
+  <div>
+    <div class="btn-pair">
+      <a class="btn-primary" href="#">Order Now</a>
+      <a class="btn-secondary" href="#">View Inventory</a>
+    </div>
+    <div class="dots" style="margin-top:20px">
+      <div class="dot on"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+  </div>
+</section>
+
+<!-- HERO 2 — Model 3 -->
+<section class="hero hero-mid">
+  <div class="hero-top">
+    <span class="hero-model">Model 3</span>
+    <span class="hero-sub">From ¥5,099,000</span>
+  </div>
+  <div class="car-stage">
+    <span class="car-emoji">🚗</span>
+    <div class="car-ground"></div>
+  </div>
+  <div>
+    <div class="spec-strip">
+      <div class="spec-chip">
+        <div class="spec-num">3.1<span style="font-size:18px">s</span></div>
+        <div class="spec-label">0–100 km/h</div>
+      </div>
+      <div class="spec-chip">
+        <div class="spec-num">629<span style="font-size:18px">km</span></div>
+        <div class="spec-label">航続距離</div>
+      </div>
+      <div class="spec-chip">
+        <div class="spec-num">225<span style="font-size:18px">km/h</span></div>
+        <div class="spec-label">最高速度</div>
+      </div>
+    </div>
+    <div class="btn-pair">
+      <a class="btn-primary" href="#">Order Now</a>
+      <a class="btn-secondary" href="#">View Inventory</a>
+    </div>
+  </div>
+</section>
+
+<!-- HERO 3 — Model S -->
+<section class="hero hero-dark">
+  <div class="hero-top">
+    <span class="hero-model">Model S</span>
+    <span class="hero-sub">最速の量産EV</span>
+  </div>
+  <div class="car-stage">
+    <span class="car-emoji">🏎️</span>
+    <div class="car-ground"></div>
+  </div>
+  <div>
+    <div class="spec-strip">
+      <div class="spec-chip">
+        <div class="spec-num">2.1<span style="font-size:18px">s</span></div>
+        <div class="spec-label">0–100 km/h</div>
+      </div>
+      <div class="spec-chip">
+        <div class="spec-num">652<span style="font-size:18px">km</span></div>
+        <div class="spec-label">航続距離</div>
+      </div>
+      <div class="spec-chip">
+        <div class="spec-num">322<span style="font-size:18px">km/h</span></div>
+        <div class="spec-label">最高速度</div>
+      </div>
+    </div>
+    <div class="btn-pair">
+      <a class="btn-primary" href="#">Order Now</a>
+      <a class="btn-secondary" href="#">Learn More</a>
+    </div>
+  </div>
+</section>
+
+<!-- HERO 4 — Cybertruck -->
+<section class="hero hero-light">
+  <div class="hero-top">
+    <span class="hero-model dark-title">Cybertruck</span>
+    <span class="hero-sub dark-sub">Beast Mode: 0–100 km/h 2.6秒</span>
+  </div>
+  <div class="car-stage">
+    <span class="car-emoji" style="font-size:160px">🛻</span>
+    <div class="car-ground-dark"></div>
+  </div>
+  <div>
+    <div class="spec-strip">
+      <div class="spec-chip">
+        <div class="spec-num dark-num">2.6<span style="font-size:18px">s</span></div>
+        <div class="spec-label dark-label">0–100 km/h</div>
+      </div>
+      <div class="spec-chip">
+        <div class="spec-num dark-num">560<span style="font-size:18px">km</span></div>
+        <div class="spec-label dark-label">航続距離</div>
+      </div>
+      <div class="spec-chip">
+        <div class="spec-num dark-num">1,000<span style="font-size:18px">hp</span></div>
+        <div class="spec-label dark-label">出力</div>
+      </div>
+    </div>
+    <div class="btn-pair">
+      <a class="btn-primary" href="#">Order Now</a>
+      <a class="btn-secondary" href="#" style="background:var(--white)">View Inventory</a>
+    </div>
+  </div>
+</section>
+
+<!-- ENERGY SECTION -->
+<section class="hero hero-energy">
+  <div class="hero-top">
+    <span class="hero-model">Tesla Energy</span>
+    <span class="hero-sub">家を丸ごとクリーンエネルギーに</span>
+  </div>
+  <div class="powerwall-visual">
+    <div class="pw-unit">
+      <div class="pw-icon">☀️</div>
+      <div class="pw-label">Solar Roof</div>
+      <div class="pw-stat">48 kWh</div>
+      <div class="pw-desc">美しい太陽電池瓦が<br>毎日電力を生成</div>
+    </div>
+    <div class="pw-unit">
+      <div class="pw-icon">🔋</div>
+      <div class="pw-label">Powerwall 3</div>
+      <div class="pw-stat">13.5 kWh</div>
+      <div class="pw-desc">夜間・停電時も<br>安定した電力供給</div>
+    </div>
+  </div>
+  <div class="btn-pair">
+    <a class="btn-primary" href="#">Order Now</a>
+    <a class="btn-secondary" href="#" style="background:rgba(255,255,255,0.15);color:#fff">Learn More</a>
+  </div>
+</section>
+
+<!-- CHARGING SECTION -->
+<section class="charging-section">
+  <div class="charging-title">Supercharger ネットワーク</div>
+  <div class="charging-sub">世界最大の高速充電ネットワーク。30分で最大320km分を充電。目的地に向かいながら充電を完了。</div>
+  <div class="supercharger-map">
+    <div class="map-overlay"></div>
+    <div class="map-dot" style="top:30%;left:25%"></div>
+    <div class="map-dot" style="top:45%;left:40%"></div>
+    <div class="map-dot" style="top:55%;left:55%"></div>
+    <div class="map-dot" style="top:35%;left:65%"></div>
+    <div class="map-dot" style="top:60%;left:75%"></div>
+    <div class="map-dot" style="top:25%;left:50%"></div>
+    <div class="map-label">50,000+ Superchargers worldwide</div>
+  </div>
+  <div class="charging-stats">
+    <div style="text-align:center">
+      <div class="chg-stat-num">50,000+</div>
+      <div class="chg-stat-label">スーパーチャージャー</div>
+    </div>
+    <div style="text-align:center">
+      <div class="chg-stat-num">15分</div>
+      <div class="chg-stat-label">最短充電時間</div>
+    </div>
+    <div style="text-align:center">
+      <div class="chg-stat-num">250kW</div>
+      <div class="chg-stat-label">最大出力</div>
+    </div>
+  </div>
+</section>
+
+<!-- VEHICLE LINEUP -->
+<section class="lineup">
+  <div class="lineup-title">モデルを選ぶ</div>
+  <div class="lineup-grid">
+    <div class="lineup-card">
+      <span class="lineup-car">🏎️</span>
+      <div class="lineup-name">Model S</div>
+      <div class="lineup-range">航続 652 km〜</div>
+      <div class="lineup-links">
+        <a href="#">詳しく</a>
+        <a href="#">購入</a>
+      </div>
+    </div>
+    <div class="lineup-card">
+      <span class="lineup-car">🚗</span>
+      <div class="lineup-name">Model 3</div>
+      <div class="lineup-range">航続 629 km〜</div>
+      <div class="lineup-links">
+        <a href="#">詳しく</a>
+        <a href="#">購入</a>
+      </div>
+    </div>
+    <div class="lineup-card">
+      <span class="lineup-car">🚙</span>
+      <div class="lineup-name">Model Y</div>
+      <div class="lineup-range">航続 533 km〜</div>
+      <div class="lineup-links">
+        <a href="#">詳しく</a>
+        <a href="#">購入</a>
+      </div>
+    </div>
+    <div class="lineup-card">
+      <span class="lineup-car">🛻</span>
+      <div class="lineup-name">Cybertruck</div>
+      <div class="lineup-range">航続 560 km〜</div>
+      <div class="lineup-links">
+        <a href="#">詳しく</a>
+        <a href="#">購入</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-col">
+      <h4>Tesla</h4>
+      <ul>
+        <li><a href="#">About Tesla</a></li>
+        <li><a href="#">Newsroom</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Investor Relations</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Vehicles</h4>
+      <ul>
+        <li><a href="#">Model S</a></li>
+        <li><a href="#">Model 3</a></li>
+        <li><a href="#">Model X</a></li>
+        <li><a href="#">Model Y</a></li>
+        <li><a href="#">Cybertruck</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Energy</h4>
+      <ul>
+        <li><a href="#">Solar Panels</a></li>
+        <li><a href="#">Solar Roof</a></li>
+        <li><a href="#">Powerwall</a></li>
+        <li><a href="#">Megapack</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <ul>
+        <li><a href="#">Find Us</a></li>
+        <li><a href="#">Schedule Service</a></li>
+        <li><a href="#">Financing</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">Tesla, Inc. — Design Reference Template © 2026</div>
+</footer>
+
+<!-- PERSISTENT CHAT BAR -->
+<div class="chat-bar">
+  <span class="chat-icon">💬</span>
+  <span class="chat-label">質問する</span>
+  <input class="chat-input" type="text" placeholder="Dog Modeって何？">
+  <a class="chat-cta" href="#">今日ドライブを予約 →</a>
+</div>
+
+</body>
+</html>

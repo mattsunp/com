@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Apple — Brand Flow Template</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#000000;
+  --gray:#f5f5f7;
+  --near-black:#1d1d1f;
+  --blue:#0071e3;
+  --blue-link:#0066cc;
+  --blue-dark:#2997ff;
+  --white:#ffffff;
+  --text-80:rgba(0,0,0,0.80);
+  --text-48:rgba(0,0,0,0.48);
+  --dark-surface:#272729;
+  --card-shadow:rgba(0,0,0,0.22) 3px 5px 30px 0px;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--gray);
+  color:var(--near-black);
+  font-family:"SF Pro Display","SF Pro Text","Helvetica Neue",Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ─── STICKY NAV ─── */
+.nav{
+  position:sticky;top:0;z-index:999;
+  height:48px;
+  background:rgba(0,0,0,0.80);
+  backdrop-filter:saturate(180%) blur(20px);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 22px;
+}
+.nav-logo{
+  font-size:20px;color:#fff;text-decoration:none;
+  font-weight:500;letter-spacing:-0.3px;
+}
+.nav-links{display:flex;align-items:center;gap:24px;list-style:none}
+.nav-links a{
+  color:rgba(255,255,255,0.8);font-size:12px;font-weight:400;
+  text-decoration:none;letter-spacing:-0.12px;
+  transition:color .2s;
+}
+.nav-links a:hover{color:#fff}
+.nav-right{display:flex;align-items:center;gap:12px}
+.nav-icon{color:rgba(255,255,255,0.8);font-size:16px;cursor:pointer}
+.nav-cta{
+  background:var(--blue);color:#fff;
+  font-size:12px;padding:5px 14px;
+  border-radius:980px;text-decoration:none;font-weight:400;
+  transition:background .2s;
+}
+.nav-cta:hover{background:#0077ed}
+
+/* ─── HERO: BLACK CINEMATIC ─── */
+.hero{
+  background:var(--black);
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;padding:100px 24px;
+  gap:0;
+}
+.hero-eyebrow{
+  color:#888;font-size:17px;font-weight:400;
+  letter-spacing:-0.374px;margin-bottom:12px;
+}
+.hero h1{
+  color:#fff;font-size:56px;font-weight:600;
+  line-height:1.07;letter-spacing:-0.28px;
+  max-width:680px;margin-bottom:14px;
+}
+.hero-sub{
+  color:rgba(255,255,255,0.7);font-size:21px;
+  font-weight:400;line-height:1.19;letter-spacing:0.231px;
+  margin-bottom:32px;
+}
+.hero-product-img{
+  width:280px;height:340px;margin:32px 0;
+  background:linear-gradient(160deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);
+  border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-size:80px;
+}
+.hero-ctas{display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:center}
+.btn-pill-outline{
+  color:var(--blue-dark);font-size:17px;font-weight:400;
+  padding:8px 20px;border:1px solid var(--blue-dark);
+  border-radius:980px;text-decoration:none;
+  transition:background .2s;
+}
+.btn-pill-outline:hover{background:rgba(41,151,255,0.1)}
+.btn-blue{
+  background:var(--blue);color:#fff;font-size:17px;font-weight:400;
+  padding:8px 20px;border-radius:8px;text-decoration:none;border:none;
+  transition:background .2s;
+}
+.btn-blue:hover{background:#0077ed}
+
+/* ─── PRODUCT SECTION: LIGHT GRAY ─── */
+.section-light{
+  background:var(--gray);
+  padding:100px 24px;
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+}
+.section-light h2{
+  color:var(--near-black);font-size:40px;font-weight:600;
+  line-height:1.10;letter-spacing:normal;
+  max-width:700px;margin-bottom:16px;
+}
+.section-light .section-sub{
+  color:var(--text-80);font-size:21px;font-weight:400;
+  line-height:1.19;max-width:560px;margin-bottom:40px;
+}
+.section-ctas{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.link-learn{
+  color:var(--blue-link);font-size:17px;text-decoration:none;
+  padding:8px 16px;border:1px solid var(--blue-link);
+  border-radius:980px;
+  transition:background .2s;
+}
+.link-learn:hover{background:rgba(0,102,204,0.08)}
+
+/* ─── PRODUCT GRID SECTION: BLACK ─── */
+.section-dark{
+  background:var(--black);
+  padding:80px 24px;
+}
+.section-dark-header{text-align:center;margin-bottom:48px}
+.section-dark-header h2{
+  color:#fff;font-size:40px;font-weight:600;
+  line-height:1.10;margin-bottom:12px;
+}
+.section-dark-header p{
+  color:rgba(255,255,255,0.7);font-size:17px;font-weight:400;
+}
+.product-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  max-width:980px;margin:0 auto;
+}
+.product-tile{
+  background:var(--dark-surface);
+  border-radius:8px;
+  padding:40px 24px 32px;
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  box-shadow:var(--card-shadow);
+}
+.product-tile-img{
+  width:100%;height:160px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:64px;margin-bottom:20px;
+}
+.product-tile h3{
+  color:#fff;font-size:28px;font-weight:400;
+  line-height:1.14;letter-spacing:0.196px;
+  margin-bottom:8px;
+}
+.product-tile p{
+  color:rgba(255,255,255,0.6);font-size:14px;font-weight:400;
+  line-height:1.43;letter-spacing:-0.224px;margin-bottom:20px;
+  flex:1;
+}
+.product-tile-links{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.tile-link{
+  color:var(--blue-dark);font-size:14px;text-decoration:none;
+  padding:4px 12px;border:1px solid var(--blue-dark);
+  border-radius:980px;
+}
+.tile-link:hover{background:rgba(41,151,255,0.1)}
+
+/* ─── FEATURE STRIP: LIGHT GRAY ─── */
+.section-feature{
+  background:var(--gray);
+  padding:80px 24px;
+}
+.section-feature h2{
+  color:var(--near-black);font-size:40px;font-weight:600;
+  line-height:1.10;text-align:center;margin-bottom:48px;
+}
+.feature-row{
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:12px;max-width:980px;margin:0 auto;
+}
+.feature-card{
+  background:#fff;border-radius:12px;
+  padding:48px 32px;
+  box-shadow:var(--card-shadow);
+}
+.feature-card-icon{font-size:48px;margin-bottom:16px}
+.feature-card h3{
+  color:var(--near-black);font-size:21px;font-weight:700;
+  line-height:1.19;letter-spacing:0.231px;margin-bottom:8px;
+}
+.feature-card p{
+  color:var(--text-80);font-size:17px;font-weight:400;
+  line-height:1.47;letter-spacing:-0.374px;
+}
+
+/* ─── COMPARE SECTION: BLACK ─── */
+.section-compare{
+  background:var(--black);
+  padding:80px 24px;
+  text-align:center;
+}
+.section-compare h2{
+  color:#fff;font-size:40px;font-weight:600;
+  line-height:1.10;margin-bottom:8px;
+}
+.section-compare .compare-sub{
+  color:rgba(255,255,255,0.6);font-size:17px;margin-bottom:48px;
+}
+.compare-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:12px;max-width:980px;margin:0 auto 40px;
+}
+.compare-card{
+  background:var(--dark-surface);border-radius:8px;
+  padding:32px 16px;
+}
+.compare-card-img{font-size:48px;margin-bottom:16px}
+.compare-card h4{
+  color:#fff;font-size:21px;font-weight:400;
+  line-height:1.19;letter-spacing:0.231px;margin-bottom:6px;
+}
+.compare-card .price{
+  color:rgba(255,255,255,0.6);font-size:14px;
+  letter-spacing:-0.224px;margin-bottom:16px;
+}
+.btn-compare{
+  display:inline-block;
+  background:var(--blue);color:#fff;
+  font-size:14px;padding:6px 16px;
+  border-radius:8px;text-decoration:none;
+}
+
+/* ─── ACCESSORIES SECTION: LIGHT ─── */
+.section-accessories{
+  background:var(--gray);padding:80px 24px;text-align:center;
+}
+.section-accessories h2{
+  color:var(--near-black);font-size:40px;font-weight:600;
+  line-height:1.10;margin-bottom:48px;
+}
+.accessories-row{
+  display:flex;gap:12px;max-width:980px;margin:0 auto;
+  overflow-x:auto;padding-bottom:8px;
+}
+.accessory-item{
+  flex:0 0 220px;background:#fff;border-radius:8px;
+  padding:32px 20px;text-align:center;
+  box-shadow:var(--card-shadow);
+}
+.accessory-item .acc-img{font-size:48px;margin-bottom:16px}
+.accessory-item h4{
+  color:var(--near-black);font-size:17px;font-weight:600;
+  line-height:1.24;letter-spacing:-0.374px;margin-bottom:6px;
+}
+.accessory-item .acc-price{
+  color:var(--text-80);font-size:14px;margin-bottom:12px;
+}
+.accessory-item .acc-link{
+  color:var(--blue-link);font-size:14px;text-decoration:none;
+}
+
+/* ─── SUSTAINABILITY SECTION: BLACK ─── */
+.section-sustain{
+  background:var(--black);padding:100px 24px;text-align:center;
+}
+.section-sustain h2{
+  color:#fff;font-size:56px;font-weight:600;
+  line-height:1.07;letter-spacing:-0.28px;
+  max-width:680px;margin:0 auto 20px;
+}
+.section-sustain p{
+  color:rgba(255,255,255,0.7);font-size:21px;font-weight:400;
+  line-height:1.19;max-width:560px;margin:0 auto 32px;
+}
+.sustain-stats{
+  display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-top:48px;
+}
+.stat{text-align:center}
+.stat-num{
+  color:#fff;font-size:56px;font-weight:600;
+  line-height:1.07;letter-spacing:-0.28px;
+}
+.stat-label{
+  color:rgba(255,255,255,0.6);font-size:14px;
+  letter-spacing:-0.224px;margin-top:8px;
+}
+
+/* ─── FOOTER ─── */
+footer{
+  background:var(--gray);
+  border-top:1px solid rgba(0,0,0,0.08);
+  padding:40px 24px 24px;
+}
+.footer-top{
+  display:grid;grid-template-columns:repeat(5,1fr);
+  gap:24px;max-width:980px;margin:0 auto 32px;
+}
+.footer-col h5{
+  color:var(--near-black);font-size:12px;font-weight:600;
+  letter-spacing:-0.12px;margin-bottom:12px;
+}
+.footer-col ul{list-style:none}
+.footer-col li{margin-bottom:8px}
+.footer-col a{
+  color:var(--text-80);font-size:12px;text-decoration:none;
+}
+.footer-col a:hover{text-decoration:underline}
+.footer-bottom{
+  max-width:980px;margin:0 auto;
+  border-top:1px solid rgba(0,0,0,0.08);
+  padding-top:16px;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:12px;
+}
+.footer-bottom p{
+  color:var(--text-48);font-size:12px;letter-spacing:-0.12px;
+}
+.footer-bottom-links{display:flex;gap:16px}
+.footer-bottom-links a{
+  color:var(--text-48);font-size:12px;text-decoration:none;
+}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:834px){
+  .nav-links{display:none}
+  .product-grid{grid-template-columns:repeat(2,1fr)}
+  .compare-grid{grid-template-columns:repeat(2,1fr)}
+  .feature-row{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:repeat(2,1fr)}
+  .hero h1{font-size:40px}
+  .section-light h2,.section-dark-header h2,.section-feature h2,
+  .section-compare h2,.section-accessories h2,.section-sustain h2{font-size:32px}
+  .section-sustain h2{font-size:32px}
+  .stat-num{font-size:40px}
+}
+@media(max-width:480px){
+  .product-grid{grid-template-columns:1fr}
+  .compare-grid{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr}
+  .hero h1{font-size:28px}
+  .sustain-stats{gap:24px}
+}
+</style>
+</head>
+<body>
+
+<!-- STICKY NAVIGATION -->
+<nav class="nav">
+  <a href="#" class="nav-logo">&#63743;</a>
+  <ul class="nav-links">
+    <li><a href="#">Mac</a></li>
+    <li><a href="#">iPad</a></li>
+    <li><a href="#">iPhone</a></li>
+    <li><a href="#">Watch</a></li>
+    <li><a href="#">Vision</a></li>
+    <li><a href="#">AirPods</a></li>
+    <li><a href="#">TV &amp; Home</a></li>
+    <li><a href="#">エンターテインメント</a></li>
+    <li><a href="#">アクセサリ</a></li>
+    <li><a href="#">サポート</a></li>
+  </ul>
+  <div class="nav-right">
+    <span class="nav-icon">&#128269;</span>
+    <span class="nav-icon">&#128717;</span>
+    <a href="#" class="nav-cta">購入</a>
+  </div>
+</nav>
+
+<!-- HERO: BLACK CINEMATIC -->
+<section class="hero">
+  <p class="hero-eyebrow">新登場</p>
+  <h1>iPhone 17 Pro</h1>
+  <p class="hero-sub">チタニウム。インテリジェンス。史上最もプロフェッショナル。</p>
+  <div class="hero-product-img">&#128241;</div>
+  <div class="hero-ctas">
+    <a href="#" class="btn-pill-outline">もっと見る</a>
+    <a href="#" class="btn-blue">購入する</a>
+  </div>
+</section>
+
+<!-- PRODUCT SECTION: MacBook Pro — LIGHT GRAY -->
+<section class="section-light">
+  <h2>MacBook Pro</h2>
+  <p class="section-sub">M4 Proチップ搭載。驚異のパフォーマンスが、驚くほどの薄さの中に。</p>
+  <div class="section-ctas">
+    <a href="#" class="link-learn">もっと見る</a>
+    <a href="#" class="btn-blue">購入する</a>
+  </div>
+  <div style="margin-top:48px;font-size:120px;line-height:1">&#128187;</div>
+</section>
+
+<!-- PRODUCT GRID: DARK -->
+<section class="section-dark">
+  <div class="section-dark-header">
+    <h2>最新モデルを探す</h2>
+    <p>あなたのライフスタイルに最適なAppleデバイスを見つけよう。</p>
+  </div>
+  <div class="product-grid">
+    <div class="product-tile">
+      <div class="product-tile-img">&#128241;</div>
+      <h3>iPhone 17</h3>
+      <p>A18チップで生まれ変わった、すべての人のためのiPhone。</p>
+      <div class="product-tile-links">
+        <a href="#" class="tile-link">もっと見る</a>
+        <a href="#" class="tile-link">購入する</a>
+      </div>
+    </div>
+    <div class="product-tile">
+      <div class="product-tile-img">&#128187;</div>
+      <h3>MacBook Air</h3>
+      <p>M3チップ。信じられないほど薄く、軽く、有能。</p>
+      <div class="product-tile-links">
+        <a href="#" class="tile-link">もっと見る</a>
+        <a href="#" class="tile-link">購入する</a>
+      </div>
+    </div>
+    <div class="product-tile">
+      <div class="product-tile-img">&#128190;</div>
+      <h3>iPad Pro</h3>
+      <p>M4チップ搭載。世界で最も薄いApple製品。</p>
+      <div class="product-tile-links">
+        <a href="#" class="tile-link">もっと見る</a>
+        <a href="#" class="tile-link">購入する</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURE SECTION: LIGHT GRAY -->
+<section class="section-feature">
+  <h2>Apple Intelligenceとは</h2>
+  <div class="feature-row">
+    <div class="feature-card">
+      <div class="feature-card-icon">&#129504;</div>
+      <h3>個人に寄り添うAI</h3>
+      <p>あなたのコンテキストを理解し、あなたのデバイスのパワーを最大限に引き出す、パーソナルインテリジェンスシステム。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-icon">&#128274;</div>
+      <h3>プライバシー優先設計</h3>
+      <p>オンデバイス処理とPrivate Cloud Computeにより、個人データは常にプライベートかつ安全に保護されます。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-icon">&#9997;</div>
+      <h3>文章作成の革新</h3>
+      <p>メール、メッセージ、ノートをより効果的に。文章の校正、リライト、要約をスマートにサポートします。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-icon">&#127916;</div>
+      <h3>画像生成</h3>
+      <p>テキストから画像を生成。あなたのビジョンをリアルタイムで視覚化する、まったく新しい表現の形。</p>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARE: BLACK -->
+<section class="section-compare">
+  <h2>モデルを比較する</h2>
+  <p class="compare-sub">あなたに最適なiPhoneはどれ？</p>
+  <div class="compare-grid">
+    <div class="compare-card">
+      <div class="compare-card-img">&#128241;</div>
+      <h4>iPhone 17 Pro Max</h4>
+      <p class="price">&#165;189,800から</p>
+      <a href="#" class="btn-compare">購入する</a>
+    </div>
+    <div class="compare-card">
+      <div class="compare-card-img">&#128242;</div>
+      <h4>iPhone 17 Pro</h4>
+      <p class="price">&#165;159,800から</p>
+      <a href="#" class="btn-compare">購入する</a>
+    </div>
+    <div class="compare-card">
+      <div class="compare-card-img">&#128243;</div>
+      <h4>iPhone 17</h4>
+      <p class="price">&#165;124,800から</p>
+      <a href="#" class="btn-compare">購入する</a>
+    </div>
+    <div class="compare-card">
+      <div class="compare-card-img">&#128244;</div>
+      <h4>iPhone 17e</h4>
+      <p class="price">&#165;89,800から</p>
+      <a href="#" class="btn-compare">購入する</a>
+    </div>
+  </div>
+  <a href="#" class="btn-pill-outline" style="margin-top:8px;display:inline-block">全モデルを比較する</a>
+</section>
+
+<!-- ACCESSORIES: LIGHT GRAY -->
+<section class="section-accessories">
+  <h2>アクセサリ</h2>
+  <div class="accessories-row">
+    <div class="accessory-item">
+      <div class="acc-img">&#127911;</div>
+      <h4>AirPods Pro</h4>
+      <p class="acc-price">&#165;39,800</p>
+      <a href="#" class="acc-link">購入する ›</a>
+    </div>
+    <div class="accessory-item">
+      <div class="acc-img">&#8987;</div>
+      <h4>Apple Watch Ultra 2</h4>
+      <p class="acc-price">&#165;124,800</p>
+      <a href="#" class="acc-link">購入する ›</a>
+    </div>
+    <div class="accessory-item">
+      <div class="acc-img">&#128421;</div>
+      <h4>Apple Vision Pro</h4>
+      <p class="acc-price">&#165;599,800</p>
+      <a href="#" class="acc-link">購入する ›</a>
+    </div>
+    <div class="accessory-item">
+      <div class="acc-img">&#128266;</div>
+      <h4>HomePod</h4>
+      <p class="acc-price">&#165;44,800</p>
+      <a href="#" class="acc-link">購入する ›</a>
+    </div>
+    <div class="accessory-item">
+      <div class="acc-img">&#128247;</div>
+      <h4>Apple Pencil Pro</h4>
+      <p class="acc-price">&#165;21,800</p>
+      <a href="#" class="acc-link">購入する ›</a>
+    </div>
+  </div>
+</section>
+
+<!-- SUSTAINABILITY: BLACK -->
+<section class="section-sustain">
+  <h2>2030年カーボンニュートラルへ</h2>
+  <p>Appleは、2030年までにすべての製品においてカーボンニュートラルを実現することを目指しています。</p>
+  <a href="#" class="btn-pill-outline">環境への取り組みを見る</a>
+  <div class="sustain-stats">
+    <div class="stat">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">再生可能エネルギーで稼働</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">80%</div>
+      <div class="stat-label">CO2排出量を削減済み</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">2030</div>
+      <div class="stat-label">完全カーボンニュートラル目標年</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-col">
+      <h5>Mac</h5>
+      <ul>
+        <li><a href="#">MacBook Air</a></li>
+        <li><a href="#">MacBook Pro</a></li>
+        <li><a href="#">iMac</a></li>
+        <li><a href="#">Mac Pro</a></li>
+        <li><a href="#">Mac mini</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>iPhone</h5>
+      <ul>
+        <li><a href="#">iPhone 17 Pro Max</a></li>
+        <li><a href="#">iPhone 17 Pro</a></li>
+        <li><a href="#">iPhone 17</a></li>
+        <li><a href="#">iPhone 17e</a></li>
+        <li><a href="#">iPhoneを比較する</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>iPad</h5>
+      <ul>
+        <li><a href="#">iPad Pro</a></li>
+        <li><a href="#">iPad Air</a></li>
+        <li><a href="#">iPad mini</a></li>
+        <li><a href="#">iPad</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Watch</h5>
+      <ul>
+        <li><a href="#">Apple Watch Ultra 2</a></li>
+        <li><a href="#">Apple Watch Series 10</a></li>
+        <li><a href="#">Apple Watch SE</a></li>
+        <li><a href="#">Apple Watch Hermès</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>サービス</h5>
+      <ul>
+        <li><a href="#">Apple Music</a></li>
+        <li><a href="#">Apple TV+</a></li>
+        <li><a href="#">Apple Arcade</a></li>
+        <li><a href="#">iCloud+</a></li>
+        <li><a href="#">Apple One</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>Copyright &copy; 2026 Apple Inc. All rights reserved.</p>
+    <div class="footer-bottom-links">
+      <a href="#">プライバシーポリシー</a>
+      <a href="#">利用規約</a>
+      <a href="#">販売ポリシー</a>
+      <a href="#">お問い合わせ</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>食べログ — レストランを探すなら食べログ</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html {
+    background: #ffffff;
+    color: #595960;
+    font-family: メイリオ, Meiryo, "Hiragino Sans", ヒラギノ角ゴシック, "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", sans-serif;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+  a { color: #595960; text-decoration: none; }
+  a:hover { color: #f09000; }
+  h1, h2, h3 { color: #333333; }
+
+  /* NAV */
+  nav {
+    background: #ffffff;
+    border-bottom: 1px solid #dddddd;
+  }
+  .nav-top {
+    background: #f09000;
+    padding: 4px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-top-logo {
+    font-size: 20px; font-weight: 700; color: #ffffff;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .nav-top-logo-icon {
+    width: 28px; height: 28px; background: #ffffff; border-radius: 3px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 900; color: #f09000;
+  }
+  .nav-top-right { display: flex; gap: 8px; align-items: center; }
+  .nav-top-btn {
+    font-size: 11px; color: #fff; padding: 4px 10px;
+    border: 1px solid rgba(255,255,255,0.6); border-radius: 3px; background: none;
+    cursor: pointer;
+  }
+  .nav-top-btn.register { background: #fff; color: #f09000; font-weight: 700; }
+  .nav-main {
+    padding: 0 16px;
+    display: flex; align-items: center; gap: 0;
+    height: 36px;
+    border-bottom: 1px solid #dddddd;
+  }
+  .nav-main a {
+    font-size: 12px; color: #333; padding: 0 12px; height: 36px;
+    display: flex; align-items: center; border-right: 1px solid #dddddd;
+  }
+  .nav-main a:first-child { border-left: 1px solid #dddddd; }
+  .nav-main a:hover { color: #f09000; background: #fffaef; }
+  .nav-main a.active { border-bottom: 2px solid #f09000; color: #f09000; }
+
+  /* HERO SEARCH -->*/
+  .hero {
+    background: linear-gradient(to bottom, #fff8ec, #fff3dd);
+    padding: 24px 16px;
+    border-bottom: 1px solid #dddddd;
+  }
+  .hero-inner { max-width: 980px; margin: 0 auto; }
+  .hero h1 { font-size: 22.5px; font-weight: 600; line-height: 1.0; color: #333; margin-bottom: 12px; }
+  .search-box {
+    background: #fff; border: 2px solid #f09000; border-radius: 3px;
+    display: flex; align-items: stretch; overflow: hidden;
+    margin-bottom: 12px;
+  }
+  .search-area {
+    display: flex; flex: 1;
+  }
+  .search-field {
+    display: flex; align-items: center; flex: 1;
+    border-right: 1px solid #dddddd; padding: 0 10px; gap: 6px;
+  }
+  .search-field-icon { color: #999; font-size: 14px; flex-shrink: 0; }
+  .search-input {
+    border: none; outline: none; font-size: 13px;
+    font-family: メイリオ, Meiryo, "Hiragino Sans", sans-serif;
+    color: #333; width: 100%; background: none;
+    padding: 10px 0;
+  }
+  .search-input::placeholder { color: #bbb; }
+  .search-divider { width: 1px; background: #dddddd; }
+  .search-field-area { width: 140px; border-right: 1px solid #dddddd; padding: 0 10px; display: flex; align-items: center; gap: 4px; }
+  .search-btn {
+    background: #f09000; color: #fff; border: none;
+    padding: 0 24px; font-size: 14px; font-weight: 700;
+    cursor: pointer; font-family: メイリオ, Meiryo, sans-serif;
+  }
+  .search-btn:hover { background: #d07e00; }
+  .search-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .search-tag {
+    font-size: 11px; color: #595960; padding: 3px 8px;
+    border: 1px solid #dddddd; border-radius: 3px; background: #fff;
+    cursor: pointer;
+  }
+  .search-tag:hover { border-color: #f09000; color: #f09000; }
+
+  /* AREA NAVIGATION -->*/
+  .area-nav {
+    background: #fff; border-bottom: 1px solid #dddddd; padding: 8px 16px;
+  }
+  .area-nav-inner { max-width: 980px; margin: 0 auto; }
+  .area-nav-title { font-size: 11px; color: #999; margin-bottom: 6px; }
+  .area-list { display: flex; gap: 4px; flex-wrap: wrap; }
+  .area-btn {
+    font-size: 11px; color: #595960; padding: 4px 8px;
+    border: 1px solid #dddddd; border-radius: 3px; background: #f5f5f5;
+    cursor: pointer;
+  }
+  .area-btn:hover { border-color: #f09000; color: #f09000; background: #fffaef; }
+
+  /* MAIN CONTENT -->*/
+  .main-wrap {
+    max-width: 980px; margin: 0 auto; padding: 12px 16px;
+    display: grid; grid-template-columns: 1fr 260px; gap: 16px;
+  }
+
+  /* RESTAURANT LIST -->*/
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 8px;
+    padding-bottom: 6px; border-bottom: 2px solid #f09000;
+  }
+  .section-title { font-size: 16px; font-weight: 700; color: #333; }
+  .section-more { font-size: 11px; color: #595960; }
+  .section-more:hover { color: #f09000; }
+
+  /* SORT BAR -->*/
+  .sort-bar {
+    background: #f5f5f5; border: 1px solid #dddddd;
+    padding: 6px 10px; margin-bottom: 8px;
+    display: flex; align-items: center; gap: 0;
+  }
+  .sort-label { font-size: 11px; color: #999; margin-right: 8px; }
+  .sort-btn {
+    font-size: 11px; color: #595960; padding: 3px 10px;
+    border: 1px solid #dddddd; border-right: none; background: #fff;
+    cursor: pointer;
+  }
+  .sort-btn:last-child { border-right: 1px solid #dddddd; }
+  .sort-btn.active { background: #f09000; color: #fff; border-color: #f09000; }
+  .sort-btn:hover:not(.active) { background: #fffaef; color: #f09000; }
+
+  /* RESTAURANT CARD -->*/
+  .restaurant-card {
+    border: 1px solid #dddddd; background: #fff;
+    margin-bottom: 8px; display: grid; grid-template-columns: 140px 1fr;
+  }
+  .restaurant-card:hover { border-color: #f09000; }
+  .rc-image { position: relative; overflow: hidden; }
+  .rc-img {
+    width: 140px; height: 96px; object-fit: cover;
+    display: block; background: #f0f0f0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px; color: #ccc;
+  }
+  .rc-rank {
+    position: absolute; top: 0; left: 0;
+    background: #f09000; color: #fff;
+    font-size: 10px; font-weight: 700; padding: 2px 6px;
+  }
+  .rc-body { padding: 8px 10px; }
+  .rc-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
+  .rc-name { font-size: 14px; font-weight: 700; color: #333; }
+  .rc-name:hover { color: #f09000; }
+  .rc-score-wrap { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+  .rc-score { font-size: 16px; font-weight: 700; color: #f09000; line-height: 1.2; }
+  .rc-stars { color: #f09000; font-size: 10px; }
+  .rc-review-count { font-size: 10px; color: #999; }
+  .rc-meta { display: flex; gap: 8px; margin-bottom: 4px; flex-wrap: wrap; }
+  .rc-tag {
+    font-size: 10px; color: #595960; padding: 1px 5px;
+    border: 1px solid #dddddd; border-radius: 2px; background: #f5f5f5;
+  }
+  .rc-tag.genre { color: #f09000; border-color: #f09000; background: #fffaef; }
+  .rc-budget { font-size: 11px; color: #595960; }
+  .rc-budget span { color: #333; font-weight: 700; }
+  .rc-access { font-size: 10px; color: #999; margin-top: 4px; }
+  .rc-actions { margin-top: 6px; display: flex; gap: 6px; }
+  .rc-reserve-btn {
+    font-size: 11px; font-weight: 700; color: #fff; padding: 4px 12px;
+    background: #f09000; border: none; border-radius: 3px; cursor: pointer;
+  }
+  .rc-bookmark-btn {
+    font-size: 11px; color: #595960; padding: 3px 8px;
+    border: 1px solid #dddddd; border-radius: 3px; background: #fff; cursor: pointer;
+  }
+  .rc-bookmark-btn:hover { border-color: #f09000; color: #f09000; }
+
+  /* PAGINATION -->*/
+  .pagination {
+    display: flex; justify-content: center; gap: 0; margin: 12px 0;
+  }
+  .page-btn {
+    font-size: 12px; padding: 5px 10px; border: 1px solid #dddddd;
+    border-right: none; color: #595960; cursor: pointer; background: #fff;
+  }
+  .page-btn:last-child { border-right: 1px solid #dddddd; }
+  .page-btn.active { background: #f09000; color: #fff; border-color: #f09000; }
+  .page-btn:hover:not(.active) { background: #fffaef; color: #f09000; }
+
+  /* SIDEBAR -->*/
+  .sidebar { }
+  .sidebar-section { border: 1px solid #dddddd; background: #fff; margin-bottom: 12px; }
+  .sidebar-header { background: #f5f5f5; padding: 6px 10px; border-bottom: 1px solid #dddddd; font-size: 13px; font-weight: 700; color: #333; }
+  .sidebar-body { padding: 10px; }
+  .ranking-item { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; border-bottom: 1px solid #f0f0f0; }
+  .ranking-item:last-child { border-bottom: none; }
+  .ranking-num {
+    font-size: 14px; font-weight: 700; color: #f09000;
+    width: 20px; flex-shrink: 0; line-height: 1;
+  }
+  .ranking-num.gold { color: #d4a000; }
+  .ranking-num.silver { color: #808080; }
+  .ranking-num.bronze { color: #8b4513; }
+  .ranking-info { flex: 1; min-width: 0; }
+  .ranking-name { font-size: 12px; font-weight: 700; color: #333; display: block; }
+  .ranking-name:hover { color: #f09000; }
+  .ranking-meta { font-size: 10px; color: #999; margin-top: 2px; }
+  .ranking-score { font-size: 13px; font-weight: 700; color: #f09000; flex-shrink: 0; }
+
+  /* CATEGORY LINKS -->*/
+  .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+  .cat-link {
+    font-size: 11px; color: #595960; padding: 5px 6px;
+    border: 1px solid #dddddd; background: #f5f5f5;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .cat-link:hover { color: #f09000; border-color: #f09000; background: #fffaef; }
+  .cat-icon { font-size: 14px; }
+
+  /* PICKUP AREAS -->*/
+  .pickup-areas { border: 1px solid #dddddd; background: #fff; margin-bottom: 12px; }
+  .area-link-list { padding: 6px 10px; }
+  .area-link { display: inline-block; font-size: 11px; color: #595960; padding: 2px 6px; margin: 2px; border: 1px solid #dddddd; border-radius: 2px; }
+  .area-link:hover { color: #f09000; border-color: #f09000; }
+
+  /* FEATURE SECTIONS -->*/
+  .feature-strip {
+    background: #f5f5f5; border-top: 1px solid #dddddd; border-bottom: 1px solid #dddddd;
+    padding: 12px 16px; margin: 16px 0;
+  }
+  .feature-strip-inner { max-width: 980px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .feature-item { background: #fff; border: 1px solid #dddddd; padding: 10px; text-align: center; cursor: pointer; }
+  .feature-item:hover { border-color: #f09000; }
+  .feature-icon { font-size: 24px; display: block; margin-bottom: 4px; }
+  .feature-label { font-size: 11px; color: #333; font-weight: 700; }
+  .feature-sub { font-size: 10px; color: #999; margin-top: 2px; }
+
+  /* FOOTER -->*/
+  footer {
+    background: #333333; padding: 24px 16px 16px;
+    margin-top: 16px;
+  }
+  .footer-inner { max-width: 980px; margin: 0 auto; }
+  .footer-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 20px; }
+  .footer-col h4 { font-size: 12px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+  .footer-col a { display: block; font-size: 11px; color: #bbb; margin-bottom: 4px; }
+  .footer-col a:hover { color: #f09000; text-decoration: none; }
+  .footer-bottom { border-top: 1px solid #555; padding-top: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; }
+  .footer-logo-text { font-size: 16px; font-weight: 700; color: #fff; }
+  .footer-bottom-links { display: flex; gap: 12px; }
+  .footer-bottom-links a { font-size: 11px; color: #bbb; }
+  .footer-bottom-links a:hover { color: #f09000; }
+  .footer-copyright { font-size: 11px; color: #888; width: 100%; text-align: center; margin-top: 8px; }
+
+  @media (max-width: 768px) {
+    .main-wrap { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .feature-strip-inner { grid-template-columns: repeat(2, 1fr); }
+    .footer-grid { grid-template-columns: repeat(2, 1fr); }
+    nav .nav-main a { padding: 0 8px; font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-top">
+    <div class="nav-top-logo">
+      <div class="nav-top-logo-icon">食</div>
+      食べログ
+    </div>
+    <div class="nav-top-right">
+      <button class="nav-top-btn">ログイン</button>
+      <button class="nav-top-btn register">会員登録（無料）</button>
+    </div>
+  </div>
+  <div class="nav-main">
+    <a href="#" class="active">レストランを探す</a>
+    <a href="#">テイクアウト</a>
+    <a href="#">デリバリー</a>
+    <a href="#">ランキング</a>
+    <a href="#">レビュー</a>
+    <a href="#">特集</a>
+    <a href="#">クーポン</a>
+    <a href="#">ニュース</a>
+  </div>
+</nav>
+
+<!-- HERO SEARCH -->
+<section class="hero">
+  <div class="hero-inner">
+    <h1>行きたいお店が必ず見つかる</h1>
+    <div class="search-box">
+      <div class="search-area">
+        <div class="search-field">
+          <span class="search-field-icon">&#128270;</span>
+          <input class="search-input" type="text" placeholder="お店の名前・料理ジャンル・キーワード">
+        </div>
+        <div class="search-field-area">
+          <span class="search-field-icon">&#128205;</span>
+          <input class="search-input" type="text" placeholder="エリア・駅名" style="width:100%">
+        </div>
+      </div>
+      <button class="search-btn">検索</button>
+    </div>
+    <div class="search-tags">
+      <span class="search-tag">&#127859; 寿司</span>
+      <span class="search-tag">&#127958; 焼肉</span>
+      <span class="search-tag">&#127857; ラーメン</span>
+      <span class="search-tag">&#127829; 焼き鳥</span>
+      <span class="search-tag">&#127828; 天ぷら</span>
+      <span class="search-tag">&#127821; 回転寿司</span>
+      <span class="search-tag">&#127816; 居酒屋</span>
+      <span class="search-tag">&#9749; カフェ</span>
+      <span class="search-tag">&#127856; ケーキ</span>
+    </div>
+  </div>
+</section>
+
+<!-- AREA NAVIGATION -->
+<div class="area-nav">
+  <div class="area-nav-inner">
+    <div class="area-nav-title">エリアから探す</div>
+    <div class="area-list">
+      <button class="area-btn">&#127968; 東京</button>
+      <button class="area-btn">&#127968; 大阪</button>
+      <button class="area-btn">&#127968; 名古屋</button>
+      <button class="area-btn">&#127968; 京都</button>
+      <button class="area-btn">&#127968; 福岡</button>
+      <button class="area-btn">&#127968; 札幌</button>
+      <button class="area-btn">&#127968; 横浜</button>
+      <button class="area-btn">&#127968; 神戸</button>
+      <button class="area-btn">&#127968; 仙台</button>
+      <button class="area-btn">&#127968; 広島</button>
+      <button class="area-btn">その他のエリア &rsaquo;</button>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURE STRIP -->
+<div class="feature-strip">
+  <div class="feature-strip-inner">
+    <div class="feature-item">
+      <span class="feature-icon">&#127942;</span>
+      <div class="feature-label">ランキング</div>
+      <div class="feature-sub">評価順で探す</div>
+    </div>
+    <div class="feature-item">
+      <span class="feature-icon">&#128722;</span>
+      <div class="feature-label">クーポン</div>
+      <div class="feature-sub">お得なお店</div>
+    </div>
+    <div class="feature-item">
+      <span class="feature-icon">&#128197;</span>
+      <div class="feature-label">ネット予約</div>
+      <div class="feature-sub">すぐに予約可能</div>
+    </div>
+    <div class="feature-item">
+      <span class="feature-icon">&#127827;</span>
+      <div class="feature-label">テイクアウト</div>
+      <div class="feature-sub">持ち帰り対応</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main-wrap">
+  <!-- RESTAURANT LIST -->
+  <div class="list-col">
+    <div class="section-header">
+      <div class="section-title">東京のおすすめレストラン</div>
+      <a href="#" class="section-more">すべて見る &rsaquo;</a>
+    </div>
+    <div class="sort-bar">
+      <span class="sort-label">並び替え：</span>
+      <button class="sort-btn active">おすすめ</button>
+      <button class="sort-btn">評価が高い</button>
+      <button class="sort-btn">新着レビュー</button>
+      <button class="sort-btn">コスパが良い</button>
+      <button class="sort-btn">夜の予算</button>
+    </div>
+
+    <!-- Card 1 -->
+    <div class="restaurant-card">
+      <div class="rc-image">
+        <div class="rc-img">&#127859;</div>
+        <div class="rc-rank">1</div>
+      </div>
+      <div class="rc-body">
+        <div class="rc-header">
+          <a href="#" class="rc-name">鮨 さいとう</a>
+          <div class="rc-score-wrap">
+            <div class="rc-score">4.68</div>
+            <div class="rc-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          </div>
+        </div>
+        <div class="rc-meta">
+          <span class="rc-tag genre">寿司</span>
+          <span class="rc-tag">東京・六本木</span>
+          <span class="rc-tag">&#128197; 予約可</span>
+        </div>
+        <div class="rc-budget">夜の予算：<span>￥30,000〜￥39,999</span> / 昼：<span>￥15,000〜￥19,999</span></div>
+        <div class="rc-access">六本木一丁目駅 徒歩2分</div>
+        <div class="rc-actions">
+          <button class="rc-reserve-btn">&#128197; 予約する</button>
+          <button class="rc-bookmark-btn">&#9825; 保存</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="restaurant-card">
+      <div class="rc-image">
+        <div class="rc-img">&#127958;</div>
+        <div class="rc-rank">2</div>
+      </div>
+      <div class="rc-body">
+        <div class="rc-header">
+          <a href="#" class="rc-name">焼肉 赤坂 いちにいさん</a>
+          <div class="rc-score-wrap">
+            <div class="rc-score">4.51</div>
+            <div class="rc-stars">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
+          </div>
+        </div>
+        <div class="rc-meta">
+          <span class="rc-tag genre">焼肉</span>
+          <span class="rc-tag">東京・赤坂</span>
+          <span class="rc-tag">&#128197; 予約可</span>
+          <span class="rc-tag">&#127819; A5和牛</span>
+        </div>
+        <div class="rc-budget">夜の予算：<span>￥20,000〜￥29,999</span> / 昼：<span>￥3,000〜￥3,999</span></div>
+        <div class="rc-access">赤坂駅 徒歩3分 / 赤坂見附駅 徒歩5分</div>
+        <div class="rc-actions">
+          <button class="rc-reserve-btn">&#128197; 予約する</button>
+          <button class="rc-bookmark-btn">&#9825; 保存</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="restaurant-card">
+      <div class="rc-image">
+        <div class="rc-img">&#127857;</div>
+        <div class="rc-rank">3</div>
+      </div>
+      <div class="rc-body">
+        <div class="rc-header">
+          <a href="#" class="rc-name">麺処 びこく</a>
+          <div class="rc-score-wrap">
+            <div class="rc-score">4.32</div>
+            <div class="rc-stars">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
+          </div>
+        </div>
+        <div class="rc-meta">
+          <span class="rc-tag genre">ラーメン</span>
+          <span class="rc-tag">東京・渋谷</span>
+          <span class="rc-tag">&#128269; 口コミ 423件</span>
+        </div>
+        <div class="rc-budget">夜の予算：<span>￥1,000〜￥1,999</span></div>
+        <div class="rc-access">渋谷駅 徒歩5分</div>
+        <div class="rc-actions">
+          <button class="rc-bookmark-btn">&#9825; 保存</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="restaurant-card">
+      <div class="rc-image">
+        <div class="rc-img">&#127829;</div>
+        <div class="rc-rank">4</div>
+      </div>
+      <div class="rc-body">
+        <div class="rc-header">
+          <a href="#" class="rc-name">鳥良商店 新宿西口店</a>
+          <div class="rc-score-wrap">
+            <div class="rc-score">3.89</div>
+            <div class="rc-stars">&#9733;&#9733;&#9733;&#9734;&#9734;</div>
+          </div>
+        </div>
+        <div class="rc-meta">
+          <span class="rc-tag genre">焼き鳥</span>
+          <span class="rc-tag">東京・新宿</span>
+          <span class="rc-tag">&#128197; ネット予約可</span>
+          <span class="rc-tag">&#128178; クーポンあり</span>
+        </div>
+        <div class="rc-budget">夜の予算：<span>￥2,000〜￥2,999</span></div>
+        <div class="rc-access">新宿駅 西口 徒歩1分</div>
+        <div class="rc-actions">
+          <button class="rc-reserve-btn">&#128197; 予約する</button>
+          <button class="rc-bookmark-btn">&#9825; 保存</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 5 -->
+    <div class="restaurant-card">
+      <div class="rc-image">
+        <div class="rc-img">&#127828;</div>
+        <div class="rc-rank">5</div>
+      </div>
+      <div class="rc-body">
+        <div class="rc-header">
+          <a href="#" class="rc-name">銀座 天一 本店</a>
+          <div class="rc-score-wrap">
+            <div class="rc-score">4.20</div>
+            <div class="rc-stars">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
+          </div>
+        </div>
+        <div class="rc-meta">
+          <span class="rc-tag genre">天ぷら</span>
+          <span class="rc-tag">東京・銀座</span>
+          <span class="rc-tag">&#128197; 予約可</span>
+          <span class="rc-tag">&#127942; 百年の老舗</span>
+        </div>
+        <div class="rc-budget">夜の予算：<span>￥8,000〜￥9,999</span> / 昼：<span>￥4,000〜￥4,999</span></div>
+        <div class="rc-access">銀座駅 徒歩2分 / 東銀座駅 徒歩3分</div>
+        <div class="rc-actions">
+          <button class="rc-reserve-btn">&#128197; 予約する</button>
+          <button class="rc-bookmark-btn">&#9825; 保存</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 6 -->
+    <div class="restaurant-card">
+      <div class="rc-image">
+        <div class="rc-img">&#9749;</div>
+      </div>
+      <div class="rc-body">
+        <div class="rc-header">
+          <a href="#" class="rc-name">猿田彦珈琲 渋谷本店</a>
+          <div class="rc-score-wrap">
+            <div class="rc-score">3.76</div>
+            <div class="rc-stars">&#9733;&#9733;&#9733;&#9734;&#9734;</div>
+          </div>
+        </div>
+        <div class="rc-meta">
+          <span class="rc-tag genre">カフェ</span>
+          <span class="rc-tag">東京・渋谷</span>
+          <span class="rc-tag">&#8962; テラス席あり</span>
+        </div>
+        <div class="rc-budget">昼の予算：<span>￥500〜￥999</span></div>
+        <div class="rc-access">渋谷駅 東口 徒歩2分</div>
+        <div class="rc-actions">
+          <button class="rc-bookmark-btn">&#9825; 保存</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="pagination">
+      <button class="page-btn active">1</button>
+      <button class="page-btn">2</button>
+      <button class="page-btn">3</button>
+      <button class="page-btn">4</button>
+      <button class="page-btn">5</button>
+      <button class="page-btn">...</button>
+      <button class="page-btn">20</button>
+      <button class="page-btn">次 &rsaquo;</button>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <!-- RANKING -->
+    <div class="sidebar-section">
+      <div class="sidebar-header">&#127942; 東京 総合ランキング TOP10</div>
+      <div class="sidebar-body">
+        <div class="ranking-item">
+          <span class="ranking-num gold">1</span>
+          <div class="ranking-info">
+            <a href="#" class="ranking-name">鮨 さいとう</a>
+            <div class="ranking-meta">寿司 / 六本木</div>
+          </div>
+          <span class="ranking-score">4.68</span>
+        </div>
+        <div class="ranking-item">
+          <span class="ranking-num silver">2</span>
+          <div class="ranking-info">
+            <a href="#" class="ranking-name">レフェルヴェソンス</a>
+            <div class="ranking-meta">フレンチ / 広尾</div>
+          </div>
+          <span class="ranking-score">4.62</span>
+        </div>
+        <div class="ranking-item">
+          <span class="ranking-num bronze">3</span>
+          <div class="ranking-info">
+            <a href="#" class="ranking-name">カンテサンス</a>
+            <div class="ranking-meta">フレンチ / 品川</div>
+          </div>
+          <span class="ranking-score">4.59</span>
+        </div>
+        <div class="ranking-item">
+          <span class="ranking-num" style="color:#595960">4</span>
+          <div class="ranking-info">
+            <a href="#" class="ranking-name">鉄板焼 みかわ</a>
+            <div class="ranking-meta">鉄板焼 / 銀座</div>
+          </div>
+          <span class="ranking-score">4.55</span>
+        </div>
+        <div class="ranking-item">
+          <span class="ranking-num" style="color:#595960">5</span>
+          <div class="ranking-info">
+            <a href="#" class="ranking-name">すきやばし次郎 本店</a>
+            <div class="ranking-meta">寿司 / 銀座</div>
+          </div>
+          <span class="ranking-score">4.53</span>
+        </div>
+        <div style="text-align:center; margin-top:8px;">
+          <a href="#" style="font-size:11px; color:#f09000;">ランキングをもっと見る &rsaquo;</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- CATEGORIES -->
+    <div class="sidebar-section">
+      <div class="sidebar-header">&#127859; ジャンルから探す</div>
+      <div class="sidebar-body">
+        <div class="cat-grid">
+          <a href="#" class="cat-link"><span class="cat-icon">&#127859;</span> 寿司</a>
+          <a href="#" class="cat-link"><span class="cat-icon">&#127958;</span> 焼肉</a>
+          <a href="#" class="cat-link"><span class="cat-icon">&#127857;</span> ラーメン</a>
+          <a href="#" class="cat-link"><span class="cat-icon">&#127828;</span> 天ぷら</a>
+          <a href="#" class="cat-link"><span class="cat-icon">&#129364;</span> しゃぶしゃぶ</a>
+          <a href="#" class="cat-link"><span class="cat-icon">&#127816;</span> 居酒屋</a>
+          <a href="#" class="cat-link"><span class="cat-icon">&#9749;</span> カフェ</a>
+          <a href="#" class="cat-link"><span class="cat-icon">&#127829;</span> 焼き鳥</a>
+          <a href="#" class="cat-link"><span class="cat-icon">&#127830;</span> 中華</a>
+          <a href="#" class="cat-link"><span class="cat-icon">&#127837;</span> イタリアン</a>
+          <a href="#" class="cat-link"><span class="cat-icon">&#127820;</span> フレンチ</a>
+          <a href="#" class="cat-link"><span class="cat-icon">&#127874;</span> スイーツ</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PICKUP AREAS -->
+    <div class="pickup-areas">
+      <div class="sidebar-header">&#128205; 人気エリア</div>
+      <div class="area-link-list">
+        <a href="#" class="area-link">銀座</a>
+        <a href="#" class="area-link">新宿</a>
+        <a href="#" class="area-link">渋谷</a>
+        <a href="#" class="area-link">六本木</a>
+        <a href="#" class="area-link">表参道</a>
+        <a href="#" class="area-link">恵比寿</a>
+        <a href="#" class="area-link">赤坂</a>
+        <a href="#" class="area-link">丸の内</a>
+        <a href="#" class="area-link">代官山</a>
+        <a href="#" class="area-link">中目黒</a>
+        <a href="#" class="area-link">池袋</a>
+        <a href="#" class="area-link">品川</a>
+        <a href="#" class="area-link">秋葉原</a>
+        <a href="#" class="area-link">上野</a>
+        <a href="#" class="area-link">浅草</a>
+      </div>
+    </div>
+
+    <!-- SCORE GUIDE -->
+    <div class="sidebar-section">
+      <div class="sidebar-header">&#9733; 点数の目安</div>
+      <div class="sidebar-body">
+        <div style="padding:4px 0; border-bottom:1px solid #f0f0f0; display:flex; justify-content:space-between;">
+          <span style="color:#f09000; font-weight:700">4.5〜</span>
+          <span style="color:#333">日本最高峰のお店</span>
+        </div>
+        <div style="padding:4px 0; border-bottom:1px solid #f0f0f0; display:flex; justify-content:space-between;">
+          <span style="color:#f09000; font-weight:700">4.0〜4.49</span>
+          <span style="color:#333">足を延ばす価値がある</span>
+        </div>
+        <div style="padding:4px 0; border-bottom:1px solid #f0f0f0; display:flex; justify-content:space-between;">
+          <span style="color:#595960; font-weight:700">3.5〜3.99</span>
+          <span style="color:#333">特におすすめ</span>
+        </div>
+        <div style="padding:4px 0; border-bottom:1px solid #f0f0f0; display:flex; justify-content:space-between;">
+          <span style="color:#595960; font-weight:700">3.0〜3.49</span>
+          <span style="color:#333">おすすめ</span>
+        </div>
+        <div style="padding:4px 0; display:flex; justify-content:space-between;">
+          <span style="color:#999; font-weight:700">〜2.99</span>
+          <span style="color:#999">点数なし</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>食べログについて</h4>
+        <a href="#">食べログとは</a>
+        <a href="#">よくある質問</a>
+        <a href="#">点数について</a>
+        <a href="#">お問い合わせ</a>
+      </div>
+      <div class="footer-col">
+        <h4>お店の方へ</h4>
+        <a href="#">無料で掲載する</a>
+        <a href="#">有料会員のご案内</a>
+        <a href="#">ネット予約とは</a>
+        <a href="#">口コミへの返信</a>
+      </div>
+      <div class="footer-col">
+        <h4>サービス</h4>
+        <a href="#">ネット予約</a>
+        <a href="#">テイクアウト</a>
+        <a href="#">デリバリー</a>
+        <a href="#">クーポン</a>
+        <a href="#">特集・まとめ</a>
+      </div>
+      <div class="footer-col">
+        <h4>ランキング</h4>
+        <a href="#">東京ランキング</a>
+        <a href="#">大阪ランキング</a>
+        <a href="#">全国ランキング</a>
+        <a href="#">夜のランキング</a>
+        <a href="#">ランチランキング</a>
+      </div>
+      <div class="footer-col">
+        <h4>カカクコム</h4>
+        <a href="#">価格.com</a>
+        <a href="#">求人ボックス</a>
+        <a href="#">保険の比較</a>
+        <a href="#">ふるさと納税</a>
+        <a href="#">カカクコムとは</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-logo-text">食べログ</span>
+      <div class="footer-bottom-links">
+        <a href="#">利用規約</a>
+        <a href="#">プライバシーポリシー</a>
+        <a href="#">サイトマップ</a>
+        <a href="#">広告について</a>
+      </div>
+      <div class="footer-copyright">&copy; 2024 Kakaku.com, Inc. All Rights Reserved.</div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

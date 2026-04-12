@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Miro — Design Reference</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --near-black: #1c1c1e;
+    --white: #ffffff;
+    --blue-450: #5b76fe;
+    --blue-pressed: #2a41b6;
+    --success: #00b473;
+    --slate: #555a6a;
+    --placeholder: #a5a8b5;
+    --border: #c7cad5;
+    --ring: rgb(224,226,232);
+    --coral-light: #ffc6c6;
+    --coral-dark: #600000;
+    --rose-light: #ffd8f4;
+    --teal-light: #c3faf5;
+    --teal-dark: #187574;
+    --orange-light: #ffe6cd;
+    --yellow-dark: #746019;
+    --pink: #fde0f0;
+    --red-light: #fbd4d4;
+  }
+
+  body {
+    font-family: 'Arial', Helvetica, sans-serif;
+    background: var(--white);
+    color: var(--near-black);
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--white);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    padding: 0 32px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+
+  .nav-logo-mark {
+    width: 32px;
+    height: 32px;
+    background: var(--blue-450);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  .nav-logo-text {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--near-black);
+    letter-spacing: -0.5px;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 4px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    display: flex;
+    align-items: center;
+    height: 36px;
+    padding: 0 14px;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--near-black);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background 150ms;
+  }
+
+  .nav-links a:hover { background: rgba(0,0,0,0.04); }
+
+  .nav-cta-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    height: 36px;
+    padding: 7px 12px;
+    background: transparent;
+    color: var(--near-black);
+    font-size: 16px;
+    font-weight: 400;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    text-decoration: none;
+    transition: border-color 150ms;
+  }
+
+  .btn-outline:hover { border-color: var(--near-black); }
+
+  .btn-blue {
+    display: inline-flex;
+    align-items: center;
+    height: 36px;
+    padding: 7px 16px;
+    background: var(--blue-450);
+    color: var(--white);
+    font-size: 17.5px;
+    font-weight: 700;
+    letter-spacing: 0.175px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 150ms;
+  }
+
+  .btn-blue:hover { background: var(--blue-pressed); }
+
+  /* HERO */
+  .hero {
+    padding: 80px 32px;
+    max-width: 1280px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .hero-overline {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--teal-light);
+    color: var(--teal-dark);
+    font-size: 14px;
+    font-weight: 400;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 24px;
+  }
+
+  .hero-title {
+    font-size: 56px;
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -1.68px;
+    color: var(--near-black);
+    max-width: 700px;
+    margin: 0 auto 24px;
+  }
+
+  .hero-subtitle {
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--slate);
+    max-width: 560px;
+    margin: 0 auto 40px;
+    line-height: 1.35;
+    letter-spacing: -0.44px;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+
+  .hero-social-proof {
+    font-size: 14px;
+    color: var(--placeholder);
+    margin-bottom: 64px;
+  }
+
+  .hero-social-proof strong { color: var(--slate); }
+
+  /* INFINITE BOARD PREVIEW */
+  .board-preview {
+    background: #f8f9fc;
+    border-radius: 12px;
+    border: 1px solid var(--ring);
+    box-shadow: var(--ring) 0px 0px 0px 1px;
+    overflow: hidden;
+    position: relative;
+    height: 400px;
+  }
+
+  .board-toolbar {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: var(--ring) 0px 0px 0px 1px, rgba(0,0,0,0.08) 0px 4px 16px;
+    padding: 6px;
+    display: flex;
+    gap: 2px;
+    z-index: 10;
+  }
+
+  .tool-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 150ms;
+  }
+
+  .tool-btn:hover { background: rgba(0,0,0,0.05); }
+  .tool-btn.active { background: var(--blue-450); color: var(--white); }
+
+  .board-avatars {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    display: flex;
+    gap: -6px;
+    z-index: 10;
+  }
+
+  .board-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--white);
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    margin-left: -6px;
+  }
+
+  .board-avatar:first-child { margin-left: 0; }
+  .av1 { background: var(--blue-450); }
+  .av2 { background: #f07b6b; }
+  .av3 { background: var(--success); }
+  .av4 { background: #b47fe0; }
+
+  .board-canvas {
+    position: absolute;
+    inset: 60px 16px 16px;
+    overflow: hidden;
+  }
+
+  /* STICKY NOTES */
+  .sticky {
+    position: absolute;
+    border-radius: 4px;
+    padding: 12px;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.4;
+    box-shadow: rgba(0,0,0,0.08) 0px 2px 8px;
+    max-width: 160px;
+    cursor: default;
+  }
+
+  .sticky-yellow { background: #fff9c4; }
+  .sticky-pink { background: #fce4ec; }
+  .sticky-blue { background: #e3f2fd; }
+  .sticky-green { background: #e8f5e9; }
+  .sticky-purple { background: #f3e5f5; }
+  .sticky-orange { background: #fff3e0; }
+
+  .connector-line {
+    position: absolute;
+    background: var(--border);
+    height: 1px;
+    transform-origin: left center;
+  }
+
+  .board-frame {
+    position: absolute;
+    border: 2px solid var(--blue-450);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .frame-header {
+    background: var(--blue-450);
+    color: var(--white);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 8px;
+  }
+
+  .frame-body {
+    flex: 1;
+    background: rgba(91,118,254,0.04);
+  }
+
+  /* PASTEL FEATURE SECTIONS */
+  .pastel-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 32px;
+  }
+
+  .pastel-card {
+    border-radius: 24px;
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pastel-card-coral { background: var(--coral-light); }
+  .pastel-card-teal { background: var(--teal-light); }
+  .pastel-card-rose { background: var(--rose-light); }
+  .pastel-card-orange { background: var(--orange-light); }
+  .pastel-card-pink { background: var(--pink); }
+  .pastel-card-red { background: var(--red-light); }
+
+  .pastel-card-title {
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--near-black);
+    line-height: 1.15;
+    letter-spacing: -0.72px;
+    margin-bottom: 12px;
+  }
+
+  .pastel-card-body {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--slate);
+    line-height: 1.5;
+    letter-spacing: -0.16px;
+    margin-bottom: 20px;
+  }
+
+  .pastel-card-icon {
+    font-size: 40px;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .pastel-card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 16px;
+    color: var(--near-black);
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 1px solid currentColor;
+  }
+
+  /* TEMPLATE GRID */
+  .templates-section {
+    padding: 80px 32px;
+    background: #f8f9fc;
+    border-top: 1px solid var(--ring);
+  }
+
+  .templates-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .templates-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 40px;
+  }
+
+  .templates-title {
+    font-size: 48px;
+    font-weight: 400;
+    color: var(--near-black);
+    line-height: 1.15;
+    letter-spacing: -1.44px;
+  }
+
+  .templates-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .template-card {
+    background: var(--white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--ring) 0px 0px 0px 1px;
+    cursor: pointer;
+    transition: box-shadow 200ms, transform 200ms;
+    text-decoration: none;
+  }
+
+  .template-card:hover {
+    box-shadow: var(--ring) 0px 0px 0px 1px, rgba(0,0,0,0.1) 0px 8px 24px;
+    transform: translateY(-2px);
+  }
+
+  .template-thumbnail {
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tt-coral { background: linear-gradient(135deg, var(--coral-light), #ff9898); }
+  .tt-teal { background: linear-gradient(135deg, var(--teal-light), #80e8e0); }
+  .tt-rose { background: linear-gradient(135deg, var(--rose-light), #ff9be0); }
+  .tt-orange { background: linear-gradient(135deg, var(--orange-light), #ffb86c); }
+  .tt-pink { background: linear-gradient(135deg, var(--pink), #ffb0d8); }
+  .tt-blue { background: linear-gradient(135deg, #e0e8ff, #a0b4ff); }
+  .tt-green { background: linear-gradient(135deg, #d4ffe8, #80f0b0); }
+  .tt-yellow { background: linear-gradient(135deg, #fffac4, #ffe880); }
+
+  .tt-icon { font-size: 48px; opacity: 0.9; }
+
+  .template-info {
+    padding: 16px;
+  }
+
+  .template-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--near-black);
+    margin-bottom: 4px;
+  }
+
+  .template-category {
+    font-size: 14px;
+    color: var(--placeholder);
+  }
+
+  /* TEAM SECTION */
+  .team-section {
+    padding: 80px 32px;
+    background: var(--white);
+  }
+
+  .team-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .team-text h2 {
+    font-size: 48px;
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -1.44px;
+    color: var(--near-black);
+    margin-bottom: 24px;
+  }
+
+  .team-text p {
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--slate);
+    line-height: 1.35;
+    letter-spacing: -0.44px;
+    margin-bottom: 32px;
+  }
+
+  .team-visual {
+    background: var(--white);
+    border-radius: 24px;
+    box-shadow: var(--ring) 0px 0px 0px 1px, rgba(0,0,0,0.08) 0px 8px 32px;
+    padding: 24px;
+    position: relative;
+  }
+
+  .avatar-grid {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+
+  .team-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  .tav1 { background: var(--blue-450); }
+  .tav2 { background: #f07b6b; }
+  .tav3 { background: var(--success); }
+  .tav4 { background: #b47fe0; }
+  .tav5 { background: #f0b040; }
+  .tav6 { background: #60c0e0; }
+
+  .team-activity {
+    border-radius: 8px;
+    padding: 12px;
+    background: #f8f9fc;
+    border: 1px solid var(--ring);
+    font-size: 14px;
+    color: var(--slate);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .activity-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    flex-shrink: 0;
+  }
+
+  /* PRICING SECTION */
+  .pricing-section {
+    padding: 80px 32px;
+    background: var(--near-black);
+  }
+
+  .pricing-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .pricing-title {
+    font-size: 48px;
+    font-weight: 400;
+    color: var(--white);
+    line-height: 1.15;
+    letter-spacing: -1.44px;
+    margin-bottom: 16px;
+  }
+
+  .pricing-subtitle {
+    font-size: 18px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 48px;
+  }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    text-align: left;
+  }
+
+  .pricing-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 32px;
+    transition: border-color 200ms;
+  }
+
+  .pricing-card.featured {
+    background: var(--blue-450);
+    border-color: var(--blue-450);
+  }
+
+  .pricing-card:hover:not(.featured) { border-color: rgba(255,255,255,0.3); }
+
+  .pricing-plan-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .pricing-price {
+    font-size: 48px;
+    font-weight: 400;
+    color: var(--white);
+    letter-spacing: -1.44px;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .pricing-price span {
+    font-size: 20px;
+    font-weight: 400;
+    letter-spacing: normal;
+  }
+
+  .pricing-period {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 24px;
+  }
+
+  .pricing-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .pricing-features li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    color: rgba(255,255,255,0.8);
+  }
+
+  .pricing-features li::before {
+    content: '&#10003;';
+    color: var(--success);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .btn-white-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 40px;
+    background: transparent;
+    color: var(--white);
+    font-size: 17.5px;
+    font-weight: 700;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.3);
+    text-decoration: none;
+    transition: background 150ms;
+  }
+
+  .btn-white-outline:hover { background: rgba(255,255,255,0.1); }
+
+  .btn-dark-blue {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 40px;
+    background: var(--near-black);
+    color: var(--white);
+    font-size: 17.5px;
+    font-weight: 700;
+    border-radius: 8px;
+    border: none;
+    text-decoration: none;
+    transition: opacity 150ms;
+  }
+
+  .btn-dark-blue:hover { opacity: 0.85; }
+
+  /* FOOTER */
+  footer {
+    background: var(--white);
+    padding: 64px 32px;
+    border-top: 1px solid var(--ring);
+  }
+
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr repeat(4, auto);
+    gap: 48px;
+    margin-bottom: 40px;
+  }
+
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .footer-brand-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--near-black);
+    letter-spacing: -0.5px;
+  }
+
+  .footer-tagline {
+    font-size: 14px;
+    color: var(--placeholder);
+    max-width: 200px;
+    line-height: 1.71;
+  }
+
+  .footer-col-title {
+    font-size: 12px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--near-black);
+    margin-bottom: 16px;
+    line-height: 0.9;
+  }
+
+  .footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .footer-links a {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--slate);
+    text-decoration: none;
+    line-height: 1.71;
+    transition: color 150ms;
+  }
+
+  .footer-links a:hover { color: var(--near-black); }
+
+  .footer-bottom {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 24px;
+    border-top: 1px solid var(--ring);
+    font-size: 12px;
+    color: var(--placeholder);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 0 16px; }
+    .nav-links { display: none; }
+    .hero { padding: 48px 16px; }
+    .hero-title { font-size: 36px; letter-spacing: -0.72px; }
+    .hero-subtitle { font-size: 18px; }
+    .pastel-grid { grid-template-columns: 1fr; padding: 48px 16px; }
+    .templates-section { padding: 48px 16px; }
+    .templates-title { font-size: 32px; }
+    .templates-grid { grid-template-columns: repeat(2, 1fr); }
+    .team-section { padding: 48px 16px; }
+    .team-inner { grid-template-columns: 1fr; gap: 40px; }
+    .team-text h2 { font-size: 32px; }
+    .pricing-section { padding: 48px 16px; }
+    .pricing-title { font-size: 32px; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    footer { padding: 48px 16px; }
+    .footer-inner { grid-template-columns: 1fr 1fr; }
+    .footer-bottom { flex-direction: column; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-mark">M</div>
+    <span class="nav-logo-text">Miro</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#">Product</a></li>
+    <li><a href="#">Solutions</a></li>
+    <li><a href="#">Templates</a></li>
+    <li><a href="#">Pricing</a></li>
+    <li><a href="#">Resources</a></li>
+  </ul>
+  <div class="nav-cta-group">
+    <a href="#" class="btn-outline">Log in</a>
+    <a href="#" class="btn-blue">Sign up free</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-overline">&#9733; #1 Visual Collaboration Platform</div>
+  <h1 class="hero-title">Where great teams do their best thinking</h1>
+  <p class="hero-subtitle">Miro is the infinite canvas where teams collaborate, brainstorm, and build together — anywhere in the world.</p>
+  <div class="hero-actions">
+    <a href="#" class="btn-blue" style="font-size:17.5px; height:48px; padding:0 24px;">Get started free</a>
+    <a href="#" class="btn-outline" style="height:48px; padding:0 24px; font-size:17.5px;">Watch demo</a>
+  </div>
+  <div class="hero-social-proof">No credit card required &nbsp;&#183;&nbsp; <strong>60M+ users</strong> worldwide &nbsp;&#183;&nbsp; Free forever plan</div>
+
+  <!-- BOARD PREVIEW -->
+  <div class="board-preview">
+    <div class="board-toolbar">
+      <div class="tool-btn">&#8613;</div>
+      <div class="tool-btn active">&#128394;</div>
+      <div class="tool-btn">&#128281;</div>
+      <div class="tool-btn">T</div>
+      <div class="tool-btn">&#9645;</div>
+      <div class="tool-btn">&#8900;</div>
+      <div class="tool-btn">&#128247;</div>
+      <div class="tool-btn">&#9702;</div>
+    </div>
+    <div class="board-avatars">
+      <div class="board-avatar av1">A</div>
+      <div class="board-avatar av2">B</div>
+      <div class="board-avatar av3">C</div>
+      <div class="board-avatar av4">+4</div>
+    </div>
+    <div class="board-canvas">
+      <!-- FRAME -->
+      <div class="board-frame" style="left:20px; top:10px; width:280px; height:200px;">
+        <div class="frame-header">&#127381; Sprint Planning</div>
+        <div class="frame-body"></div>
+      </div>
+      <!-- STICKY NOTES -->
+      <div class="sticky sticky-yellow" style="left:30px; top:50px;">User research interviews with 5 participants</div>
+      <div class="sticky sticky-pink" style="left:200px; top:30px;">Define MVP scope for Q2</div>
+      <div class="sticky sticky-blue" style="left:30px; top:140px;">Design system update needed</div>
+      <div class="sticky sticky-green" style="left:340px; top:20px; max-width:140px;">Analytics integration &#10003;</div>
+      <div class="sticky sticky-orange" style="left:340px; top:120px; max-width:140px;">Onboarding flow v3</div>
+      <div class="sticky sticky-purple" style="left:510px; top:40px; max-width:150px;">Performance audit &amp; fixes</div>
+      <div class="sticky sticky-yellow" style="left:510px; top:140px;">API documentation update</div>
+      <!-- CONNECTOR LINES -->
+      <div class="connector-line" style="left:160px; top:85px; width:180px; transform:rotate(-15deg);"></div>
+      <div class="connector-line" style="left:160px; top:155px; width:180px; transform:rotate(5deg);"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PASTEL FEATURE CARDS -->
+<div class="pastel-grid">
+  <div class="pastel-card pastel-card-teal">
+    <span class="pastel-card-icon">&#9997;</span>
+    <div class="pastel-card-title">Infinite Whiteboard</div>
+    <p class="pastel-card-body">An endless canvas for your ideas. Sticky notes, diagrams, wireframes — all in one place.</p>
+    <a href="#" class="pastel-card-link">Explore &#8594;</a>
+  </div>
+  <div class="pastel-card pastel-card-coral">
+    <span class="pastel-card-icon">&#128197;</span>
+    <div class="pastel-card-title">Agile Workflows</div>
+    <p class="pastel-card-body">Sprint planning, retrospectives, and kanban boards built for high-performing product teams.</p>
+    <a href="#" class="pastel-card-link">Explore &#8594;</a>
+  </div>
+  <div class="pastel-card pastel-card-rose">
+    <span class="pastel-card-icon">&#127809;</span>
+    <div class="pastel-card-title">Mind Mapping</div>
+    <p class="pastel-card-body">Visual thinking that flows naturally. Connect ideas and see the big picture at a glance.</p>
+    <a href="#" class="pastel-card-link">Explore &#8594;</a>
+  </div>
+  <div class="pastel-card pastel-card-orange">
+    <span class="pastel-card-icon">&#128101;</span>
+    <div class="pastel-card-title">Real-time Collaboration</div>
+    <p class="pastel-card-body">See your teammates' cursors live. Comment, react, and build together regardless of timezone.</p>
+    <a href="#" class="pastel-card-link">Explore &#8594;</a>
+  </div>
+  <div class="pastel-card pastel-card-pink">
+    <span class="pastel-card-icon">&#128197;</span>
+    <div class="pastel-card-title">Project Planning</div>
+    <p class="pastel-card-body">Gantt-style timelines, roadmaps, and dependency tracking for complex projects.</p>
+    <a href="#" class="pastel-card-link">Explore &#8594;</a>
+  </div>
+  <div class="pastel-card pastel-card-red">
+    <span class="pastel-card-icon">&#128237;</span>
+    <div class="pastel-card-title">Presentation Mode</div>
+    <p class="pastel-card-body">Present directly from your board. Frame-by-frame storytelling that keeps everyone engaged.</p>
+    <a href="#" class="pastel-card-link">Explore &#8594;</a>
+  </div>
+</div>
+
+<!-- TEMPLATES -->
+<section class="templates-section">
+  <div class="templates-inner">
+    <div class="templates-header">
+      <h2 class="templates-title">Start faster<br>with templates</h2>
+      <a href="#" class="btn-blue">Browse all templates</a>
+    </div>
+    <div class="templates-grid">
+      <a href="#" class="template-card">
+        <div class="template-thumbnail tt-coral"><div class="tt-icon">&#128202;</div></div>
+        <div class="template-info">
+          <div class="template-name">Retrospective</div>
+          <div class="template-category">Agile &amp; Scrum</div>
+        </div>
+      </a>
+      <a href="#" class="template-card">
+        <div class="template-thumbnail tt-teal"><div class="tt-icon">&#128205;</div></div>
+        <div class="template-info">
+          <div class="template-name">User Journey Map</div>
+          <div class="template-category">Design Thinking</div>
+        </div>
+      </a>
+      <a href="#" class="template-card">
+        <div class="template-thumbnail tt-rose"><div class="tt-icon">&#128161;</div></div>
+        <div class="template-info">
+          <div class="template-name">Brainstorming</div>
+          <div class="template-category">Creative</div>
+        </div>
+      </a>
+      <a href="#" class="template-card">
+        <div class="template-thumbnail tt-orange"><div class="tt-icon">&#9981;</div></div>
+        <div class="template-info">
+          <div class="template-name">Sprint Planning</div>
+          <div class="template-category">Product Management</div>
+        </div>
+      </a>
+      <a href="#" class="template-card">
+        <div class="template-thumbnail tt-blue"><div class="tt-icon">&#128221;</div></div>
+        <div class="template-info">
+          <div class="template-name">Product Roadmap</div>
+          <div class="template-category">Strategy</div>
+        </div>
+      </a>
+      <a href="#" class="template-card">
+        <div class="template-thumbnail tt-green"><div class="tt-icon">&#129153;</div></div>
+        <div class="template-info">
+          <div class="template-name">SWOT Analysis</div>
+          <div class="template-category">Business</div>
+        </div>
+      </a>
+      <a href="#" class="template-card">
+        <div class="template-thumbnail tt-yellow"><div class="tt-icon">&#128248;</div></div>
+        <div class="template-info">
+          <div class="template-name">Wireframe Kit</div>
+          <div class="template-category">Design</div>
+        </div>
+      </a>
+      <a href="#" class="template-card">
+        <div class="template-thumbnail tt-pink"><div class="tt-icon">&#128309;</div></div>
+        <div class="template-info">
+          <div class="template-name">Empathy Map</div>
+          <div class="template-category">UX Research</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM SECTION -->
+<section class="team-section">
+  <div class="team-inner">
+    <div class="team-text">
+      <h2>Your whole team, one canvas</h2>
+      <p>From designers to developers, PMs to executives — everyone contributes in Miro. No learning curve required.</p>
+      <a href="#" class="btn-blue">See how teams use Miro &#8594;</a>
+    </div>
+    <div class="team-visual">
+      <div class="avatar-grid">
+        <div class="team-avatar tav1">A</div>
+        <div class="team-avatar tav2">B</div>
+        <div class="team-avatar tav3">C</div>
+        <div class="team-avatar tav4">D</div>
+        <div class="team-avatar tav5">E</div>
+        <div class="team-avatar tav6">F</div>
+      </div>
+      <div class="team-activity">
+        <div class="activity-avatar" style="background:var(--blue-450);">A</div>
+        Alex is editing "Q2 Roadmap" — just now
+      </div>
+      <div class="team-activity">
+        <div class="activity-avatar" style="background:#f07b6b;">B</div>
+        Beth commented on Sprint 12 board
+      </div>
+      <div class="team-activity">
+        <div class="activity-avatar" style="background:var(--success);">C</div>
+        Carlos added 3 sticky notes
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section">
+  <div class="pricing-inner">
+    <h2 class="pricing-title">Simple pricing</h2>
+    <p class="pricing-subtitle">Start free. Scale as your team grows.</p>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="pricing-plan-name">Free</div>
+        <div class="pricing-price">&#36;0<span>/mo</span></div>
+        <div class="pricing-period">forever free</div>
+        <ul class="pricing-features">
+          <li>3 editable boards</li>
+          <li>Unlimited team members</li>
+          <li>100+ templates</li>
+          <li>Core integrations</li>
+        </ul>
+        <a href="#" class="btn-white-outline">Get started free</a>
+      </div>
+      <div class="pricing-card featured">
+        <div class="pricing-plan-name">Starter</div>
+        <div class="pricing-price">&#36;8<span>/mo</span></div>
+        <div class="pricing-period">per member, billed annually</div>
+        <ul class="pricing-features">
+          <li>Unlimited boards</li>
+          <li>Custom templates</li>
+          <li>Board export (PDF, PNG)</li>
+          <li>Priority support</li>
+        </ul>
+        <a href="#" class="btn-dark-blue">Start 30-day trial</a>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-plan-name">Business</div>
+        <div class="pricing-price">&#36;16<span>/mo</span></div>
+        <div class="pricing-period">per member, billed annually</div>
+        <ul class="pricing-features">
+          <li>Everything in Starter</li>
+          <li>Advanced facilitation</li>
+          <li>SSO &amp; SAML</li>
+          <li>Analytics &amp; reporting</li>
+        </ul>
+        <a href="#" class="btn-white-outline">Contact sales</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">
+        <div class="nav-logo-mark" style="width:28px; height:28px; font-size:12px;">M</div>
+        <span class="footer-brand-name">Miro</span>
+      </div>
+      <p class="footer-tagline">Visual collaboration for modern teams worldwide.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Product</div>
+      <ul class="footer-links">
+        <li><a href="#">Whiteboard</a></li>
+        <li><a href="#">Mind Map</a></li>
+        <li><a href="#">Diagramming</a></li>
+        <li><a href="#">Wireframing</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Solutions</div>
+      <ul class="footer-links">
+        <li><a href="#">Agile Teams</a></li>
+        <li><a href="#">Remote Work</a></li>
+        <li><a href="#">Education</a></li>
+        <li><a href="#">Enterprise</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Resources</div>
+      <ul class="footer-links">
+        <li><a href="#">Templates</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Help Center</a></li>
+        <li><a href="#">Community</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Company</div>
+      <ul class="footer-links">
+        <li><a href="#">About</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Press</a></li>
+        <li><a href="#">Security</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&#169; 2026 Miro. All rights reserved.</span>
+    <div style="display:flex; gap:16px;">
+      <a href="#" style="color:var(--placeholder); text-decoration:none; font-size:12px;">Privacy</a>
+      <a href="#" style="color:var(--placeholder); text-decoration:none; font-size:12px;">Terms</a>
+      <a href="#" style="color:var(--placeholder); text-decoration:none; font-size:12px;">Cookie Policy</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

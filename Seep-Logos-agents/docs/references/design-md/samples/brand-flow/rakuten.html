@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>楽天市場 — Design Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Meiryo, "Hiragino Kaku Gothic ProN", "MS PGothic", sans-serif;
+    background: #ffffff;
+    color: #666666;
+    font-size: 12px;
+    line-height: 1.1;
+    letter-spacing: normal;
+  }
+
+  a { color: #666666; text-decoration: none; }
+  a:hover { text-decoration: underline; color: #bf0000; }
+
+  /* SUPER HEADER */
+  .super-header {
+    background: #bf0000;
+    padding: 3px 0;
+  }
+
+  .super-header-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 8px;
+    gap: 8px;
+  }
+
+  .super-logo {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .logo-eagle {
+    width: 32px;
+    height: 32px;
+    background: #bf0000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    filter: brightness(1.8);
+  }
+
+  .logo-text-r {
+    font-size: 22px;
+    font-weight: 900;
+    color: white;
+    font-style: italic;
+    font-family: Georgia, serif;
+    line-height: 1;
+  }
+
+  .logo-text-sub {
+    font-size: 10px;
+    color: rgba(255,255,255,0.8);
+    margin-top: 2px;
+  }
+
+  .super-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    list-style: none;
+  }
+
+  .super-nav a {
+    color: white;
+    font-size: 11px;
+    text-decoration: none;
+  }
+
+  .super-nav a:hover { text-decoration: underline; color: #ffeeaa; }
+
+  /* MAIN HEADER */
+  .main-header {
+    background: white;
+    border-bottom: 3px solid #bf0000;
+    padding: 6px 8px;
+  }
+
+  .main-header-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .search-area {
+    display: flex;
+    align-items: stretch;
+    flex: 1;
+    max-width: 600px;
+    gap: 0;
+  }
+
+  .search-input {
+    flex: 1;
+    border: 2px solid #bf0000;
+    border-right: none;
+    padding: 6px 10px;
+    font-size: 14px;
+    font-family: inherit;
+    color: #333;
+    outline: none;
+    border-radius: 0;
+  }
+
+  .search-input::placeholder { color: #999; }
+
+  .search-btn {
+    background: #bf0000;
+    color: white;
+    border: none;
+    padding: 6px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+    border-radius: 0;
+  }
+
+  .search-btn:hover { background: #990000; }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0;
+  }
+
+  .header-action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    text-decoration: none;
+    color: #333;
+    font-size: 10px;
+  }
+
+  .header-action-btn .icon { font-size: 20px; }
+
+  .point-display {
+    background: #fff5cc;
+    border: 1px solid #ffcc00;
+    padding: 4px 10px;
+    font-size: 11px;
+    color: #333;
+    white-space: nowrap;
+  }
+
+  .point-display strong { color: #ff8c00; font-size: 14px; font-weight: 700; }
+
+  /* SERVICE NAV */
+  .service-nav {
+    background: #f6f6f6;
+    border-bottom: 1px solid #dddddd;
+  }
+
+  .service-nav-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 8px;
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .service-nav-inner::-webkit-scrollbar { display: none; }
+
+  .service-nav a {
+    display: inline-flex;
+    align-items: center;
+    height: 32px;
+    padding: 0 12px;
+    font-size: 12px;
+    color: #666;
+    text-decoration: none;
+    border-right: 1px solid #ddd;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 100ms, color 100ms;
+  }
+
+  .service-nav a:hover { background: white; color: #bf0000; }
+  .service-nav a.active { background: white; color: #bf0000; font-weight: 700; border-top: 2px solid #bf0000; }
+
+  /* CATEGORY TREE NAV */
+  .layout-wrapper {
+    max-width: 1120px;
+    margin: 0 auto;
+    display: flex;
+    gap: 0;
+    padding: 0 8px;
+    align-items: flex-start;
+    padding-top: 12px;
+  }
+
+  .category-tree {
+    width: 180px;
+    flex-shrink: 0;
+    border: 1px solid #dddddd;
+    margin-right: 12px;
+  }
+
+  .cat-tree-header {
+    background: #bf0000;
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 10px;
+    border-bottom: 1px solid #990000;
+  }
+
+  .cat-tree-item {
+    border-bottom: 1px solid #eeeeee;
+  }
+
+  .cat-tree-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 10px;
+    font-size: 12px;
+    color: #333;
+    text-decoration: none;
+    transition: background 100ms;
+  }
+
+  .cat-tree-link:hover { background: #f9f9f9; color: #bf0000; }
+  .cat-tree-link .arrow { color: #aaa; font-size: 10px; }
+
+  .cat-tree-sub {
+    background: #f9f9f9;
+    padding: 0;
+    display: none;
+  }
+
+  .cat-tree-item:hover .cat-tree-sub { display: block; }
+
+  .cat-tree-sub a {
+    display: block;
+    padding: 4px 10px 4px 18px;
+    font-size: 11px;
+    color: #666;
+    text-decoration: none;
+    border-bottom: 1px solid #eee;
+  }
+
+  .cat-tree-sub a:hover { color: #bf0000; background: #fff; }
+
+  /* MAIN COLUMN */
+  .main-column {
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* BANNER AREA */
+  .banner-area {
+    margin-bottom: 12px;
+  }
+
+  .main-banner {
+    width: 100%;
+    height: 180px;
+    background: linear-gradient(120deg, #bf0000 0%, #990000 40%, #ff3333 100%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    border: 1px solid #dddddd;
+    margin-bottom: 6px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .main-banner::before {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 300px;
+    background: rgba(0,0,0,0.15);
+    clip-path: polygon(30% 0, 100% 0, 100% 100%, 0 100%);
+  }
+
+  .banner-text { position: relative; z-index: 1; }
+
+  .banner-sale-badge {
+    background: #ffff00;
+    color: #bf0000;
+    font-size: 16px;
+    font-weight: 900;
+    padding: 4px 12px;
+    display: inline-block;
+    margin-bottom: 8px;
+    border-radius: 0;
+  }
+
+  .banner-title {
+    font-size: 28px;
+    font-weight: 900;
+    color: white;
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+
+  .banner-subtitle {
+    font-size: 14px;
+    color: rgba(255,255,255,0.9);
+  }
+
+  .banner-cta {
+    display: inline-flex;
+    align-items: center;
+    height: 36px;
+    padding: 0 20px;
+    background: white;
+    color: #bf0000;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    position: relative;
+    z-index: 1;
+  }
+
+  .banner-cta:hover { background: #ffeeee; color: #990000; }
+
+  .sub-banners {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+  }
+
+  .sub-banner {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    line-height: 1.3;
+    padding: 8px;
+  }
+
+  .sb1 { background: #ff6600; }
+  .sb2 { background: #009900; }
+  .sb3 { background: #0066cc; }
+  .sb4 { background: #cc00cc; }
+
+  /* RANKING SECTION */
+  .section-box {
+    border: 1px solid #dddddd;
+    margin-bottom: 12px;
+  }
+
+  .section-box-header {
+    background: #f6f6f6;
+    border-bottom: 1px solid #dddddd;
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .section-box-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #333;
+  }
+
+  .section-box-title span {
+    color: #bf0000;
+  }
+
+  .section-box-more {
+    font-size: 11px;
+    color: #0066cc;
+    text-decoration: none;
+  }
+
+  .section-box-more:hover { text-decoration: underline; }
+
+  /* PRODUCT GRID DENSE */
+  .product-grid-dense {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0;
+  }
+
+  .product-cell {
+    border-right: 1px solid #dddddd;
+    border-bottom: 1px solid #dddddd;
+    padding: 8px;
+    text-decoration: none;
+    color: #333;
+    display: block;
+    transition: background 100ms;
+  }
+
+  .product-cell:hover { background: #fafafa; }
+
+  .product-cell:nth-child(6n) { border-right: none; }
+
+  .product-rank {
+    font-size: 11px;
+    font-weight: 700;
+    color: #bf0000;
+    margin-bottom: 4px;
+  }
+
+  .product-rank.rank1 { font-size: 14px; }
+  .product-rank.rank2 { font-size: 13px; }
+  .product-rank.rank3 { font-size: 12px; color: #ff6600; }
+
+  .product-img-dense {
+    width: 100%;
+    aspect-ratio: 1;
+    border: 1px solid #eeeeee;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+  }
+
+  .pi-d1 { background: #fff8f0; }
+  .pi-d2 { background: #f0f8ff; }
+  .pi-d3 { background: #f8fff0; }
+  .pi-d4 { background: #fff0f8; }
+  .pi-d5 { background: #f0fff8; }
+  .pi-d6 { background: #f8f0ff; }
+
+  .product-dense-name {
+    font-size: 11px;
+    color: #333;
+    line-height: 1.3;
+    margin-bottom: 3px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .product-dense-price {
+    font-size: 14px;
+    font-weight: 700;
+    color: #bf0000;
+    line-height: 1.1;
+  }
+
+  .product-dense-price-original {
+    font-size: 11px;
+    color: #999;
+    text-decoration: line-through;
+  }
+
+  .product-dense-points {
+    font-size: 11px;
+    color: #ff8c00;
+    margin-top: 2px;
+  }
+
+  .product-dense-review {
+    font-size: 10px;
+    color: #ff8c00;
+  }
+
+  /* GENRE LINKS */
+  .genre-section {
+    border: 1px solid #dddddd;
+    margin-bottom: 12px;
+  }
+
+  .genre-header {
+    background: #f6f6f6;
+    border-bottom: 1px solid #dddddd;
+    padding: 6px 10px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #333;
+  }
+
+  .genre-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 0;
+    padding: 8px;
+  }
+
+  .genre-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 6px;
+    text-decoration: none;
+    color: #333;
+    border: 1px solid #eeeeee;
+    margin: 2px;
+    transition: background 100ms;
+  }
+
+  .genre-item:hover { background: #fff5f5; border-color: #bf0000; color: #bf0000; }
+
+  .genre-icon { font-size: 20px; }
+  .genre-name { font-size: 11px; text-align: center; line-height: 1.2; }
+
+  /* POINT SECTION */
+  .point-section {
+    background: #fffbee;
+    border: 2px solid #ffcc00;
+    padding: 12px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .point-icon { font-size: 24px; }
+
+  .point-text h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 4px;
+  }
+
+  .point-text p {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.4;
+  }
+
+  .point-rate {
+    font-size: 28px;
+    font-weight: 900;
+    color: #ff8c00;
+    flex-shrink: 0;
+  }
+
+  .point-rate span {
+    font-size: 14px;
+    font-weight: 400;
+    color: #666;
+  }
+
+  .point-cta {
+    display: inline-flex;
+    align-items: center;
+    height: 32px;
+    padding: 0 16px;
+    background: #bf0000;
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 4px;
+    white-space: nowrap;
+    margin-left: auto;
+  }
+
+  /* NEW ITEMS SECTION */
+  .new-items-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .new-item {
+    text-decoration: none;
+    color: #333;
+    display: block;
+  }
+
+  .new-item-img {
+    width: 100%;
+    aspect-ratio: 1;
+    border: 1px solid #eeeeee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    margin-bottom: 4px;
+  }
+
+  .ni1 { background: #fff0f5; }
+  .ni2 { background: #f0f5ff; }
+  .ni3 { background: #f5fff0; }
+  .ni4 { background: #fff5f0; }
+  .ni5 { background: #f5f0ff; }
+
+  .new-item-name {
+    font-size: 11px;
+    color: #333;
+    line-height: 1.3;
+    margin-bottom: 2px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .new-item-price {
+    font-size: 13px;
+    font-weight: 700;
+    color: #bf0000;
+  }
+
+  .new-badge {
+    background: #ff6600;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 4px;
+    display: inline-block;
+    margin-bottom: 2px;
+  }
+
+  /* FOOTER */
+  footer {
+    background: #f6f6f6;
+    border-top: 3px solid #bf0000;
+    padding: 16px 8px;
+    margin-top: 24px;
+  }
+
+  .footer-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+
+  .footer-service-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    margin-bottom: 12px;
+    border: 1px solid #dddddd;
+    background: white;
+  }
+
+  .footer-service-links a {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 12px;
+    font-size: 12px;
+    color: #333;
+    text-decoration: none;
+    border-right: 1px solid #dddddd;
+    border-bottom: 1px solid #dddddd;
+    white-space: nowrap;
+  }
+
+  .footer-service-links a:hover { background: #fff5f5; color: #bf0000; }
+
+  .footer-links-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .footer-links-row a {
+    font-size: 11px;
+    color: #666;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .footer-links-row a:hover { text-decoration: underline; color: #bf0000; }
+
+  .footer-links-row span {
+    color: #ccc;
+  }
+
+  .footer-copyright {
+    font-size: 11px;
+    color: #999;
+    text-align: center;
+    padding-top: 8px;
+    border-top: 1px solid #dddddd;
+  }
+
+  @media (max-width: 768px) {
+    .category-tree { display: none; }
+    .layout-wrapper { padding: 0 4px; }
+    .sub-banners { grid-template-columns: repeat(2, 1fr); }
+    .product-grid-dense { grid-template-columns: repeat(3, 1fr); }
+    .genre-grid { grid-template-columns: repeat(4, 1fr); }
+    .new-items-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- SUPER HEADER -->
+<div class="super-header">
+  <div class="super-header-inner">
+    <div class="super-logo">
+      <div class="logo-eagle">&#127385;</div>
+      <div>
+        <div class="logo-text-r">Rakuten</div>
+        <div class="logo-text-sub">楽天市場</div>
+      </div>
+    </div>
+    <ul class="super-nav">
+      <li><a href="#">楽天会員ログイン</a></li>
+      <li><a href="#">楽天カード</a></li>
+      <li><a href="#">楽天銀行</a></li>
+      <li><a href="#">楽天証券</a></li>
+      <li><a href="#">楽天モバイル</a></li>
+      <li><a href="#">楽天トラベル</a></li>
+      <li><a href="#">楽天ブックス</a></li>
+      <li><a href="#">楽天Kobo</a></li>
+      <li><a href="#">Rakuten Fashion</a></li>
+    </ul>
+  </div>
+</div>
+
+<!-- MAIN HEADER -->
+<div class="main-header">
+  <div class="main-header-inner">
+    <div style="display:flex; align-items:center; gap:4px; flex-shrink:0;">
+      <span style="font-size:28px; font-weight:900; color:#bf0000; font-style:italic; font-family:Georgia,serif;">R</span>
+      <span style="font-size:18px; font-weight:700; color:#bf0000;">楽天市場</span>
+    </div>
+    <div class="search-area">
+      <input type="text" class="search-input" placeholder="何をお探しですか？">
+      <button class="search-btn">検索</button>
+    </div>
+    <div class="header-actions">
+      <div class="point-display">
+        保有ポイント: <strong>3,248</strong> pt
+      </div>
+      <a href="#" class="header-action-btn">
+        <span class="icon">&#128722;</span>
+        <span>買い物かご</span>
+      </a>
+      <a href="#" class="header-action-btn">
+        <span class="icon">&#10084;</span>
+        <span>お気に入り</span>
+      </a>
+      <a href="#" class="header-action-btn">
+        <span class="icon">&#128100;</span>
+        <span>マイページ</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICE NAV -->
+<div class="service-nav">
+  <div class="service-nav-inner">
+    <a href="#" class="active">楽天市場TOP</a>
+    <a href="#">ランキング</a>
+    <a href="#">スーパーSALE</a>
+    <a href="#">楽天スーパーポイント</a>
+    <a href="#">クーポン</a>
+    <a href="#">毎日お得</a>
+    <a href="#">タイムセール</a>
+    <a href="#">レディースファッション</a>
+    <a href="#">メンズファッション</a>
+    <a href="#">家電・カメラ</a>
+    <a href="#">食品・スイーツ</a>
+    <a href="#">インテリア・寝具</a>
+    <a href="#">日用品・雑貨</a>
+    <a href="#">ベビー・キッズ</a>
+    <a href="#">スポーツ・アウトドア</a>
+    <a href="#">ペット・ガーデン</a>
+    <a href="#">車・バイク</a>
+    <a href="#">ギフト</a>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout-wrapper">
+
+  <!-- CATEGORY TREE -->
+  <div class="category-tree">
+    <div class="cat-tree-header">&#127968; カテゴリ一覧</div>
+    <div class="cat-tree-item">
+      <a href="#" class="cat-tree-link">
+        <span>&#128084; レディースファッション</span>
+        <span class="arrow">&#8250;</span>
+      </a>
+    </div>
+    <div class="cat-tree-item">
+      <a href="#" class="cat-tree-link">
+        <span>&#128085; メンズファッション</span>
+        <span class="arrow">&#8250;</span>
+      </a>
+    </div>
+    <div class="cat-tree-item">
+      <a href="#" class="cat-tree-link">
+        <span>&#128187; 家電・カメラ</span>
+        <span class="arrow">&#8250;</span>
+      </a>
+    </div>
+    <div class="cat-tree-item">
+      <a href="#" class="cat-tree-link">
+        <span>&#127829; 食品・飲料</span>
+        <span class="arrow">&#8250;</span>
+      </a>
+    </div>
+    <div class="cat-tree-item">
+      <a href="#" class="cat-tree-link">
+        <span>&#127968; インテリア</span>
+        <span class="arrow">&#8250;</span>
+      </a>
+    </div>
+    <div class="cat-tree-item">
+      <a href="#" class="cat-tree-link">
+        <span>&#128218; 本・雑誌</span>
+        <span class="arrow">&#8250;</span>
+      </a>
+    </div>
+    <div class="cat-tree-item">
+      <a href="#" class="cat-tree-link">
+        <span>&#9978; スポーツ</span>
+        <span class="arrow">&#8250;</span>
+      </a>
+    </div>
+    <div class="cat-tree-item">
+      <a href="#" class="cat-tree-link">
+        <span>&#128694; ベビー・キッズ</span>
+        <span class="arrow">&#8250;</span>
+      </a>
+    </div>
+    <div class="cat-tree-item">
+      <a href="#" class="cat-tree-link">
+        <span>&#128021; ペット用品</span>
+        <span class="arrow">&#8250;</span>
+      </a>
+    </div>
+    <div class="cat-tree-item">
+      <a href="#" class="cat-tree-link">
+        <span>&#128149; コスメ・香水</span>
+        <span class="arrow">&#8250;</span>
+      </a>
+    </div>
+    <div class="cat-tree-item">
+      <a href="#" class="cat-tree-link">
+        <span>&#127828; グルメ・ギフト</span>
+        <span class="arrow">&#8250;</span>
+      </a>
+    </div>
+    <div class="cat-tree-item">
+      <a href="#" class="cat-tree-link">
+        <span>&#128663; 車・バイク</span>
+        <span class="arrow">&#8250;</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- MAIN COLUMN -->
+  <div class="main-column">
+
+    <!-- MAIN BANNER -->
+    <div class="banner-area">
+      <div class="main-banner">
+        <div class="banner-text">
+          <div class="banner-sale-badge">★ 期間限定 ★</div>
+          <div class="banner-title">楽天スーパーSALE</div>
+          <div class="banner-subtitle">最大70%OFF &#43; ポイント最大44倍！</div>
+        </div>
+        <a href="#" class="banner-cta">今すぐ買う &#8594;</a>
+      </div>
+      <div class="sub-banners">
+        <a href="#" class="sub-banner sb1">&#128722; SALE<br>最大70%OFF</a>
+        <a href="#" class="sub-banner sb2">&#127358; ポイント<br>最大44倍</a>
+        <a href="#" class="sub-banner sb3">&#127378; クーポン<br>無料配布中</a>
+        <a href="#" class="sub-banner sb4">&#9196; タイム<br>セール 24時間</a>
+      </div>
+    </div>
+
+    <!-- POINT CAMPAIGN -->
+    <div class="point-section">
+      <div class="point-icon">&#127358;</div>
+      <div class="point-text">
+        <h3>楽天スーパーポイントキャンペーン実施中</h3>
+        <p>楽天カード利用でポイントがさらにアップ！お買い物がお得になります。</p>
+      </div>
+      <div class="point-rate">44<span>倍</span></div>
+      <a href="#" class="point-cta">詳細を確認する</a>
+    </div>
+
+    <!-- GENRE LINKS -->
+    <div class="genre-section">
+      <div class="genre-header">&#9734; ジャンルから探す</div>
+      <div class="genre-grid">
+        <a href="#" class="genre-item">
+          <span class="genre-icon">&#128084;</span>
+          <span class="genre-name">ファッション</span>
+        </a>
+        <a href="#" class="genre-item">
+          <span class="genre-icon">&#128187;</span>
+          <span class="genre-name">家電・PC</span>
+        </a>
+        <a href="#" class="genre-item">
+          <span class="genre-icon">&#127829;</span>
+          <span class="genre-name">食品・飲料</span>
+        </a>
+        <a href="#" class="genre-item">
+          <span class="genre-icon">&#127968;</span>
+          <span class="genre-name">インテリア</span>
+        </a>
+        <a href="#" class="genre-item">
+          <span class="genre-icon">&#128218;</span>
+          <span class="genre-name">本・CD</span>
+        </a>
+        <a href="#" class="genre-item">
+          <span class="genre-icon">&#128149;</span>
+          <span class="genre-name">コスメ</span>
+        </a>
+        <a href="#" class="genre-item">
+          <span class="genre-icon">&#9978;</span>
+          <span class="genre-name">スポーツ</span>
+        </a>
+        <a href="#" class="genre-item">
+          <span class="genre-icon">&#128021;</span>
+          <span class="genre-name">ペット用品</span>
+        </a>
+        <a href="#" class="genre-item">
+          <span class="genre-icon">&#128694;</span>
+          <span class="genre-name">ベビー・キッズ</span>
+        </a>
+        <a href="#" class="genre-item">
+          <span class="genre-icon">&#128663;</span>
+          <span class="genre-name">車・バイク</span>
+        </a>
+        <a href="#" class="genre-item">
+          <span class="genre-icon">&#127828;</span>
+          <span class="genre-name">グルメ・ギフト</span>
+        </a>
+        <a href="#" class="genre-item">
+          <span class="genre-icon">&#9962;</span>
+          <span class="genre-name">旅行・ホテル</span>
+        </a>
+        <a href="#" class="genre-item">
+          <span class="genre-icon">&#127912;</span>
+          <span class="genre-name">ホビー・手芸</span>
+        </a>
+        <a href="#" class="genre-item">
+          <span class="genre-icon">&#129352;</span>
+          <span class="genre-name">ゲーム</span>
+        </a>
+        <a href="#" class="genre-item">
+          <span class="genre-icon">&#128692;</span>
+          <span class="genre-name">自転車</span>
+        </a>
+        <a href="#" class="genre-item">
+          <span class="genre-icon">&#127799;</span>
+          <span class="genre-name">ガーデン</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- RANKING SECTION -->
+    <div class="section-box">
+      <div class="section-box-header">
+        <div class="section-box-title">&#127362; <span>楽天市場</span>売れ筋ランキング</div>
+        <a href="#" class="section-box-more">もっと見る &#8250;</a>
+      </div>
+      <div class="product-grid-dense">
+        <a href="#" class="product-cell">
+          <div class="product-rank rank1">&#127362; 1位</div>
+          <div class="product-img-dense pi-d1">&#129362;</div>
+          <div class="product-dense-name">楽天1位 マスクケース 抗菌 日本製 3枚入り</div>
+          <div class="product-dense-price">&#165;980</div>
+          <div class="product-dense-points">&#127358; 9pt</div>
+          <div class="product-dense-review">&#11088;&#11088;&#11088;&#11088;&#11088; (4,231)</div>
+        </a>
+        <a href="#" class="product-cell">
+          <div class="product-rank rank2">2位</div>
+          <div class="product-img-dense pi-d2">&#127795;</div>
+          <div class="product-dense-name">【送料無料】人気スキンケアセット 4点</div>
+          <div class="product-dense-price">&#165;4,980</div>
+          <div class="product-dense-price-original">&#165;8,800</div>
+          <div class="product-dense-points">&#127358; 49pt</div>
+        </a>
+        <a href="#" class="product-cell">
+          <div class="product-rank rank3">3位</div>
+          <div class="product-img-dense pi-d3">&#9749;</div>
+          <div class="product-dense-name">スペシャルティコーヒー 自家焙煎 200g</div>
+          <div class="product-dense-price">&#165;1,580</div>
+          <div class="product-dense-points">&#127358; 15pt</div>
+        </a>
+        <a href="#" class="product-cell">
+          <div class="product-rank" style="color:#666;">4位</div>
+          <div class="product-img-dense pi-d4">&#128188;</div>
+          <div class="product-dense-name">ビジネスバッグ 大容量 A4対応 通勤</div>
+          <div class="product-dense-price">&#165;6,800</div>
+          <div class="product-dense-points">&#127358; 68pt</div>
+          <div class="product-dense-review">&#11088;&#11088;&#11088;&#11088;&#9734; (892)</div>
+        </a>
+        <a href="#" class="product-cell">
+          <div class="product-rank" style="color:#666;">5位</div>
+          <div class="product-img-dense pi-d5">&#127881;</div>
+          <div class="product-dense-name">誕生日プレゼント ギフトBOX 人気セット</div>
+          <div class="product-dense-price">&#165;3,280</div>
+          <div class="product-dense-points">&#127358; 32pt</div>
+        </a>
+        <a href="#" class="product-cell">
+          <div class="product-rank" style="color:#666;">6位</div>
+          <div class="product-img-dense pi-d6">&#128241;</div>
+          <div class="product-dense-name">スマホケース iPhone 15 Pro 手帳型</div>
+          <div class="product-dense-price">&#165;1,280</div>
+          <div class="product-dense-points">&#127358; 12pt</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- NEW ITEMS -->
+    <div class="section-box">
+      <div class="section-box-header">
+        <div class="section-box-title">&#127381; 新着アイテム</div>
+        <a href="#" class="section-box-more">もっと見る &#8250;</a>
+      </div>
+      <div class="new-items-grid">
+        <a href="#" class="new-item">
+          <div class="new-item-img ni1">&#127857;</div>
+          <div class="new-badge">NEW</div>
+          <div class="new-item-name">抹茶スイーツ詰め合わせ 京都老舗</div>
+          <div class="new-item-price">&#165;2,800</div>
+        </a>
+        <a href="#" class="new-item">
+          <div class="new-item-img ni2">&#128247;</div>
+          <div class="new-badge">NEW</div>
+          <div class="new-item-name">デジタルカメラ 4K動画対応 防水</div>
+          <div class="new-item-price">&#165;38,000</div>
+        </a>
+        <a href="#" class="new-item">
+          <div class="new-item-img ni3">&#127799;</div>
+          <div class="new-badge">NEW</div>
+          <div class="new-item-name">観葉植物 モンステラ 10号鉢</div>
+          <div class="new-item-price">&#165;5,500</div>
+        </a>
+        <a href="#" class="new-item">
+          <div class="new-item-img ni4">&#128083;</div>
+          <div class="new-badge">NEW</div>
+          <div class="new-item-name">本革ハンドバッグ 国産 牛革</div>
+          <div class="new-item-price">&#165;24,800</div>
+        </a>
+        <a href="#" class="new-item">
+          <div class="new-item-img ni5">&#127895;</div>
+          <div class="new-badge">NEW</div>
+          <div class="new-item-name">Bluetoothスピーカー 防水 アウトドア</div>
+          <div class="new-item-price">&#165;4,980</div>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-service-links">
+      <a href="#">楽天市場</a>
+      <a href="#">楽天トラベル</a>
+      <a href="#">楽天ブックス</a>
+      <a href="#">楽天カード</a>
+      <a href="#">楽天銀行</a>
+      <a href="#">楽天証券</a>
+      <a href="#">楽天モバイル</a>
+      <a href="#">楽天Edy</a>
+      <a href="#">楽天ポイント</a>
+      <a href="#">楽天Pay</a>
+      <a href="#">Rakuten Fashion</a>
+      <a href="#">楽天ビューティ</a>
+      <a href="#">楽天デリバリー</a>
+      <a href="#">楽天レシピ</a>
+    </div>
+    <div class="footer-links-row">
+      <a href="#">楽天株式会社について</a><span>|</span>
+      <a href="#">投資家向け情報</a><span>|</span>
+      <a href="#">採用情報</a><span>|</span>
+      <a href="#">プライバシーポリシー</a><span>|</span>
+      <a href="#">利用規約</a><span>|</span>
+      <a href="#">特定商取引法に基づく表記</a><span>|</span>
+      <a href="#">広告掲載について</a><span>|</span>
+      <a href="#">Rakuten Global</a>
+    </div>
+    <div class="footer-copyright">
+      Copyright &copy; 2026 Rakuten Group, Inc. All Rights Reserved.
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

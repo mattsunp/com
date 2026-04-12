@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>freee — バックオフィスをもっと自由に</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --primary-blue: #2864f0;
+    --primary-dark: #1e46aa;
+    --heading-blue: #1e46aa;
+    --text-heading: #323232;
+    --text-body: #595959;
+    --text-muted: #8c8c8c;
+    --bg-white: #ffffff;
+    --bg-light: #f7f5f5;
+    --border: #e9e7e7;
+    --danger: #dc1e32;
+    --success: #00963c;
+    --warning: #ffb91e;
+    --orange: #fa6414;
+    --font-product: '-apple-system', BlinkMacSystemFont, 'Helvetica Neue', 'Hiragino Kaku Gothic ProN', Arial, 'Meiryo', sans-serif;
+    --font-site: 'Noto Sans JP', sans-serif;
+  }
+
+  html { font-size: 16px; }
+  body {
+    font-family: var(--font-site);
+    color: var(--text-body);
+    background: var(--bg-white);
+    line-height: 1.5;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    background: var(--bg-white);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 0 24px;
+  }
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .nav-logo {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--primary-blue);
+    letter-spacing: -0.02em;
+    flex-shrink: 0;
+  }
+  .nav-logo span { color: var(--text-heading); }
+  .nav-links { display: flex; gap: 0; list-style: none; }
+  .nav-links a {
+    display: block;
+    padding: 0 16px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-heading);
+    text-decoration: none;
+    line-height: 64px;
+    transition: color 0.2s;
+    white-space: nowrap;
+  }
+  .nav-links a:hover { color: var(--primary-blue); }
+  .nav-right { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+  .btn-nav-secondary {
+    padding: 8px 16px;
+    border: 1px solid var(--primary-blue);
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--primary-blue);
+    background: var(--bg-white);
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+  .btn-nav-secondary:hover { background: rgba(40,100,240,0.04); }
+  .btn-nav-primary {
+    padding: 8px 16px;
+    border: 2px solid var(--primary-blue);
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--bg-white);
+    background: var(--primary-blue);
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity 0.2s;
+  }
+  .btn-nav-primary:hover { opacity: 0.88; }
+
+  /* ─── HERO ─── */
+  .hero {
+    background: linear-gradient(160deg, #eef3ff 0%, #f7f5f5 50%, var(--bg-white) 100%);
+    padding: 80px 24px 64px;
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+    position: relative;
+  }
+  .hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(40,100,240,0.08);
+    color: var(--primary-blue);
+    border-radius: 99px;
+    padding: 4px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-size: 40px;
+    font-weight: 500;
+    color: var(--text-heading);
+    line-height: 1.3;
+    letter-spacing: 0.04em;
+    margin-bottom: 20px;
+  }
+  .hero h1 strong { font-weight: 700; color: var(--primary-blue); }
+  .hero p {
+    font-size: 16px;
+    color: var(--text-body);
+    line-height: 1.7;
+    margin-bottom: 32px;
+    max-width: 480px;
+  }
+  .hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
+  .btn-primary-hero {
+    background: var(--primary-blue);
+    color: var(--bg-white);
+    padding: 14px 32px;
+    border: 2px solid var(--primary-blue);
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.2s;
+    display: inline-block;
+  }
+  .btn-primary-hero:hover { opacity: 0.88; }
+  .btn-secondary-hero {
+    background: var(--bg-white);
+    color: var(--primary-blue);
+    padding: 14px 32px;
+    border: 1px solid var(--primary-blue);
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s;
+    display: inline-block;
+  }
+  .btn-secondary-hero:hover { background: rgba(40,100,240,0.04); }
+  .hero-note { font-size: 13px; color: var(--text-muted); }
+  .hero-note span { color: var(--success); font-weight: 600; }
+
+  /* Dashboard Mock */
+  .dashboard-mock {
+    background: var(--bg-white);
+    border-radius: 12px;
+    box-shadow: 0 0 1rem rgba(0,0,0,0.1), 0 0.125rem 0.25rem rgba(0,0,0,0.2);
+    overflow: hidden;
+  }
+  .dash-header {
+    background: var(--primary-blue);
+    color: var(--bg-white);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .dash-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dash-body { padding: 20px; }
+  .dash-greeting { font-size: 14px; font-weight: 700; color: var(--text-heading); margin-bottom: 16px; }
+  .dash-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .dash-card {
+    background: var(--bg-light);
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+  }
+  .dash-card-label { font-size: 10px; color: var(--text-muted); margin-bottom: 4px; }
+  .dash-card-value { font-size: 18px; font-weight: 700; color: var(--text-heading); }
+  .dash-card-value.positive { color: var(--success); }
+  .dash-card-value.negative { color: var(--danger); }
+  .dash-chart {
+    background: var(--bg-light);
+    border-radius: 8px;
+    padding: 12px;
+    height: 80px;
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+  }
+  .dash-bar {
+    flex: 1;
+    background: var(--primary-blue);
+    border-radius: 2px 2px 0 0;
+    opacity: 0.85;
+  }
+  .dash-bar.dimmed { opacity: 0.3; }
+  .dash-bar.highlight { background: var(--orange); opacity: 1; }
+
+  /* ─── LOGOS ─── */
+  .logos-bar {
+    background: var(--bg-light);
+    padding: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .logos-inner { max-width: 1200px; margin: 0 auto; }
+  .logos-label { font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 16px; }
+  .logos-list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .logo-item { font-size: 14px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.04em; }
+
+  /* ─── SECTION ─── */
+  .section { padding: 72px 24px; }
+  .section-gray { background: var(--bg-light); }
+  .section-inner { max-width: 1200px; margin: 0 auto; }
+  .section-header { text-align: center; margin-bottom: 56px; }
+  .section-tag {
+    display: inline-block;
+    background: rgba(40,100,240,0.08);
+    color: var(--primary-blue);
+    border-radius: 99px;
+    padding: 4px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-size: 34px;
+    font-weight: 700;
+    color: var(--text-heading);
+    letter-spacing: 0.04em;
+    margin-bottom: 12px;
+  }
+  .section-title span { color: var(--heading-blue); }
+  .section-lead { font-size: 16px; color: var(--text-body); max-width: 560px; margin: 0 auto; }
+
+  /* ─── PRODUCTS ─── */
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .product-card {
+    background: var(--bg-white);
+    border-radius: 12px;
+    box-shadow: 0 0 1rem rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.08);
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .product-card:hover { transform: translateY(-4px); box-shadow: 0 0 2rem rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.12); }
+  .product-card-top {
+    padding: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .product-icon { font-size: 36px; margin-bottom: 12px; display: block; }
+  .product-name { font-size: 18px; font-weight: 700; color: var(--text-heading); margin-bottom: 8px; }
+  .product-desc { font-size: 14px; color: var(--text-body); line-height: 1.6; }
+  .product-card-bottom { padding: 20px 28px; display: flex; align-items: center; justify-content: space-between; }
+  .product-price { font-size: 13px; color: var(--text-muted); }
+  .product-price strong { font-size: 18px; font-weight: 700; color: var(--text-heading); }
+  .btn-product {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--primary-blue);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: gap 0.2s;
+  }
+  .btn-product:hover { gap: 8px; }
+
+  /* ─── FEATURES ─── */
+  .features-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .features-two-col.reverse { direction: rtl; }
+  .features-two-col.reverse > * { direction: ltr; }
+  .feat-text { }
+  .feat-tag { color: var(--heading-blue); font-size: 13px; font-weight: 700; margin-bottom: 12px; }
+  .feat-title { font-size: 28px; font-weight: 500; color: var(--text-heading); line-height: 1.3; letter-spacing: 0.04em; margin-bottom: 16px; }
+  .feat-title strong { font-weight: 700; }
+  .feat-desc { font-size: 15px; color: var(--text-body); line-height: 1.7; margin-bottom: 24px; }
+  .feat-list { list-style: none; margin-bottom: 24px; }
+  .feat-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: var(--text-body);
+  }
+  .feat-list li::before {
+    content: '&#10003;';
+    color: var(--success);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .feat-visual {
+    background: var(--bg-white);
+    border-radius: 12px;
+    box-shadow: 0 0 1rem rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.12);
+    padding: 28px;
+  }
+  .invoice-mock { }
+  .invoice-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--primary-blue);
+  }
+  .invoice-header .title { font-size: 18px; font-weight: 700; color: var(--heading-blue); }
+  .invoice-header .number { font-size: 12px; color: var(--text-muted); }
+  .invoice-rows { }
+  .invoice-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+  }
+  .invoice-row:last-child { border-bottom: none; }
+  .invoice-row .label { color: var(--text-body); }
+  .invoice-row .amount { font-weight: 600; color: var(--text-heading); }
+  .invoice-total {
+    margin-top: 12px;
+    padding: 12px;
+    background: rgba(40,100,240,0.06);
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .invoice-total .label { font-size: 14px; font-weight: 700; color: var(--heading-blue); }
+  .invoice-total .amount { font-size: 22px; font-weight: 700; color: var(--primary-blue); }
+  .invoice-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(0,150,60,0.1);
+    color: var(--success);
+    border-radius: 99px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-top: 12px;
+  }
+
+  /* ─── PRICING ─── */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    align-items: start;
+  }
+  .price-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .price-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+  .price-card.featured {
+    border: 2px solid var(--primary-blue);
+    transform: scale(1.02);
+    box-shadow: 0 8px 32px rgba(40,100,240,0.2);
+  }
+  .price-card-top {
+    padding: 24px;
+    background: var(--bg-light);
+  }
+  .price-card.featured .price-card-top { background: var(--primary-blue); color: var(--bg-white); }
+  .price-badge {
+    display: inline-block;
+    background: var(--orange);
+    color: var(--bg-white);
+    border-radius: 99px;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .price-plan-name { font-size: 18px; font-weight: 700; color: var(--text-heading); margin-bottom: 4px; }
+  .price-card.featured .price-plan-name { color: var(--bg-white); }
+  .price-target { font-size: 12px; color: var(--text-muted); }
+  .price-card.featured .price-target { color: rgba(255,255,255,0.8); }
+  .price-card-body { padding: 24px; }
+  .price-amount { margin-bottom: 4px; }
+  .price-amount .yen { font-size: 14px; color: var(--text-muted); vertical-align: super; }
+  .price-amount .value { font-size: 32px; font-weight: 700; color: var(--text-heading); }
+  .price-amount .unit { font-size: 13px; color: var(--text-muted); }
+  .price-note { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
+  .price-features { list-style: none; margin-bottom: 20px; }
+  .price-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-body);
+    margin-bottom: 8px;
+  }
+  .check { color: var(--success); font-size: 14px; flex-shrink: 0; }
+  .btn-price {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    border: 2px solid var(--primary-blue);
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    transition: all 0.2s;
+  }
+  .btn-price.primary { background: var(--primary-blue); color: var(--bg-white); }
+  .btn-price.primary:hover { opacity: 0.88; }
+  .btn-price.outline { background: transparent; color: var(--primary-blue); }
+  .btn-price.outline:hover { background: rgba(40,100,240,0.04); }
+
+  /* ─── COMPARISON TABLE ─── */
+  .table-wrap { overflow-x: auto; margin-top: 40px; }
+  .comparison-table { width: 100%; border-collapse: collapse; }
+  .comparison-table th, .comparison-table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .comparison-table th { font-weight: 700; color: var(--text-heading); background: var(--bg-light); }
+  .comparison-table td { color: var(--text-body); }
+  .comparison-table .feature-col { font-weight: 600; color: var(--text-heading); }
+  .comparison-table .check-cell { text-align: center; color: var(--success); font-size: 16px; }
+  .comparison-table .dash-cell { text-align: center; color: var(--text-muted); }
+  .comparison-table .head-col { background: rgba(40,100,240,0.05); color: var(--primary-blue); font-weight: 700; }
+
+  /* ─── TESTIMONIALS ─── */
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .testimonial-card {
+    background: var(--bg-white);
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: 0 0 1rem rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.08);
+    border-left: 4px solid var(--primary-blue);
+  }
+  .testimonial-quote { font-size: 14px; color: var(--text-body); line-height: 1.8; margin-bottom: 16px; font-style: italic; }
+  .testimonial-meta { display: flex; align-items: center; gap: 12px; }
+  .testimonial-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--primary-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--bg-white);
+    font-weight: 700;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .testimonial-name { font-size: 13px; font-weight: 700; color: var(--text-heading); }
+  .testimonial-company { font-size: 12px; color: var(--text-muted); }
+
+  /* ─── CTA ─── */
+  .cta-section {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-dark) 100%);
+    padding: 72px 24px;
+    text-align: center;
+    color: var(--bg-white);
+  }
+  .cta-section h2 { font-size: 34px; font-weight: 700; margin-bottom: 12px; letter-spacing: 0.04em; }
+  .cta-section p { font-size: 16px; opacity: 0.85; margin-bottom: 32px; }
+  .btn-cta-white {
+    background: var(--bg-white);
+    color: var(--primary-blue);
+    padding: 16px 48px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    display: inline-block;
+    transition: opacity 0.2s;
+  }
+  .btn-cta-white:hover { opacity: 0.9; }
+  .cta-note { margin-top: 16px; font-size: 13px; opacity: 0.7; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--bg-light);
+    border-top: 1px solid var(--border);
+    padding: 48px 24px 24px;
+  }
+  .footer-inner { max-width: 1200px; margin: 0 auto; }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 32px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+  .footer-brand-name { font-size: 20px; font-weight: 700; color: var(--primary-blue); margin-bottom: 10px; }
+  .footer-brand p { font-size: 13px; color: var(--text-muted); line-height: 1.7; }
+  .footer-col h5 { font-size: 13px; font-weight: 700; color: var(--text-heading); margin-bottom: 12px; }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 8px; }
+  .footer-col ul li a { font-size: 13px; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+  .footer-col ul li a:hover { color: var(--primary-blue); }
+  .footer-bottom { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); align-items: center; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 1024px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .products-grid { grid-template-columns: repeat(2, 1fr); }
+    .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+    .features-two-col { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 767px) {
+    .nav-links { display: none; }
+    .products-grid { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .section-title { font-size: 26px; }
+    .hero h1 { font-size: 28px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">free<span>e</span></div>
+    <ul class="nav-links">
+      <li><a href="#">会計ソフト</a></li>
+      <li><a href="#">人事・労務</a></li>
+      <li><a href="#">請求書</a></li>
+      <li><a href="#">個人事業主向け</a></li>
+      <li><a href="#">料金プラン</a></li>
+      <li><a href="#">導入事例</a></li>
+    </ul>
+    <div class="nav-right">
+      <a href="#" class="btn-nav-secondary">ログイン</a>
+      <a href="#" class="btn-nav-primary">無料で試す</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-eyebrow">&#127381; 2026年 最新アップデート公開</div>
+      <h1>バックオフィスを、<br><strong>もっと自由に。</strong></h1>
+      <p>会計・請求・給与・人事労務。複雑な業務をかんたん・スマートに。freeeはあなたの経営を全力サポートします。</p>
+      <div class="hero-ctas">
+        <a href="#" class="btn-primary-hero">30日間無料で試す</a>
+        <a href="#" class="btn-secondary-hero">デモを見る</a>
+      </div>
+      <p class="hero-note"><span>&#10003; クレジットカード不要</span> &#47; 導入企業数 150万社以上</p>
+    </div>
+    <div class="dashboard-mock">
+      <div class="dash-header">
+        <div class="dash-dot" style="background:#ff5f57;"></div>
+        <div class="dash-dot" style="background:#febc2e;"></div>
+        <div class="dash-dot" style="background:#28c840;"></div>
+        <span style="margin-left:8px;">freee 会計ダッシュボード</span>
+      </div>
+      <div class="dash-body">
+        <div class="dash-greeting">こんにちは、田中さん &#128640; 2026年4月の経営サマリー</div>
+        <div class="dash-cards">
+          <div class="dash-card">
+            <div class="dash-card-label">当月売上</div>
+            <div class="dash-card-value positive">+4.8M</div>
+          </div>
+          <div class="dash-card">
+            <div class="dash-card-label">経費合計</div>
+            <div class="dash-card-value negative">-1.2M</div>
+          </div>
+          <div class="dash-card">
+            <div class="dash-card-label">利益率</div>
+            <div class="dash-card-value" style="color:var(--primary-blue);">74.8%</div>
+          </div>
+        </div>
+        <div class="dash-chart">
+          <div class="dash-bar dimmed" style="height:40%"></div>
+          <div class="dash-bar dimmed" style="height:55%"></div>
+          <div class="dash-bar" style="height:70%"></div>
+          <div class="dash-bar" style="height:50%"></div>
+          <div class="dash-bar" style="height:80%"></div>
+          <div class="dash-bar highlight" style="height:95%"></div>
+          <div class="dash-bar dimmed" style="height:20%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOGOS -->
+<div class="logos-bar">
+  <div class="logos-inner">
+    <div class="logos-label">全国150万社以上の中小企業・個人事業主に選ばれています</div>
+    <div class="logos-list">
+      <div class="logo-item">&#127968; 設計事務所</div>
+      <div class="logo-item">&#127869; 飲食店</div>
+      <div class="logo-item">&#128187; ITスタートアップ</div>
+      <div class="logo-item">&#127979; 塾・教育</div>
+      <div class="logo-item">&#128521; フリーランス</div>
+      <div class="logo-item">&#127750; 医療・クリニック</div>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<section class="section section-gray">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-tag">PRODUCTS</div>
+      <h2 class="section-title">業務別に選べる<span>freeeの製品ライン</span></h2>
+      <p class="section-lead">会計・人事・請求。あなたのビジネスに必要なものから始められます。</p>
+    </div>
+    <div class="products-grid">
+      <div class="product-card">
+        <div class="product-card-top">
+          <span class="product-icon">&#128184;</span>
+          <h3 class="product-name">freee 会計</h3>
+          <p class="product-desc">銀行・クレカと連携して自動仕訳。確定申告・決算書をカンタン作成。経理知識がなくても使えます。</p>
+        </div>
+        <div class="product-card-bottom">
+          <div class="product-price">月額 <strong>2,980</strong> 円〜</div>
+          <a href="#" class="btn-product">詳しく見る &#8594;</a>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-card-top">
+          <span class="product-icon">&#128101;</span>
+          <h3 class="product-name">freee 人事労務</h3>
+          <p class="product-desc">給与計算・社会保険・勤怠管理を一元化。電子申請に対応し、役所への書類作成も自動化。</p>
+        </div>
+        <div class="product-card-bottom">
+          <div class="product-price">月額 <strong>3,980</strong> 円〜</div>
+          <a href="#" class="btn-product">詳しく見る &#8594;</a>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-card-top">
+          <span class="product-icon">&#128203;</span>
+          <h3 class="product-name">freee 請求書</h3>
+          <p class="product-desc">インボイス対応の請求書をかんたん作成・送付・管理。入金管理と会計の連携でダブル入力ゼロ。</p>
+        </div>
+        <div class="product-card-bottom">
+          <div class="product-price">月額 <strong>980</strong> 円〜</div>
+          <a href="#" class="btn-product">詳しく見る &#8594;</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURE: Invoice -->
+<section class="section">
+  <div class="section-inner">
+    <div class="features-two-col">
+      <div class="feat-text">
+        <div class="feat-tag">INVOICE &#47; BILLING</div>
+        <h2 class="feat-title">請求書の作成から<br><strong>入金管理まで</strong>、自動化</h2>
+        <p class="feat-desc">インボイス制度対応済み。取引先マスタから宛先を選ぶだけで、適格請求書が数分で完成。PDFで送信・郵送代行も可能。</p>
+        <ul class="feat-list">
+          <li>銀行口座と連携して入金自動確認</li>
+          <li>電子帳簿保存法対応・タイムスタンプ付与</li>
+          <li>承認ワークフロー機能つき</li>
+          <li>freee 会計と自動連携・二重入力なし</li>
+        </ul>
+        <a href="#" class="btn-primary-hero" style="font-size:14px; padding:10px 24px;">無料で試す</a>
+      </div>
+      <div class="feat-visual">
+        <div class="invoice-mock">
+          <div class="invoice-header">
+            <div class="title">適格請求書</div>
+            <div class="number">No. INV-2026-0413</div>
+          </div>
+          <div class="invoice-rows">
+            <div class="invoice-row">
+              <span class="label">Webサイト制作費</span>
+              <span class="amount">&#165;480,000</span>
+            </div>
+            <div class="invoice-row">
+              <span class="label">デザイン修正費</span>
+              <span class="amount">&#165;80,000</span>
+            </div>
+            <div class="invoice-row">
+              <span class="label">保守・運用費（月額）</span>
+              <span class="amount">&#165;30,000</span>
+            </div>
+            <div class="invoice-row">
+              <span class="label">消費税（10%）</span>
+              <span class="amount">&#165;59,000</span>
+            </div>
+          </div>
+          <div class="invoice-total">
+            <span class="label">ご請求額合計</span>
+            <span class="amount">&#165;649,000</span>
+          </div>
+          <div class="invoice-status">&#10003; 入金確認済み</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section section-gray">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-tag">PRICING</div>
+      <h2 class="section-title">シンプルな<span>料金プラン</span></h2>
+      <p class="section-lead">会社の規模・ニーズに合わせてプランを選択。全プラン30日間無料。</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-card-top">
+          <div class="price-plan-name">フリープラン</div>
+          <div class="price-target">個人・副業向け</div>
+        </div>
+        <div class="price-card-body">
+          <div class="price-amount">
+            <span class="yen">&#165;</span><span class="value">0</span><span class="unit"> /月</span>
+          </div>
+          <div class="price-note">基本機能のみ</div>
+          <ul class="price-features">
+            <li><span class="check">&#10003;</span>仕訳入力（月50件まで）</li>
+            <li><span class="check">&#10003;</span>確定申告（白色）</li>
+            <li><span class="check">&#10003;</span>レポート閲覧</li>
+          </ul>
+          <a href="#" class="btn-price outline">無料で始める</a>
+        </div>
+      </div>
+      <div class="price-card">
+        <div class="price-card-top">
+          <div class="price-plan-name">スターター</div>
+          <div class="price-target">フリーランス・個人事業主</div>
+        </div>
+        <div class="price-card-body">
+          <div class="price-amount">
+            <span class="yen">&#165;</span><span class="value">2,980</span><span class="unit"> /月</span>
+          </div>
+          <div class="price-note">年払いで20%オフ</div>
+          <ul class="price-features">
+            <li><span class="check">&#10003;</span>仕訳入力（無制限）</li>
+            <li><span class="check">&#10003;</span>確定申告（青色・白色）</li>
+            <li><span class="check">&#10003;</span>請求書・見積書作成</li>
+            <li><span class="check">&#10003;</span>銀行・クレカ連携</li>
+          </ul>
+          <a href="#" class="btn-price outline">30日間無料</a>
+        </div>
+      </div>
+      <div class="price-card featured">
+        <div class="price-card-top">
+          <div class="price-badge">人気 No.1</div>
+          <div class="price-plan-name">スタンダード</div>
+          <div class="price-target">法人・成長フェーズ</div>
+        </div>
+        <div class="price-card-body">
+          <div class="price-amount">
+            <span class="yen">&#165;</span><span class="value">5,980</span><span class="unit"> /月</span>
+          </div>
+          <div class="price-note">年払いで20%オフ</div>
+          <ul class="price-features">
+            <li><span class="check">&#10003;</span>スターター全機能</li>
+            <li><span class="check">&#10003;</span>消費税申告</li>
+            <li><span class="check">&#10003;</span>部門別管理</li>
+            <li><span class="check">&#10003;</span>電子帳簿保存法対応</li>
+            <li><span class="check">&#10003;</span>優先サポート</li>
+          </ul>
+          <a href="#" class="btn-price primary">30日間無料</a>
+        </div>
+      </div>
+      <div class="price-card">
+        <div class="price-card-top">
+          <div class="price-plan-name">エンタープライズ</div>
+          <div class="price-target">大企業・グループ会社</div>
+        </div>
+        <div class="price-card-body">
+          <div class="price-amount">
+            <span class="value" style="font-size:22px;">お問い合わせ</span>
+          </div>
+          <div class="price-note">カスタム見積もり</div>
+          <ul class="price-features">
+            <li><span class="check">&#10003;</span>スタンダード全機能</li>
+            <li><span class="check">&#10003;</span>連結会計対応</li>
+            <li><span class="check">&#10003;</span>専任担当者</li>
+            <li><span class="check">&#10003;</span>SLA保証</li>
+            <li><span class="check">&#10003;</span>セキュリティ強化</li>
+          </ul>
+          <a href="#" class="btn-price outline">相談する</a>
+        </div>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>機能</th>
+            <th>フリー</th>
+            <th>スターター</th>
+            <th class="head-col">スタンダード</th>
+            <th>エンタープライズ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="feature-col">仕訳入力</td>
+            <td class="dash-cell">月50件</td>
+            <td class="check-cell">&#10003;</td>
+            <td class="check-cell">&#10003;</td>
+            <td class="check-cell">&#10003;</td>
+          </tr>
+          <tr>
+            <td class="feature-col">確定申告・決算書</td>
+            <td class="check-cell">白色のみ</td>
+            <td class="check-cell">&#10003;</td>
+            <td class="check-cell">&#10003;</td>
+            <td class="check-cell">&#10003;</td>
+          </tr>
+          <tr>
+            <td class="feature-col">消費税申告</td>
+            <td class="dash-cell">—</td>
+            <td class="dash-cell">—</td>
+            <td class="check-cell">&#10003;</td>
+            <td class="check-cell">&#10003;</td>
+          </tr>
+          <tr>
+            <td class="feature-col">電子帳簿保存法</td>
+            <td class="dash-cell">—</td>
+            <td class="dash-cell">—</td>
+            <td class="check-cell">&#10003;</td>
+            <td class="check-cell">&#10003;</td>
+          </tr>
+          <tr>
+            <td class="feature-col">専任サポート</td>
+            <td class="dash-cell">—</td>
+            <td class="dash-cell">—</td>
+            <td class="dash-cell">—</td>
+            <td class="check-cell">&#10003;</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-tag">TESTIMONIALS</div>
+      <h2 class="section-title">導入企業の<span>声</span></h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <p class="testimonial-quote">「経理担当がいなくても、毎月の試算表が自動で作れるようになりました。確定申告が2時間で終わったのは衝撃でした。」</p>
+        <div class="testimonial-meta">
+          <div class="testimonial-avatar">田</div>
+          <div>
+            <div class="testimonial-name">田中 俊介 様</div>
+            <div class="testimonial-company">Web制作フリーランス・5年目</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <p class="testimonial-quote">「給与計算に毎月5時間かかっていたのが30分になりました。社会保険の電子申請も一発で完了。担当者の残業がゼロになりました。」</p>
+        <div class="testimonial-meta">
+          <div class="testimonial-avatar">木</div>
+          <div>
+            <div class="testimonial-name">木村 智子 様</div>
+            <div class="testimonial-company">株式会社グリーンリーフ 経営管理部</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <p class="testimonial-quote">「請求書を出してからの入金確認が完全に自動化。売掛管理の漏れがなくなり、キャッシュフローが可視化されました。」</p>
+        <div class="testimonial-meta">
+          <div class="testimonial-avatar">鈴</div>
+          <div>
+            <div class="testimonial-name">鈴木 大輔 様</div>
+            <div class="testimonial-company">合同会社サンライズ代表</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <h2>まず30日間、無料で試してみてください</h2>
+  <p>クレジットカード不要。設定5分で、すぐに使い始められます。</p>
+  <a href="#" class="btn-cta-white">無料トライアルを始める</a>
+  <p class="cta-note">&#10003; 30日間無料 &#47; &#10003; クレジットカード不要 &#47; &#10003; いつでも解約可能</p>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-brand-name">freee</div>
+        <p>中小企業・個人事業主のバックオフィス業務を自動化・効率化するクラウドサービス。会計・人事・請求をシームレスに連携。</p>
+      </div>
+      <div class="footer-col">
+        <h5>製品</h5>
+        <ul>
+          <li><a href="#">freee 会計</a></li>
+          <li><a href="#">freee 人事労務</a></li>
+          <li><a href="#">freee 請求書</a></li>
+          <li><a href="#">freee 開業</a></li>
+          <li><a href="#">freee サイン</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>活用シーン</h5>
+        <ul>
+          <li><a href="#">個人事業主</a></li>
+          <li><a href="#">小規模法人</a></li>
+          <li><a href="#">中規模法人</a></li>
+          <li><a href="#">会計事務所</a></li>
+          <li><a href="#">税理士向け</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>サポート</h5>
+        <ul>
+          <li><a href="#">ヘルプセンター</a></li>
+          <li><a href="#">チュートリアル</a></li>
+          <li><a href="#">セミナー・ウェビナー</a></li>
+          <li><a href="#">導入相談</a></li>
+          <li><a href="#">パートナー紹介</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>会社情報</h5>
+        <ul>
+          <li><a href="#">freeeとは</a></li>
+          <li><a href="#">採用情報</a></li>
+          <li><a href="#">プレスリリース</a></li>
+          <li><a href="#">プライバシーポリシー</a></li>
+          <li><a href="#">お問い合わせ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 freee K.K. All Rights Reserved.</span>
+      <span>プライバシーポリシー &#47; 利用規約</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

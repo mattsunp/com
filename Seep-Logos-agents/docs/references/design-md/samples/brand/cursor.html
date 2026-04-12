@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cursor — Design Template</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#f2f1ed;
+  --cream-light:#f7f7f4;
+  --cream-mid:#ebeae5;
+  --cream-dark:#e6e5e0;
+  --cream-deep:#e1e0db;
+  --text:#26251e;
+  --text-55:rgba(38,37,30,0.55);
+  --text-40:rgba(38,37,30,0.40);
+  --text-20:rgba(38,37,30,0.20);
+  --orange:#f54e00;
+  --crimson:#cf2d56;
+  --gold:#c08532;
+  --border:rgba(38,37,30,0.10);
+  --border-med:rgba(38,37,30,0.20);
+  --shadow-card:rgba(0,0,0,0.14) 0px 28px 70px, rgba(0,0,0,0.10) 0px 14px 32px, rgba(38,37,30,0.10) 0px 0px 0px 1px;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--cream);color:var(--text);
+  font-family:system-ui,-apple-system,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  font-size:16px;line-height:1.5;
+}
+
+/* ─── NAV ─── */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(242,241,237,0.88);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:0 32px;height:52px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav-logo{
+  font-size:17px;font-weight:500;letter-spacing:-0.3px;color:var(--text);
+  text-decoration:none;display:flex;align-items:center;gap:8px;
+}
+.nav-logo-icon{
+  width:24px;height:24px;background:var(--text);border-radius:4px;
+  display:flex;align-items:center;justify-content:center;color:var(--cream);font-size:13px;
+}
+.nav-links{display:flex;align-items:center;gap:4px}
+.nav-links a{
+  font-size:14px;font-weight:500;color:var(--text-55);text-decoration:none;
+  padding:6px 10px;border-radius:6px;transition:color .15s,background .15s;
+}
+.nav-links a:hover{color:var(--text);background:var(--cream-mid)}
+.nav-cta{
+  background:var(--cream-mid);color:var(--text);border:none;
+  padding:8px 16px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;
+  text-decoration:none;transition:color .15s;
+  outline:1px solid var(--border);
+}
+.nav-cta:hover{color:var(--crimson)}
+
+/* ─── HERO ─── */
+.hero{
+  padding:100px 32px 80px;max-width:960px;margin:0 auto;text-align:center;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--cream-mid);border:1px solid var(--border);
+  border-radius:9999px;padding:4px 12px 4px 10px;
+  font-size:12px;color:var(--text-55);margin-bottom:32px;
+  cursor:pointer;transition:color .15s;
+}
+.hero-badge:hover{color:var(--orange)}
+.hero-badge .badge-dot{width:6px;height:6px;border-radius:50%;background:var(--orange);flex-shrink:0}
+.hero h1{
+  font-size:72px;font-weight:400;line-height:1.06;letter-spacing:-2.16px;
+  color:var(--text);margin-bottom:24px;
+}
+.hero h1 em{font-style:normal;color:var(--orange)}
+.hero-sub{
+  font-size:19px;font-weight:500;line-height:1.5;color:var(--text-55);
+  max-width:540px;margin:0 auto 40px;
+  /* serif body – iowan fallback */
+  font-family:"Iowan Old Style",Palatino,Georgia,serif;
+}
+.hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-primary{
+  background:var(--cream-mid);color:var(--text);border:none;outline:1px solid var(--border);
+  padding:11px 20px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;
+  transition:color .15s,box-shadow .15s;
+}
+.btn-primary:hover{color:var(--crimson);box-shadow:rgba(0,0,0,0.10) 0 4px 12px}
+.btn-link{
+  background:none;border:none;color:var(--text-55);font-size:14px;
+  padding:11px 8px;cursor:pointer;transition:color .15s;
+  text-decoration:none;display:inline-flex;align-items:center;gap:4px;
+}
+.btn-link:hover{color:var(--orange)}
+
+/* ─── CODE EDITOR PREVIEW ─── */
+.editor-preview-wrap{padding:0 32px 80px;max-width:960px;margin:0 auto}
+.editor-preview{
+  background:#1c1b17;border-radius:10px;
+  border:1px solid var(--border);
+  box-shadow:var(--shadow-card);
+  overflow:hidden;
+}
+.editor-header{
+  background:#242320;padding:12px 16px;
+  display:flex;align-items:center;gap:8px;
+  border-bottom:1px solid rgba(38,37,30,0.2);
+}
+.editor-dot{width:12px;height:12px;border-radius:50%}
+.editor-tab{
+  font-size:12px;color:rgba(255,255,255,0.5);padding:4px 12px;border-radius:4px;
+  cursor:pointer;transition:background .15s;
+}
+.editor-tab.active{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.9)}
+.editor-body{display:flex;min-height:280px}
+.editor-sidebar{
+  width:48px;background:#1c1b17;border-right:1px solid rgba(255,255,255,0.06);
+  display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:16px;
+}
+.editor-sidebar-icon{font-size:16px;opacity:0.4;cursor:pointer}
+.editor-sidebar-icon:hover{opacity:0.9}
+.editor-code{flex:1;padding:20px 24px;font-family:ui-monospace,"SF Mono",Consolas,monospace;font-size:13px;line-height:1.65}
+.ln{color:rgba(255,255,255,0.2);margin-right:24px;user-select:none;font-size:12px}
+.kw{color:#cf2d56}.fn{color:#dfa88f}.str{color:#9fc9a2}.cm{color:rgba(255,255,255,0.3);font-style:italic}.var{color:#9fbbe0}.num{color:#c0a8dd}
+
+.ai-pane{
+  width:260px;background:#242320;border-left:1px solid rgba(255,255,255,0.08);
+  padding:16px;
+}
+.ai-pane h4{font-size:12px;color:rgba(255,255,255,0.4);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:12px}
+.ai-step{
+  display:flex;align-items:flex-start;gap:8px;margin-bottom:12px;
+  padding:10px;border-radius:6px;background:rgba(255,255,255,0.03);
+}
+.ai-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:3px}
+.ai-step-text{font-size:12px;color:rgba(255,255,255,0.6);line-height:1.4}
+.ai-step-label{font-size:11px;color:rgba(255,255,255,0.35);margin-top:2px}
+/* timeline connector */
+.ai-steps{position:relative}
+
+/* ─── TAGS / PILLS ─── */
+.tag-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:0 32px 56px;max-width:960px;margin:0 auto}
+.tag{
+  background:var(--cream-dark);color:var(--text-55);
+  border:1px solid var(--border);border-radius:9999px;
+  padding:3px 12px;font-size:13px;cursor:pointer;transition:color .15s;
+}
+.tag:hover{color:var(--orange)}
+
+/* ─── FEATURES GRID ─── */
+.features{padding:0 32px 80px;max-width:960px;margin:0 auto}
+.features-header{margin-bottom:40px}
+.features-header h2{font-size:36px;font-weight:400;letter-spacing:-0.72px;color:var(--text);margin-bottom:8px}
+.features-header p{font-size:17px;color:var(--text-55);font-family:"Iowan Old Style",Georgia,serif;font-weight:400}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.feature-card{
+  background:var(--cream-dark);border:1px solid var(--border);
+  border-radius:8px;padding:24px;transition:box-shadow .2s;
+}
+.feature-card:hover{box-shadow:rgba(0,0,0,0.14) 0 28px 70px,rgba(0,0,0,0.10) 0 14px 32px}
+.feature-card .icon{font-size:24px;margin-bottom:12px}
+.feature-card h3{font-size:17px;font-weight:400;letter-spacing:-0.1px;color:var(--text);margin-bottom:8px}
+.feature-card p{font-size:14px;color:var(--text-55);line-height:1.5}
+.feature-card a{display:inline-block;margin-top:12px;font-size:14px;color:var(--orange);text-decoration:none}
+.feature-card a:hover{text-decoration:underline}
+
+/* ─── PRICING ─── */
+.pricing{padding:0 32px 80px;max-width:960px;margin:0 auto}
+.pricing h2{font-size:36px;font-weight:400;letter-spacing:-0.72px;margin-bottom:40px}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.price-card{
+  background:var(--cream-light);border:1px solid var(--border);
+  border-radius:10px;padding:28px 24px;
+}
+.price-card.featured{
+  background:var(--text);color:var(--cream);
+  border-color:var(--text);
+}
+.price-card h3{font-size:16px;font-weight:500;margin-bottom:4px}
+.price-card.featured h3{color:var(--cream)}
+.price-card .price{font-size:32px;font-weight:400;letter-spacing:-0.5px;margin:16px 0 4px}
+.price-card .period{font-size:13px;color:var(--text-55)}
+.price-card.featured .period{color:rgba(242,241,237,0.55)}
+.price-card ul{margin:20px 0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.price-card li{font-size:14px;color:var(--text-55);display:flex;gap:8px}
+.price-card li::before{content:"✓";color:var(--orange);font-weight:700;flex-shrink:0}
+.price-card.featured li{color:rgba(242,241,237,0.7)}
+.price-cta{
+  display:block;text-align:center;padding:10px;border-radius:8px;
+  background:var(--cream-mid);color:var(--text);font-size:14px;font-weight:500;
+  text-decoration:none;margin-top:auto;transition:color .15s;outline:1px solid var(--border);
+}
+.price-cta:hover{color:var(--crimson)}
+.price-card.featured .price-cta{
+  background:var(--cream);color:var(--text);outline:none;
+}
+
+/* ─── FOOTER ─── */
+footer{
+  border-top:1px solid var(--border);
+  padding:40px 32px 32px;
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;
+}
+.footer-brand h3{font-size:17px;font-weight:500;margin-bottom:8px}
+.footer-brand p{font-size:13px;color:var(--text-55);max-width:240px;line-height:1.5}
+.footer-col h4{font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-40);margin-bottom:12px}
+.footer-col a{display:block;font-size:13px;color:var(--text-55);text-decoration:none;margin-bottom:8px}
+.footer-col a:hover{color:var(--orange)}
+.footer-bottom{
+  padding:16px 32px;border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;
+  font-size:12px;color:var(--text-40);
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="nav-logo-icon">⌥</div>
+    Cursor
+  </a>
+  <div class="nav-links">
+    <a href="#">Product</a>
+    <a href="#">Pricing</a>
+    <a href="#">Enterprise</a>
+    <a href="#">Blog</a>
+    <a href="#">Changelog</a>
+    <a href="#">Docs</a>
+  </div>
+  <a class="nav-cta" href="#">Download</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">
+    <div class="badge-dot"></div>
+    Cursor 0.47 — GPT-4o, Claude Opus 4 対応
+    <span style="color:var(--text-40)">→</span>
+  </div>
+  <h1>The AI Code<br>Editor Built to<br><em>Make You Ship</em></h1>
+  <p class="hero-sub">Cursor is an AI-first editor. Not a plugin. Not an extension. A fundamentally different way to write and understand code.</p>
+  <div class="hero-actions">
+    <a class="btn-primary" href="#">Download for macOS</a>
+    <a class="btn-link" href="#">Windows / Linux →</a>
+  </div>
+</section>
+
+<!-- TAGS -->
+<div class="tag-row">
+  <span class="tag">Tab completion</span>
+  <span class="tag">AI Chat</span>
+  <span class="tag">Agent mode</span>
+  <span class="tag">Cmd+K</span>
+  <span class="tag">Codebase context</span>
+  <span class="tag">Multi-file edits</span>
+  <span class="tag">Claude Opus 4</span>
+  <span class="tag">GPT-4o</span>
+  <span class="tag">Gemini</span>
+</div>
+
+<!-- CODE EDITOR PREVIEW -->
+<div class="editor-preview-wrap">
+  <div class="editor-preview">
+    <div class="editor-header">
+      <div class="editor-dot" style="background:#ff5f57"></div>
+      <div class="editor-dot" style="background:#febc2e"></div>
+      <div class="editor-dot" style="background:#28c840"></div>
+      <div style="flex:1;display:flex;gap:0;margin-left:12px">
+        <div class="editor-tab active">index.ts</div>
+        <div class="editor-tab">components/Card.tsx</div>
+        <div class="editor-tab">api/routes.ts</div>
+      </div>
+    </div>
+    <div class="editor-body">
+      <div class="editor-sidebar">
+        <div class="editor-sidebar-icon">📁</div>
+        <div class="editor-sidebar-icon">🔍</div>
+        <div class="editor-sidebar-icon">⎇</div>
+        <div class="editor-sidebar-icon">⚙️</div>
+      </div>
+      <div class="editor-code" style="color:rgba(255,255,255,0.85)">
+        <div><span class="ln">1</span><span class="kw">import</span> <span class="var">{ createServer }</span> <span class="kw">from</span> <span class="str">'http'</span></div>
+        <div><span class="ln">2</span><span class="kw">import</span> <span class="var">{ app }</span> <span class="kw">from</span> <span class="str">'./app'</span></div>
+        <div><span class="ln">3</span></div>
+        <div><span class="ln">4</span><span class="cm">// AI generated: streaming endpoint</span></div>
+        <div><span class="ln">5</span><span class="kw">async function</span> <span class="fn">handleStream</span><span style="color:rgba(255,255,255,0.7)">(req: Request) {</span></div>
+        <div><span class="ln">6</span>&nbsp;&nbsp;<span class="kw">const</span> <span class="var">stream</span> = <span class="kw">await</span> <span class="fn">generateCompletion</span>({</div>
+        <div><span class="ln">7</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="var">model</span>: <span class="str">'claude-opus-4-6'</span>,</div>
+        <div><span class="ln">8</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="var">messages</span>: req.<span class="fn">body</span>.<span class="var">messages</span>,</div>
+        <div><span class="ln">9</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="var">stream</span>: <span class="num">true</span></div>
+        <div><span class="ln">10</span>&nbsp;&nbsp;})</div>
+        <div><span class="ln">11</span>&nbsp;&nbsp;<span class="kw">for await</span> (<span class="kw">const</span> <span class="var">chunk</span> <span class="kw">of</span> <span class="var">stream</span>) {</div>
+        <div><span class="ln">12</span>&nbsp;&nbsp;&nbsp;&nbsp;res.<span class="fn">write</span>(<span class="var">chunk</span>.<span class="var">content</span>)</div>
+        <div><span class="ln">13</span>&nbsp;&nbsp;}</div>
+        <div><span class="ln">14</span>}</div>
+      </div>
+      <div class="ai-pane">
+        <h4>AI Timeline</h4>
+        <div class="ai-steps">
+          <div class="ai-step">
+            <div class="ai-dot" style="background:#dfa88f"></div>
+            <div>
+              <div class="ai-step-text">Analyzing codebase context...</div>
+              <div class="ai-step-label">Thinking</div>
+            </div>
+          </div>
+          <div class="ai-step">
+            <div class="ai-dot" style="background:#9fc9a2"></div>
+            <div>
+              <div class="ai-step-text">grep: "createServer" → 3 matches</div>
+              <div class="ai-step-label">Grep</div>
+            </div>
+          </div>
+          <div class="ai-step">
+            <div class="ai-dot" style="background:#9fbbe0"></div>
+            <div>
+              <div class="ai-step-text">Reading app.ts, routes.ts</div>
+              <div class="ai-step-label">Read</div>
+            </div>
+          </div>
+          <div class="ai-step">
+            <div class="ai-dot" style="background:#c0a8dd"></div>
+            <div>
+              <div class="ai-step-text">Inserting streaming handler</div>
+              <div class="ai-step-label">Edit</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="features-header">
+    <h2>Everything you need to ship faster</h2>
+    <p>Cursor learns your codebase and thinks in terms of your architecture, not just autocomplete.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="icon">⇥</div>
+      <h3>Tab Completion</h3>
+      <p>Predicts your next edit, not just the next token. Cursor's diff-aware model understands intent.</p>
+      <a href="#">Learn more →</a>
+    </div>
+    <div class="feature-card">
+      <div class="icon">💬</div>
+      <h3>Chat with Codebase</h3>
+      <p>Ask questions about any file, function, or architectural decision. Inline diffs applied instantly.</p>
+      <a href="#">Learn more →</a>
+    </div>
+    <div class="feature-card">
+      <div class="icon">⚡</div>
+      <h3>Agent Mode</h3>
+      <p>Cursor runs terminal commands, edits across files, and validates changes autonomously.</p>
+      <a href="#">Learn more →</a>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing">
+  <h2>Simple pricing</h2>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <h3>Hobby</h3>
+      <div class="price">$0</div>
+      <div class="period">/month</div>
+      <ul>
+        <li>2,000 completions/month</li>
+        <li>50 slow premium requests</li>
+        <li>Community support</li>
+      </ul>
+      <a class="price-cta" href="#">Get started free</a>
+    </div>
+    <div class="price-card featured">
+      <h3>Pro</h3>
+      <div class="price">$20</div>
+      <div class="period">/month</div>
+      <ul>
+        <li>Unlimited completions</li>
+        <li>500 fast premium requests</li>
+        <li>Claude Opus 4, GPT-4o</li>
+        <li>Priority support</li>
+      </ul>
+      <a class="price-cta" href="#">Start free trial</a>
+    </div>
+    <div class="price-card">
+      <h3>Business</h3>
+      <div class="price">$40</div>
+      <div class="period">/user/month</div>
+      <ul>
+        <li>Everything in Pro</li>
+        <li>Admin dashboard</li>
+        <li>SSO / SAML</li>
+        <li>Dedicated support</li>
+      </ul>
+      <a class="price-cta" href="#">Contact sales</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <h3>Cursor</h3>
+    <p>Built for engineers who care about quality. AI-native from the ground up.</p>
+  </div>
+  <div class="footer-col">
+    <h4>Product</h4>
+    <a href="#">Features</a>
+    <a href="#">Changelog</a>
+    <a href="#">Roadmap</a>
+    <a href="#">Security</a>
+  </div>
+  <div class="footer-col">
+    <h4>Resources</h4>
+    <a href="#">Documentation</a>
+    <a href="#">Blog</a>
+    <a href="#">GitHub</a>
+    <a href="#">Status</a>
+  </div>
+  <div class="footer-col">
+    <h4>Company</h4>
+    <a href="#">About</a>
+    <a href="#">Careers</a>
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <span>© 2026 Anysphere Inc. — Design Template</span>
+  <span>Made with ♥ in San Francisco</span>
+</div>
+
+</body>
+</html>

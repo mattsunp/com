@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meta — Connect the World</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --meta-blue: #0064E0;
+    --meta-blue-hover: #0143B5;
+    --meta-blue-light: #47A5FA;
+    --near-black: #1C1E21;
+    --dark-charcoal: #1C2B33;
+    --body-text: #65676B;
+    --slate-gray: #5D6C7B;
+    --soft-gray: #F1F4F7;
+    --warm-gray: #F7F8FA;
+    --divider: #DEE3E9;
+    --divider-std: #CED0D4;
+    --white: #FFFFFF;
+  }
+  html { background: var(--white); color: var(--dark-charcoal); font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 16px; }
+  a { color: var(--meta-blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(241,244,247,0.8);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px; height: 56px;
+  }
+  .nav-logo { display: flex; align-items: center; gap: 8px; }
+  .meta-logo-icon {
+    width: 36px; height: 24px; display: flex; align-items: center; justify-content: center;
+  }
+  .meta-infinity {
+    font-size: 28px; font-weight: 700; line-height: 1;
+    background: linear-gradient(135deg, var(--meta-blue), var(--meta-blue-light));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    letter-spacing: -2px;
+  }
+  .nav-logo span { font-size: 18px; font-weight: 600; color: var(--dark-charcoal); letter-spacing: -0.2px; }
+  .nav-links { display: flex; gap: 24px; }
+  .nav-links a { font-size: 16px; font-weight: 500; color: var(--dark-charcoal); letter-spacing: -0.16px; }
+  .nav-links a:hover { text-decoration: underline; }
+  .nav-cta {
+    background: var(--meta-blue); color: var(--white);
+    padding: 10px 22px; border-radius: 100px; border: none;
+    font-size: 14px; font-weight: 400; letter-spacing: -0.14px;
+    cursor: pointer; display: inline-block;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .nav-cta:hover { background: var(--meta-blue-hover); transform: scale(1.05); text-decoration: none; }
+
+  /* HERO */
+  .hero {
+    padding: 80px 40px;
+    text-align: center;
+    background: var(--white);
+  }
+  .hero h1 {
+    font-size: 64px; font-weight: 500; line-height: 1.16;
+    color: var(--dark-charcoal); margin-bottom: 24px;
+    max-width: 800px; margin-left: auto; margin-right: auto;
+  }
+  .hero p {
+    font-size: 18px; font-weight: 400; line-height: 1.44;
+    color: var(--slate-gray); max-width: 580px; margin: 0 auto 40px;
+  }
+  .hero-ctas { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 80px; }
+  .btn-primary-pill {
+    background: var(--meta-blue); color: var(--white);
+    padding: 10px 22px; border-radius: 100px;
+    font-size: 14px; font-weight: 400; letter-spacing: -0.14px;
+    display: inline-block; transition: background 0.2s, transform 0.15s;
+  }
+  .btn-primary-pill:hover { background: var(--meta-blue-hover); transform: scale(1.05); text-decoration: none; }
+  .btn-outline-pill {
+    background: transparent; color: var(--dark-charcoal);
+    padding: 10px 22px; border-radius: 100px;
+    font-size: 14px; border: 2px solid rgba(10,19,23,0.12);
+    display: inline-block;
+    transition: background 0.2s;
+  }
+  .btn-outline-pill:hover { background: rgba(70,90,105,0.1); text-decoration: none; }
+
+  /* HERO VISUAL */
+  .hero-visual {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+  }
+  .hero-product-card {
+    border-radius: 24px; overflow: hidden;
+    box-shadow: 0 12px 28px 0 rgba(0,0,0,0.2), 0 2px 4px 0 rgba(0,0,0,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+  }
+  .hero-product-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px 0 rgba(0,0,0,0.25), 0 4px 8px 0 rgba(0,0,0,0.1); }
+  .hpc-visual {
+    height: 280px; display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .hpc-quest { background: linear-gradient(135deg, #181A1B 0%, #1f1f2e 50%, #0d0d18 100%); }
+  .hpc-rayban { background: linear-gradient(135deg, #F2F0E6 0%, #e8e4d8 50%, #f0ece0 100%); }
+  .hpc-workrooms { background: linear-gradient(135deg, #C8E4E8 0%, #add4e0 50%, #b8dde4 100%); }
+  .hpc-label {
+    padding: 20px; background: var(--white);
+  }
+  .hpc-product-name { font-size: 18px; font-weight: 700; color: var(--dark-charcoal); margin-bottom: 4px; }
+  .hpc-product-desc { font-size: 14px; color: var(--slate-gray); letter-spacing: -0.14px; }
+  .hpc-cta { font-size: 14px; color: var(--meta-blue); margin-top: 8px; display: inline-block; }
+
+  /* Quest visual */
+  .quest-headset {
+    width: 120px; height: 80px; position: relative;
+  }
+  .quest-visor { width: 100%; height: 60px; background: linear-gradient(135deg, #2a2a40, #3a3a58); border-radius: 12px; position: absolute; top: 0; }
+  .quest-visor::before { content: ''; position: absolute; top: 10px; left: 10px; right: 10px; height: 30px; background: linear-gradient(135deg, rgba(161,33,206,0.6), rgba(80,20,120,0.4)); border-radius: 6px; }
+  .quest-strap { width: 60%; height: 8px; background: #222; border-radius: 4px; position: absolute; bottom: 0; left: 20%; }
+
+  /* Ray-Ban visual */
+  .rayban-glasses {
+    width: 160px; height: 60px; position: relative;
+  }
+  .rb-frame-l { width: 60px; height: 40px; border: 3px solid #8B4513; border-radius: 8px; position: absolute; left: 0; top: 10px; background: rgba(139,69,19,0.1); }
+  .rb-frame-r { width: 60px; height: 40px; border: 3px solid #8B4513; border-radius: 8px; position: absolute; right: 0; top: 10px; background: rgba(139,69,19,0.1); }
+  .rb-bridge { width: 40px; height: 3px; background: #8B4513; position: absolute; top: 28px; left: 50%; transform: translateX(-50%); }
+
+  /* Workrooms visual */
+  .workrooms-icon {
+    width: 80px; height: 80px; background: rgba(27,54,93,0.2);
+    border-radius: 20px; display: flex; align-items: center; justify-content: center;
+    font-size: 36px;
+  }
+
+  /* PRODUCTS SECTION */
+  .products {
+    padding: 80px 40px; background: var(--soft-gray);
+  }
+  .products-inner { max-width: 1200px; margin: 0 auto; }
+  .products h2 { font-size: 48px; font-weight: 500; line-height: 1.17; color: var(--dark-charcoal); margin-bottom: 12px; }
+  .products .sub { font-size: 18px; color: var(--slate-gray); margin-bottom: 48px; }
+  .products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .product-card {
+    background: var(--white); border-radius: 20px; overflow: hidden;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+  }
+  .product-card:hover { transform: translateY(-2px); box-shadow: 0 12px 28px 0 rgba(0,0,0,0.2), 0 2px 4px 0 rgba(0,0,0,0.1); }
+  .pc-visual { height: 220px; display: flex; align-items: center; justify-content: center; }
+  .pc-visual.fb { background: linear-gradient(135deg, #1877F2, #0d5fd4); }
+  .pc-visual.ig { background: linear-gradient(135deg, #E1306C, #C13584, #833AB4); }
+  .pc-visual.wa { background: linear-gradient(135deg, #25D366, #128C7E); }
+  .pc-visual.msn { background: linear-gradient(135deg, #0084FF, #0064d4); }
+  .pc-visual.th { background: linear-gradient(135deg, #0866FF, #1877F2); }
+  .pc-visual.rayo { background: linear-gradient(135deg, #6441D2, #8B5FE0); }
+  .pc-icon { font-size: 56px; color: rgba(255,255,255,0.9); }
+  .pc-info { padding: 20px; }
+  .pc-name { font-size: 18px; font-weight: 700; color: var(--dark-charcoal); margin-bottom: 6px; }
+  .pc-desc { font-size: 14px; color: var(--slate-gray); line-height: 1.43; letter-spacing: -0.14px; }
+  .pc-link { font-size: 14px; color: var(--meta-blue); margin-top: 10px; display: inline-block; font-weight: 700; }
+
+  /* DARK QUEST SECTION */
+  .quest-section {
+    background: #181A1B; padding: 80px 40px;
+    display: flex; align-items: center;
+  }
+  .quest-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+  .qs-text h2 { font-size: 48px; font-weight: 500; line-height: 1.17; color: var(--white); margin-bottom: 16px; }
+  .qs-text p { font-size: 18px; color: #adb5bd; line-height: 1.44; margin-bottom: 32px; }
+  .btn-dark-pill {
+    background: var(--meta-blue-light); color: var(--near-black);
+    padding: 10px 22px; border-radius: 100px;
+    font-size: 14px; display: inline-block;
+    transition: opacity 0.2s;
+  }
+  .btn-dark-pill:hover { opacity: 0.85; text-decoration: none; }
+  .qs-visual {
+    background: linear-gradient(135deg, #1f1f2e 0%, #252540 50%, #1a1a30 100%);
+    border-radius: 24px; height: 360px;
+    display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;
+  }
+  .qs-visual::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 40%, rgba(161,33,206,0.25), transparent 60%);
+  }
+  .qs-headset-large {
+    position: relative; z-index: 1;
+    width: 220px; text-align: center;
+  }
+  .qs-visor { width: 100%; height: 100px; background: linear-gradient(135deg, #2a2a40, #3a3a58, #2a2a40); border-radius: 20px; position: relative; margin-bottom: 16px; }
+  .qs-visor::before { content: ''; position: absolute; top: 16px; left: 16px; right: 16px; height: 56px; background: linear-gradient(135deg, rgba(161,33,206,0.8), rgba(80,20,120,0.6)); border-radius: 10px; }
+  .qs-visor::after { content: 'QUEST 3'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.8); letter-spacing: 2px; z-index: 2; }
+  .qs-strap-top { width: 40%; height: 12px; background: #222; border-radius: 6px; margin: 0 auto 4px; }
+  .qs-strap-bot { width: 60%; height: 12px; background: #1a1a1a; border-radius: 6px; margin: 0 auto; }
+
+  /* CONNECT SECTION -->*/
+  .connect {
+    padding: 80px 40px; background: var(--white); text-align: center;
+  }
+  .connect-inner { max-width: 900px; margin: 0 auto; }
+  .connect h2 { font-size: 48px; font-weight: 500; line-height: 1.17; color: var(--dark-charcoal); margin-bottom: 20px; }
+  .connect p { font-size: 18px; color: var(--slate-gray); line-height: 1.44; margin-bottom: 40px; }
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--divider); border-radius: 20px; overflow: hidden; margin-top: 64px; }
+  .stat-block { padding: 40px 24px; text-align: center; border-right: 1px solid var(--divider); }
+  .stat-block:last-child { border-right: none; }
+  .stat-num { font-size: 36px; font-weight: 500; color: var(--dark-charcoal); line-height: 1.28; }
+  .stat-label { font-size: 14px; color: var(--slate-gray); letter-spacing: -0.14px; margin-top: 4px; }
+
+  /* DEVELOPER SECTION */
+  .developer {
+    padding: 80px 40px; background: var(--soft-gray);
+  }
+  .developer-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+  .dev-text h2 { font-size: 36px; font-weight: 500; line-height: 1.28; color: var(--dark-charcoal); margin-bottom: 16px; }
+  .dev-text p { font-size: 18px; color: var(--slate-gray); line-height: 1.44; margin-bottom: 24px; }
+  .dev-links { display: flex; flex-direction: column; gap: 12px; }
+  .dev-link { font-size: 16px; color: var(--meta-blue); font-weight: 500; display: flex; align-items: center; gap: 8px; }
+  .dev-link::before { content: '&#8594;'; font-size: 14px; }
+  .dev-visual {
+    background: var(--white); border-radius: 20px; padding: 28px;
+    box-shadow: 0 12px 28px 0 rgba(0,0,0,0.1), 0 2px 4px 0 rgba(0,0,0,0.05);
+  }
+  .dev-code-header { display: flex; gap: 8px; margin-bottom: 20px; align-items: center; }
+  .dev-code-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .code-snippet { font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.8; color: #333; }
+  .cs-blue { color: var(--meta-blue); }
+  .cs-purple { color: #8B5FE0; }
+  .cs-green { color: #0a7c42; }
+  .cs-gray { color: #888; }
+
+  /* FOOTER */
+  footer {
+    background: var(--white); border-top: 1px solid var(--divider);
+    padding: 64px 40px 40px;
+  }
+  .footer-inner { max-width: 1200px; margin: 0 auto; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 48px; }
+  .footer-brand-text { font-size: 14px; color: var(--body-text); margin-top: 12px; line-height: 1.5; }
+  .footer-col h4 { font-size: 12px; font-weight: 700; color: var(--dark-charcoal); margin-bottom: 14px; }
+  .footer-col a { display: block; font-size: 14px; color: var(--body-text); margin-bottom: 8px; }
+  .footer-col a:hover { color: var(--dark-charcoal); text-decoration: none; }
+  .footer-bottom { display: flex; justify-content: space-between; padding-top: 24px; border-top: 1px solid var(--divider); flex-wrap: wrap; gap: 8px; }
+  .footer-bottom p { font-size: 12px; color: var(--body-text); }
+
+  @media (max-width: 1024px) {
+    .hero-visual { grid-template-columns: 1fr 1fr; }
+    .products-grid { grid-template-columns: 1fr 1fr; }
+    .quest-inner { grid-template-columns: 1fr; }
+    .developer-inner { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 36px; }
+    .hero-visual { grid-template-columns: 1fr; }
+    .stats-row { grid-template-columns: 1fr 1fr; }
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <div class="meta-logo-icon">
+      <span class="meta-infinity">&#8734;</span>
+    </div>
+    <span>Meta</span>
+  </div>
+  <div class="nav-links">
+    <a href="#">Products</a>
+    <a href="#">AR/VR</a>
+    <a href="#">AI</a>
+    <a href="#">Developers</a>
+    <a href="#">About</a>
+  </div>
+  <a href="#" class="nav-cta">Get Started</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <h1>Give everyone the power to build community and bring the world closer together.</h1>
+  <p>Meta builds technologies that help people connect, find communities, and grow businesses.</p>
+  <div class="hero-ctas">
+    <a href="#" class="btn-primary-pill">Explore Our Products</a>
+    <a href="#" class="btn-outline-pill">Developer Platform</a>
+  </div>
+
+  <div class="hero-visual">
+    <div class="hero-product-card">
+      <div class="hpc-visual hpc-quest">
+        <div class="quest-headset">
+          <div class="quest-visor"></div>
+          <div class="quest-strap"></div>
+        </div>
+      </div>
+      <div class="hpc-label">
+        <div class="hpc-product-name">Meta Quest 3</div>
+        <div class="hpc-product-desc">The most powerful mixed reality headset</div>
+        <a href="#" class="hpc-cta">Shop Quest &rarr;</a>
+      </div>
+    </div>
+    <div class="hero-product-card">
+      <div class="hpc-visual hpc-rayban">
+        <div class="rayban-glasses">
+          <div class="rb-frame-l"></div>
+          <div class="rb-frame-r"></div>
+          <div class="rb-bridge"></div>
+        </div>
+      </div>
+      <div class="hpc-label">
+        <div class="hpc-product-name">Ray-Ban Meta</div>
+        <div class="hpc-product-desc">Smart glasses. Open ear audio. Live streaming.</div>
+        <a href="#" class="hpc-cta">Shop Ray-Ban Meta &rarr;</a>
+      </div>
+    </div>
+    <div class="hero-product-card">
+      <div class="hpc-visual hpc-workrooms">
+        <div class="workrooms-icon">&#128187;</div>
+      </div>
+      <div class="hpc-label">
+        <div class="hpc-product-name">Horizon Workrooms</div>
+        <div class="hpc-product-desc">Collaborate in virtual reality like you're in the room</div>
+        <a href="#" class="hpc-cta">Learn More &rarr;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="products">
+  <div class="products-inner">
+    <h2>Our Apps & Services</h2>
+    <p class="sub">Billions of people around the world use Meta apps every day.</p>
+    <div class="products-grid">
+      <div class="product-card">
+        <div class="pc-visual fb">
+          <span class="pc-icon">&#x1F170;</span>
+        </div>
+        <div class="pc-info">
+          <div class="pc-name">Facebook</div>
+          <div class="pc-desc">Find community. Connect with friends and family. Share what matters most to you.</div>
+          <a href="#" class="pc-link">Visit Facebook &rarr;</a>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="pc-visual ig">
+          <span class="pc-icon">&#128247;</span>
+        </div>
+        <div class="pc-info">
+          <div class="pc-name">Instagram</div>
+          <div class="pc-desc">Share photos and videos. Explore stories, Reels, and creative tools from creators you love.</div>
+          <a href="#" class="pc-link">Visit Instagram &rarr;</a>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="pc-visual wa">
+          <span class="pc-icon">&#128172;</span>
+        </div>
+        <div class="pc-info">
+          <div class="pc-name">WhatsApp</div>
+          <div class="pc-desc">Message and call for free anywhere in the world. Fast, simple, secure private messaging.</div>
+          <a href="#" class="pc-link">Visit WhatsApp &rarr;</a>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="pc-visual msn">
+          <span class="pc-icon">&#127750;</span>
+        </div>
+        <div class="pc-info">
+          <div class="pc-name">Messenger</div>
+          <div class="pc-desc">Connect the way you want with text, voice and video calls, stories, and more.</div>
+          <a href="#" class="pc-link">Visit Messenger &rarr;</a>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="pc-visual th">
+          <span class="pc-icon">&#9875;</span>
+        </div>
+        <div class="pc-info">
+          <div class="pc-name">Threads</div>
+          <div class="pc-desc">The place for real-time conversation. Share ideas, updates, and join the conversation.</div>
+          <a href="#" class="pc-link">Visit Threads &rarr;</a>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="pc-visual rayo">
+          <span class="pc-icon">&#128263;</span>
+        </div>
+        <div class="pc-info">
+          <div class="pc-name">Meta AI</div>
+          <div class="pc-desc">Your intelligent assistant across Meta apps. Ask questions, create images, and get things done.</div>
+          <a href="#" class="pc-link">Try Meta AI &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUEST DARK SECTION -->
+<section class="quest-section">
+  <div class="quest-inner">
+    <div class="qs-text">
+      <h2>Reality is what you make it.</h2>
+      <p>Meta Quest 3 brings you the most immersive mixed reality experience ever. 4K+ display, Meta Reality technology, and next-level gaming and productivity apps.</p>
+      <div style="display:flex; gap:12px; flex-wrap:wrap;">
+        <a href="#" class="btn-dark-pill">Shop Meta Quest 3</a>
+        <a href="#" style="padding:10px 22px; border-radius:100px; border:2px solid rgba(255,255,255,0.3); color:var(--white); font-size:14px; display:inline-block;">Learn More</a>
+      </div>
+    </div>
+    <div class="qs-visual">
+      <div class="qs-headset-large">
+        <div class="qs-visor"></div>
+        <div class="qs-strap-top"></div>
+        <div class="qs-strap-bot"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONNECT STATS -->
+<section class="connect">
+  <div class="connect-inner">
+    <h2>Connecting people across the world.</h2>
+    <p>Every day, billions of people use Meta technologies to stay connected with the people who matter most to them.</p>
+    <a href="#" class="btn-primary-pill">Our Impact</a>
+    <div class="stats-row">
+      <div class="stat-block">
+        <div class="stat-num">3.27B</div>
+        <div class="stat-label">Daily Active People across Meta family of apps</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-num">200+</div>
+        <div class="stat-label">Countries and territories where people use Facebook</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-num">2B+</div>
+        <div class="stat-label">WhatsApp messages sent every day</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-num">10M+</div>
+        <div class="stat-label">Active advertisers on Meta platforms</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEVELOPER -->
+<section class="developer">
+  <div class="developer-inner">
+    <div class="dev-text">
+      <h2>Build on Meta's Platform</h2>
+      <p>Access Meta's developer tools to build apps, integrations, and experiences across Facebook, Instagram, WhatsApp, and the metaverse.</p>
+      <div class="dev-links">
+        <a href="#" class="dev-link">&#8594; Meta for Developers</a>
+        <a href="#" class="dev-link">&#8594; Facebook Graph API</a>
+        <a href="#" class="dev-link">&#8594; Instagram Basic Display API</a>
+        <a href="#" class="dev-link">&#8594; WhatsApp Business API</a>
+      </div>
+    </div>
+    <div class="dev-visual">
+      <div class="dev-code-header">
+        <div class="dev-code-dot" style="background:#ff5f57"></div>
+        <div class="dev-code-dot" style="background:#febc2e"></div>
+        <div class="dev-code-dot" style="background:#28c840"></div>
+        <span style="font-size:12px; color:#999; margin-left:8px;">graph_api.js</span>
+      </div>
+      <div class="code-snippet">
+        <span class="cs-blue">const</span> response = <span class="cs-blue">await</span> fetch(<br>
+        &nbsp;&nbsp;<span class="cs-green">`https://graph.facebook.com/v18.0/me`</span>,<br>
+        &nbsp;&nbsp;{ headers: {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="cs-green">'Authorization'</span>: <span class="cs-green">`Bearer <span class="cs-purple">${ACCESS_TOKEN}</span>`</span><br>
+        &nbsp;&nbsp;}}<br>
+        );<br><br>
+        <span class="cs-blue">const</span> data = <span class="cs-blue">await</span> response.json();<br>
+        <span class="cs-gray">// { id: "123", name: "John Doe", ... }</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+          <span class="meta-infinity" style="font-size:24px;">&#8734;</span>
+          <span style="font-size:18px; font-weight:600; color:var(--dark-charcoal);">Meta</span>
+        </div>
+        <p class="footer-brand-text">Meta builds technologies that help people connect, find communities, and grow businesses.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Products</h4>
+        <a href="#">Facebook</a>
+        <a href="#">Instagram</a>
+        <a href="#">WhatsApp</a>
+        <a href="#">Messenger</a>
+        <a href="#">Threads</a>
+      </div>
+      <div class="footer-col">
+        <h4>Hardware</h4>
+        <a href="#">Meta Quest 3</a>
+        <a href="#">Ray-Ban Meta</a>
+        <a href="#">Orion (AR Glasses)</a>
+        <a href="#">Portal</a>
+      </div>
+      <div class="footer-col">
+        <h4>Developers</h4>
+        <a href="#">Meta for Developers</a>
+        <a href="#">Graph API</a>
+        <a href="#">Business SDK</a>
+        <a href="#">AR Studio</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">About</a>
+        <a href="#">News</a>
+        <a href="#">Sustainability</a>
+        <a href="#">Careers</a>
+        <a href="#">Investor Relations</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 Meta Platforms, Inc.</p>
+      <p>Privacy Policy &middot; Terms of Service &middot; Cookie Policy &middot; Accessibility</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

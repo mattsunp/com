@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>note — 読む・書く・つながる</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --note-green: #5ac8b8;
+    --text-primary: #08131a;
+    --text-secondary: rgba(8,19,26,0.66);
+    --bg-primary: #ffffff;
+    --bg-secondary: #f5f8fa;
+    --border: rgba(8,19,26,0.14);
+    --border-strong: rgba(8,19,26,0.22);
+    --like: #d13e5c;
+    --cta-bg: #08131a;
+    --badge: #d53c21;
+    --sans: "Helvetica Neue", "Hiragino Sans", "Hiragino Kaku Gothic ProN", Arial, "Noto Sans JP", Meiryo, sans-serif;
+    --serif: "Hiragino Mincho ProN", "Hiragino Mincho Pro", HGSMinchoE, "Yu Mincho", YuMincho, "MS PMincho", serif;
+  }
+
+  html { font-size: 16px; }
+  body {
+    font-family: var(--sans);
+    color: var(--text-primary);
+    background: var(--bg-primary);
+    line-height: 1.5;
+  }
+
+  a { color: var(--text-primary); text-decoration: none; }
+
+  /* ─── HEADER ─── */
+  header {
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--bg-primary);
+    z-index: 100;
+  }
+  .header-inner {
+    max-width: 940px;
+    margin: 0 auto;
+    padding: 0 16px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .header-left { display: flex; align-items: center; gap: 32px; }
+  .logo {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .logo .dot {
+    width: 8px; height: 8px;
+    background: var(--note-green);
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .header-tabs { display: flex; gap: 0; }
+  .header-tab {
+    padding: 4px 16px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .header-tab.active { color: var(--text-primary); font-weight: 600; border-bottom-color: var(--text-primary); }
+  .header-tab:hover { color: var(--text-primary); }
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .header-search {
+    display: flex;
+    align-items: center;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 14px;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    cursor: pointer;
+  }
+  .header-search .icon { font-size: 14px; }
+  .btn-login {
+    padding: 8px 16px;
+    border: 1px solid var(--border-strong);
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    background: var(--bg-primary);
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-login:hover { background: var(--bg-secondary); }
+  .btn-signup {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--bg-primary);
+    background: var(--cta-bg);
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .btn-signup:hover { opacity: 0.85; }
+
+  /* ─── HERO ─── */
+  .hero {
+    background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+    padding: 64px 16px 48px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(90,200,184,0.12);
+    color: var(--note-green);
+    border: 1px solid rgba(90,200,184,0.3);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1.4;
+    margin-bottom: 16px;
+    font-feature-settings: "palt";
+  }
+  .hero p {
+    font-size: 16px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    max-width: 560px;
+    margin: 0 auto 32px;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+  .btn-hero-primary {
+    background: var(--cta-bg);
+    color: var(--bg-primary);
+    padding: 12px 32px;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: opacity 0.2s;
+  }
+  .btn-hero-primary:hover { opacity: 0.85; }
+  .btn-hero-secondary {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    padding: 12px 32px;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: 600;
+    border: 1px solid var(--border-strong);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.2s;
+  }
+  .btn-hero-secondary:hover { background: var(--bg-secondary); }
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  .hero-stats strong { font-size: 20px; font-weight: 700; color: var(--text-primary); display: block; }
+
+  /* ─── MAIN LAYOUT ─── */
+  .main-container {
+    max-width: 940px;
+    margin: 0 auto;
+    padding: 32px 16px;
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 48px;
+  }
+
+  /* ─── FEED ─── */
+  .feed-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .feed-header h2 { font-size: 16px; font-weight: 700; }
+  .feed-tabs { display: flex; gap: 4px; }
+  .feed-tab {
+    padding: 4px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+  .feed-tab.active { background: var(--cta-bg); color: var(--bg-primary); }
+  .feed-tab:hover:not(.active) { background: var(--bg-secondary); color: var(--text-primary); }
+
+  .article-card {
+    display: flex;
+    gap: 16px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+    transition: opacity 0.15s;
+    cursor: pointer;
+  }
+  .article-card:hover { opacity: 0.8; }
+  .article-card:last-child { border-bottom: none; }
+  .article-card-content { flex: 1; min-width: 0; }
+  .article-author {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .author-avatar {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--bg-primary);
+    flex-shrink: 0;
+  }
+  .author-name { font-size: 13px; font-weight: 600; color: var(--text-secondary); }
+  .article-title {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: 0.04em;
+    font-feature-settings: "palt";
+    margin-bottom: 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .article-desc {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+  .article-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+  .article-like {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--like);
+    font-weight: 600;
+  }
+  .badge-paid {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffc107;
+    border-radius: 20px;
+    padding: 1px 8px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .badge-series {
+    background: rgba(90,200,184,0.12);
+    color: #1e7b65;
+    border: 1px solid rgba(90,200,184,0.3);
+    border-radius: 20px;
+    padding: 1px 8px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .article-thumb {
+    width: 110px;
+    height: 80px;
+    border-radius: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--bg-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+  }
+
+  /* ─── SIDEBAR ─── */
+  .sidebar { }
+  .sidebar-block {
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+    border: 1px solid var(--border);
+  }
+  .sidebar-block h3 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--text-primary);
+  }
+  .topic-list { list-style: none; }
+  .topic-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s;
+  }
+  .topic-list li:last-child { border-bottom: none; }
+  .topic-list li:hover { color: var(--note-green); }
+  .topic-list li .topic-icon { font-size: 16px; flex-shrink: 0; }
+  .creator-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+  }
+  .creator-item:last-child { border-bottom: none; }
+  .creator-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: var(--bg-primary);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .creator-info { flex: 1; min-width: 0; }
+  .creator-name { font-size: 13px; font-weight: 700; }
+  .creator-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .btn-follow {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border-strong);
+    background: var(--bg-primary);
+    cursor: pointer;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+  .btn-follow:hover { background: var(--cta-bg); color: var(--bg-primary); border-color: var(--cta-bg); }
+
+  .magazine-card {
+    display: flex;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+  }
+  .magazine-card:last-child { border-bottom: none; }
+  .magazine-thumb {
+    width: 48px; height: 48px;
+    border-radius: 6px;
+    background: var(--bg-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+  }
+  .magazine-info h4 { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+  .magazine-info p { font-size: 12px; color: var(--text-secondary); }
+  .magazine-price { font-size: 11px; color: #856404; font-weight: 600; }
+
+  /* ─── FEATURES ─── */
+  .features-section {
+    background: var(--bg-secondary);
+    padding: 64px 16px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .features-inner { max-width: 940px; margin: 0 auto; }
+  .features-inner h2 {
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 8px;
+    letter-spacing: 0.04em;
+    font-feature-settings: "palt";
+  }
+  .features-inner > p {
+    text-align: center;
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+  }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .feature-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: 0px 1px 3px 1px rgba(0,0,0,0.06);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .feature-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+  }
+  .feature-icon { font-size: 32px; margin-bottom: 16px; display: block; }
+  .feature-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .feature-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--bg-primary);
+    border-top: 1px solid var(--border);
+    padding: 40px 16px 24px;
+  }
+  .footer-inner { max-width: 940px; margin: 0 auto; }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 32px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+  .footer-brand .logo-footer {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .footer-brand p { font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+  .footer-col h5 {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 8px; }
+  .footer-col ul li a { font-size: 13px; color: var(--text-secondary); transition: color 0.2s; }
+  .footer-col ul li a:hover { color: var(--note-green); }
+  .footer-bottom { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--text-secondary); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 769px) {
+    .main-container { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .features-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 26px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .hero-stats { gap: 24px; }
+  }
+  @media (max-width: 481px) {
+    .header-tabs { display: none; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .article-thumb { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="logo">note<div class="dot"></div></div>
+      <div class="header-tabs">
+        <div class="header-tab active">おすすめ</div>
+        <div class="header-tab">フォロー中</div>
+        <div class="header-tab">マガジン</div>
+        <div class="header-tab">ランキング</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="header-search">
+        <span class="icon">&#128269;</span>
+        キーワードで探す
+      </div>
+      <button class="btn-login">ログイン</button>
+      <button class="btn-signup">無料で始める</button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-label">&#127756; 日本最大のクリエイタープラットフォーム</div>
+  <h1>読む・書く・つながる。<br>あなたの物語がここにある。</h1>
+  <p>毎日、誰かの言葉があなたの世界を広げる。クリエイターの思いをまっすぐ届ける、note のコンテンツコミュニティ。</p>
+  <div class="hero-actions">
+    <a href="#" class="btn-hero-primary">無料で始める</a>
+    <a href="#" class="btn-hero-secondary">noteを読む</a>
+  </div>
+  <div class="hero-stats">
+    <div>
+      <strong>6,500万</strong>
+      月間ユニークユーザー
+    </div>
+    <div>
+      <strong>1億本以上</strong>
+      投稿コンテンツ数
+    </div>
+    <div>
+      <strong>680万人</strong>
+      クリエイター数
+    </div>
+  </div>
+</section>
+
+<!-- MAIN CONTENT -->
+<div class="main-container">
+  <!-- FEED -->
+  <main>
+    <div class="feed-header">
+      <h2>今日のおすすめ</h2>
+      <div class="feed-tabs">
+        <div class="feed-tab active">全て</div>
+        <div class="feed-tab">テキスト</div>
+        <div class="feed-tab">画像</div>
+        <div class="feed-tab">音声</div>
+      </div>
+    </div>
+
+    <!-- Article 1 -->
+    <div class="article-card">
+      <div class="article-card-content">
+        <div class="article-author">
+          <div class="author-avatar" style="background:#2c7bb5;">山</div>
+          <span class="author-name">山田 哲也 / テック系ライター</span>
+          <span class="badge-paid">&#128274; 有料</span>
+        </div>
+        <h3 class="article-title">2026年のAI活用術。毎日の仕事を半分にするワークフロー設計の全貌</h3>
+        <p class="article-desc">ChatGPT、Claude、Geminiが普及した今、「使える人」と「使えない人」の差はワークフロー設計にある。3ヶ月で業務を50%削減した私の実践例を完全公開します。</p>
+        <div class="article-meta">
+          <span class="article-like">&#9825; 2,847</span>
+          <span>5,210 views</span>
+          <span>3分で読める</span>
+          <span style="color:var(--text-secondary);">2026年4月11日</span>
+        </div>
+      </div>
+      <div class="article-thumb">&#129302;</div>
+    </div>
+
+    <!-- Article 2 -->
+    <div class="article-card">
+      <div class="article-card-content">
+        <div class="article-author">
+          <div class="author-avatar" style="background:#e5704a;">鈴</div>
+          <span class="author-name">鈴木 花音 / 料理研究家</span>
+          <span class="badge-series">&#128218; シリーズ</span>
+        </div>
+        <h3 class="article-title">【第12回】毎日15分で完成する「疲れた日の献立」30選——春夏編</h3>
+        <p class="article-desc">スーパーの特売野菜だけで作れる、栄養バランスのとれた夕食レシピ。写真付きで丁寧に解説します。冷蔵庫の残り物でも美味しく作れます。</p>
+        <div class="article-meta">
+          <span class="article-like">&#9825; 1,429</span>
+          <span>12,840 views</span>
+          <span>8分で読める</span>
+          <span style="color:var(--text-secondary);">2026年4月10日</span>
+        </div>
+      </div>
+      <div class="article-thumb">&#127860;</div>
+    </div>
+
+    <!-- Article 3 -->
+    <div class="article-card">
+      <div class="article-card-content">
+        <div class="article-author">
+          <div class="author-avatar" style="background:#5a8c6b;">中</div>
+          <span class="author-name">中村 誠一 / スタートアップCFO</span>
+          <span class="badge-paid">&#128274; 有料</span>
+        </div>
+        <h3 class="article-title">資金調達2億円を達成したSeed期ピッチデッキの中身を全公開する</h3>
+        <p class="article-desc">VCからシード調達をする上で最も重要なのは「物語の一貫性」だった。投資家に刺さった14枚のスライドと、各スライドの設計意図を解説します。</p>
+        <div class="article-meta">
+          <span class="article-like">&#9825; 3,201</span>
+          <span>28,450 views</span>
+          <span>12分で読める</span>
+          <span style="color:var(--text-secondary);">2026年4月9日</span>
+        </div>
+      </div>
+      <div class="article-thumb">&#128188;</div>
+    </div>
+
+    <!-- Article 4 -->
+    <div class="article-card">
+      <div class="article-card-content">
+        <div class="article-author">
+          <div class="author-avatar" style="background:#9b59b6;">林</div>
+          <span class="author-name">林 美咲 / イラストレーター</span>
+        </div>
+        <h3 class="article-title">毎日絵を描き続けた1000日間。変わったもの、変わらなかったもの。</h3>
+        <p class="article-desc">全くの素人から始めて1000日間、一日も休まず絵を描き続けた記録。最初と最後の絵を並べると、誰でも続ければ上手くなれると信じられる。</p>
+        <div class="article-meta">
+          <span class="article-like">&#9825; 4,578</span>
+          <span>54,230 views</span>
+          <span>6分で読める</span>
+          <span style="color:var(--text-secondary);">2026年4月8日</span>
+        </div>
+      </div>
+      <div class="article-thumb">&#127912;</div>
+    </div>
+
+    <!-- Article 5 -->
+    <div class="article-card">
+      <div class="article-card-content">
+        <div class="article-author">
+          <div class="author-avatar" style="background:#c0392b;">佐</div>
+          <span class="author-name">佐藤 健太 / 旅行ライター</span>
+          <span class="badge-series">&#128218; シリーズ</span>
+        </div>
+        <h3 class="article-title">「移住して3年」北海道の冬を生き延びる知恵と、東京では気づかなかった時間の豊かさ</h3>
+        <p class="article-desc">東京から道東の小さな町に移住した記録。マイナス20度の世界で学んだ「本当に必要なもの」と「捨てられるもの」を正直に書きました。</p>
+        <div class="article-meta">
+          <span class="article-like">&#9825; 2,155</span>
+          <span>19,800 views</span>
+          <span>10分で読める</span>
+          <span style="color:var(--text-secondary);">2026年4月7日</span>
+        </div>
+      </div>
+      <div class="article-thumb">&#128507;</div>
+    </div>
+  </main>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <!-- Topics -->
+    <div class="sidebar-block">
+      <h3>&#9889; 注目のトピック</h3>
+      <ul class="topic-list">
+        <li><span class="topic-icon">&#129302;</span>AI・テクノロジー</li>
+        <li><span class="topic-icon">&#128640;</span>キャリア・転職</li>
+        <li><span class="topic-icon">&#127760;</span>ライフスタイル</li>
+        <li><span class="topic-icon">&#127814;</span>健康・食事</li>
+        <li><span class="topic-icon">&#127912;</span>デザイン・アート</li>
+        <li><span class="topic-icon">&#128209;</span>ビジネス・マーケ</li>
+        <li><span class="topic-icon">&#9997;</span>小説・エッセイ</li>
+      </ul>
+    </div>
+
+    <!-- Featured Creators -->
+    <div class="sidebar-block">
+      <h3>&#127775; 注目のクリエイター</h3>
+      <div class="creator-item">
+        <div class="creator-avatar" style="background:#2c7bb5;">山</div>
+        <div class="creator-info">
+          <div class="creator-name">山田 哲也</div>
+          <div class="creator-desc">AIとテクノロジーで働き方を変える</div>
+        </div>
+        <button class="btn-follow">フォロー</button>
+      </div>
+      <div class="creator-item">
+        <div class="creator-avatar" style="background:#e5704a;">鈴</div>
+        <div class="creator-info">
+          <div class="creator-name">鈴木 花音</div>
+          <div class="creator-desc">毎日のごはんをもっと楽しく</div>
+        </div>
+        <button class="btn-follow">フォロー</button>
+      </div>
+      <div class="creator-item">
+        <div class="creator-avatar" style="background:#9b59b6;">林</div>
+        <div class="creator-info">
+          <div class="creator-name">林 美咲</div>
+          <div class="creator-desc">1000日間の絵日記</div>
+        </div>
+        <button class="btn-follow">フォロー</button>
+      </div>
+    </div>
+
+    <!-- Magazines -->
+    <div class="sidebar-block">
+      <h3>&#128218; 人気マガジン</h3>
+      <div class="magazine-card">
+        <div class="magazine-thumb">&#129302;</div>
+        <div class="magazine-info">
+          <h4>AI活用の最前線 2026</h4>
+          <p>最新のAI活用事例を毎週更新</p>
+          <div class="magazine-price">&#128274; 月額 980円 / 42本収録</div>
+        </div>
+      </div>
+      <div class="magazine-card">
+        <div class="magazine-thumb">&#127808;</div>
+        <div class="magazine-info">
+          <h4>スタートアップの解剖</h4>
+          <p>起業・資金調達の実録レポート</p>
+          <div class="magazine-price">&#128274; 月額 1,480円 / 58本収録</div>
+        </div>
+      </div>
+      <div class="magazine-card">
+        <div class="magazine-thumb">&#127912;</div>
+        <div class="magazine-info">
+          <h4>クリエイターの仕事術</h4>
+          <p>フリーランス・副業で稼ぐ方法</p>
+          <div class="magazine-price">無料 / 85本収録</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<!-- FEATURES -->
+<section class="features-section">
+  <div class="features-inner">
+    <h2>noteで、もっと自由に表現しよう</h2>
+    <p>ブログ・音声・マガジン・有料コンテンツ。あなたの表現方法に制限はない。</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <span class="feature-icon">&#9997;</span>
+        <h3>テキスト・ブログ</h3>
+        <p>思ったことをそのまま書ける。マークダウン対応で、読みやすい記事をかんたんに作成できます。</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">&#127908;</span>
+        <h3>音声・ポッドキャスト</h3>
+        <p>声で届けるコンテンツ。移動中や作業中に「ながら聴き」できる音声コンテンツが増えています。</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">&#128274;</span>
+        <h3>有料コンテンツ・サブスク</h3>
+        <p>あなたの知識・スキルを収益化。月額サブスクやスポット販売で、ファンから直接サポートを受けられます。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo-footer">note<span style="color:var(--note-green);">.</span></div>
+        <p>クリエイターが自分らしく表現し、読者と直接つながれるプラットフォーム。誰でも無料でコンテンツを発信できます。</p>
+      </div>
+      <div class="footer-col">
+        <h5>noteを使う</h5>
+        <ul>
+          <li><a href="#">noteを書く</a></li>
+          <li><a href="#">マガジンを作る</a></li>
+          <li><a href="#">有料noteを売る</a></li>
+          <li><a href="#">コミュニティ</a></li>
+          <li><a href="#">プレミアム会員</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>カテゴリ</h5>
+        <ul>
+          <li><a href="#">テクノロジー</a></li>
+          <li><a href="#">ビジネス</a></li>
+          <li><a href="#">デザイン</a></li>
+          <li><a href="#">ライフスタイル</a></li>
+          <li><a href="#">小説・詩</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>会社情報</h5>
+        <ul>
+          <li><a href="#">note株式会社</a></li>
+          <li><a href="#">採用情報</a></li>
+          <li><a href="#">ガイドライン</a></li>
+          <li><a href="#">プライバシーポリシー</a></li>
+          <li><a href="#">お問い合わせ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 note Inc.</span>
+      <span>プライバシーポリシー &#47; 利用規約 &#47; 特定商取引法</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

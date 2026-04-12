@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NVIDIA — Accelerating the World's AI</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --nvidia-green: #76b900;
+    --nvidia-green-light: #bff230;
+    --black: #000000;
+    --white: #ffffff;
+    --near-black: #1a1a1a;
+    --gray-300: #a7a7a7;
+    --gray-400: #898989;
+    --gray-500: #757575;
+    --gray-border: #5e5e5e;
+    --orange-400: #df6500;
+    --purple-800: #4d1368;
+    --link-hover: #3860be;
+    --btn-hover: #1eaedb;
+    --font: Arial, Helvetica, sans-serif;
+  }
+
+  html { font-size: 16px; }
+  body {
+    font-family: var(--font);
+    font-size: 16px;
+    color: var(--white);
+    background: var(--black);
+    line-height: 1.5;
+  }
+
+  a { color: var(--white); text-decoration: none; }
+
+  /* ─── NAV ─── */
+  nav {
+    background: var(--black);
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    border-bottom: 1px solid #222;
+    padding: 0 16px;
+  }
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+  .nav-logo {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .logo-mark {
+    width: 28px; height: 28px;
+    background: var(--nvidia-green);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .nav-links { display: flex; gap: 0; list-style: none; flex: 1; }
+  .nav-links a {
+    display: block;
+    padding: 0 14px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--white);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 56px;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--nvidia-green); }
+  .btn-nav {
+    padding: 8px 14px;
+    border: 2px solid var(--nvidia-green);
+    background: transparent;
+    color: var(--white);
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 2px;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.2s, color 0.2s;
+    flex-shrink: 0;
+  }
+  .btn-nav:hover { background: var(--btn-hover); }
+
+  /* ─── HERO ─── */
+  .hero {
+    background: var(--black);
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding: 80px 16px;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 60% at 70% 50%, rgba(118,185,0,0.12) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 40% at 30% 80%, rgba(77,19,104,0.15) 0%, transparent 60%);
+  }
+  .hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .hero-label {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--nvidia-green);
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--white);
+    margin-bottom: 20px;
+    letter-spacing: 0.01em;
+  }
+  .hero h1 .accent { color: var(--nvidia-green); }
+  .hero p {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--gray-300);
+    line-height: 1.67;
+    margin-bottom: 32px;
+    max-width: 480px;
+  }
+  .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn-primary-green {
+    padding: 11px 24px;
+    border: 2px solid var(--nvidia-green);
+    background: transparent;
+    color: var(--white);
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 2px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+    display: inline-block;
+  }
+  .btn-primary-green:hover { background: var(--btn-hover); }
+  .btn-secondary {
+    padding: 11px 24px;
+    border: 1px solid var(--nvidia-green);
+    background: transparent;
+    color: var(--white);
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 2px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s;
+    display: inline-block;
+  }
+  .btn-secondary:hover { background: rgba(118,185,0,0.1); }
+
+  /* GPU VISUAL */
+  .gpu-visual {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .gpu-card {
+    background: var(--near-black);
+    border: 1px solid var(--gray-border);
+    border-radius: 2px;
+    padding: 24px;
+    box-shadow: rgba(0,0,0,0.3) 0px 0px 5px 0px;
+    transition: border-color 0.2s;
+  }
+  .gpu-card:hover { border-color: var(--nvidia-green); }
+  .gpu-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .gpu-name { font-size: 18px; font-weight: 700; color: var(--white); }
+  .gpu-badge {
+    background: var(--nvidia-green);
+    color: var(--black);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 2px;
+    letter-spacing: 0.06em;
+  }
+  .gpu-specs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .gpu-spec-label { font-size: 11px; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.06em; }
+  .gpu-spec-value { font-size: 16px; font-weight: 700; color: var(--white); }
+  .gpu-spec-value .unit { font-size: 11px; color: var(--gray-400); font-weight: 400; }
+
+  /* ─── DARK / LIGHT ALTERNATING ─── */
+  .section-dark { background: var(--black); padding: 80px 16px; }
+  .section-light { background: var(--white); padding: 80px 16px; color: var(--black); }
+  .section-inner { max-width: 1200px; margin: 0 auto; }
+
+  .section-label {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--nvidia-green);
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+  }
+  .section-title-dark {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+  .section-title-light {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--black);
+    margin-bottom: 12px;
+  }
+  .section-desc-dark { font-size: 16px; color: var(--gray-300); line-height: 1.5; margin-bottom: 40px; max-width: 640px; }
+  .section-desc-light { font-size: 16px; color: #333; line-height: 1.5; margin-bottom: 40px; max-width: 640px; }
+
+  /* ─── PRODUCT CARDS ─── */
+  .cards-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .prod-card-dark {
+    background: var(--near-black);
+    border-radius: 2px;
+    box-shadow: rgba(0,0,0,0.3) 0px 0px 5px 0px;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+  }
+  .prod-card-dark:hover { box-shadow: rgba(0,0,0,0.5) 0px 0px 12px 0px; }
+  .prod-card-top {
+    padding: 24px;
+    border-bottom: 1px solid var(--gray-border);
+  }
+  .prod-card-icon { font-size: 40px; margin-bottom: 12px; display: block; }
+  .prod-card-name { font-size: 20px; font-weight: 700; color: var(--white); border-bottom: 2px solid var(--nvidia-green); padding-bottom: 8px; margin-bottom: 10px; display: inline-block; }
+  .prod-card-desc { font-size: 15px; color: var(--gray-400); line-height: 1.67; }
+  .prod-card-bottom { padding: 16px 24px; }
+  .btn-card-green {
+    display: inline-block;
+    padding: 9px 16px;
+    border: 2px solid var(--nvidia-green);
+    background: transparent;
+    color: var(--white);
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 2px;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .btn-card-green:hover { background: var(--btn-hover); }
+
+  /* ─── LIGHT SECTION CARDS ─── */
+  .prod-card-light {
+    background: var(--white);
+    border-radius: 2px;
+    box-shadow: rgba(0,0,0,0.3) 0px 0px 5px 0px;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+    border: 1px solid #e0e0e0;
+  }
+  .prod-card-light:hover { box-shadow: rgba(0,0,0,0.15) 0px 8px 24px; }
+  .prod-card-light .prod-card-top { border-bottom: 1px solid #e0e0e0; }
+  .prod-card-light .prod-card-name { color: var(--black); }
+  .prod-card-light .prod-card-desc { color: var(--gray-500); }
+  .btn-card-green-light {
+    display: inline-block;
+    padding: 9px 16px;
+    border: 2px solid var(--nvidia-green);
+    background: transparent;
+    color: var(--black);
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 2px;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+  }
+  .btn-card-green-light:hover { background: var(--btn-hover); color: var(--white); }
+
+  /* ─── TECH SPEC TABLE ─── */
+  .spec-table { width: 100%; border-collapse: collapse; }
+  .spec-table th, .spec-table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--gray-border);
+    font-size: 14px;
+  }
+  .spec-table th { font-weight: 700; color: var(--gray-300); font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; }
+  .spec-table td { color: var(--white); }
+  .spec-table td.key { font-weight: 700; }
+  .spec-table td.highlight { color: var(--nvidia-green); font-weight: 700; }
+  .spec-table tr:hover td { background: rgba(255,255,255,0.03); }
+
+  /* ─── AI FEATURES ─── */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--gray-border);
+    border: 1px solid var(--gray-border);
+    margin-top: 40px;
+  }
+  .feat-box {
+    background: var(--black);
+    padding: 32px;
+    transition: background 0.2s;
+  }
+  .feat-box:hover { background: var(--near-black); }
+  .feat-icon { font-size: 32px; margin-bottom: 12px; display: block; }
+  .feat-title { font-size: 18px; font-weight: 700; color: var(--white); margin-bottom: 8px; }
+  .feat-desc { font-size: 15px; color: var(--gray-400); line-height: 1.67; margin-bottom: 16px; }
+  .feat-link {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--white);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--nvidia-green);
+    text-decoration-thickness: 2px;
+    transition: color 0.2s;
+  }
+  .feat-link:hover { color: var(--link-hover); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--black);
+    border-top: 1px solid var(--gray-border);
+    padding: 48px 16px 24px;
+  }
+  .footer-inner { max-width: 1200px; margin: 0 auto; }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 32px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--gray-border);
+  }
+  .footer-logo { font-size: 18px; font-weight: 700; letter-spacing: 0.1em; color: var(--white); margin-bottom: 12px; }
+  .footer-logo span { color: var(--nvidia-green); }
+  .footer-brand p { font-size: 13px; color: var(--gray-500); line-height: 1.7; }
+  .footer-col h5 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gray-300); margin-bottom: 12px; }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 8px; }
+  .footer-col ul li a { font-size: 13px; color: var(--gray-400); text-decoration: none; transition: color 0.2s; }
+  .footer-col ul li a:hover { color: var(--nvidia-green); }
+  .footer-bottom { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--gray-500); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 1024px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .cards-3 { grid-template-columns: repeat(2, 1fr); }
+    .footer-grid { grid-template-columns: repeat(2, 1fr); }
+    .features-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 767px) {
+    .nav-links { display: none; }
+    .cards-3 { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 26px; }
+    .gpu-specs { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <div class="logo-mark"></div>
+      NVIDIA
+    </div>
+    <ul class="nav-links">
+      <li><a href="#">AI & DATA SCIENCE</a></li>
+      <li><a href="#">GAMING</a></li>
+      <li><a href="#">PROFESSIONAL VIZ</a></a></li>
+      <li><a href="#">DATA CENTER</a></li>
+      <li><a href="#">AUTOMOTIVE</a></li>
+      <li><a href="#">ROBOTICS</a></li>
+    </ul>
+    <a href="#" class="btn-nav">Shop</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-label">&#9889; NVIDIA Blackwell Architecture</div>
+      <h1>The <span class="accent">AI</span> that's<br>Changing Everything.</h1>
+      <p>From gaming to enterprise AI, NVIDIA accelerates the applications that matter most. Trillions of parameters. Petaflops of performance. The world runs on NVIDIA.</p>
+      <div class="hero-btns">
+        <a href="#" class="btn-primary-green">Explore AI Solutions</a>
+        <a href="#" class="btn-secondary">View GPUs</a>
+      </div>
+    </div>
+    <div class="gpu-visual">
+      <div class="gpu-card">
+        <div class="gpu-card-header">
+          <div class="gpu-name">GeForce RTX 5090</div>
+          <div class="gpu-badge">NEW</div>
+        </div>
+        <div class="gpu-specs">
+          <div>
+            <div class="gpu-spec-label">CUDA Cores</div>
+            <div class="gpu-spec-value">21,760</div>
+          </div>
+          <div>
+            <div class="gpu-spec-label">VRAM</div>
+            <div class="gpu-spec-value">32 <span class="unit">GB GDDR7</span></div>
+          </div>
+          <div>
+            <div class="gpu-spec-label">AI TOPS</div>
+            <div class="gpu-spec-value">3,352 <span class="unit">TOPS</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="gpu-card">
+        <div class="gpu-card-header">
+          <div class="gpu-name">H200 NVL — Data Center</div>
+          <div class="gpu-badge">Enterprise</div>
+        </div>
+        <div class="gpu-specs">
+          <div>
+            <div class="gpu-spec-label">Mem BW</div>
+            <div class="gpu-spec-value">4.8 <span class="unit">TB/s</span></div>
+          </div>
+          <div>
+            <div class="gpu-spec-label">HBM3e</div>
+            <div class="gpu-spec-value">141 <span class="unit">GB</span></div>
+          </div>
+          <div>
+            <div class="gpu-spec-label">FP8</div>
+            <div class="gpu-spec-value">3,958 <span class="unit">TFLOPS</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DARK: AI SOLUTIONS -->
+<section class="section-dark">
+  <div class="section-inner">
+    <div class="section-label">NVIDIA AI PLATFORMS</div>
+    <h2 class="section-title-dark">Every Scale of AI, Accelerated.</h2>
+    <p class="section-desc-dark">From the cloud to the edge, NVIDIA provides the full stack — hardware, software, and networking — to power the AI era.</p>
+    <div class="cards-3">
+      <div class="prod-card-dark">
+        <div class="prod-card-top">
+          <span class="prod-card-icon">&#127760;</span>
+          <div class="prod-card-name">NVIDIA DGX Cloud</div>
+          <p class="prod-card-desc">Enterprise AI supercomputing delivered as a service. Train, fine-tune, and deploy large language models at scale without managing infrastructure.</p>
+        </div>
+        <div class="prod-card-bottom">
+          <a href="#" class="btn-card-green">Explore DGX Cloud</a>
+        </div>
+      </div>
+      <div class="prod-card-dark">
+        <div class="prod-card-top">
+          <span class="prod-card-icon">&#129302;</span>
+          <div class="prod-card-name">NVIDIA NIM</div>
+          <p class="prod-card-desc">Inference microservices for production AI. Deploy optimized AI models in minutes with containerized packages that run anywhere.</p>
+        </div>
+        <div class="prod-card-bottom">
+          <a href="#" class="btn-card-green">Start with NIM</a>
+        </div>
+      </div>
+      <div class="prod-card-dark">
+        <div class="prod-card-top">
+          <span class="prod-card-icon">&#127918;</span>
+          <div class="prod-card-name">GeForce RTX</div>
+          <p class="prod-card-desc">The world's best gaming GPU. AI-powered DLSS 4 delivers frame generation, ray tracing, and reflex for unmatched gaming performance.</p>
+        </div>
+        <div class="prod-card-bottom">
+          <a href="#" class="btn-card-green">Explore Gaming</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI FEATURES GRID -->
+<section class="section-dark" style="padding-top:0;">
+  <div class="section-inner">
+    <div class="section-label">NVIDIA TECHNOLOGIES</div>
+    <h2 class="section-title-dark">The AI Stack, Complete.</h2>
+    <div class="features-grid">
+      <div class="feat-box">
+        <span class="feat-icon">&#9889;</span>
+        <div class="feat-title">CUDA & cuDNN</div>
+        <p class="feat-desc">The foundational programming model for GPU computing. CUDA accelerates training and inference across every major AI framework — PyTorch, TensorFlow, JAX.</p>
+        <a href="#" class="feat-link">Developer docs</a>
+      </div>
+      <div class="feat-box">
+        <span class="feat-icon">&#128200;</span>
+        <div class="feat-title">TensorRT-LLM</div>
+        <p class="feat-desc">Inference optimization for large language models. Quantization, KV cache, and speculative decoding bring production LLMs to maximum throughput.</p>
+        <a href="#" class="feat-link">Try on NGC</a>
+      </div>
+      <div class="feat-box">
+        <span class="feat-icon">&#128187;</span>
+        <div class="feat-title">NVIDIA DLSS 4</div>
+        <p class="feat-desc">Multi Frame Generation and AI Super Resolution deliver up to 8x more frames. DLSS 4 sets the standard for AI-powered rendering in AAA titles.</p>
+        <a href="#" class="feat-link">Game list</a>
+      </div>
+      <div class="feat-box">
+        <span class="feat-icon">&#129302;</span>
+        <div class="feat-title">NVIDIA Omniverse</div>
+        <p class="feat-desc">An open platform for connecting and simulating 3D worlds. Industrial digitalization, robotics simulation, and real-time collaboration at scale.</p>
+        <a href="#" class="feat-link">Get Omniverse</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIGHT: SPEC TABLE -->
+<section class="section-light">
+  <div class="section-inner">
+    <div style="color:var(--nvidia-green); font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:12px;">GPU SPECIFICATIONS</div>
+    <h2 class="section-title-light">RTX 50 Series — Blackwell Performance</h2>
+    <p class="section-desc-light">Next-generation Blackwell architecture. AI Tensor performance up to 4,000 TOPS.</p>
+    <div class="cards-3">
+      <div class="prod-card-light">
+        <div class="prod-card-top">
+          <span class="prod-card-icon">&#9660;</span>
+          <div class="prod-card-name">RTX 5090</div>
+          <p class="prod-card-desc">Flagship consumer GPU. 21,760 CUDA cores, 32GB GDDR7, 3,352 AI TOPS. The fastest RTX ever built.</p>
+        </div>
+        <div class="prod-card-bottom">
+          <a href="#" class="btn-card-green-light">Learn More</a>
+        </div>
+      </div>
+      <div class="prod-card-light">
+        <div class="prod-card-top">
+          <span class="prod-card-icon">&#9650;</span>
+          <div class="prod-card-name">RTX 5080</div>
+          <p class="prod-card-desc">High-performance gaming and creative AI. 10,752 CUDA cores, 16GB GDDR7, 1,801 AI TOPS.</p>
+        </div>
+        <div class="prod-card-bottom">
+          <a href="#" class="btn-card-green-light">Learn More</a>
+        </div>
+      </div>
+      <div class="prod-card-light">
+        <div class="prod-card-top">
+          <span class="prod-card-icon">&#9679;</span>
+          <div class="prod-card-name">RTX 5070</div>
+          <p class="prod-card-desc">The 4K sweet spot. Extraordinary performance per dollar with Blackwell AI and DLSS 4 support.</p>
+        </div>
+        <div class="prod-card-bottom">
+          <a href="#" class="btn-card-green-light">Learn More</a>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:40px;">
+      <table class="spec-table" style="background:var(--near-black); border:1px solid var(--gray-border);">
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Architecture</th>
+            <th>CUDA Cores</th>
+            <th>VRAM</th>
+            <th>Boost Clock</th>
+            <th>AI TOPS</th>
+            <th>TDP</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="key">RTX 5090</td>
+            <td>Blackwell GB202</td>
+            <td class="highlight">21,760</td>
+            <td>32GB GDDR7</td>
+            <td>2.41 GHz</td>
+            <td class="highlight">3,352</td>
+            <td>575W</td>
+          </tr>
+          <tr>
+            <td class="key">RTX 5080</td>
+            <td>Blackwell GB203</td>
+            <td>10,752</td>
+            <td>16GB GDDR7</td>
+            <td>2.62 GHz</td>
+            <td class="highlight">1,801</td>
+            <td>360W</td>
+          </tr>
+          <tr>
+            <td class="key">RTX 5070 Ti</td>
+            <td>Blackwell GB203</td>
+            <td>8,960</td>
+            <td>16GB GDDR7</td>
+            <td>2.45 GHz</td>
+            <td>1,406</td>
+            <td>300W</td>
+          </tr>
+          <tr>
+            <td class="key">RTX 5070</td>
+            <td>Blackwell GB205</td>
+            <td>6,144</td>
+            <td>12GB GDDR7</td>
+            <td>2.51 GHz</td>
+            <td>988</td>
+            <td>250W</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">NVI<span>D</span>IA</div>
+        <p>NVIDIA is the world leader in visual computing and AI. Our products span gaming, professional visualization, data center, and automotive markets.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Products</h5>
+        <ul>
+          <li><a href="#">GeForce RTX</a></li>
+          <li><a href="#">Quadro RTX</a></li>
+          <li><a href="#">Tesla / H Series</a></li>
+          <li><a href="#">DRIVE Platform</a></li>
+          <li><a href="#">Jetson</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>AI & Software</h5>
+        <ul>
+          <li><a href="#">CUDA</a></li>
+          <li><a href="#">TensorRT</a></li>
+          <li><a href="#">NIM Microservices</a></li>
+          <li><a href="#">Omniverse</a></li>
+          <li><a href="#">RAPIDS</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Solutions</h5>
+        <ul>
+          <li><a href="#">Enterprise AI</a></li>
+          <li><a href="#">Cloud Services</a></li>
+          <li><a href="#">Gaming</a></li>
+          <li><a href="#">Healthcare</a></li>
+          <li><a href="#">Robotics</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <ul>
+          <li><a href="#">About NVIDIA</a></li>
+          <li><a href="#">Investor Relations</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Research</a></li>
+          <li><a href="#">News</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 NVIDIA Corporation. All rights reserved.</span>
+      <span>Privacy Policy &#47; Terms of Use &#47; Cookie Policy</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

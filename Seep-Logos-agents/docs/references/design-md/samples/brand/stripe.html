@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Stripe — Design Template</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --purple:#533afd;
+  --purple-hover:#4434d4;
+  --purple-light:#b9b9f9;
+  --purple-bg:rgba(83,58,253,0.05);
+  --navy:#061b31;
+  --brand-dark:#1c1e54;
+  --slate:#64748d;
+  --label:#273951;
+  --border:#e5edf5;
+  --ruby:#ea2261;
+  --magenta:#f96bee;
+  --success:#15be53;
+  --success-text:#108c3d;
+  --white:#fff;
+  --shadow-std:rgba(50,50,93,0.25) 0px 30px 45px -30px,rgba(0,0,0,0.10) 0px 18px 36px -18px;
+  --shadow-sm:rgba(23,23,23,0.06) 0px 3px 6px;
+  --shadow-ambient:rgba(23,23,23,0.08) 0px 15px 35px;
+}
+body{
+  background:var(--white);color:var(--navy);
+  font-family:"SF Pro Display",system-ui,-apple-system,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;font-size:16px;
+}
+
+/* ─── NAV ─── */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(255,255,255,0.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:0 32px;height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav-logo{font-size:22px;font-weight:300;color:var(--navy);text-decoration:none;letter-spacing:-0.5px}
+.nav-links{display:flex;align-items:center;gap:8px}
+.nav-links a{font-size:14px;font-weight:400;color:var(--navy);text-decoration:none;padding:8px 12px;border-radius:6px;transition:background .15s}
+.nav-links a:hover{background:rgba(6,27,49,0.05)}
+.nav-right{display:flex;align-items:center;gap:8px}
+.nav-link-plain{font-size:14px;font-weight:400;color:var(--navy);text-decoration:none;padding:8px 12px}
+.nav-link-plain:hover{color:var(--purple)}
+.nav-btn{
+  background:var(--purple);color:#fff;border:none;
+  padding:8px 16px;border-radius:4px;font-size:14px;font-weight:400;cursor:pointer;
+  text-decoration:none;transition:background .15s;
+}
+.nav-btn:hover{background:var(--purple-hover)}
+
+/* ─── HERO ─── */
+.hero{
+  padding:96px 32px 80px;max-width:1080px;margin:0 auto;text-align:center;
+  position:relative;overflow:hidden;
+}
+.hero-deco{
+  position:absolute;top:-60px;left:50%;transform:translateX(-50%);
+  width:800px;height:400px;
+  background:radial-gradient(ellipse at 30% 50%,rgba(234,34,97,0.12) 0%,transparent 60%),
+             radial-gradient(ellipse at 70% 50%,rgba(249,107,238,0.10) 0%,transparent 60%);
+  pointer-events:none;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(83,58,253,0.06);border:1px solid rgba(83,58,253,0.2);
+  border-radius:4px;padding:4px 10px;
+  font-size:12px;font-weight:400;color:var(--purple);margin-bottom:28px;
+}
+.hero h1{
+  font-size:56px;font-weight:300;line-height:1.03;letter-spacing:-1.4px;
+  color:var(--navy);margin-bottom:24px;position:relative;z-index:1;
+}
+.hero-sub{
+  font-size:18px;font-weight:300;line-height:1.40;color:var(--slate);
+  max-width:560px;margin:0 auto 40px;
+}
+.hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-purple{
+  background:var(--purple);color:#fff;border:none;
+  padding:10px 22px;border-radius:4px;font-size:16px;font-weight:400;cursor:pointer;
+  text-decoration:none;transition:background .15s;
+}
+.btn-purple:hover{background:var(--purple-hover)}
+.btn-outline{
+  background:transparent;color:var(--purple);border:1px solid var(--purple-light);
+  padding:10px 22px;border-radius:4px;font-size:16px;font-weight:400;cursor:pointer;
+  text-decoration:none;transition:background .15s;
+}
+.btn-outline:hover{background:var(--purple-bg)}
+
+/* ─── DASHBOARD PREVIEW ─── */
+.preview-wrap{padding:0 32px 80px;max-width:1080px;margin:0 auto}
+.dashboard{
+  background:#fff;border:1px solid var(--border);border-radius:8px;
+  box-shadow:var(--shadow-std);overflow:hidden;
+}
+.dash-header{
+  background:#f6f9fc;border-bottom:1px solid var(--border);
+  padding:12px 20px;display:flex;align-items:center;gap:12px;
+}
+.dash-header-dot{width:8px;height:8px;border-radius:50%;background:var(--purple);opacity:0.6}
+.dash-header span{font-size:12px;color:var(--slate);font-weight:400}
+.dash-body{display:grid;grid-template-columns:200px 1fr;min-height:320px}
+.dash-sidebar{
+  border-right:1px solid var(--border);padding:20px 0;
+}
+.dash-sidebar-item{
+  padding:8px 20px;font-size:14px;font-weight:400;color:var(--slate);cursor:pointer;
+  display:flex;align-items:center;gap:8px;transition:background .1s;
+}
+.dash-sidebar-item:hover{background:rgba(83,58,253,0.04)}
+.dash-sidebar-item.active{background:rgba(83,58,253,0.06);color:var(--purple)}
+.dash-main{padding:24px}
+.dash-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.stat-card{
+  border:1px solid var(--border);border-radius:5px;padding:16px;
+  box-shadow:var(--shadow-sm);
+}
+.stat-label{font-size:12px;font-weight:400;color:var(--slate);margin-bottom:8px}
+.stat-value{font-size:24px;font-weight:300;letter-spacing:-0.26px;color:var(--navy);font-variant-numeric:tabular-nums}
+.stat-badge{
+  display:inline-flex;align-items:center;font-size:10px;font-weight:300;
+  background:rgba(21,190,83,0.20);color:var(--success-text);
+  border:1px solid rgba(21,190,83,0.4);border-radius:4px;padding:1px 6px;margin-top:6px;
+}
+.dash-table{border:1px solid var(--border);border-radius:5px;overflow:hidden}
+.table-header{
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;
+  background:#f6f9fc;padding:8px 16px;
+  font-size:12px;font-weight:400;color:var(--slate);
+  border-bottom:1px solid var(--border);
+}
+.table-row{
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;
+  padding:12px 16px;font-size:13px;color:var(--navy);
+  border-bottom:1px solid var(--border);
+  transition:background .1s;cursor:pointer;
+}
+.table-row:last-child{border-bottom:none}
+.table-row:hover{background:rgba(83,58,253,0.02)}
+.badge-success{
+  display:inline-flex;padding:1px 8px;font-size:11px;
+  background:rgba(21,190,83,0.15);color:var(--success-text);
+  border-radius:4px;border:1px solid rgba(21,190,83,0.3);
+}
+.badge-pending{
+  display:inline-flex;padding:1px 8px;font-size:11px;
+  background:rgba(249,107,238,0.12);color:#8a1f7a;
+  border-radius:4px;border:1px solid rgba(249,107,238,0.3);
+}
+
+/* ─── FEATURES ─── */
+.section-features{padding:0 32px 80px;max-width:1080px;margin:0 auto}
+.section-features h2{font-size:32px;font-weight:300;letter-spacing:-0.64px;color:var(--navy);margin-bottom:8px}
+.section-features .section-sub{font-size:16px;font-weight:300;color:var(--slate);margin-bottom:48px;max-width:520px}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.feature-card{
+  background:#fff;border:1px solid var(--border);border-radius:6px;padding:24px;
+  box-shadow:var(--shadow-sm);transition:box-shadow .2s;
+}
+.feature-card:hover{box-shadow:var(--shadow-ambient)}
+.feature-card .icon{font-size:20px;margin-bottom:12px}
+.feature-card h3{font-size:16px;font-weight:300;letter-spacing:-0.26px;color:var(--navy);margin-bottom:8px}
+.feature-card p{font-size:14px;font-weight:300;color:var(--slate);line-height:1.5}
+.feature-card a{display:inline-block;margin-top:12px;font-size:14px;color:var(--purple);text-decoration:none}
+.feature-card a:hover{text-decoration:underline}
+
+/* ─── DARK BRAND SECTION ─── */
+.section-brand{
+  background:var(--brand-dark);padding:96px 32px;text-align:center;
+}
+.section-brand h2{
+  font-size:48px;font-weight:300;letter-spacing:-0.96px;color:#fff;
+  margin-bottom:20px;
+}
+.section-brand p{
+  font-size:18px;font-weight:300;color:rgba(255,255,255,0.65);
+  max-width:520px;margin:0 auto 40px;line-height:1.5;
+}
+.section-brand .btn-purple{font-size:16px;padding:12px 28px}
+.brand-stats{
+  display:flex;justify-content:center;gap:64px;margin-top:64px;
+  padding-top:64px;border-top:1px solid rgba(255,255,255,0.1);
+}
+.brand-stat-value{font-size:40px;font-weight:300;letter-spacing:-0.96px;color:#fff;font-variant-numeric:tabular-nums}
+.brand-stat-label{font-size:14px;font-weight:300;color:rgba(255,255,255,0.5);margin-top:4px}
+
+/* ─── CODE SECTION ─── */
+.section-code{padding:0 32px 80px;max-width:1080px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.code-info h2{font-size:32px;font-weight:300;letter-spacing:-0.64px;color:var(--navy);margin-bottom:12px}
+.code-info p{font-size:16px;font-weight:300;color:var(--slate);line-height:1.5;margin-bottom:24px}
+.code-block{
+  background:#0d1117;border-radius:6px;border:1px solid rgba(255,255,255,0.08);
+  padding:24px;font-family:ui-monospace,"SF Mono",Consolas,monospace;font-size:13px;line-height:2;
+  color:rgba(255,255,255,0.75);
+  box-shadow:rgba(50,50,93,0.25) 0px 30px 45px -30px,rgba(0,0,0,0.10) 0px 18px 36px -18px;
+}
+.code-comment{color:rgba(255,255,255,0.3)}
+.code-kw{color:#9fb1d4}
+.code-str{color:#a8d4b4}
+.code-fn{color:#b9b9f9}
+.code-num{color:#f9ae58}
+
+/* ─── FOOTER ─── */
+footer{border-top:1px solid var(--border);padding:48px 32px 32px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:32px}
+.footer-brand .logo{font-size:20px;font-weight:300;color:var(--navy);margin-bottom:12px}
+.footer-brand p{font-size:13px;font-weight:300;color:var(--slate);max-width:200px;line-height:1.5}
+.footer-col h4{font-size:12px;font-weight:400;color:var(--label);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:14px}
+.footer-col a{display:block;font-size:13px;font-weight:300;color:var(--slate);text-decoration:none;margin-bottom:9px}
+.footer-col a:hover{color:var(--purple)}
+.footer-bottom{padding:16px 32px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:12px;font-weight:300;color:var(--slate)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">stripe</a>
+  <div class="nav-links">
+    <a href="#">製品</a>
+    <a href="#">料金体系</a>
+    <a href="#">開発者向け</a>
+    <a href="#">リソース</a>
+    <a href="#">企業向け</a>
+  </div>
+  <div class="nav-right">
+    <a class="nav-link-plain" href="#">ログイン</a>
+    <a class="nav-btn" href="#">今すぐ始める</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-deco"></div>
+  <div class="hero-eyebrow">✦ Stripe Sessions 2026 — 登録受付中</div>
+  <h1>インターネット経済の<br>インフラをつくる</h1>
+  <p class="hero-sub">数百万の企業がStripeを使って決済を受け付け、売上を管理し、ビジネスを成長させています。</p>
+  <div class="hero-actions">
+    <a class="btn-purple" href="#">今すぐ始める</a>
+    <a class="btn-outline" href="#">お問い合わせ</a>
+  </div>
+</section>
+
+<!-- DASHBOARD PREVIEW -->
+<div class="preview-wrap">
+  <div class="dashboard">
+    <div class="dash-header">
+      <div class="dash-header-dot"></div>
+      <div class="dash-header-dot" style="background:var(--ruby)"></div>
+      <div class="dash-header-dot" style="background:var(--success)"></div>
+      <span>dashboard.stripe.com</span>
+    </div>
+    <div class="dash-body">
+      <div class="dash-sidebar">
+        <div class="dash-sidebar-item active">📊 ホーム</div>
+        <div class="dash-sidebar-item">💳 決済</div>
+        <div class="dash-sidebar-item">📦 商品</div>
+        <div class="dash-sidebar-item">👥 顧客</div>
+        <div class="dash-sidebar-item">📈 レポート</div>
+        <div class="dash-sidebar-item">🔗 Connect</div>
+        <div class="dash-sidebar-item">⚙️ 設定</div>
+      </div>
+      <div class="dash-main">
+        <div class="dash-stats">
+          <div class="stat-card">
+            <div class="stat-label">今日の収益</div>
+            <div class="stat-value">¥1,248,300</div>
+            <div class="stat-badge">↑ 12.4%</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">今月の収益</div>
+            <div class="stat-value">¥24,882,100</div>
+            <div class="stat-badge">↑ 8.1%</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">新規顧客</div>
+            <div class="stat-value">341</div>
+            <div class="stat-badge">↑ 5.7%</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">成功率</div>
+            <div class="stat-value">98.6%</div>
+            <div class="stat-badge">↑ 0.2%</div>
+          </div>
+        </div>
+        <div class="dash-table">
+          <div class="table-header">
+            <span>説明</span><span>金額</span><span>ステータス</span><span>日時</span>
+          </div>
+          <div class="table-row">
+            <span>Starter Plan · oda.kenji@gmail.com</span>
+            <span>¥9,800</span>
+            <span><span class="badge-success">成功</span></span>
+            <span style="color:var(--slate);font-size:12px">今日 14:32</span>
+          </div>
+          <div class="table-row">
+            <span>Pro Plan · tanaka.yuki@co.jp</span>
+            <span>¥29,800</span>
+            <span><span class="badge-success">成功</span></span>
+            <span style="color:var(--slate);font-size:12px">今日 13:17</span>
+          </div>
+          <div class="table-row">
+            <span>Enterprise · seep-logos.com</span>
+            <span>¥198,000</span>
+            <span><span class="badge-pending">処理中</span></span>
+            <span style="color:var(--slate);font-size:12px">今日 11:54</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="section-features">
+  <h2>ビジネスに必要なすべてを</h2>
+  <p class="section-sub">Stripeはシンプルな決済から、グローバル展開、サブスクリプション管理まで一つのプラットフォームで。</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="icon">💳</div>
+      <h3>Payments</h3>
+      <p>135以上の通貨と多様な決済手段に対応。クレジットカード、銀行振込、BNPL。</p>
+      <a href="#">詳しく見る →</a>
+    </div>
+    <div class="feature-card">
+      <div class="icon">🔄</div>
+      <h3>Subscriptions</h3>
+      <p>複雑なサブスクリプションモデルも、従量課金も、試用期間も一行のコードで。</p>
+      <a href="#">詳しく見る →</a>
+    </div>
+    <div class="feature-card">
+      <div class="icon">🌍</div>
+      <h3>Connect</h3>
+      <p>マーケットプレイスや配車サービスに。複数当事者間の複雑な資金移動を自動化。</p>
+      <a href="#">詳しく見る →</a>
+    </div>
+  </div>
+</section>
+
+<!-- CODE SECTION -->
+<section class="section-code">
+  <div class="code-info">
+    <h2>数行で本番環境へ</h2>
+    <p>Stripeの強力なAPIは、シンプルで予測可能です。数分で統合し、数時間でローンチできます。</p>
+    <a class="btn-purple" href="#">ドキュメントを読む</a>
+  </div>
+  <div class="code-block">
+    <div><span class="code-comment">// サブスクリプション作成</span></div>
+    <div><span class="code-kw">const</span> subscription = <span class="code-kw">await</span> stripe</div>
+    <div>&nbsp;&nbsp;.<span class="code-fn">subscriptions</span>.<span class="code-fn">create</span>({</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;customer: <span class="code-str">'cus_XXXXXXXXXXXX'</span>,</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;items: [{</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price: <span class="code-str">'price_1MowQULkdIwHu7ix'</span>,</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;quantity: <span class="code-num">1</span></div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;}],</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;payment_behavior: <span class="code-str">'default_incomplete'</span>,</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;expand: [<span class="code-str">'latest_invoice.payment_intent'</span>]</div>
+    <div>&nbsp;&nbsp;})</div>
+  </div>
+</section>
+
+<!-- DARK BRAND SECTION -->
+<section class="section-brand">
+  <h2>数百万のビジネスが<br>Stripeを選ぶ理由</h2>
+  <p>Amazon、Lyft、Booking.com、そして世界中のスタートアップがStripeで売上を伸ばしています。</p>
+  <a class="btn-purple" href="#">導入事例を見る</a>
+  <div class="brand-stats">
+    <div>
+      <div class="brand-stat-value">$1T+</div>
+      <div class="brand-stat-label">年間処理額</div>
+    </div>
+    <div>
+      <div class="brand-stat-value">135+</div>
+      <div class="brand-stat-label">対応通貨</div>
+    </div>
+    <div>
+      <div class="brand-stat-value">99.99%</div>
+      <div class="brand-stat-label">稼働率</div>
+    </div>
+    <div>
+      <div class="brand-stat-value">M+</div>
+      <div class="brand-stat-label">API呼び出し/日</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <div class="logo">stripe</div>
+    <p>インターネット経済の金融インフラ。世界中の企業のために構築。</p>
+  </div>
+  <div class="footer-col">
+    <h4>製品</h4>
+    <a href="#">Payments</a>
+    <a href="#">Billing</a>
+    <a href="#">Connect</a>
+    <a href="#">Issuing</a>
+    <a href="#">Terminal</a>
+  </div>
+  <div class="footer-col">
+    <h4>開発者</h4>
+    <a href="#">ドキュメント</a>
+    <a href="#">APIリファレンス</a>
+    <a href="#">ライブラリ</a>
+    <a href="#">ステータス</a>
+  </div>
+  <div class="footer-col">
+    <h4>企業</h4>
+    <a href="#">会社概要</a>
+    <a href="#">採用情報</a>
+    <a href="#">ブログ</a>
+    <a href="#">お問い合わせ</a>
+  </div>
+  <div class="footer-col">
+    <h4>法的情報</h4>
+    <a href="#">プライバシー</a>
+    <a href="#">利用規約</a>
+    <a href="#">Cookie</a>
+    <a href="#">ライセンス</a>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <span>© 2026 Stripe, Inc. — Design Template</span>
+  <span>世界中のビジネスを支えるインフラ</span>
+</div>
+
+</body>
+</html>

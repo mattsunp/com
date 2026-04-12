@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lamborghini — EXPECT THE UNEXPECTED</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #FFC000;
+    --dark-gold: #917300;
+    --white: #FFFFFF;
+    --black: #000000;
+    --charcoal: #202020;
+    --dark-iron: #181818;
+    --ash: #7D7D7D;
+    --steel: #969696;
+    --smoke: #F5F5F5;
+    --graphite: #494949;
+    --teal-action: #1EAEDB;
+    --font: Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  html { font-size: 16px; }
+  body {
+    font-family: var(--font);
+    background: var(--black);
+    color: var(--white);
+    font-size: 16px;
+    line-height: 1.5;
+    overflow-x: hidden;
+  }
+
+  * { letter-spacing: 0.02em; }
+
+  /* ─── NAVIGATION ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 200;
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: transparent;
+  }
+  .nav-hamburger {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--white);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+  .hamburger-icon {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .hamburger-icon span {
+    display: block;
+    width: 22px;
+    height: 1px;
+    background: var(--white);
+  }
+  .nav-logo {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--white);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+  }
+  .nav-logo .bull {
+    font-size: 20px;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 2px;
+  }
+  .nav-right { display: flex; align-items: center; gap: 20px; }
+  .nav-icon { color: var(--white); font-size: 18px; cursor: pointer; }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    background: var(--black);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding-bottom: 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.6) 70%, rgba(0,0,0,0.9) 100%);
+    z-index: 1;
+  }
+  .hero-visual {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 220px;
+    opacity: 0.12;
+    pointer-events: none;
+    z-index: 0;
+    user-select: none;
+  }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 0 40px;
+  }
+  .hero-label {
+    font-size: 12px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+  .hero-title {
+    font-size: 80px;
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 1.1;
+    color: var(--white);
+    letter-spacing: 0.08em;
+    margin-bottom: 32px;
+  }
+  .hero-subtitle {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--ash);
+    letter-spacing: 0.06em;
+    margin-bottom: 48px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .hero-btns { display: flex; gap: 20px; justify-content: center; }
+  .btn-gold {
+    background: var(--gold);
+    color: var(--black);
+    padding: 16px 40px;
+    border: none;
+    border-radius: 0;
+    font-size: 14px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.2s;
+  }
+  .btn-gold:hover { background: var(--dark-gold); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--white);
+    padding: 15px 40px;
+    border: 1px solid rgba(255,255,255,0.5);
+    border-radius: 0;
+    font-size: 14px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    opacity: 0.5;
+    transition: background 0.2s, opacity 0.2s;
+  }
+  .btn-ghost:hover { background: var(--teal-action); opacity: 0.7; }
+  .hero-progress {
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 35%;
+    height: 2px;
+    background: var(--white);
+    opacity: 0.4;
+  }
+
+  /* ─── SECTIONS ─── */
+  .section { padding: 80px 40px; background: var(--black); }
+  .section-charcoal { padding: 80px 40px; background: var(--charcoal); }
+  .section-inner { max-width: 1440px; margin: 0 auto; }
+
+  .section-header { margin-bottom: 56px; }
+  .section-eyebrow {
+    font-size: 10px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-size: 54px;
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 1.18;
+    color: var(--white);
+    letter-spacing: 0.06em;
+  }
+
+  /* ─── MODEL LINEUP ─── */
+  .models-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--charcoal);
+  }
+  .model-card {
+    background: var(--black);
+    padding: 40px 32px;
+    transition: background 0.2s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .model-card:hover { background: var(--charcoal); }
+  .model-visual {
+    font-size: 80px;
+    margin-bottom: 20px;
+    display: block;
+    text-align: center;
+  }
+  .model-category {
+    font-size: 10px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--ash);
+    margin-bottom: 8px;
+  }
+  .model-name {
+    font-size: 27px;
+    font-weight: 400;
+    text-transform: uppercase;
+    color: var(--white);
+    letter-spacing: 0.06em;
+    margin-bottom: 12px;
+  }
+  .model-desc {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--ash);
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+  .model-specs { display: flex; gap: 24px; margin-bottom: 24px; }
+  .model-spec-item { }
+  .spec-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--ash); }
+  .spec-value { font-size: 20px; font-weight: 400; color: var(--white); }
+  .spec-unit { font-size: 12px; color: var(--steel); }
+  .model-link {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--white);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-color: rgba(255,255,255,0.3);
+    transition: text-decoration-color 0.2s;
+  }
+  .model-link:hover { text-decoration-color: var(--white); }
+
+  /* ─── FULL-WIDTH FEATURE ─── */
+  .feature-full {
+    background: var(--dark-iron);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+  }
+  .feature-visual-bg {
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 55%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 300px;
+    opacity: 0.08;
+    pointer-events: none;
+  }
+  .feature-content {
+    padding: 80px 40px;
+    max-width: 580px;
+    position: relative;
+    z-index: 1;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+  }
+  .feature-content .section-eyebrow { margin-bottom: 16px; }
+  .feature-content h2 {
+    font-size: 40px;
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 1.15;
+    color: var(--white);
+    letter-spacing: 0.06em;
+    margin-bottom: 20px;
+  }
+  .feature-content p {
+    font-size: 16px;
+    color: var(--ash);
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+  .specs-row { display: flex; gap: 40px; margin-bottom: 40px; flex-wrap: wrap; }
+  .spec-large .spec-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--ash); display: block; margin-bottom: 4px; }
+  .spec-large .spec-value { font-size: 36px; font-weight: 400; color: var(--gold); line-height: 1; }
+  .spec-large .spec-unit { font-size: 14px; color: var(--ash); margin-left: 4px; }
+
+  /* ─── HERITAGE ─── */
+  .heritage-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+  }
+  .heritage-text h2 {
+    font-size: 40px;
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 1.15;
+    color: var(--white);
+    letter-spacing: 0.06em;
+    margin-bottom: 20px;
+  }
+  .heritage-text p {
+    font-size: 15px;
+    color: var(--ash);
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+  .timeline { margin-top: 32px; }
+  .timeline-item {
+    display: flex;
+    gap: 20px;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .timeline-year {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--gold);
+    width: 56px;
+    flex-shrink: 0;
+  }
+  .timeline-event { font-size: 14px; color: var(--ash); line-height: 1.5; }
+  .heritage-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .heritage-stat {
+    background: var(--charcoal);
+    padding: 28px;
+    text-align: center;
+  }
+  .heritage-stat-value { font-size: 48px; font-weight: 400; color: var(--gold); line-height: 1; letter-spacing: -0.02em; }
+  .heritage-stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--ash); margin-top: 8px; }
+
+  /* ─── NEWS ─── */
+  .news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--charcoal); }
+  .news-card {
+    background: var(--black);
+    padding: 32px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .news-card:hover { background: var(--charcoal); }
+  .news-date { font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--ash); margin-bottom: 12px; }
+  .news-title { font-size: 18px; font-weight: 400; text-transform: uppercase; color: var(--white); letter-spacing: 0.04em; margin-bottom: 12px; line-height: 1.3; }
+  .news-desc { font-size: 14px; color: var(--ash); line-height: 1.7; margin-bottom: 20px; }
+  .news-link {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--white);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+    padding-bottom: 2px;
+    transition: border-color 0.2s;
+  }
+  .news-link:hover { border-color: var(--white); }
+
+  /* ─── CONFIGURATOR CTA ─── */
+  .config-cta {
+    background: var(--gold);
+    padding: 64px 40px;
+    text-align: center;
+  }
+  .config-cta h2 {
+    font-size: 40px;
+    font-weight: 400;
+    text-transform: uppercase;
+    color: var(--black);
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+  }
+  .config-cta p {
+    font-size: 16px;
+    color: rgba(0,0,0,0.6);
+    margin-bottom: 32px;
+    letter-spacing: 0.04em;
+  }
+  .btn-black {
+    background: var(--black);
+    color: var(--white);
+    padding: 16px 48px;
+    border: none;
+    border-radius: 0;
+    font-size: 14px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.2s;
+  }
+  .btn-black:hover { background: var(--graphite); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--dark-iron);
+    padding: 48px 40px 24px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  .footer-inner { max-width: 1440px; margin: 0 auto; }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .footer-brand-name {
+    font-size: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .footer-brand-name span { color: var(--gold); }
+  .footer-brand p { font-size: 13px; color: var(--ash); line-height: 1.7; }
+  .footer-col h5 {
+    font-size: 10px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--steel);
+    margin-bottom: 16px;
+  }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 10px; }
+  .footer-col ul li a {
+    font-size: 13px;
+    color: var(--ash);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    transition: color 0.2s;
+  }
+  .footer-col ul li a:hover { color: var(--gold); }
+  .footer-bottom { display: flex; justify-content: space-between; font-size: 11px; color: var(--ash); align-items: center; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 1024px) {
+    .hero-title { font-size: 54px; }
+    .models-grid { grid-template-columns: repeat(2, 1fr); }
+    .heritage-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .news-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 767px) {
+    nav { padding: 16px 20px; }
+    .hero-title { font-size: 40px; }
+    .section { padding: 56px 20px; }
+    .section-title { font-size: 32px; }
+    .models-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .heritage-stats { grid-template-columns: 1fr; }
+    .specs-row { gap: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <div class="nav-hamburger">
+    <div class="hamburger-icon">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    MENU
+  </div>
+  <div class="nav-logo">
+    <span class="bull">&#9651;</span>
+    LAMBORGHINI
+  </div>
+  <div class="nav-right">
+    <div class="nav-icon">&#128269;</div>
+    <div class="nav-icon">&#9733;</div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-overlay"></div>
+  <div class="hero-visual">&#127946;</div>
+  <div class="hero-content">
+    <div class="hero-label">2026 World Premiere</div>
+    <h1 class="hero-title">TEMERARIO</h1>
+    <p class="hero-subtitle">The new era begins. Plug-in hybrid V8 supercar. 920 CV. The future of Lamborghini performance.</p>
+    <div class="hero-btns">
+      <a href="#" class="btn-gold">Discover More</a>
+      <a href="#" class="btn-ghost">Book a Test Drive</a>
+    </div>
+  </div>
+  <div class="hero-progress"></div>
+</section>
+
+<!-- MODEL LINEUP -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-eyebrow">Model Range</div>
+      <h2 class="section-title">CHOOSE YOUR SUPERCAR</h2>
+    </div>
+    <div class="models-grid">
+      <div class="model-card">
+        <span class="model-visual">&#127946;</span>
+        <div class="model-category">V8 PHEV Supercar</div>
+        <h3 class="model-name">TEMERARIO</h3>
+        <p class="model-desc">The successor to the Huracán. Twin-turbo V8 with three electric motors and 920 CV of combined power. The most technologically advanced Lamborghini ever.</p>
+        <div class="model-specs">
+          <div class="model-spec-item">
+            <div class="spec-label">Combined Power</div>
+            <div class="spec-value">920 <span class="spec-unit">CV</span></div>
+          </div>
+          <div class="model-spec-item">
+            <div class="spec-label">0–100 km/h</div>
+            <div class="spec-value">2.7 <span class="spec-unit">s</span></div>
+          </div>
+        </div>
+        <a href="#" class="model-link">Explore Temerario &#8594;</a>
+      </div>
+      <div class="model-card">
+        <span class="model-visual">&#9889;</span>
+        <div class="model-category">V12 Icona</div>
+        <h3 class="model-name">REVUELTO</h3>
+        <p class="model-desc">The heir to the Aventador. 6.5-litre naturally aspirated V12 combined with three electric motors. 1,001 CV. The pinnacle of Lamborghini's V12 tradition.</p>
+        <div class="model-specs">
+          <div class="model-spec-item">
+            <div class="spec-label">Combined Power</div>
+            <div class="spec-value">1,001 <span class="spec-unit">CV</span></div>
+          </div>
+          <div class="model-spec-item">
+            <div class="spec-label">0–100 km/h</div>
+            <div class="spec-value">2.5 <span class="spec-unit">s</span></div>
+          </div>
+        </div>
+        <a href="#" class="model-link">Explore Revuelto &#8594;</a>
+      </div>
+      <div class="model-card">
+        <span class="model-visual">&#129664;</span>
+        <div class="model-category">Super SUV</div>
+        <h3 class="model-name">URUS SE</h3>
+        <p class="model-desc">The world's first Super Sport Utility Vehicle. V8 PHEV with 800 CV. The Urus SE redefined an entire automotive segment.</p>
+        <div class="model-specs">
+          <div class="model-spec-item">
+            <div class="spec-label">Combined Power</div>
+            <div class="spec-value">800 <span class="spec-unit">CV</span></div>
+          </div>
+          <div class="model-spec-item">
+            <div class="spec-label">0–100 km/h</div>
+            <div class="spec-value">3.4 <span class="spec-unit">s</span></div>
+          </div>
+        </div>
+        <a href="#" class="model-link">Explore Urus SE &#8594;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURE: Temerario Detail -->
+<div class="feature-full">
+  <div class="feature-visual-bg">&#9889;</div>
+  <div class="feature-content">
+    <div class="section-eyebrow">TEMERARIO — Technical Excellence</div>
+    <h2>V8 TWIN-TURBO<br>+ 3 ELECTRIC MOTORS</h2>
+    <p>The Temerario's revolutionary powertrain combines a 4.0-litre twin-turbo V8 with three independently controlled electric motors — two on the front axle, one integrated into the DCT gearbox. The result is unparalleled traction and unprecedented performance.</p>
+    <div class="specs-row">
+      <div class="spec-large">
+        <span class="spec-label">Total Output</span>
+        <span class="spec-value">920<span class="spec-unit"> CV</span></span>
+      </div>
+      <div class="spec-large">
+        <span class="spec-label">Top Speed</span>
+        <span class="spec-value">340<span class="spec-unit"> km/h</span></span>
+      </div>
+      <div class="spec-large">
+        <span class="spec-label">Electric Range</span>
+        <span class="spec-value">60<span class="spec-unit"> km</span></span>
+      </div>
+    </div>
+    <a href="#" class="btn-gold">Configure Your Temerario</a>
+  </div>
+</div>
+
+<!-- HERITAGE -->
+<section class="section-charcoal">
+  <div class="section-inner">
+    <div class="heritage-grid">
+      <div class="heritage-text">
+        <div class="section-eyebrow">Heritage &amp; Innovation</div>
+        <h2>60 YEARS OF IMPOSSIBLE MADE REAL</h2>
+        <p>Founded in 1963, Automobili Lamborghini has always challenged convention. From Ferruccio Lamborghini's first V12 to the electrified hypercars of today, we have never accepted limits.</p>
+        <p>Each model is a statement — aggressive, uncompromising, and unmistakably Lamborghini.</p>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-year">1963</div>
+            <div class="timeline-event">Automobili Lamborghini founded in Sant'Agata Bolognese, Italy</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">1966</div>
+            <div class="timeline-event">Miura debuts — inventing the mid-engine supercar concept</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">1974</div>
+            <div class="timeline-event">Countach — the car that defined a generation of posters and dreams</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2023</div>
+            <div class="timeline-event">Revuelto — world's first V12 PHEV supercar unveiled</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2024</div>
+            <div class="timeline-event">Temerario — new era of V8 hybrid performance begins</div>
+          </div>
+        </div>
+      </div>
+      <div class="heritage-stats">
+        <div class="heritage-stat">
+          <div class="heritage-stat-value">63</div>
+          <div class="heritage-stat-label">Years of Excellence</div>
+        </div>
+        <div class="heritage-stat">
+          <div class="heritage-stat-value">10K+</div>
+          <div class="heritage-stat-label">Cars Delivered Annually</div>
+        </div>
+        <div class="heritage-stat">
+          <div class="heritage-stat-value">3</div>
+          <div class="heritage-stat-label">Current Model Lines</div>
+        </div>
+        <div class="heritage-stat">
+          <div class="heritage-stat-value">100%</div>
+          <div class="heritage-stat-label">PHEV by 2024</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWS -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-eyebrow">Latest News</div>
+      <h2 class="section-title">FROM THE HOUSE OF THE BULL</h2>
+    </div>
+    <div class="news-grid">
+      <div class="news-card">
+        <div class="news-date">April 11, 2026</div>
+        <h3 class="news-title">LAMBORGHINI TEMERARIO: RACING CONFIGURATION UNVEILED</h3>
+        <p class="news-desc">The GT3 Evo version of the Temerario takes to the track. Full titanium exhaust, aerodynamic package, and no electric motors — pure V8 racing DNA.</p>
+        <a href="#" class="news-link">Read More</a>
+      </div>
+      <div class="news-card">
+        <div class="news-date">March 28, 2026</div>
+        <h3 class="news-title">URUS SE ACHIEVES RECORD SALES IN ASIA PACIFIC</h3>
+        <p class="news-desc">The Urus SE PHEV marks a new chapter for the Super SUV. Record deliveries in Japan, Korea, and Australia as demand for electrified supercars grows.</p>
+        <a href="#" class="news-link">Read More</a>
+      </div>
+      <div class="news-card">
+        <div class="news-date">March 15, 2026</div>
+        <h3 class="news-title">LAMBORGHINI ACCADEMIA 2026: MASTER YOUR SUPERCAR</h3>
+        <p class="news-desc">The driving education program for Lamborghini owners. From Fiorano to Nürburgring — master the limits of your car with professional instruction.</p>
+        <a href="#" class="news-link">Read More</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONFIGURATOR CTA -->
+<div class="config-cta">
+  <h2>BUILD YOUR LAMBORGHINI</h2>
+  <p>Over 100,000 possible configurations. Start with the model, choose your colour, personalise every detail.</p>
+  <a href="#" class="btn-black">Start Configuration</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-brand-name">LAMBOR<span>G</span>HINI</div>
+        <p>Automobili Lamborghini S.p.A. — Sant'Agata Bolognese, Italia. Established 1963. Challenging convention since day one.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Models</h5>
+        <ul>
+          <li><a href="#">Revuelto</a></li>
+          <li><a href="#">Temerario</a></li>
+          <li><a href="#">Urus SE</a></li>
+          <li><a href="#">Sian FKP 37</a></li>
+          <li><a href="#">Countach LPI 800-4</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Experience</h5>
+        <ul>
+          <li><a href="#">Configure</a></li>
+          <li><a href="#">Test Drive</a></li>
+          <li><a href="#">Accademia</a></li>
+          <li><a href="#">Events</a></li>
+          <li><a href="#">Lifestyle</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <ul>
+          <li><a href="#">Heritage</a></li>
+          <li><a href="#">Design Centre</a></li>
+          <li><a href="#">Sustainability</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Press Room</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Automobili Lamborghini S.p.A. All Rights Reserved.</span>
+      <span>Privacy Policy &#47; Legal Notice</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

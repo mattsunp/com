@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ElevenLabs — The most realistic AI voice platform</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --white: #ffffff;
+    --light-gray: #f5f5f5;
+    --warm-stone: rgba(245,242,239,0.8);
+    --warm-stone-solid: #f5f2ef;
+    --black: #000000;
+    --dark-gray: #4e4e4e;
+    --warm-gray: #777169;
+    --border: #e5e5e5;
+    --border-subtle: rgba(0,0,0,0.05);
+    --inset-shadow: rgba(0,0,0,0.075) 0px 0px 0px 0.5px inset;
+    --outline-ring: rgba(0,0,0,0.06) 0px 0px 0px 1px;
+    --soft-lift: rgba(0,0,0,0.04) 0px 4px 4px;
+    --warm-lift: rgba(78,50,23,0.04) 0px 6px 16px;
+    --card-shadow: rgba(0,0,0,0.4) 0px 0px 1px, rgba(0,0,0,0.04) 0px 4px 4px;
+  }
+  html { background: var(--white); color: var(--black); font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+  a { color: var(--black); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--white);
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px; height: 56px;
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; }
+  .eleven-icon {
+    width: 28px; height: 28px;
+    background: var(--black); border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: var(--white); letter-spacing: 0.5px;
+  }
+  .nav-logo-text { font-size: 17px; font-weight: 500; letter-spacing: 0.15px; }
+  .nav-links { display: flex; gap: 28px; }
+  .nav-links a { font-size: 15px; font-weight: 500; color: #333; letter-spacing: 0.15px; }
+  .nav-links a:hover { text-decoration: none; color: var(--black); }
+  .nav-right { display: flex; gap: 10px; align-items: center; }
+  .btn-nav-white {
+    background: var(--white); color: var(--black);
+    padding: 0px 14px; height: 32px; border-radius: 9999px;
+    font-size: 15px; font-weight: 500;
+    box-shadow: var(--card-shadow);
+    border: none; cursor: pointer; display: inline-flex; align-items: center;
+  }
+  .btn-nav-black {
+    background: var(--black); color: var(--white);
+    padding: 0px 14px; height: 32px; border-radius: 9999px;
+    font-size: 15px; font-weight: 500;
+    border: none; cursor: pointer; display: inline-flex; align-items: center;
+  }
+
+  /* HERO -->*/
+  .hero {
+    padding: 100px 40px 80px;
+    text-align: center; background: var(--white);
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--warm-stone); border-radius: 30px;
+    padding: 6px 14px 6px 10px;
+    font-size: 13px; font-weight: 500; color: var(--warm-gray);
+    margin-bottom: 32px;
+    box-shadow: var(--warm-lift);
+  }
+  .hero-tag-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--warm-gray); }
+  .hero h1 {
+    font-size: 48px; font-weight: 300; line-height: 1.08;
+    letter-spacing: -0.96px; color: var(--black);
+    max-width: 760px; margin: 0 auto 24px;
+  }
+  .hero p {
+    font-size: 18px; font-weight: 400; line-height: 1.60;
+    letter-spacing: 0.18px; color: var(--dark-gray);
+    max-width: 540px; margin: 0 auto 40px;
+  }
+  .hero-ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 80px; }
+  .btn-black-pill {
+    background: var(--black); color: var(--white);
+    padding: 0 14px; height: 40px; border-radius: 9999px;
+    font-size: 15px; font-weight: 500;
+    border: none; cursor: pointer; display: inline-flex; align-items: center;
+  }
+  .btn-black-pill:hover { opacity: 0.85; }
+  .btn-warm-pill {
+    background: var(--warm-stone); color: var(--black);
+    padding: 12px 20px 12px 14px; border-radius: 30px;
+    font-size: 15px; font-weight: 500;
+    border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+    box-shadow: var(--warm-lift);
+  }
+  .btn-warm-pill:hover { opacity: 0.9; }
+  .btn-white-pill {
+    background: var(--white); color: var(--black);
+    padding: 0 14px; height: 40px; border-radius: 9999px;
+    font-size: 15px; font-weight: 500;
+    box-shadow: var(--card-shadow);
+    border: none; cursor: pointer; display: inline-flex; align-items: center;
+  }
+
+  /* WAVEFORM VISUAL -->*/
+  .waveform-section {
+    padding: 20px 40px 80px;
+    max-width: 1100px; margin: 0 auto;
+  }
+  .waveform-card {
+    background: var(--light-gray); border-radius: 24px; overflow: hidden;
+    box-shadow: var(--outline-ring), var(--soft-lift);
+  }
+  .wf-header {
+    padding: 20px 24px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 12px; background: var(--white);
+  }
+  .wf-play { width: 36px; height: 36px; border-radius: 50%; background: var(--black); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+  .wf-play span { color: var(--white); font-size: 12px; margin-left: 2px; }
+  .wf-label { font-size: 15px; font-weight: 500; color: var(--black); letter-spacing: 0.15px; }
+  .wf-sub { font-size: 13px; color: var(--warm-gray); }
+  .wf-badge { margin-left: auto; font-size: 12px; font-weight: 500; padding: 4px 10px; border-radius: 9999px; background: var(--warm-stone-solid); color: var(--warm-gray); }
+  .waveform-visual {
+    padding: 32px 24px;
+    display: flex; align-items: center; gap: 2px; height: 100px;
+    overflow: hidden;
+  }
+  .wf-bar { border-radius: 2px; background: var(--warm-gray); flex-shrink: 0; }
+  .wf-bar-active { background: var(--black); }
+
+  /* VOICES SECTION -->*/
+  .voices {
+    padding: 80px 40px; background: var(--white);
+  }
+  .voices-inner { max-width: 1100px; margin: 0 auto; }
+  .section-label { font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.14px; color: var(--warm-gray); margin-bottom: 12px; display: block; }
+  .section-title { font-size: 36px; font-weight: 300; line-height: 1.17; letter-spacing: normal; color: var(--black); margin-bottom: 16px; }
+  .section-sub { font-size: 18px; color: var(--dark-gray); letter-spacing: 0.18px; line-height: 1.44; margin-bottom: 48px; max-width: 540px; }
+  .voices-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .voice-card {
+    background: var(--white); border-radius: 20px;
+    box-shadow: var(--outline-ring), var(--soft-lift);
+    padding: 20px; cursor: pointer;
+    transition: box-shadow 0.2s;
+  }
+  .voice-card:hover { box-shadow: rgba(0,0,0,0.1) 0px 0px 0px 1px, rgba(0,0,0,0.08) 0px 8px 16px; }
+  .vc-top { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .vc-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700; color: var(--white);
+    flex-shrink: 0;
+  }
+  .vc-info { }
+  .vc-name { font-size: 15px; font-weight: 500; color: var(--black); margin-bottom: 2px; }
+  .vc-meta { font-size: 13px; color: var(--warm-gray); letter-spacing: 0.14px; }
+  .vc-waveform { display: flex; align-items: center; gap: 2px; height: 36px; }
+  .vc-bar { border-radius: 2px; flex-shrink: 0; }
+  .vc-play-btn {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--black); border: none;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--white); font-size: 10px; cursor: pointer;
+    margin-left: auto; flex-shrink: 0;
+  }
+  .vc-tag { display: inline-block; margin-top: 12px; font-size: 12px; font-weight: 500; padding: 3px 8px; border-radius: 4px; }
+
+  /* USE CASES -->*/
+  .usecases {
+    padding: 80px 40px; background: var(--light-gray);
+  }
+  .usecases-inner { max-width: 1100px; margin: 0 auto; }
+  .usecases-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 48px; }
+  .usecase-card {
+    background: var(--white); border-radius: 20px; padding: 28px;
+    box-shadow: var(--outline-ring), var(--soft-lift);
+  }
+  .uc-icon { font-size: 32px; margin-bottom: 16px; display: block; }
+  .uc-title { font-size: 20px; font-weight: 300; line-height: 1.13; color: var(--black); margin-bottom: 10px; }
+  .uc-desc { font-size: 16px; color: var(--dark-gray); line-height: 1.50; letter-spacing: 0.16px; }
+  .uc-link { display: inline-block; margin-top: 16px; font-size: 14px; font-weight: 500; color: var(--warm-gray); text-decoration: underline; }
+
+  /* API SECTION -->*/
+  .api-section {
+    padding: 80px 40px; background: var(--white);
+    display: grid; gap: 64px; align-items: center;
+    max-width: 1100px; margin: 0 auto;
+  }
+  .api-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+  .api-text h2 { font-size: 32px; font-weight: 300; line-height: 1.13; color: var(--black); margin-bottom: 16px; }
+  .api-text p { font-size: 16px; color: var(--dark-gray); line-height: 1.50; letter-spacing: 0.16px; margin-bottom: 24px; }
+  .api-code {
+    background: var(--light-gray); border-radius: 20px; padding: 24px;
+    box-shadow: var(--inset-shadow), var(--outline-ring);
+    font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.85; color: #333;
+  }
+  .ac-key { color: #666; }
+  .ac-string { color: #0a7c42; }
+  .ac-num { color: #1c69d4; }
+  .ac-bracket { color: #888; }
+
+  /* PRICING -->*/
+  .pricing {
+    padding: 80px 40px; background: var(--warm-stone-solid);
+  }
+  .pricing-inner { max-width: 1100px; margin: 0 auto; }
+  .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 48px; }
+  .price-card {
+    background: var(--white); border-radius: 20px; padding: 28px;
+    box-shadow: var(--outline-ring), var(--soft-lift);
+  }
+  .price-card.featured { background: var(--black); color: var(--white); }
+  .price-name { font-size: 16px; font-weight: 500; color: var(--black); margin-bottom: 8px; }
+  .price-card.featured .price-name { color: var(--white); }
+  .price-val { font-size: 48px; font-weight: 300; color: var(--black); line-height: 1.08; }
+  .price-card.featured .price-val { color: var(--white); }
+  .price-period { font-size: 16px; font-weight: 400; }
+  .price-desc { font-size: 14px; color: var(--warm-gray); margin: 12px 0 20px; letter-spacing: 0.14px; }
+  .price-card.featured .price-desc { color: rgba(255,255,255,0.6); }
+  .price-feats { list-style: none; margin-bottom: 24px; }
+  .price-feats li { font-size: 14px; color: var(--dark-gray); padding: 7px 0; border-bottom: 1px solid var(--border); display: flex; gap: 8px; align-items: flex-start; letter-spacing: 0.14px; }
+  .price-feats li::before { content: '✓'; color: var(--warm-gray); flex-shrink: 0; font-weight: 700; }
+  .price-card.featured .price-feats li { border-bottom-color: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); }
+  .price-card.featured .price-feats li::before { color: rgba(255,255,255,0.6); }
+
+  /* FOOTER -->*/
+  footer {
+    background: var(--white); border-top: 1px solid var(--border);
+    padding: 64px 40px 40px;
+  }
+  .footer-inner { max-width: 1100px; margin: 0 auto; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 48px; }
+  .footer-brand p { font-size: 14px; color: var(--warm-gray); margin-top: 12px; line-height: 1.5; letter-spacing: 0.14px; }
+  .footer-col h4 { font-size: 12px; font-weight: 500; color: var(--warm-gray); text-transform: uppercase; letter-spacing: 0.14px; margin-bottom: 16px; }
+  .footer-col a { display: block; font-size: 14px; color: var(--dark-gray); margin-bottom: 8px; letter-spacing: 0.14px; }
+  .footer-col a:hover { color: var(--black); }
+  .footer-bottom { display: flex; justify-content: space-between; padding-top: 24px; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 8px; }
+  .footer-bottom p { font-size: 13px; color: var(--warm-gray); }
+
+  @media (max-width: 1024px) {
+    .voices-grid { grid-template-columns: 1fr 1fr; }
+    .usecases-grid { grid-template-columns: 1fr 1fr; }
+    .api-inner { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+  }
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 32px; }
+    .voices-grid { grid-template-columns: 1fr; }
+    .usecases-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <div class="eleven-icon">11</div>
+    <span class="nav-logo-text">ElevenLabs</span>
+  </div>
+  <div class="nav-links">
+    <a href="#">Products</a>
+    <a href="#">Voices</a>
+    <a href="#">API</a>
+    <a href="#">Pricing</a>
+    <a href="#">Enterprise</a>
+  </div>
+  <div class="nav-right">
+    <button class="btn-nav-white">Log in</button>
+    <button class="btn-nav-black">Sign up free</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag">
+    <div class="hero-tag-dot"></div>
+    The world's most realistic AI voices
+  </div>
+  <h1>Create the highest quality AI audio, in any voice, in any language.</h1>
+  <p>Generate natural-sounding speech, clone voices, and build audio products. Trusted by 1M+ creators and developers worldwide.</p>
+  <div class="hero-ctas">
+    <button class="btn-black-pill">Get started free</button>
+    <button class="btn-warm-pill">
+      &#9654; Hear examples
+    </button>
+  </div>
+</section>
+
+<!-- WAVEFORM VISUAL -->
+<section class="waveform-section">
+  <div class="waveform-card">
+    <div class="wf-header">
+      <div class="wf-play"><span>&#9654;</span></div>
+      <div>
+        <div class="wf-label">Text to Speech — Sample</div>
+        <div class="wf-sub">"The future of voice generation is here. Natural. Expressive. Human."</div>
+      </div>
+      <div class="wf-badge">Bella — English US</div>
+    </div>
+    <div class="waveform-visual" id="waveform-main">
+      <!-- Generated via JS-like inline style variation -->
+      <script>
+        // Inline waveform bars rendered directly
+      </script>
+      <div style="display:flex; gap:2px; align-items:center; height:100%; width:100%;">
+        <!-- 80 bars with varying heights -->
+        <style>
+          .wf-bar { border-radius: 2px; flex-shrink:0; background: #e0ddd8; width: 4px; }
+          .wf-bar-active { background: #000; }
+        </style>
+        <div class="wf-bar" style="height:15%"></div><div class="wf-bar" style="height:30%"></div><div class="wf-bar" style="height:55%"></div><div class="wf-bar wf-bar-active" style="height:80%"></div><div class="wf-bar wf-bar-active" style="height:90%"></div><div class="wf-bar wf-bar-active" style="height:75%"></div><div class="wf-bar wf-bar-active" style="height:60%"></div><div class="wf-bar wf-bar-active" style="height:85%"></div><div class="wf-bar wf-bar-active" style="height:95%"></div><div class="wf-bar wf-bar-active" style="height:70%"></div><div class="wf-bar wf-bar-active" style="height:50%"></div><div class="wf-bar wf-bar-active" style="height:40%"></div><div class="wf-bar wf-bar-active" style="height:65%"></div><div class="wf-bar wf-bar-active" style="height:80%"></div><div class="wf-bar wf-bar-active" style="height:45%"></div><div class="wf-bar wf-bar-active" style="height:55%"></div><div class="wf-bar wf-bar-active" style="height:70%"></div><div class="wf-bar wf-bar-active" style="height:88%"></div><div class="wf-bar wf-bar-active" style="height:92%"></div><div class="wf-bar wf-bar-active" style="height:75%"></div><div class="wf-bar wf-bar-active" style="height:30%"></div><div class="wf-bar wf-bar-active" style="height:20%"></div><div class="wf-bar wf-bar-active" style="height:50%"></div><div class="wf-bar wf-bar-active" style="height:65%"></div><div class="wf-bar wf-bar-active" style="height:78%"></div><div class="wf-bar wf-bar-active" style="height:90%"></div><div class="wf-bar wf-bar-active" style="height:85%"></div><div class="wf-bar wf-bar-active" style="height:60%"></div><div class="wf-bar wf-bar-active" style="height:40%"></div><div class="wf-bar wf-bar-active" style="height:55%"></div>
+        <div class="wf-bar" style="height:45%"></div><div class="wf-bar" style="height:70%"></div><div class="wf-bar" style="height:55%"></div><div class="wf-bar" style="height:40%"></div><div class="wf-bar" style="height:30%"></div><div class="wf-bar" style="height:50%"></div><div class="wf-bar" style="height:65%"></div><div class="wf-bar" style="height:80%"></div><div class="wf-bar" style="height:75%"></div><div class="wf-bar" style="height:60%"></div><div class="wf-bar" style="height:45%"></div><div class="wf-bar" style="height:35%"></div><div class="wf-bar" style="height:55%"></div><div class="wf-bar" style="height:70%"></div><div class="wf-bar" style="height:85%"></div><div class="wf-bar" style="height:90%"></div><div class="wf-bar" style="height:75%"></div><div class="wf-bar" style="height:50%"></div><div class="wf-bar" style="height:40%"></div><div class="wf-bar" style="height:60%"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VOICES -->
+<section class="voices">
+  <div class="voices-inner">
+    <span class="section-label">Voice Library</span>
+    <h2 class="section-title">1,000+ voices. Every language.</h2>
+    <p class="section-sub">Browse our Voice Library for the perfect voice. Or clone your own with just one minute of audio.</p>
+    <div class="voices-grid">
+      <div class="voice-card">
+        <div class="vc-top">
+          <div class="vc-avatar" style="background:linear-gradient(135deg,#e8c4a0,#c4906a)">B</div>
+          <div class="vc-info">
+            <div class="vc-name">Bella</div>
+            <div class="vc-meta">American English &middot; Female &middot; Young Adult</div>
+          </div>
+          <button class="vc-play-btn">&#9654;</button>
+        </div>
+        <div class="vc-waveform">
+          <div class="vc-bar" style="width:3px;height:40%;background:#d0cdc8;"></div><div class="vc-bar" style="width:3px;height:60%;background:#d0cdc8;"></div><div class="vc-bar" style="width:3px;height:80%;background:#000;"></div><div class="vc-bar" style="width:3px;height:100%;background:#000;"></div><div class="vc-bar" style="width:3px;height:80%;background:#000;"></div><div class="vc-bar" style="width:3px;height:60%;background:#d0cdc8;"></div><div class="vc-bar" style="width:3px;height:40%;background:#d0cdc8;"></div><div class="vc-bar" style="width:3px;height:55%;background:#d0cdc8;"></div><div class="vc-bar" style="width:3px;height:70%;background:#d0cdc8;"></div><div class="vc-bar" style="width:3px;height:50%;background:#d0cdc8;"></div><div class="vc-bar" style="width:3px;height:30%;background:#d0cdc8;"></div><div class="vc-bar" style="width:3px;height:45%;background:#d0cdc8;"></div>
+        </div>
+        <span class="vc-tag" style="background:#f5f2ef;color:var(--warm-gray)">Narrative</span>
+        <span class="vc-tag" style="background:#f5f5f5;color:var(--dark-gray);margin-left:4px">Calm</span>
+      </div>
+      <div class="voice-card">
+        <div class="vc-top">
+          <div class="vc-avatar" style="background:linear-gradient(135deg,#8ea8c4,#5a7fa0)">A</div>
+          <div class="vc-info">
+            <div class="vc-name">Adam</div>
+            <div class="vc-meta">American English &middot; Male &middot; Middle-aged</div>
+          </div>
+          <button class="vc-play-btn">&#9654;</button>
+        </div>
+        <div class="vc-waveform">
+          <div class="vc-bar" style="width:3px;height:50%;background:#d0cdc8;"></div><div class="vc-bar" style="width:3px;height:70%;background:#d0cdc8;"></div><div class="vc-bar" style="width:3px;height:90%;background:#000;"></div><div class="vc-bar" style="width:3px;height:100%;background:#000;"></div><div class="vc-bar" style="width:3px;height:85%;background:#000;"></div><div class="vc-bar" style="width:3px;height:65%;background:#d0cdc8;"></div><div class="vc-bar" style="width:3px;height:45%;background:#d0cdc8;"></div><div class="vc-bar" style="width:3px;height:60%;background:#d0cdc8;"></div><div class="vc-bar" style="width:3px;height:75%;background:#d0cdc8;"></div><div class="vc-bar" style="width:3px;height:55%;background:#d0cdc8;"></div><div class="vc-bar" style="width:3px;height:35%;background:#d0cdc8;"></div><div class="vc-bar" style="width:3px;height:50%;background:#d0cdc8;"></div>
+        </div>
+        <span class="vc-tag" style="background:#f5f2ef;color:var(--warm-gray)">News</span>
+        <span class="vc-tag" style="background:#f5f5f5;color:var(--dark-gray);margin-left:4px">Deep</span>
+      </div>
+      <div class="voice-card">
+        <div class="vc-top">
+          <div class="vc-avatar" style="background:linear-gradient(135deg,#a8c4b0,#6a9c78)">R</div>
+          <div class="vc-info">
+            <div class="vc-name">Rachel</div>
+            <div class="vc-meta">American English &middot; Female &middot; Young Adult</div>
+          </div>
+          <button class="vc-play-btn">&#9654;</button>
+        </div>
+        <div class="vc-waveform">
+          <div class="vc-bar" style="width:3px;height:35%;background:#d0cdc8;"></div><div class="vc-bar" style="width:3px;height:55%;background:#d0cdc8;"></div><div class="vc-bar" style="width:3px;height:75%;background:#000;"></div><div class="vc-bar" style="width:3px;height:95%;background:#000;"></div><div class="vc-bar" style="width:3px;height:80%;background:#000;"></div><div class="vc-bar" style="width:3px;height:60%;background:#d0cdc8;"></div><div class="vc-bar" style="width:3px;height:40%;background:#d0cdc8;"></div><div class="vc-bar" style="width:3px;height:65%;background:#d0cdc8;"></div><div class="vc-bar" style="width:3px;height:70%;background:#d0cdc8;"></div><div class="vc-bar" style="width:3px;height:45%;background:#d0cdc8;"></div><div class="vc-bar" style="width:3px;height:25%;background:#d0cdc8;"></div><div class="vc-bar" style="width:3px;height:40%;background:#d0cdc8;"></div>
+        </div>
+        <span class="vc-tag" style="background:#f5f2ef;color:var(--warm-gray)">Conversational</span>
+        <span class="vc-tag" style="background:#f5f5f5;color:var(--dark-gray);margin-left:4px">Warm</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- USE CASES -->
+<section class="usecases">
+  <div class="usecases-inner">
+    <span class="section-label">Use Cases</span>
+    <h2 class="section-title">Built for every kind of creator.</h2>
+    <div class="usecases-grid">
+      <div class="usecase-card">
+        <span class="uc-icon">&#127908;</span>
+        <h3 class="uc-title">Audiobooks & Narration</h3>
+        <p class="uc-desc">Turn manuscripts into professional-grade audiobooks. Our long-form synthesis preserves emotion and pacing across chapters.</p>
+        <a href="#" class="uc-link">Learn more &rarr;</a>
+      </div>
+      <div class="usecase-card">
+        <span class="uc-icon">&#127988;</span>
+        <h3 class="uc-title">Dubbing & Localization</h3>
+        <p class="uc-desc">Automatically dub video content into 29 languages — preserving the original speaker's voice, timing, and lip sync.</p>
+        <a href="#" class="uc-link">Learn more &rarr;</a>
+      </div>
+      <div class="usecase-card">
+        <span class="uc-icon">&#128187;</span>
+        <h3 class="uc-title">Developer API</h3>
+        <p class="uc-desc">Integrate ultra-realistic voice synthesis into any app with our REST API. Real-time streaming, 29 languages, SDKs for Python, Node, and more.</p>
+        <a href="#" class="uc-link">View API docs &rarr;</a>
+      </div>
+      <div class="usecase-card">
+        <span class="uc-icon">&#128253;</span>
+        <h3 class="uc-title">Conversational AI</h3>
+        <p class="uc-desc">Build AI agents that sound human. Ultra-low latency for real-time conversations, customer service, and interactive storytelling.</p>
+        <a href="#" class="uc-link">Learn more &rarr;</a>
+      </div>
+      <div class="usecase-card">
+        <span class="uc-icon">&#127775;</span>
+        <h3 class="uc-title">Voice Cloning</h3>
+        <p class="uc-desc">Replicate any voice from just one minute of audio. Enterprise-grade voice cloning for consistent brand voice across all content.</p>
+        <a href="#" class="uc-link">Learn more &rarr;</a>
+      </div>
+      <div class="usecase-card">
+        <span class="uc-icon">&#127897;</span>
+        <h3 class="uc-title">Content Creation</h3>
+        <p class="uc-desc">Generate podcast intros, YouTube narration, ad voice-overs, and e-learning content at scale — in hours, not weeks.</p>
+        <a href="#" class="uc-link">Learn more &rarr;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- API -->
+<section class="api-section">
+  <div class="api-inner">
+    <div class="api-text">
+      <span class="section-label">Developer API</span>
+      <h2 class="section-title" style="font-size:32px">Build voice into anything.</h2>
+      <p>Integrate ElevenLabs into your product with our REST API. Simple, powerful, and designed for scale — from prototype to production.</p>
+      <div style="display:flex; gap:12px; flex-wrap:wrap;">
+        <button class="btn-black-pill">View API docs</button>
+        <button class="btn-white-pill" style="box-shadow:var(--card-shadow)">Try in playground</button>
+      </div>
+    </div>
+    <div class="api-code">
+      <span class="ac-key">import</span> ElevenLabs <span class="ac-key">from</span> <span class="ac-string">"elevenlabs"</span><br><br>
+      <span class="ac-key">const</span> client = <span class="ac-key">new</span> ElevenLabs({<br>
+      &nbsp;&nbsp;apiKey: <span class="ac-string">process.env.ELEVEN_API_KEY</span><br>
+      });<br><br>
+      <span class="ac-key">const</span> audio = <span class="ac-key">await</span> client.textToSpeech({<br>
+      &nbsp;&nbsp;voiceId: <span class="ac-string">"EXAVITQu4vr4xnSDxMaL"</span>,<br>
+      &nbsp;&nbsp;text: <span class="ac-string">"The future of AI voice is here."</span>,<br>
+      &nbsp;&nbsp;modelId: <span class="ac-string">"eleven_multilingual_v2"</span><br>
+      });<br><br>
+      <span class="ac-key">await</span> audio.pipe(<span class="ac-string">fs</span>.createWriteStream(<span class="ac-string">"output.mp3"</span>));
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing">
+  <div class="pricing-inner">
+    <span class="section-label">Pricing</span>
+    <h2 class="section-title">Start free. Scale with confidence.</h2>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-name">Free</div>
+        <div class="price-val">$0<span class="price-period" style="font-size:16px;"> / month</span></div>
+        <div class="price-desc">Get started with 10,000 characters per month. Perfect for experimenting.</div>
+        <ul class="price-feats">
+          <li>10,000 characters / month</li>
+          <li>3 custom voices</li>
+          <li>Text to Speech</li>
+          <li>Standard quality models</li>
+        </ul>
+        <button class="btn-white-pill" style="width:100%; justify-content:center; font-size:14px; height:40px; border-radius:9999px; box-shadow:var(--card-shadow);">Get started free</button>
+      </div>
+      <div class="price-card featured">
+        <div class="price-name">Creator</div>
+        <div class="price-val" style="color:white">$22<span class="price-period" style="font-size:16px; color:rgba(255,255,255,0.6);"> / month</span></div>
+        <div class="price-desc">For professional creators. More characters, higher quality, and more voices.</div>
+        <ul class="price-feats">
+          <li>100,000 characters / month</li>
+          <li>30 custom voices</li>
+          <li>All models including highest quality</li>
+          <li>Commercial license</li>
+        </ul>
+        <button class="btn-warm-pill" style="width:100%; justify-content:center; font-size:14px; height:40px; border-radius:9999px;">Get Creator</button>
+      </div>
+      <div class="price-card">
+        <div class="price-name">Enterprise</div>
+        <div class="price-val">Custom</div>
+        <div class="price-desc">For teams and companies with large-scale voice generation needs.</div>
+        <ul class="price-feats">
+          <li>Unlimited characters</li>
+          <li>Custom voice cloning</li>
+          <li>Dedicated infrastructure</li>
+          <li>SLA & priority support</li>
+        </ul>
+        <button class="btn-white-pill" style="width:100%; justify-content:center; font-size:14px; height:40px; border-radius:9999px; box-shadow:var(--card-shadow);">Contact sales</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo">
+          <div class="eleven-icon">11</div>
+          <span class="nav-logo-text">ElevenLabs</span>
+        </div>
+        <p>The world's most realistic AI text-to-speech and voice cloning platform. Trusted by 1M+ creators and developers.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Products</h4>
+        <a href="#">Text to Speech</a>
+        <a href="#">Voice Cloning</a>
+        <a href="#">Dubbing</a>
+        <a href="#">AI Speech</a>
+        <a href="#">Voice Library</a>
+      </div>
+      <div class="footer-col">
+        <h4>Developers</h4>
+        <a href="#">API Docs</a>
+        <a href="#">SDK & Libraries</a>
+        <a href="#">Status</a>
+        <a href="#">GitHub</a>
+        <a href="#">Changelog</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">About</a>
+        <a href="#">Blog</a>
+        <a href="#">Careers</a>
+        <a href="#">Press</a>
+        <a href="#">Privacy Policy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 ElevenLabs, Inc. All rights reserved.</p>
+      <p>Terms of Service &middot; Privacy Policy &middot; Cookie Settings</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

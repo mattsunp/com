@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Airbnb — Brand Flow Template</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --rausch:#ff385c;
+  --deep-rausch:#e00b41;
+  --near-black:#222222;
+  --secondary:#6a6a6a;
+  --white:#ffffff;
+  --border:#c1c1c1;
+  --surface:#f2f2f2;
+  --card-shadow:rgba(0,0,0,0.02) 0px 0px 0px 1px,rgba(0,0,0,0.04) 0px 2px 6px,rgba(0,0,0,0.1) 0px 4px 8px;
+  --hover-shadow:rgba(0,0,0,0.08) 0px 4px 12px;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--white);
+  color:var(--near-black);
+  font-family:"Airbnb Cereal VF","Circular",-apple-system,system-ui,Roboto,"Helvetica Neue",sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ─── STICKY HEADER ─── */
+.header{
+  position:sticky;top:0;z-index:999;
+  background:var(--white);
+  border-bottom:1px solid rgba(0,0,0,0.08);
+  padding:0 24px;
+}
+.header-inner{
+  max-width:1440px;margin:0 auto;
+  height:80px;display:flex;align-items:center;justify-content:space-between;
+}
+.logo{
+  font-size:28px;color:var(--rausch);text-decoration:none;
+  font-weight:700;letter-spacing:-0.44px;
+}
+.search-bar{
+  display:flex;align-items:center;
+  background:var(--white);border-radius:32px;
+  box-shadow:var(--card-shadow);
+  padding:0;overflow:hidden;
+  flex:0 0 460px;
+}
+.search-segment{
+  padding:14px 20px;flex:1;cursor:pointer;
+  border-right:1px solid rgba(0,0,0,0.08);
+}
+.search-segment:last-of-type{border-right:none}
+.search-segment:hover{background:var(--surface);border-radius:32px}
+.search-label{
+  font-size:11px;font-weight:700;color:var(--near-black);
+  display:block;margin-bottom:2px;
+}
+.search-value{font-size:13px;color:var(--secondary)}
+.search-btn{
+  background:var(--rausch);color:var(--white);
+  border:none;width:48px;height:48px;border-radius:50%;
+  cursor:pointer;font-size:18px;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 8px;flex-shrink:0;
+  transition:background .2s;
+}
+.search-btn:hover{background:var(--deep-rausch)}
+.header-right{
+  display:flex;align-items:center;gap:8px;
+}
+.header-link{
+  color:var(--near-black);text-decoration:none;font-size:14px;font-weight:500;
+  padding:12px 16px;border-radius:22px;
+  transition:background .2s;
+}
+.header-link:hover{background:var(--surface)}
+.avatar-btn{
+  display:flex;align-items:center;gap:12px;
+  border:1px solid var(--border);border-radius:22px;
+  padding:8px 12px;cursor:pointer;
+  transition:box-shadow .2s;
+}
+.avatar-btn:hover{box-shadow:var(--hover-shadow)}
+.hamburger{font-size:16px;color:var(--near-black)}
+.avatar{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--near-black);color:var(--white);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:600;
+}
+
+/* ─── CATEGORY PILL BAR ─── */
+.category-bar{
+  border-bottom:1px solid rgba(0,0,0,0.08);
+  padding:0 24px;position:sticky;top:80px;z-index:998;
+  background:var(--white);
+}
+.category-inner{
+  max-width:1440px;margin:0 auto;
+  display:flex;align-items:center;gap:0;overflow-x:auto;
+  scrollbar-width:none;padding:16px 0;
+}
+.category-inner::-webkit-scrollbar{display:none}
+.category-item{
+  display:flex;flex-direction:column;align-items:center;
+  gap:6px;padding:4px 16px;cursor:pointer;
+  border-bottom:2px solid transparent;
+  flex-shrink:0;
+  transition:border-color .15s,color .15s;
+  color:var(--secondary);text-decoration:none;
+}
+.category-item:hover,.category-item.active{
+  border-bottom-color:var(--near-black);color:var(--near-black);
+}
+.category-icon{font-size:24px}
+.category-label{font-size:12px;font-weight:600;white-space:nowrap}
+
+/* ─── LISTING GRID ─── */
+.main{
+  max-width:1440px;margin:0 auto;
+  padding:32px 24px;
+}
+.section-heading{
+  font-size:28px;font-weight:700;color:var(--near-black);
+  line-height:1.43;margin-bottom:24px;
+}
+.listing-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:24px;
+}
+.listing-card{
+  cursor:pointer;
+}
+.listing-img{
+  width:100%;aspect-ratio:4/3;border-radius:14px;
+  background:linear-gradient(135deg,#e8d5c4 0%,#d4a574 100%);
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  font-size:64px;margin-bottom:12px;
+  transition:transform .2s;
+}
+.listing-card:hover .listing-img{transform:scale(1.02)}
+.heart-btn{
+  position:absolute;top:12px;right:12px;
+  background:transparent;border:none;cursor:pointer;
+  font-size:20px;
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,0.4));
+}
+.listing-badge{
+  position:absolute;top:12px;left:12px;
+  background:var(--white);color:var(--near-black);
+  font-size:11px;font-weight:700;
+  padding:4px 8px;border-radius:4px;
+}
+.listing-info{}
+.listing-top{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  margin-bottom:4px;
+}
+.listing-location{font-size:16px;font-weight:600;color:var(--near-black)}
+.listing-rating{
+  display:flex;align-items:center;gap:4px;
+  font-size:14px;font-weight:500;color:var(--near-black);
+}
+.listing-host{font-size:14px;color:var(--secondary);margin-bottom:4px}
+.listing-dates{font-size:14px;color:var(--secondary);margin-bottom:6px}
+.listing-price{
+  font-size:16px;color:var(--near-black);
+}
+.listing-price strong{font-weight:700}
+.listing-price span{color:var(--secondary)}
+
+/* ─── EXPLORE SECTION ─── */
+.section-explore{padding:48px 0 32px}
+.explore-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:16px;
+}
+.explore-card{
+  background:var(--surface);border-radius:20px;
+  overflow:hidden;cursor:pointer;
+  transition:box-shadow .2s;
+}
+.explore-card:hover{box-shadow:var(--hover-shadow)}
+.explore-img{
+  width:100%;aspect-ratio:1;
+  display:flex;align-items:center;justify-content:center;
+  font-size:64px;
+  background:linear-gradient(135deg,#f0e6d3 0%,#e8c9a0 100%);
+}
+.explore-label{
+  padding:16px;font-size:16px;font-weight:600;color:var(--near-black);
+}
+
+/* ─── EXPERIENCE SECTION ─── */
+.section-experience{padding:48px 0 32px}
+.experience-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+}
+.exp-card{
+  border-radius:20px;overflow:hidden;
+  box-shadow:var(--card-shadow);
+  cursor:pointer;transition:box-shadow .2s;
+}
+.exp-card:hover{box-shadow:var(--hover-shadow)}
+.exp-img{
+  width:100%;aspect-ratio:3/2;
+  display:flex;align-items:center;justify-content:center;
+  font-size:72px;
+  background:linear-gradient(135deg,#ffd6d6 0%,#ffb3c1 100%);
+}
+.exp-info{padding:16px}
+.exp-tag{
+  font-size:11px;font-weight:700;color:var(--secondary);
+  text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;
+}
+.exp-title{font-size:22px;font-weight:600;color:var(--near-black);letter-spacing:-0.44px;margin-bottom:4px}
+.exp-host{font-size:14px;color:var(--secondary);margin-bottom:8px}
+.exp-rating{display:flex;align-items:center;gap:4px;font-size:14px;font-weight:500}
+.exp-price{font-size:14px;color:var(--secondary);margin-top:4px}
+
+/* ─── BECOME HOST BANNER ─── */
+.host-banner{
+  background:linear-gradient(135deg,#ff385c 0%,#ff6b6b 100%);
+  border-radius:20px;padding:64px 48px;
+  display:flex;justify-content:space-between;align-items:center;
+  margin:48px 0;gap:24px;flex-wrap:wrap;
+}
+.host-text h2{
+  font-size:28px;font-weight:700;color:var(--white);
+  line-height:1.43;margin-bottom:12px;
+}
+.host-text p{font-size:16px;color:rgba(255,255,255,0.85);font-weight:500}
+.btn-host{
+  background:var(--white);color:var(--rausch);
+  font-size:16px;font-weight:700;padding:16px 32px;
+  border-radius:8px;text-decoration:none;
+  white-space:nowrap;transition:box-shadow .2s;
+}
+.btn-host:hover{box-shadow:0 4px 16px rgba(0,0,0,0.2)}
+
+/* ─── FOOTER ─── */
+footer{
+  background:var(--surface);
+  border-top:1px solid rgba(0,0,0,0.08);
+  padding:48px 24px 24px;
+}
+.footer-inner{max-width:1440px;margin:0 auto}
+.footer-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:40px;margin-bottom:40px;
+}
+.footer-col h5{
+  font-size:13px;font-weight:700;color:var(--near-black);
+  margin-bottom:16px;letter-spacing:0.1px;
+}
+.footer-col ul{list-style:none}
+.footer-col li{margin-bottom:10px}
+.footer-col a{
+  color:var(--secondary);font-size:14px;text-decoration:none;font-weight:400;
+}
+.footer-col a:hover{color:var(--near-black);text-decoration:underline}
+.footer-bottom{
+  border-top:1px solid rgba(0,0,0,0.08);padding-top:24px;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:16px;
+}
+.footer-bottom p{font-size:14px;color:var(--secondary)}
+.footer-links{display:flex;gap:16px;flex-wrap:wrap}
+.footer-links a{font-size:14px;color:var(--secondary);text-decoration:none}
+.footer-links a:hover{text-decoration:underline}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:1128px){
+  .listing-grid{grid-template-columns:repeat(3,1fr)}
+  .explore-grid{grid-template-columns:repeat(3,1fr)}
+  .footer-grid{grid-template-columns:repeat(2,1fr)}
+  .search-bar{flex:0 0 360px}
+}
+@media(max-width:744px){
+  .listing-grid{grid-template-columns:repeat(2,1fr)}
+  .explore-grid{grid-template-columns:repeat(2,1fr)}
+  .experience-grid{grid-template-columns:1fr}
+  .search-bar{display:none}
+  .footer-grid{grid-template-columns:1fr}
+  .host-banner{flex-direction:column}
+}
+@media(max-width:550px){
+  .listing-grid{grid-template-columns:1fr}
+  .explore-grid{grid-template-columns:repeat(2,1fr)}
+  .header-link{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- STICKY HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <a href="#" class="logo">airbnb</a>
+    <div class="search-bar">
+      <div class="search-segment">
+        <span class="search-label">どこへ</span>
+        <span class="search-value">行き先を検索</span>
+      </div>
+      <div class="search-segment">
+        <span class="search-label">チェックイン</span>
+        <span class="search-value">日付を追加</span>
+      </div>
+      <div class="search-segment">
+        <span class="search-label">チェックアウト</span>
+        <span class="search-value">日付を追加</span>
+      </div>
+      <div class="search-segment">
+        <span class="search-label">旅行者</span>
+        <span class="search-value">ゲストを追加</span>
+      </div>
+      <button class="search-btn">&#128269;</button>
+    </div>
+    <div class="header-right">
+      <a href="#" class="header-link">ホストになる</a>
+      <a href="#" class="header-link">&#127758;</a>
+      <div class="avatar-btn">
+        <span class="hamburger">&#9776;</span>
+        <div class="avatar">T</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- CATEGORY PILL BAR -->
+<nav class="category-bar">
+  <div class="category-inner">
+    <a href="#" class="category-item active">
+      <span class="category-icon">&#127968;</span>
+      <span class="category-label">一棟貸し</span>
+    </a>
+    <a href="#" class="category-item">
+      <span class="category-icon">&#127944;</span>
+      <span class="category-label">プール付き</span>
+    </a>
+    <a href="#" class="category-item">
+      <span class="category-icon">&#127963;</span>
+      <span class="category-label">城・古民家</span>
+    </a>
+    <a href="#" class="category-item">
+      <span class="category-icon">&#127957;</span>
+      <span class="category-label">キャンプ</span>
+    </a>
+    <a href="#" class="category-item">
+      <span class="category-icon">&#127958;</span>
+      <span class="category-label">農場・田舎</span>
+    </a>
+    <a href="#" class="category-item">
+      <span class="category-icon">&#127754;</span>
+      <span class="category-label">海辺</span>
+    </a>
+    <a href="#" class="category-item">
+      <span class="category-icon">&#127956;</span>
+      <span class="category-label">山・スキー</span>
+    </a>
+    <a href="#" class="category-item">
+      <span class="category-icon">&#127794;</span>
+      <span class="category-label">離島</span>
+    </a>
+    <a href="#" class="category-item">
+      <span class="category-icon">&#127881;</span>
+      <span class="category-label">デザイン</span>
+    </a>
+    <a href="#" class="category-item">
+      <span class="category-icon">&#127847;</span>
+      <span class="category-label">新着</span>
+    </a>
+  </div>
+</nav>
+
+<!-- MAIN: LISTING GRID -->
+<main class="main">
+  <!-- Listings -->
+  <div class="listing-grid">
+    <div class="listing-card">
+      <div class="listing-img" style="background:linear-gradient(135deg,#e8d5c4,#d4a574)">
+        &#127968;
+        <button class="heart-btn">&#9825;</button>
+        <span class="listing-badge">ゲストのお気に入り</span>
+      </div>
+      <div class="listing-info">
+        <div class="listing-top">
+          <span class="listing-location">京都市、京都府</span>
+          <span class="listing-rating">&#9733; 4.97</span>
+        </div>
+        <p class="listing-host">Takako さんのホスト</p>
+        <p class="listing-dates">4月15日〜20日</p>
+        <p class="listing-price"><strong>&#165;28,500</strong> <span>/ 泊</span></p>
+      </div>
+    </div>
+    <div class="listing-card">
+      <div class="listing-img" style="background:linear-gradient(135deg,#c8d8e8,#8ab4d4)">
+        &#127960;
+        <button class="heart-btn">&#9825;</button>
+      </div>
+      <div class="listing-info">
+        <div class="listing-top">
+          <span class="listing-location">箱根町、神奈川県</span>
+          <span class="listing-rating">&#9733; 4.89</span>
+        </div>
+        <p class="listing-host">Kenji さんのホスト</p>
+        <p class="listing-dates">4月20日〜25日</p>
+        <p class="listing-price"><strong>&#165;42,000</strong> <span>/ 泊</span></p>
+      </div>
+    </div>
+    <div class="listing-card">
+      <div class="listing-img" style="background:linear-gradient(135deg,#d8e8c8,#a4c874)">
+        &#127966;
+        <button class="heart-btn">&#9825;</button>
+        <span class="listing-badge">Airbnb Plus</span>
+      </div>
+      <div class="listing-info">
+        <div class="listing-top">
+          <span class="listing-location">軽井沢町、長野県</span>
+          <span class="listing-rating">&#9733; 4.95</span>
+        </div>
+        <p class="listing-host">Yuki さんのホスト</p>
+        <p class="listing-dates">5月3日〜7日</p>
+        <p class="listing-price"><strong>&#165;65,000</strong> <span>/ 泊</span></p>
+      </div>
+    </div>
+    <div class="listing-card">
+      <div class="listing-img" style="background:linear-gradient(135deg,#e8c8d8,#d474a4)">
+        &#127963;
+        <button class="heart-btn">&#9825;</button>
+      </div>
+      <div class="listing-info">
+        <div class="listing-top">
+          <span class="listing-location">京丹後市、京都府</span>
+          <span class="listing-rating">&#9733; 4.91</span>
+        </div>
+        <p class="listing-host">Hanako さんのホスト</p>
+        <p class="listing-dates">4月28日〜5月2日</p>
+        <p class="listing-price"><strong>&#165;18,000</strong> <span>/ 泊</span></p>
+      </div>
+    </div>
+    <div class="listing-card">
+      <div class="listing-img" style="background:linear-gradient(135deg,#e8e4c4,#d4c874)">
+        &#127957;
+        <button class="heart-btn">&#9829;</button>
+        <span class="listing-badge">ゲストのお気に入り</span>
+      </div>
+      <div class="listing-info">
+        <div class="listing-top">
+          <span class="listing-location">富良野市、北海道</span>
+          <span class="listing-rating">&#9733; 4.99</span>
+        </div>
+        <p class="listing-host">Satoshi さんのホスト</p>
+        <p class="listing-dates">7月10日〜15日</p>
+        <p class="listing-price"><strong>&#165;22,000</strong> <span>/ 泊</span></p>
+      </div>
+    </div>
+    <div class="listing-card">
+      <div class="listing-img" style="background:linear-gradient(135deg,#c8e8e4,#74d4cc)">
+        &#127754;
+        <button class="heart-btn">&#9825;</button>
+      </div>
+      <div class="listing-info">
+        <div class="listing-top">
+          <span class="listing-location">宮古島市、沖縄県</span>
+          <span class="listing-rating">&#9733; 4.93</span>
+        </div>
+        <p class="listing-host">Mari さんのホスト</p>
+        <p class="listing-dates">5月20日〜25日</p>
+        <p class="listing-price"><strong>&#165;38,000</strong> <span>/ 泊</span></p>
+      </div>
+    </div>
+    <div class="listing-card">
+      <div class="listing-img" style="background:linear-gradient(135deg,#e4c8e8,#c474d4)">
+        &#127968;
+        <button class="heart-btn">&#9825;</button>
+      </div>
+      <div class="listing-info">
+        <div class="listing-top">
+          <span class="listing-location">鎌倉市、神奈川県</span>
+          <span class="listing-rating">&#9733; 4.86</span>
+        </div>
+        <p class="listing-host">Rin さんのホスト</p>
+        <p class="listing-dates">4月25日〜30日</p>
+        <p class="listing-price"><strong>&#165;31,500</strong> <span>/ 泊</span></p>
+      </div>
+    </div>
+    <div class="listing-card">
+      <div class="listing-img" style="background:linear-gradient(135deg,#c8d4e8,#7494d4)">
+        &#127956;
+        <button class="heart-btn">&#9825;</button>
+      </div>
+      <div class="listing-info">
+        <div class="listing-top">
+          <span class="listing-location">白馬村、長野県</span>
+          <span class="listing-rating">&#9733; 4.88</span>
+        </div>
+        <p class="listing-host">Taro さんのホスト</p>
+        <p class="listing-dates">1月15日〜20日</p>
+        <p class="listing-price"><strong>&#165;55,000</strong> <span>/ 泊</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPLORE DESTINATIONS -->
+  <section class="section-explore">
+    <h2 class="section-heading">近場の目的地を探す</h2>
+    <div class="explore-grid">
+      <div class="explore-card">
+        <div class="explore-img">&#127970;</div>
+        <div class="explore-label">東京 — 車で0〜1時間</div>
+      </div>
+      <div class="explore-card">
+        <div class="explore-img">&#127958;</div>
+        <div class="explore-label">箱根 — 車で1〜2時間</div>
+      </div>
+      <div class="explore-card">
+        <div class="explore-img">&#127963;</div>
+        <div class="explore-label">京都 — 電車で2〜3時間</div>
+      </div>
+      <div class="explore-card">
+        <div class="explore-img">&#127957;</div>
+        <div class="explore-label">軽井沢 — 電車で1〜2時間</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCES -->
+  <section class="section-experience">
+    <h2 class="section-heading">体験を予約する</h2>
+    <div class="experience-grid">
+      <div class="exp-card">
+        <div class="exp-img" style="background:linear-gradient(135deg,#ffe0e6,#ffb3c1)">&#127869;</div>
+        <div class="exp-info">
+          <p class="exp-tag">料理体験</p>
+          <h3 class="exp-title">本格だし料理教室</h3>
+          <p class="exp-host">Michiko さんのホスト</p>
+          <div class="exp-rating">&#9733; 4.98 <span style="color:var(--secondary);font-weight:400">(156件)</span></div>
+          <p class="exp-price">&#165;8,500 / 人</p>
+        </div>
+      </div>
+      <div class="exp-card">
+        <div class="exp-img" style="background:linear-gradient(135deg,#e0f0ff,#b3d4f0)">&#127944;</div>
+        <div class="exp-info">
+          <p class="exp-tag">アクティビティ</p>
+          <h3 class="exp-title">富士山麓トレッキング</h3>
+          <p class="exp-host">Hiroshi さんのホスト</p>
+          <div class="exp-rating">&#9733; 4.95 <span style="color:var(--secondary);font-weight:400">(89件)</span></div>
+          <p class="exp-price">&#165;12,000 / 人</p>
+        </div>
+      </div>
+      <div class="exp-card">
+        <div class="exp-img" style="background:linear-gradient(135deg,#fff0e0,#f0d4b3)">&#127912;</div>
+        <div class="exp-info">
+          <p class="exp-tag">文化・伝統</p>
+          <h3 class="exp-title">着物着付け体験＆散策</h3>
+          <p class="exp-host">Akiko さんのホスト</p>
+          <div class="exp-rating">&#9733; 4.97 <span style="color:var(--secondary);font-weight:400">(234件)</span></div>
+          <p class="exp-price">&#165;6,500 / 人</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BECOME HOST BANNER -->
+  <div class="host-banner">
+    <div class="host-text">
+      <h2>あなたも、ホストになりませんか</h2>
+      <p>空いているスペースを活かして、旅行者と出会い、収入を得ましょう。</p>
+    </div>
+    <a href="#" class="btn-host">ホストを始める</a>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h5>Airbnbサポート</h5>
+        <ul>
+          <li><a href="#">ヘルプセンター</a></li>
+          <li><a href="#">AirCover</a></li>
+          <li><a href="#">差別への取り組み</a></li>
+          <li><a href="#">障がいを持つゲストのサポート</a></li>
+          <li><a href="#">緊急時のサポート</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Airbnbを使いこなす</h5>
+        <ul>
+          <li><a href="#">ニュースルーム</a></li>
+          <li><a href="#">新機能</a></li>
+          <li><a href="#">採用情報</a></li>
+          <li><a href="#">投資家向け情報</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Airbnbホスティング</h5>
+        <ul>
+          <li><a href="#">ホストになる</a></li>
+          <li><a href="#">AirCover：ホスト向け</a></li>
+          <li><a href="#">ホスティングリソース</a></li>
+          <li><a href="#">コミュニティフォーラム</a></li>
+          <li><a href="#">ホスト責任ある観光</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Airbnb</h5>
+        <ul>
+          <li><a href="#">プレスルーム</a></li>
+          <li><a href="#">新機能</a></li>
+          <li><a href="#">お問い合わせ</a></li>
+          <li><a href="#">パートナーシップ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Airbnb, Inc. &nbsp;&#183;&nbsp; プライバシー &nbsp;&#183;&nbsp; 利用規約 &nbsp;&#183;&nbsp; サイトマップ</p>
+      <div class="footer-links">
+        <a href="#">&#127758; 日本語 (JP)</a>
+        <a href="#">&#165; JPY</a>
+        <a href="#">&#169;</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

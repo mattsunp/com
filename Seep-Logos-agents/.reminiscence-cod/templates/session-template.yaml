@@ -1,0 +1,29 @@
+session_id: 2026-04-12_19-11_example-topic
+agent: codex
+project: Seep-Logos-agents
+started_at: 2026-04-12T19:11:00+09:00
+ended_at: 2026-04-12T19:42:00+09:00
+topic: Example topic
+tags:
+  - codex
+  - logging
+messages:
+  - role: user
+    ts: 2026-04-12T19:11:10+09:00
+    content: |
+      ここにユーザー発話の全文を入れる。
+  - role: assistant
+    ts: 2026-04-12T19:11:35+09:00
+    content: |
+      ここに Codex 応答の全文を入れる。
+artifacts:
+  - path: docs/example.md
+    kind: updated
+    status: completed
+handoff:
+  needed: true
+  target: claude
+  summary: |
+    次回 Claude Code に戻すときの要点を書く。
+notes: |
+  必要に応じて補助メモを書く。

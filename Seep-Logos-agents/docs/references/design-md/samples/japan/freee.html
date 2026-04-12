@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>freee — Design Sample</title>
+  <style>
+    :root {
+      --brand:     #2864f0;
+      --brand-text:#ffffff;
+      --bg:        #ffffff;
+      --text:      #323232;
+      --text-sec:  #666666;
+      --surface:   #f7f5f5;
+      --border:    #e9e7e7;
+      --r-btn:     6px;
+      --r-card:    12px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: '-apple-system', BlinkMacSystemFont, 'Helvetica Neue',, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    /* ── Nav ── */
+    .nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-brand {
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--brand);
+    }
+    .nav-back {
+      font-size: 13px;
+      color: var(--text-sec);
+      text-decoration: none;
+    }
+    .nav-back:hover { color: var(--brand); }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+    .section {
+      margin-bottom: 56px;
+    }
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-sec);
+      margin-bottom: 20px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── Hero ── */
+    .hero {
+      background: var(--brand);
+      color: var(--brand-text);
+      border-radius: var(--r-card);
+      padding: 48px 40px;
+      margin-bottom: 56px;
+    }
+    .hero h1 {
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .hero p {
+      font-size: 15px;
+      line-height: 1.7;
+      opacity: 0.85;
+      max-width: 600px;
+    }
+
+    /* ── Color Palette ── */
+    .palette {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 8px;
+    }
+    .swatch {
+      border-radius: 8px;
+      padding: 20px 12px 10px;
+      min-height: 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+    .swatch-hex {
+      font-size: 12px;
+      font-weight: 700;
+      font-family: monospace;
+      opacity: 0.9;
+    }
+    .swatch-name {
+      font-size: 11px;
+      opacity: 0.7;
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ── Typography ── */
+    .type-row {
+      display: flex;
+      align-items: baseline;
+      gap: 20px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .type-meta {
+      width: 100px;
+      flex-shrink: 0;
+      font-size: 11px;
+      color: var(--text-sec);
+    }
+    .type-display  { font-size: 48px; font-weight: 700; line-height: 1.1; }
+    .type-h1       { font-size: 32px; font-weight: 700; line-height: 1.2; }
+    .type-h2       { font-size: 24px; font-weight: 600; line-height: 1.3; }
+    .type-h3       { font-size: 20px; font-weight: 600; line-height: 1.4; }
+    .type-body     { font-size: 16px; font-weight: 400; line-height: 1.6; }
+    .type-small    { font-size: 13px; font-weight: 400; color: var(--text-sec); }
+    .type-label    { font-size: 11px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
+
+    /* ── Buttons ── */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 20px;
+      border-radius: var(--r-btn);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: opacity 0.15s;
+      font-family: inherit;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn-primary {
+      background: var(--brand);
+      color: var(--brand-text);
+    }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1.5px solid var(--border);
+    }
+    .btn-surface {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--brand);
+      text-decoration: underline;
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    /* ── Input ── */
+    .input-demo {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-width: 480px;
+    }
+    .input-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-sec);
+      margin-bottom: 4px;
+      display: block;
+    }
+    .input {
+      width: 100%;
+      padding: 10px 14px;
+      background: var(--bg);
+      color: var(--text);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-btn);
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .input:focus {
+      border-color: var(--brand);
+    }
+    .input-row {
+      display: flex;
+      gap: 8px;
+    }
+    .input-row .input { flex: 1; }
+
+    /* ── Cards ── */
+    .card-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-card);
+      padding: 24px;
+    }
+    .card-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--brand);
+      margin-bottom: 8px;
+    }
+    .card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .card p {
+      font-size: 14px;
+      color: var(--text-sec);
+      line-height: 1.6;
+    }
+    .card-footer {
+      margin-top: 20px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    /* ── Font info ── */
+    .font-info {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-card);
+      padding: 20px 24px;
+      font-size: 13px;
+      color: var(--text-sec);
+    }
+    .font-info strong { color: var(--text); }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <span class="nav-brand">freee</span>
+  <a class="nav-back" href="../../index.html">← Index</a>
+</nav>
+
+<div class="container">
+
+  <!-- Hero -->
+  <div class="hero">
+    <h1>freee</h1>
+    <p>- **デザイン方針**: 親しみやすく、明快な業務UI。複雑な会計・人事業務を直感的で軽やかなインターフェースで提供する - **キーワード**: 親しみやすい、明快、信頼性、シンプル、アクセシブル - **特徴**: ブルーを基調としたクリーンな配色。プロダクトUI（Vibes）とコーポレートサイトで異なるフォント戦略</p>
+  </div>
+
+  <!-- Font Info -->
+  <div class="section">
+    <div class="section-title">Font</div>
+    <div class="font-info">
+      <strong>-apple-system</strong>
+      <span style="margin-left:12px;font-family:monospace;font-size:12px">&#x27;-apple-system&#x27;, BlinkMacSystemFont, &#x27;Helvetica Neue&#x27;,</span>
+    </div>
+  </div>
+
+  <!-- Color Palette -->
+  <div class="section">
+    <div class="section-title">Color Palette</div>
+    <div class="palette">
+      
+        <div class="swatch" style="background:#2864f0;color:#ffffff">
+          <span class="swatch-hex">#2864f0</span>
+          <span class="swatch-name">Primary Blue</span>
+        </div>
+
+        <div class="swatch" style="background:#1e46aa;color:#ffffff">
+          <span class="swatch-hex">#1e46aa</span>
+          <span class="swatch-name">Primary Dark</span>
+        </div>
+
+        <div class="swatch" style="background:#dc1e32;color:#ffffff">
+          <span class="swatch-hex">#dc1e32</span>
+          <span class="swatch-name">Danger</span>
+        </div>
+
+        <div class="swatch" style="background:#ffb91e;color:#111111">
+          <span class="swatch-hex">#ffb91e</span>
+          <span class="swatch-name">Warning</span>
+        </div>
+
+        <div class="swatch" style="background:#00963c;color:#ffffff">
+          <span class="swatch-hex">#00963c</span>
+          <span class="swatch-name">Success</span>
+        </div>
+
+        <div class="swatch" style="background:#fa6414;color:#ffffff">
+          <span class="swatch-hex">#fa6414</span>
+          <span class="swatch-name">Orange</span>
+        </div>
+
+        <div class="swatch" style="background:#323232;color:#ffffff">
+          <span class="swatch-hex">#323232</span>
+          <span class="swatch-name">Text Heading</span>
+        </div>
+
+        <div class="swatch" style="background:#595959;color:#ffffff">
+          <span class="swatch-hex">#595959</span>
+          <span class="swatch-name">Text Body</span>
+        </div>
+
+        <div class="swatch" style="background:#8c8c8c;color:#ffffff">
+          <span class="swatch-hex">#8c8c8c</span>
+          <span class="swatch-name">Text Muted</span>
+        </div>
+
+        <div class="swatch" style="background:#f7f5f5;color:#111111">
+          <span class="swatch-hex">#f7f5f5</span>
+          <span class="swatch-name">Background Light</span>
+        </div>
+
+        <div class="swatch" style="background:#e9e7e7;color:#111111">
+          <span class="swatch-hex">#e9e7e7</span>
+          <span class="swatch-name">Border</span>
+        </div>
+    </div>
+  </div>
+
+  <!-- Typography -->
+  <div class="section">
+    <div class="section-title">Typography</div>
+    <div class="type-row"><span class="type-meta">Display</span><span class="type-display">Aa</span></div>
+    <div class="type-row"><span class="type-meta">H1</span><span class="type-h1">見出しサンプル / Heading One</span></div>
+    <div class="type-row"><span class="type-meta">H2</span><span class="type-h2">見出しサンプル / Heading Two</span></div>
+    <div class="type-row"><span class="type-meta">H3</span><span class="type-h3">見出しサンプル / Heading Three</span></div>
+    <div class="type-row"><span class="type-meta">Body</span><span class="type-body">本文テキストのサンプルです。The quick brown fox jumps over the lazy dog.</span></div>
+    <div class="type-row"><span class="type-meta">Small</span><span class="type-small">補足テキスト・ラベルなど / Caption and auxiliary text</span></div>
+    <div class="type-row"><span class="type-meta">Label</span><span class="type-label">Label / ラベル</span></div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="section">
+    <div class="section-title">Buttons</div>
+    <div class="btn-row">
+      <button class="btn btn-primary">Primary Action</button>
+      <button class="btn btn-secondary">Secondary</button>
+      <button class="btn btn-surface">Surface</button>
+      <button class="btn btn-ghost">Ghost Link</button>
+    </div>
+  </div>
+
+  <!-- Inputs -->
+  <div class="section">
+    <div class="section-title">Inputs</div>
+    <div class="input-demo">
+      <div>
+        <label class="input-label">メールアドレス</label>
+        <input class="input" type="text" placeholder="hello@example.com">
+      </div>
+      <div class="input-row">
+        <input class="input" type="text" placeholder="検索キーワード...">
+        <button class="btn btn-primary">検索</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cards -->
+  <div class="section">
+    <div class="section-title">Cards</div>
+    <div class="card-row">
+      <div class="card">
+        <div class="card-label">Feature</div>
+        <h3>カードタイトル</h3>
+        <p>カードの本文テキストです。デザインシステムのコンポーネントサンプルとして表示しています。</p>
+        <div class="card-footer">
+          <button class="btn btn-primary" style="font-size:13px;padding:8px 16px">詳しく見る</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label">Info</div>
+        <h3>Second Card</h3>
+        <p>Another card sample showing the same card component in a grid layout. Consistent styling throughout.</p>
+        <div class="card-footer">
+          <button class="btn btn-secondary" style="font-size:13px;padding:8px 16px">Learn More</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label">Stats</div>
+        <h3>Third Card</h3>
+        <p>グリッドレイアウト内のカードコンポーネントのサンプルです。余白・角丸・ボーダーを確認できます。</p>
+        <div class="card-footer">
+          <button class="btn btn-ghost" style="font-size:13px">See all →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

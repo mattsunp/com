@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nike — Just Do It</title>
+<style>
+  :root {
+    --nike-black: #111111;
+    --white: #ffffff;
+    --snow: #fafafa;
+    --light-gray: #f5f5f5;
+    --hover-gray: #e5e5e5;
+    --border-gray: #cacacb;
+    --text-secondary: #707072;
+    --text-disabled: #9e9ea0;
+    --dark-surface: #28282a;
+    --deep-charcoal: #1f1f21;
+    --nike-red: #d30005;
+    --orange-badge: #d33918;
+    --success-green: #007d48;
+    --link-blue: #1151ff;
+    --border-primary: #707072;
+    --focus-ring: rgba(39,93,197,1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--nike-black);
+    background: var(--white);
+  }
+
+  /* Promo Banner */
+  .promo-banner {
+    background: var(--nike-black);
+    color: var(--white);
+    text-align: center;
+    padding: 10px 24px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+  .promo-banner a {
+    color: var(--white);
+    text-decoration: underline;
+    margin-left: 8px;
+  }
+
+  /* Navigation */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--white);
+    border-bottom: 1px solid var(--border-gray);
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding: 0 48px;
+    gap: 40px;
+  }
+  .nav-swoosh {
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--nike-black);
+    letter-spacing: -2px;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .nav-links {
+    display: flex;
+    gap: 0;
+    list-style: none;
+    flex: 1;
+    justify-content: center;
+  }
+  .nav-links a {
+    padding: 8px 14px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--nike-black);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text-secondary); }
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .nav-search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--light-gray);
+    border: none;
+    border-radius: 24px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+  }
+  .nav-icon-btn {
+    width: 40px; height: 40px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .nav-icon-btn:hover { background: var(--light-gray); }
+
+  /* Hero - Full bleed */
+  .hero {
+    position: relative;
+    width: 100%;
+    background: #1a1a1a;
+    overflow: hidden;
+    min-height: 90vh;
+    display: flex;
+    align-items: flex-end;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #0d0d0d 0%, #2a2a2a 40%, #1a1a1a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 240px;
+    opacity: 0.08;
+    user-select: none;
+  }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 80px 64px;
+    max-width: 800px;
+    color: var(--white);
+  }
+  .hero-eyebrow {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 16px;
+  }
+  .hero-title {
+    font-size: 96px;
+    font-weight: 500;
+    line-height: 0.90;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 32px;
+    font-family: 'Helvetica Neue', Impact, Helvetica, Arial, sans-serif;
+  }
+  .hero-desc {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.75;
+    color: rgba(255,255,255,0.8);
+    max-width: 480px;
+    margin-bottom: 40px;
+  }
+  .hero-cta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .btn-primary-pill {
+    padding: 12px 32px;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--nike-black);
+    background: var(--white);
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.2s;
+  }
+  .btn-primary-pill:hover { background: var(--hover-gray); }
+  .btn-outline-pill {
+    padding: 12px 32px;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--white);
+    background: transparent;
+    border: 1.5px solid rgba(255,255,255,0.5);
+    border-radius: 30px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: border-color 0.2s;
+  }
+  .btn-outline-pill:hover { border-color: var(--white); }
+
+  /* Category Grid */
+  .category-section {
+    padding: 64px 48px;
+    background: var(--white);
+  }
+  .category-section h2 {
+    font-size: 32px;
+    font-weight: 500;
+    margin-bottom: 32px;
+    color: var(--nike-black);
+  }
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .category-card {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    background: var(--light-gray);
+    aspect-ratio: 3/4;
+    display: flex;
+    align-items: flex-end;
+  }
+  .category-card-bg {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 80px;
+    background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.6) 100%);
+  }
+  .category-card-text {
+    position: relative;
+    z-index: 2;
+    padding: 20px;
+    color: var(--white);
+  }
+  .category-card-title {
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .category-card-link {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--white);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--white);
+    color: var(--nike-black);
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-size: 14px;
+  }
+
+  /* Product grid */
+  .product-section {
+    padding: 48px;
+    background: var(--white);
+  }
+  .product-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 24px;
+  }
+  .product-section h2 {
+    font-size: 32px;
+    font-weight: 500;
+    color: var(--nike-black);
+  }
+  .view-all-link {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--nike-black);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  .product-card {
+    cursor: pointer;
+  }
+  .product-img {
+    background: var(--light-gray);
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 56px;
+    margin-bottom: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  .product-img-bg {
+    position: absolute;
+    inset: 0;
+    opacity: 0.1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 100px;
+  }
+  .product-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: var(--nike-red);
+    color: var(--white);
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 30px;
+  }
+  .product-info {
+    padding: 0 4px;
+  }
+  .product-colors {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+  }
+  .product-name {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--nike-black);
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+  .product-category {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+  }
+  .product-price {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--nike-black);
+  }
+  .product-price-sale {
+    color: var(--orange-badge);
+  }
+  .product-price-original {
+    text-decoration: line-through;
+    color: var(--text-secondary);
+    margin-left: 6px;
+  }
+
+  /* Brand statement */
+  .brand-statement {
+    background: var(--nike-black);
+    color: var(--white);
+    padding: 120px 64px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .brand-statement::before {
+    content: 'JUST DO IT';
+    position: absolute;
+    font-size: 160px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.03);
+    text-transform: uppercase;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .brand-eyebrow {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 24px;
+  }
+  .brand-title {
+    font-size: 72px;
+    font-weight: 500;
+    line-height: 0.9;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    font-family: 'Helvetica Neue', Impact, Helvetica, Arial, sans-serif;
+  }
+  .brand-desc {
+    font-size: 18px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.7);
+    max-width: 560px;
+    margin: 0 auto 48px;
+  }
+
+  /* Members section */
+  .members-section {
+    background: var(--light-gray);
+    padding: 80px 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .members-text {}
+  .members-eyebrow {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+  }
+  .members-title {
+    font-size: 40px;
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--nike-black);
+    margin-bottom: 16px;
+  }
+  .members-desc {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    margin-bottom: 32px;
+    line-height: 1.75;
+  }
+  .members-benefits {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .members-benefit {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--nike-black);
+  }
+  .benefit-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .members-visual {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: 0 4px 40px rgba(0,0,0,0.08);
+  }
+  .members-logo-big {
+    font-size: 64px;
+    font-weight: 900;
+    color: var(--nike-black);
+    letter-spacing: -4px;
+    margin-bottom: 16px;
+  }
+  .members-card-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .members-card-name {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--nike-black);
+    margin-bottom: 24px;
+  }
+  .members-points {
+    font-size: 48px;
+    font-weight: 500;
+    color: var(--nike-black);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .members-points-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  /* Footer */
+  footer {
+    background: var(--white);
+    border-top: 1px solid var(--hover-gray);
+    padding: 64px 48px 32px;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    margin-bottom: 48px;
+  }
+  .footer-col-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--nike-black);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .footer-links a {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .footer-links a:hover { color: var(--nike-black); }
+  .footer-bottom {
+    border-top: 1px solid var(--hover-gray);
+    padding-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .footer-copy {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+  .footer-bottom-links {
+    display: flex;
+    gap: 16px;
+  }
+  .footer-bottom-links a {
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  @media (max-width: 1024px) {
+    .product-grid { grid-template-columns: repeat(3, 1fr); }
+    .hero-title { font-size: 72px; }
+  }
+  @media (max-width: 768px) {
+    .nav { padding: 0 24px; }
+    .nav-links { display: none; }
+    .hero-title { font-size: 56px; }
+    .hero-content { padding: 48px 32px; }
+    .category-section, .product-section { padding: 40px 24px; }
+    .category-grid { grid-template-columns: 1fr; }
+    .product-grid { grid-template-columns: repeat(2, 1fr); }
+    .brand-title { font-size: 48px; }
+    .brand-statement { padding: 80px 32px; }
+    .members-section { grid-template-columns: 1fr; padding: 48px 24px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    footer { padding: 48px 24px 24px; }
+  }
+  @media (max-width: 480px) {
+    .hero-title { font-size: 40px; }
+    .product-grid { grid-template-columns: 1fr 1fr; }
+    .category-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Promo Banner -->
+<div class="promo-banner">
+  会員登録で送料無料。<a href="#">今すぐ登録 &rarr;</a>
+</div>
+
+<!-- Navigation -->
+<nav class="nav">
+  <div class="nav-swoosh">&#10003;</div>
+  <ul class="nav-links">
+    <li><a href="#">新着</a></li>
+    <li><a href="#">メンズ</a></li>
+    <li><a href="#">レディース</a></li>
+    <li><a href="#">キッズ</a></li>
+    <li><a href="#">セール</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="nav-search">&#128269; 検索</div>
+    <div class="nav-icon-btn">&#9825;</div>
+    <div class="nav-icon-btn">&#128717;</div>
+  </div>
+</nav>
+
+<!-- Hero - Full bleed -->
+<div class="hero">
+  <div class="hero-bg">&#128250;</div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">New Season 2026</div>
+    <div class="hero-title">Just<br>Do It</div>
+    <p class="hero-desc">限界は自分が作るものではない。新しい Air Max で、あなたの次の一歩を踏み出せ。</p>
+    <div class="hero-cta">
+      <a href="#" class="btn-primary-pill">今すぐ購入</a>
+      <a href="#" class="btn-outline-pill">コレクションを見る</a>
+    </div>
+  </div>
+</div>
+
+<!-- Category Grid -->
+<section class="category-section">
+  <h2>カテゴリから探す</h2>
+  <div class="category-grid">
+    <div class="category-card" style="background:#1a1a2e;">
+      <div class="category-card-bg" style="background:linear-gradient(180deg,transparent 30%,rgba(0,0,0,0.7) 100%);">&#128249;</div>
+      <div class="category-card-text">
+        <div class="category-card-title">ランニング</div>
+        <a href="#" class="category-card-link">ショップ</a>
+      </div>
+    </div>
+    <div class="category-card" style="background:#2d1b1b;">
+      <div class="category-card-bg" style="background:linear-gradient(180deg,transparent 30%,rgba(0,0,0,0.7) 100%);">&#127944;</div>
+      <div class="category-card-text">
+        <div class="category-card-title">バスケットボール</div>
+        <a href="#" class="category-card-link">ショップ</a>
+      </div>
+    </div>
+    <div class="category-card" style="background:#1a2d1a;">
+      <div class="category-card-bg" style="background:linear-gradient(180deg,transparent 30%,rgba(0,0,0,0.7) 100%);">&#9917;</div>
+      <div class="category-card-text">
+        <div class="category-card-title">サッカー</div>
+        <a href="#" class="category-card-link">ショップ</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Product Grid -->
+<section class="product-section">
+  <div class="product-section-header">
+    <h2>新着アイテム</h2>
+    <span class="view-all-link">すべて見る</span>
+  </div>
+  <div class="product-grid">
+    <div class="product-card">
+      <div class="product-img">
+        <div class="product-img-bg">&#128249;</div>
+        &#128249;
+        <div class="product-badge">NEW</div>
+      </div>
+      <div class="product-info">
+        <div class="product-colors">カラー: 3色</div>
+        <div class="product-name">Nike Air Max 2026</div>
+        <div class="product-category">メンズ ランニングシューズ</div>
+        <div class="product-price">¥18,700</div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img" style="background:#f5f5f0;">
+        <div class="product-img-bg">&#128248;</div>
+        &#128248;
+      </div>
+      <div class="product-info">
+        <div class="product-colors">カラー: 5色</div>
+        <div class="product-name">Nike Zoom Fly 6</div>
+        <div class="product-category">メンズ ロードレーシング</div>
+        <div class="product-price product-price-sale">¥16,500 <span class="product-price-original">¥22,000</span></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img" style="background:#f0f0f5;">
+        <div class="product-img-bg">&#128250;</div>
+        &#128250;
+      </div>
+      <div class="product-info">
+        <div class="product-colors">カラー: 2色</div>
+        <div class="product-name">Nike Pegasus 41</div>
+        <div class="product-category">ウィメンズ ランニング</div>
+        <div class="product-price">¥15,400</div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img" style="background:#f5f0f0;">
+        <div class="product-img-bg">&#128249;</div>
+        &#128249;
+        <div class="product-badge">SALE</div>
+      </div>
+      <div class="product-info">
+        <div class="product-colors">カラー: 4色</div>
+        <div class="product-name">Nike Free RN 5.0</div>
+        <div class="product-category">レディース トレーニング</div>
+        <div class="product-price product-price-sale">¥9,900 <span class="product-price-original">¥13,200</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Brand Statement -->
+<div class="brand-statement">
+  <div class="brand-eyebrow">Nike Philosophy</div>
+  <div class="brand-title">Just<br>Do It</div>
+  <p class="brand-desc">限界を決めるのはあなた自身だ。ただ、それを乗り越えるのもあなただ。どんな体でも、どんな目標でも、アスリートはすべての人の中にいる。</p>
+  <a href="#" class="btn-primary-pill" style="font-size:16px;padding:14px 40px;">スポーツを始める</a>
+</div>
+
+<!-- Members -->
+<div class="members-section">
+  <div class="members-text">
+    <div class="members-eyebrow">Nike Member</div>
+    <div class="members-title">無料で<br>メンバーになる</div>
+    <p class="members-desc">メンバー限定商品、送料無料、誕生日特典、会員先行セール。アスリートのためのすべての特権が、無料で手に入る。</p>
+    <ul class="members-benefits">
+      <li class="members-benefit"><span class="benefit-icon">&#127808;</span> メンバー限定商品へのアクセス</li>
+      <li class="members-benefit"><span class="benefit-icon">&#128230;</span> すべての注文で送料無料</li>
+      <li class="members-benefit"><span class="benefit-icon">&#9733;</span> ポイントで次回購入に使える</li>
+      <li class="members-benefit"><span class="benefit-icon">&#127878;</span> 誕生日に特別ギフト</li>
+    </ul>
+    <a href="#" class="btn-primary-pill" style="color:white;background:var(--nike-black);font-size:16px;padding:14px 36px;">今すぐ登録（無料）</a>
+  </div>
+  <div class="members-visual">
+    <div class="members-logo-big">&#10003;</div>
+    <div class="members-card-label">Nike Member Card</div>
+    <div class="members-card-name">田中 スポーツ</div>
+    <div class="members-points">12,450</div>
+    <div class="members-points-label">Nike Points</div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-col-title">アイコン</div>
+      <ul class="footer-links">
+        <li><a href="#">Jordan</a></li>
+        <li><a href="#">Nike SB</a></li>
+        <li><a href="#">Nike ACG</a></li>
+        <li><a href="#">Nike Tech</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">ヘルプ</div>
+      <ul class="footer-links">
+        <li><a href="#">注文状況</a></li>
+        <li><a href="#">配送・返品</a></li>
+        <li><a href="#">お問い合わせ</a></li>
+        <li><a href="#">サイズガイド</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">会社情報</div>
+      <ul class="footer-links">
+        <li><a href="#">About Nike</a></li>
+        <li><a href="#">ニュース</a></li>
+        <li><a href="#">採用情報</a></li>
+        <li><a href="#">投資家情報</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">フォロー</div>
+      <ul class="footer-links">
+        <li><a href="#">Twitter/X</a></li>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">YouTube</a></li>
+        <li><a href="#">TikTok</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">&copy; 2026 Nike, Inc. All Rights Reserved</span>
+    <div class="footer-bottom-links">
+      <a href="#">プライバシーポリシー</a>
+      <a href="#">利用規約</a>
+      <a href="#">クッキーポリシー</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

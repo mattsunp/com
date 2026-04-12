@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Raycast — Your shortcut to everything</title>
+<style>
+  :root {
+    --bg: #07080a;
+    --surface-100: #101111;
+    --card-surface: #1b1c1e;
+    --key-start: #121212;
+    --key-end: #0d0d0d;
+    --white: #ffffff;
+    --near-white: #f9f9f9;
+    --light-gray: #cecece;
+    --silver: #c0c0c0;
+    --medium-gray: #9c9c9d;
+    --dim-gray: #6a6b6c;
+    --dark-gray: #434345;
+    --border: #252829;
+    --dark-border: #2f3031;
+    --red: #FF6363;
+    --red-glow: hsla(0, 100%, 69%, 0.15);
+    --blue: hsl(202, 100%, 67%);
+    --blue-glow: hsla(202, 100%, 67%, 0.15);
+    --green: hsl(151, 59%, 59%);
+    --yellow: hsl(43, 100%, 60%);
+    --btn-fg: #18191a;
+    --card-ring-outer: rgb(27, 28, 30);
+    --card-ring-inner: rgb(7, 8, 10);
+    --warm-glow: rgba(215, 201, 175, 0.05);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--bg);
+    color: var(--near-white);
+    font-family: Inter, 'Inter Fallback', system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.6;
+    letter-spacing: 0.2px;
+    font-feature-settings: "calt", "kern", "liga", "ss03";
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { opacity: 0.8; }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ── NAV ── */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(7, 8, 10, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    height: 56px;
+    display: flex;
+    align-items: center;
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+  .nav-logo-mark {
+    width: 28px;
+    height: 28px;
+    background: var(--red);
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: rgba(255,99,99,0.3) 0px 0px 12px;
+  }
+  .nav-logo-mark::before {
+    content: '';
+    position: absolute;
+    top: -4px; left: -4px;
+    width: 140%; height: 140%;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 3px,
+      rgba(0,0,0,0.25) 3px,
+      rgba(0,0,0,0.25) 6px
+    );
+  }
+  .nav-logo-text {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--near-white);
+    letter-spacing: 0.3px;
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--medium-gray);
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: color 0.15s, opacity 0.15s;
+    text-decoration: none;
+  }
+  .nav-links a:hover { color: var(--near-white); opacity: 1; }
+  .nav-cta {
+    background: hsla(0, 0%, 100%, 0.815);
+    color: var(--btn-fg) !important;
+    font-weight: 600 !important;
+    font-size: 16px;
+    letter-spacing: 0.3px;
+    padding: 8px 18px;
+    border-radius: 86px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.15s, background 0.15s;
+    box-shadow:
+      rgba(255,255,255,0.05) 0px 1px 0px 0px inset,
+      rgba(255,255,255,0.25) 0px 0px 0px 1px,
+      rgba(0,0,0,0.2) 0px -1px 0px 0px inset;
+  }
+  .nav-cta:hover { background: hsl(0, 0%, 100%); opacity: 1; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding-top: 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 70% 50%, rgba(255, 99, 99, 0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 30% 50%, rgba(7, 8, 10, 0) 0%, transparent 70%);
+  }
+  /* Red diagonal stripes in hero */
+  .hero-stripes {
+    position: absolute;
+    top: 0; right: 0;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    opacity: 0.12;
+  }
+  .hero-stripes::before {
+    content: '';
+    position: absolute;
+    inset: -50%;
+    background: repeating-linear-gradient(
+      -45deg,
+      var(--red),
+      var(--red) 1px,
+      transparent 1px,
+      transparent 40px
+    );
+  }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 680px;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--card-surface);
+    color: var(--light-gray);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    margin-bottom: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .hero-badge-dot {
+    width: 6px; height: 6px;
+    background: var(--red);
+    border-radius: 50%;
+  }
+  .hero-title {
+    font-size: 64px;
+    font-weight: 600;
+    line-height: 1.10;
+    letter-spacing: 0px;
+    color: var(--white);
+    font-feature-settings: "liga" 0, "ss02", "ss08";
+    margin-bottom: 24px;
+  }
+  .hero-title .accent { color: var(--red); }
+  .hero-description {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.55;
+    letter-spacing: 0.2px;
+    color: var(--light-gray);
+    margin-bottom: 36px;
+    max-width: 520px;
+  }
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .btn-primary-pill {
+    background: hsla(0, 0%, 100%, 0.815);
+    color: var(--btn-fg);
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    padding: 12px 24px;
+    border-radius: 86px;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    box-shadow:
+      rgba(255,255,255,0.05) 0px 1px 0px 0px inset,
+      rgba(255,255,255,0.25) 0px 0px 0px 1px,
+      rgba(0,0,0,0.2) 0px -1px 0px 0px inset;
+  }
+  .btn-primary-pill:hover { opacity: 0.7; }
+  .btn-secondary-rect {
+    background: transparent;
+    color: var(--near-white);
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    padding: 11px 20px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    transition: opacity 0.15s;
+    box-shadow: rgba(0, 0, 0, 0.03) 0px 7px 3px;
+  }
+  .btn-secondary-rect:hover { opacity: 0.6; }
+  .hero-meta {
+    margin-top: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--dim-gray);
+    letter-spacing: 0.2px;
+  }
+
+  /* ── COMMAND PALETTE SHOWCASE ── */
+  .palette-section {
+    padding: 40px 0 100px;
+    position: relative;
+  }
+  .palette-window {
+    background: var(--surface-100);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    overflow: hidden;
+    max-width: 620px;
+    margin: 0 auto;
+    box-shadow:
+      rgba(0, 0, 0, 0.5) 0px 0px 0px 2px,
+      rgba(255, 255, 255, 0.19) 0px 0px 14px,
+      rgba(0, 0, 0, 0.8) 0px 40px 80px;
+  }
+  .palette-topbar {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    gap: 12px;
+  }
+  .palette-dots { display: flex; gap: 6px; }
+  .palette-dot {
+    width: 12px; height: 12px; border-radius: 50%;
+  }
+  .palette-dot.red { background: #ff5f57; }
+  .palette-dot.yellow { background: #febc2e; }
+  .palette-dot.green { background: #28c840; }
+  .palette-search-bar {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--near-white);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+  }
+  .palette-search-icon { color: var(--medium-gray); font-size: 12px; }
+  .palette-search-text { color: var(--near-white); }
+  .palette-search-cursor {
+    width: 1px; height: 14px;
+    background: var(--blue);
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+  .palette-body { display: flex; }
+  .palette-sidebar {
+    width: 200px;
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 8px;
+  }
+  .palette-sidebar-group { margin-bottom: 16px; }
+  .palette-sidebar-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--dim-gray);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    margin-bottom: 2px;
+  }
+  .palette-sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--light-gray);
+    letter-spacing: 0.2px;
+    transition: background 0.1s;
+  }
+  .palette-sidebar-item.active {
+    background: rgba(255, 255, 255, 0.07);
+    color: var(--white);
+  }
+  .palette-sidebar-item:hover { background: rgba(255, 255, 255, 0.04); }
+  .palette-sidebar-icon { width: 18px; height: 18px; border-radius: 4px; font-size: 11px; display: flex; align-items: center; justify-content: center; }
+  .icon-red { background: rgba(255, 99, 99, 0.2); }
+  .icon-blue { background: rgba(85, 179, 255, 0.2); }
+  .icon-green { background: rgba(95, 201, 146, 0.2); }
+  .icon-yellow { background: rgba(255, 188, 51, 0.2); }
+  .palette-main {
+    flex: 1;
+    padding: 8px;
+  }
+  .palette-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--dim-gray);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 4px 8px 6px;
+  }
+  .palette-cmd-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+  .palette-cmd-item:hover { background: rgba(255, 255, 255, 0.06); }
+  .palette-cmd-item.selected { background: rgba(85, 179, 255, 0.12); }
+  .palette-cmd-left { display: flex; align-items: center; gap: 10px; }
+  .palette-cmd-icon {
+    width: 28px; height: 28px; border-radius: 6px;
+    background: var(--card-surface);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .palette-cmd-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--near-white);
+    letter-spacing: 0.2px;
+  }
+  .palette-cmd-sub {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--medium-gray);
+    margin-top: 1px;
+  }
+  .palette-cmd-right { display: flex; align-items: center; gap: 4px; }
+
+  /* Keyboard key cap */
+  .key {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 20px;
+    padding: 0 5px;
+    background: linear-gradient(to bottom, var(--key-start), var(--key-end));
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--light-gray);
+    letter-spacing: 0px;
+    font-family: Inter, sans-serif;
+    box-shadow:
+      rgba(0, 0, 0, 0.4) 0px 1.5px 0.5px 2.5px,
+      rgba(255, 255, 255, 0.06) 0px 1px 0px 0px inset,
+      rgba(255, 255, 255, 0.08) 0px 0px 0px 1px inset,
+      rgba(0, 0, 0, 0.3) 0px -1px 0px 0px inset,
+      rgba(0, 0, 0, 0.2) 0px 0px 0px 1px;
+  }
+
+  /* ── STATS BAND ── */
+  .stats-band {
+    padding: 60px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    text-align: center;
+  }
+  .stat-value {
+    font-size: 40px;
+    font-weight: 600;
+    color: var(--white);
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+  }
+  .stat-value .stat-accent { color: var(--red); }
+  .stat-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--medium-gray);
+    letter-spacing: 0.2px;
+  }
+
+  /* ── FEATURES SECTION ── */
+  .section {
+    padding: 100px 0;
+  }
+  .section-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+  .section-badge {
+    display: inline-block;
+    background: var(--card-surface);
+    color: var(--medium-gray);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    margin-bottom: 20px;
+  }
+  .section-title {
+    font-size: 56px;
+    font-weight: 400;
+    line-height: 1.17;
+    letter-spacing: 0.2px;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+  .section-desc {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.55;
+    color: var(--light-gray);
+    letter-spacing: 0.2px;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .feature-card {
+    background: var(--surface-100);
+    padding: 32px;
+    position: relative;
+    transition: background 0.15s;
+    box-shadow:
+      var(--card-ring-outer) 0px 0px 0px 1px,
+      var(--card-ring-inner) 0px 0px 0px 1px inset;
+  }
+  .feature-card:hover { background: rgba(16, 17, 17, 0.95); }
+  .feature-icon-wrap {
+    width: 44px; height: 44px;
+    background: var(--card-surface);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .feature-title {
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.15;
+    color: var(--near-white);
+    letter-spacing: 0px;
+    margin-bottom: 10px;
+  }
+  .feature-body {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--medium-gray);
+    letter-spacing: 0.1px;
+  }
+  .feature-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 16px;
+    background: var(--card-surface);
+    color: var(--light-gray);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  /* ── KEYBOARD SHORTCUTS SECTION ── */
+  .shortcuts-section {
+    padding: 100px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .shortcuts-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .shortcuts-copy .section-title {
+    text-align: left;
+    font-size: 48px;
+  }
+  .shortcuts-copy .section-desc {
+    text-align: left;
+    max-width: none;
+    margin: 0;
+  }
+  .shortcut-list {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .shortcut-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    background: var(--surface-100);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    box-shadow:
+      var(--card-ring-outer) 0px 0px 0px 1px,
+      var(--card-ring-inner) 0px 0px 0px 1px inset;
+    transition: border-color 0.15s;
+  }
+  .shortcut-item:hover { border-color: rgba(255, 255, 255, 0.12); }
+  .shortcut-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--near-white);
+    letter-spacing: 0.2px;
+  }
+  .shortcut-sub {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--medium-gray);
+    margin-top: 2px;
+    letter-spacing: 0.2px;
+  }
+  .shortcut-keys {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .key-sep {
+    color: var(--dark-gray);
+    font-size: 11px;
+    margin: 0 2px;
+  }
+  .shortcuts-visual {
+    position: relative;
+  }
+  .extension-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .extension-card {
+    background: var(--surface-100);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.15s, transform 0.15s;
+    box-shadow:
+      var(--card-ring-outer) 0px 0px 0px 1px,
+      var(--card-ring-inner) 0px 0px 0px 1px inset;
+  }
+  .extension-card:hover {
+    border-color: rgba(255, 255, 255, 0.12);
+    transform: translateY(-2px);
+  }
+  .extension-icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .extension-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--light-gray);
+    letter-spacing: 0px;
+  }
+  .extension-count {
+    font-size: 11px;
+    color: var(--dim-gray);
+    margin-top: 2px;
+    letter-spacing: 0.2px;
+  }
+
+  /* ── EXTENSIONS SECTION ── */
+  .extensions-section {
+    padding: 100px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .extensions-showcase {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 48px;
+  }
+  .ext-showcase-card {
+    background: var(--surface-100);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    padding: 24px 20px;
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    box-shadow:
+      var(--card-ring-outer) 0px 0px 0px 1px,
+      var(--card-ring-inner) 0px 0px 0px 1px inset;
+  }
+  .ext-showcase-card:hover {
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow:
+      var(--card-ring-outer) 0px 0px 0px 1px,
+      var(--card-ring-inner) 0px 0px 0px 1px inset,
+      rgba(215, 201, 175, 0.05) 0px 0px 20px 5px;
+  }
+  .ext-icon-large {
+    font-size: 32px;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .ext-name-large {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--near-white);
+    margin-bottom: 6px;
+    letter-spacing: 0.2px;
+  }
+  .ext-desc {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--medium-gray);
+    line-height: 1.4;
+    letter-spacing: 0.2px;
+  }
+  .ext-badge {
+    display: inline-block;
+    margin-top: 12px;
+    background: var(--card-surface);
+    color: var(--dim-gray);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+
+  /* ── AI SECTION ── */
+  .ai-section {
+    padding: 100px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    position: relative;
+    overflow: hidden;
+  }
+  .ai-bg-glow {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(ellipse, rgba(85, 179, 255, 0.04) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .ai-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    position: relative;
+  }
+  .ai-chat-window {
+    background: var(--surface-100);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow:
+      rgba(0, 0, 0, 0.5) 0px 0px 0px 2px,
+      rgba(255, 255, 255, 0.04) 0px 0px 14px,
+      rgba(0, 0, 0, 0.6) 0px 30px 60px;
+  }
+  .ai-chat-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .ai-model-badge {
+    background: rgba(85, 179, 255, 0.15);
+    color: var(--blue);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+  .ai-title-text {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--medium-gray);
+  }
+  .ai-chat-body {
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .ai-msg {
+    max-width: 85%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0.2px;
+  }
+  .ai-msg.user {
+    align-self: flex-end;
+    background: rgba(85, 179, 255, 0.12);
+    border: 1px solid rgba(85, 179, 255, 0.2);
+    color: var(--near-white);
+  }
+  .ai-msg.assistant {
+    align-self: flex-start;
+    background: var(--card-surface);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    color: var(--light-gray);
+  }
+  .ai-msg code {
+    font-family: 'Courier New', monospace;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 12px;
+    color: var(--blue);
+  }
+  .ai-input-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .ai-input-mock {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+    color: var(--dim-gray);
+  }
+  .ai-send-btn {
+    background: rgba(85, 179, 255, 0.15);
+    border: 1px solid rgba(85, 179, 255, 0.2);
+    border-radius: 6px;
+    padding: 8px 12px;
+    color: var(--blue);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .ai-send-btn:hover { opacity: 0.7; }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials-section {
+    padding: 100px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 48px;
+  }
+  .testimonial-card {
+    background: var(--surface-100);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow:
+      var(--card-ring-outer) 0px 0px 0px 1px,
+      var(--card-ring-inner) 0px 0px 0px 1px inset;
+    transition: border-color 0.15s;
+  }
+  .testimonial-card:hover { border-color: rgba(255, 255, 255, 0.1); }
+  .testimonial-stars {
+    color: var(--yellow);
+    font-size: 14px;
+    margin-bottom: 14px;
+    letter-spacing: 1px;
+  }
+  .testimonial-text {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--light-gray);
+    letter-spacing: 0.2px;
+    margin-bottom: 20px;
+  }
+  .testimonial-author { display: flex; align-items: center; gap: 10px; }
+  .author-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--card-surface);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    color: var(--medium-gray);
+    font-weight: 600;
+  }
+  .author-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--near-white);
+    letter-spacing: 0.2px;
+  }
+  .author-role {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--dim-gray);
+    letter-spacing: 0.2px;
+  }
+
+  /* ── CTA SECTION ── */
+  .cta-section {
+    padding: 120px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-bg-glow {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px; height: 400px;
+    background: radial-gradient(ellipse, rgba(255, 99, 99, 0.05) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .cta-title {
+    font-size: 56px;
+    font-weight: 600;
+    line-height: 1.10;
+    color: var(--white);
+    letter-spacing: 0px;
+    margin-bottom: 20px;
+    position: relative;
+    font-feature-settings: "liga" 0;
+  }
+  .cta-title span { color: var(--red); }
+  .cta-desc {
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--light-gray);
+    letter-spacing: 0.2px;
+    margin-bottom: 36px;
+    position: relative;
+  }
+  .cta-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    position: relative;
+  }
+  .cta-platforms {
+    margin-top: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--dim-gray);
+    letter-spacing: 0.4px;
+    position: relative;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 60px 0 40px;
+  }
+  .footer-top {
+    display: grid;
+    grid-template-columns: 1.5fr repeat(4, 1fr);
+    gap: 40px;
+    margin-bottom: 48px;
+  }
+  .footer-brand .nav-logo-mark { width: 32px; height: 32px; margin-bottom: 12px; }
+  .footer-brand-text {
+    font-size: 14px;
+    color: var(--medium-gray);
+    line-height: 1.6;
+    letter-spacing: 0.2px;
+    margin-top: 10px;
+    max-width: 220px;
+  }
+  .footer-col-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--near-white);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .footer-links a {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--medium-gray);
+    letter-spacing: 0.4px;
+    transition: color 0.15s;
+    text-decoration: none;
+  }
+  .footer-links a:hover { color: var(--near-white); }
+  .footer-bottom {
+    padding-top: 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-copy {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--dim-gray);
+    letter-spacing: 0.4px;
+  }
+  .footer-legal {
+    display: flex; gap: 20px; list-style: none;
+  }
+  .footer-legal a {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--dim-gray);
+    letter-spacing: 0.4px;
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .footer-legal a:hover { color: var(--medium-gray); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1023px) {
+    .hero-title { font-size: 48px; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .features-grid { grid-template-columns: repeat(2, 1fr); }
+    .shortcuts-layout { grid-template-columns: 1fr; gap: 48px; }
+    .shortcuts-copy .section-title { font-size: 36px; }
+    .extensions-showcase { grid-template-columns: repeat(2, 1fr); }
+    .ai-layout { grid-template-columns: 1fr; gap: 48px; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .footer-top { grid-template-columns: repeat(2, 1fr); }
+    .section-title { font-size: 40px; }
+    .cta-title { font-size: 40px; }
+  }
+  @media (max-width: 599px) {
+    .hero-title { font-size: 36px; }
+    .hero-description { font-size: 16px; }
+    .nav-links { display: none; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .stat-value { font-size: 28px; }
+    .features-grid { grid-template-columns: 1fr; }
+    .extension-grid { grid-template-columns: repeat(2, 1fr); }
+    .extensions-showcase { grid-template-columns: 1fr; }
+    .section-title { font-size: 32px; }
+    .cta-title { font-size: 32px; }
+    .footer-top { grid-template-columns: 1fr; }
+    .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <div class="nav-logo-mark"></div>
+        <span class="nav-logo-text">Raycast</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#">Store</a></li>
+        <li><a href="#">Extensions</a></li>
+        <li><a href="#">Pro</a></li>
+        <li><a href="#">Teams</a></li>
+        <li><a href="#">Changelog</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Manual</a></li>
+      </ul>
+      <a href="#" class="nav-cta">Download for Mac</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-stripes"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        Now with AI · Powered by Claude &amp; GPT-4
+      </div>
+      <h1 class="hero-title">
+        Your shortcut to<br><span class="accent">everything</span>
+      </h1>
+      <p class="hero-description">
+        Raycast lets you control your tools with a few keystrokes and create your own script commands and
+        extensions. Productivity for the macOS power user.
+      </p>
+      <div class="hero-actions">
+        <a href="#" class="btn-primary-pill">Download for Mac — It's free</a>
+        <a href="#" class="btn-secondary-rect">Browse Extensions</a>
+      </div>
+      <p class="hero-meta">macOS 12+ required &nbsp;·&nbsp; 500,000+ developers &amp; designers</p>
+    </div>
+  </div>
+</section>
+
+<!-- COMMAND PALETTE SHOWCASE -->
+<section class="palette-section">
+  <div class="container">
+    <div class="palette-window">
+      <div class="palette-topbar">
+        <div class="palette-dots">
+          <div class="palette-dot red"></div>
+          <div class="palette-dot yellow"></div>
+          <div class="palette-dot green"></div>
+        </div>
+        <div class="palette-search-bar">
+          <span class="palette-search-icon">&#9776;</span>
+          <span class="palette-search-text">Create new pull request</span>
+          <div class="palette-search-cursor"></div>
+        </div>
+      </div>
+      <div class="palette-body">
+        <div class="palette-sidebar">
+          <div class="palette-sidebar-group">
+            <div class="palette-sidebar-label">Pinned</div>
+            <div class="palette-sidebar-item active">
+              <div class="palette-sidebar-icon icon-red">&#128197;</div>
+              Calendar
+            </div>
+            <div class="palette-sidebar-item">
+              <div class="palette-sidebar-icon icon-blue">&#128203;</div>
+              GitHub
+            </div>
+            <div class="palette-sidebar-item">
+              <div class="palette-sidebar-icon icon-green">&#9881;</div>
+              System Settings
+            </div>
+          </div>
+          <div class="palette-sidebar-group">
+            <div class="palette-sidebar-label">Recent</div>
+            <div class="palette-sidebar-item">
+              <div class="palette-sidebar-icon icon-yellow">&#128081;</div>
+              Linear
+            </div>
+            <div class="palette-sidebar-item">
+              <div class="palette-sidebar-icon icon-blue">&#128442;</div>
+              Notion
+            </div>
+            <div class="palette-sidebar-item">
+              <div class="palette-sidebar-icon icon-red">&#127758;</div>
+              Browser Tabs
+            </div>
+          </div>
+        </div>
+        <div class="palette-main">
+          <div class="palette-section-label">GitHub — Best Match</div>
+          <div class="palette-cmd-item selected">
+            <div class="palette-cmd-left">
+              <div class="palette-cmd-icon">&#128203;</div>
+              <div>
+                <div class="palette-cmd-name">Create Pull Request</div>
+                <div class="palette-cmd-sub">GitHub · main → feature/raycast-api</div>
+              </div>
+            </div>
+            <div class="palette-cmd-right">
+              <span class="key">&#8984;</span>
+              <span class="key">&#9166;</span>
+            </div>
+          </div>
+          <div class="palette-cmd-item">
+            <div class="palette-cmd-left">
+              <div class="palette-cmd-icon">&#128274;</div>
+              <div>
+                <div class="palette-cmd-name">Create New Issue</div>
+                <div class="palette-cmd-sub">GitHub · raycast/raycast</div>
+              </div>
+            </div>
+            <div class="palette-cmd-right">
+              <span class="key">&#8984;</span>
+              <span class="key">N</span>
+            </div>
+          </div>
+          <div class="palette-cmd-item">
+            <div class="palette-cmd-left">
+              <div class="palette-cmd-icon">&#128268;</div>
+              <div>
+                <div class="palette-cmd-name">Search Issues &amp; PRs</div>
+                <div class="palette-cmd-sub">GitHub · All repositories</div>
+              </div>
+            </div>
+            <div class="palette-cmd-right">
+              <span class="key">&#8984;</span>
+              <span class="key">&#8679;</span>
+              <span class="key">F</span>
+            </div>
+          </div>
+          <div class="palette-section-label" style="margin-top:8px">Applications</div>
+          <div class="palette-cmd-item">
+            <div class="palette-cmd-left">
+              <div class="palette-cmd-icon">&#128736;</div>
+              <div>
+                <div class="palette-cmd-name">Open in VS Code</div>
+                <div class="palette-cmd-sub">Developer Tools</div>
+              </div>
+            </div>
+            <div class="palette-cmd-right">
+              <span class="key">&#8984;</span>
+              <span class="key">&#8679;</span>
+              <span class="key">C</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAND -->
+<div class="stats-band">
+  <div class="container">
+    <div class="stats-grid">
+      <div>
+        <div class="stat-value">500<span class="stat-accent">K</span>+</div>
+        <div class="stat-label">Active developers</div>
+      </div>
+      <div>
+        <div class="stat-value">1,200<span class="stat-accent">+</span></div>
+        <div class="stat-label">Extensions in Store</div>
+      </div>
+      <div>
+        <div class="stat-value">4.9<span class="stat-accent">★</span></div>
+        <div class="stat-label">App Store rating</div>
+      </div>
+      <div>
+        <div class="stat-value">100<span class="stat-accent">%</span></div>
+        <div class="stat-label">Free for individuals</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES GRID -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge">Features</div>
+      <h2 class="section-title">Built for speed,<br>designed for flow</h2>
+      <p class="section-desc">Every interaction is designed to feel native to macOS — precise, responsive, and out of your way.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon-wrap">&#9889;</div>
+        <div class="feature-title">Blazing Fast Launch</div>
+        <p class="feature-body">Opens in milliseconds. Every command, file, and action is instantly accessible without lifting your hands from the keyboard.</p>
+        <div class="feature-tag">&#8984; Space</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-wrap">&#129302;</div>
+        <div class="feature-title">AI Commands</div>
+        <p class="feature-body">Ask questions, generate text, translate, summarize — all without leaving your current context. Claude, GPT-4, and more.</p>
+        <div class="feature-tag" style="background:rgba(85,179,255,0.1);color:var(--blue);border-color:rgba(85,179,255,0.2)">AI Pro</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-wrap">&#128268;</div>
+        <div class="feature-title">Extension Store</div>
+        <p class="feature-body">1,200+ extensions for your favorite tools — GitHub, Linear, Notion, Figma, and anything you can script in Node or Swift.</p>
+        <div class="feature-tag">1,200+ extensions</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-wrap">&#128221;</div>
+        <div class="feature-title">Clipboard History</div>
+        <p class="feature-body">Every text snippet, image, and link you've copied, searchable in an instant. Never lose something you copied 3 hours ago.</p>
+        <div class="feature-tag">&#8984; &#8679; V</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-wrap">&#127760;</div>
+        <div class="feature-title">Window Management</div>
+        <p class="feature-body">Resize, move, and arrange windows with keyboard shortcuts. No mouse, no dragging — just declarative window control.</p>
+        <div class="feature-tag">Built-in</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-wrap">&#128101;</div>
+        <div class="feature-title">Team Sharing</div>
+        <p class="feature-body">Share snippets, scripts, and setups across your entire team. Consistent tooling, zero onboarding friction.</p>
+        <div class="feature-tag" style="background:rgba(95,201,146,0.1);color:var(--green);border-color:rgba(95,201,146,0.2)">Teams</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KEYBOARD SHORTCUTS SECTION -->
+<section class="shortcuts-section">
+  <div class="container">
+    <div class="shortcuts-layout">
+      <div class="shortcuts-copy">
+        <div class="section-badge">Keyboard First</div>
+        <h2 class="section-title" style="font-size:48px;text-align:left;margin-bottom:14px">Every action has<br>a shortcut</h2>
+        <p class="section-desc" style="text-align:left;max-width:none;margin:0">Every command, every extension, every action — mapped to a keystroke. The mouse is optional.</p>
+        <div class="shortcut-list">
+          <div class="shortcut-item">
+            <div>
+              <div class="shortcut-name">Open Raycast</div>
+              <div class="shortcut-sub">Launch the command palette</div>
+            </div>
+            <div class="shortcut-keys">
+              <span class="key">&#8984;</span>
+              <span class="key">Space</span>
+            </div>
+          </div>
+          <div class="shortcut-item">
+            <div>
+              <div class="shortcut-name">Clipboard History</div>
+              <div class="shortcut-sub">Search your clipboard</div>
+            </div>
+            <div class="shortcut-keys">
+              <span class="key">&#8984;</span>
+              <span class="key">&#8679;</span>
+              <span class="key">V</span>
+            </div>
+          </div>
+          <div class="shortcut-item">
+            <div>
+              <div class="shortcut-name">Window Left Half</div>
+              <div class="shortcut-sub">Snap window to left</div>
+            </div>
+            <div class="shortcut-keys">
+              <span class="key">ctrl</span>
+              <span class="key">&#8997;</span>
+              <span class="key">&#8592;</span>
+            </div>
+          </div>
+          <div class="shortcut-item">
+            <div>
+              <div class="shortcut-name">AI Assistant</div>
+              <div class="shortcut-sub">Ask anything with AI</div>
+            </div>
+            <div class="shortcut-keys">
+              <span class="key">&#8984;</span>
+              <span class="key">&#9166;</span>
+            </div>
+          </div>
+          <div class="shortcut-item">
+            <div>
+              <div class="shortcut-name">Floating Notes</div>
+              <div class="shortcut-sub">Quick scratch pad</div>
+            </div>
+            <div class="shortcut-keys">
+              <span class="key">&#8984;</span>
+              <span class="key">&#8679;</span>
+              <span class="key">N</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="shortcuts-visual">
+        <div class="extension-grid">
+          <div class="extension-card">
+            <span class="extension-icon">&#128203;</span>
+            <div class="extension-name">GitHub</div>
+            <div class="extension-count">↗ 42.3K users</div>
+          </div>
+          <div class="extension-card">
+            <span class="extension-icon">&#128261;</span>
+            <div class="extension-name">Linear</div>
+            <div class="extension-count">↗ 18.1K users</div>
+          </div>
+          <div class="extension-card">
+            <span class="extension-icon">&#128203;</span>
+            <div class="extension-name">Notion</div>
+            <div class="extension-count">↗ 31.0K users</div>
+          </div>
+          <div class="extension-card">
+            <span class="extension-icon">&#127912;</span>
+            <div class="extension-name">Figma</div>
+            <div class="extension-count">↗ 22.7K users</div>
+          </div>
+          <div class="extension-card">
+            <span class="extension-icon">&#128296;</span>
+            <div class="extension-name">Homebrew</div>
+            <div class="extension-count">↗ 15.4K users</div>
+          </div>
+          <div class="extension-card">
+            <span class="extension-icon">&#9729;</span>
+            <div class="extension-name">Vercel</div>
+            <div class="extension-count">↗ 9.8K users</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXTENSIONS SHOWCASE -->
+<section class="extensions-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge">Extensions</div>
+      <h2 class="section-title">Build your own<br>or use ours</h2>
+      <p class="section-desc">Extensions are built with React and Node.js. Ship in minutes, used by thousands.</p>
+    </div>
+    <div class="extensions-showcase">
+      <div class="ext-showcase-card">
+        <span class="ext-icon-large">&#9881;</span>
+        <div class="ext-name-large">Script Commands</div>
+        <p class="ext-desc">Run any shell script, Python, or Ruby script from the command palette.</p>
+        <span class="ext-badge">Bash · Python · Ruby</span>
+      </div>
+      <div class="ext-showcase-card">
+        <span class="ext-icon-large">&#128241;</span>
+        <div class="ext-name-large">Deep Links</div>
+        <p class="ext-desc">Trigger Raycast commands from any URL or other apps via deep linking protocol.</p>
+        <span class="ext-badge">raycast://</span>
+      </div>
+      <div class="ext-showcase-card">
+        <span class="ext-icon-large">&#128205;</span>
+        <div class="ext-name-large">Menu Bar Extras</div>
+        <p class="ext-desc">Expose any extension command in the macOS menu bar for persistent access.</p>
+        <span class="ext-badge">Always available</span>
+      </div>
+      <div class="ext-showcase-card">
+        <span class="ext-icon-large">&#128279;</span>
+        <div class="ext-name-large">API Integrations</div>
+        <p class="ext-desc">Connect to any REST API, GraphQL endpoint, or local service with the Extensions API.</p>
+        <span class="ext-badge">TypeScript SDK</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI SECTION -->
+<section class="ai-section">
+  <div class="ai-bg-glow"></div>
+  <div class="container">
+    <div class="ai-layout">
+      <div>
+        <div class="section-badge">Raycast AI</div>
+        <h2 class="section-title" style="text-align:left;font-size:48px;margin-bottom:14px">AI that works<br>how you work</h2>
+        <p class="section-desc" style="text-align:left;max-width:none;margin:0 0 24px">Ask questions, write code, summarize pages, and automate tasks without switching context. Choose Claude, GPT-4o, Perplexity, or bring your own API key.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px">
+          <div class="feature-tag" style="background:rgba(85,179,255,0.1);color:var(--blue);border-color:rgba(85,179,255,0.2);margin:0">Claude 3.7 Sonnet</div>
+          <div class="feature-tag" style="margin:0">GPT-4o</div>
+          <div class="feature-tag" style="background:rgba(95,201,146,0.1);color:var(--green);border-color:rgba(95,201,146,0.2);margin:0">Perplexity</div>
+          <div class="feature-tag" style="margin:0">Gemini Pro</div>
+        </div>
+        <a href="#" class="btn-secondary-rect">Try AI for free</a>
+      </div>
+      <div class="ai-chat-window">
+        <div class="ai-chat-header">
+          <div class="ai-model-badge">Claude 3.7 Sonnet</div>
+          <span class="ai-title-text">Raycast AI</span>
+        </div>
+        <div class="ai-chat-body">
+          <div class="ai-msg user">Write a TypeScript function that debounces async API calls with cancellation support</div>
+          <div class="ai-msg assistant">Here's a debounce implementation with AbortController for cancellation:<br><br><code>function debounceAsync&lt;T&gt;(fn, delay)</code><br><br>The function returns a Promise that auto-cancels previous calls when a new one arrives within the delay window. Perfect for search inputs.</div>
+          <div class="ai-msg user">Add rate limiting to it — max 10 calls per minute</div>
+          <div class="ai-msg assistant">Added a token bucket rate limiter with a sliding window. Calls exceeding the limit are queued and automatically drained as tokens refill every 6 seconds.</div>
+        </div>
+        <div class="ai-input-row">
+          <div class="ai-input-mock">Ask Raycast AI anything...</div>
+          <button class="ai-send-btn">&#9166; Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge">Testimonials</div>
+      <h2 class="section-title">Loved by developers</h2>
+      <p class="section-desc">Thousands of engineers and designers made Raycast their daily driver.</p>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="testimonial-text">"I replaced Spotlight, Alfred, and my snippet manager with Raycast. I haven't looked back. The extension ecosystem is the real killer feature."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">TH</div>
+          <div>
+            <div class="author-name">Tom Hartmann</div>
+            <div class="author-role">Senior Engineer at Stripe</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="testimonial-text">"The AI commands are insane. I can draft emails, summarize Slack threads, and write code — all without ever leaving the keyboard."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">MK</div>
+          <div>
+            <div class="author-name">Mia Kowalski</div>
+            <div class="author-role">Product Designer at Linear</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="testimonial-text">"We shipped a custom extension for our internal tools in two hours. The SDK is genuinely excellent — feels like writing any React component."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">AJ</div>
+          <div>
+            <div class="author-name">Alex Jin</div>
+            <div class="author-role">Staff Engineer at Vercel</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA SECTION -->
+<section class="cta-section">
+  <div class="cta-bg-glow"></div>
+  <div class="container">
+    <h2 class="cta-title">Start moving<br><span>faster</span> today</h2>
+    <p class="cta-desc">Free for individuals. Private, secure, and built for macOS.</p>
+    <div class="cta-actions">
+      <a href="#" class="btn-primary-pill" style="font-size:18px;padding:14px 32px">Download for Mac — Free</a>
+      <a href="#" class="btn-secondary-rect">View pricing</a>
+    </div>
+    <p class="cta-platforms">macOS 12 Monterey or later &nbsp;·&nbsp; Apple Silicon &amp; Intel &nbsp;·&nbsp; No account required to start</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="nav-logo-mark" style="width:32px;height:32px;border-radius:9px"></div>
+        <p class="footer-brand-text">The productivity platform for macOS power users. Free for individuals, built for teams.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Product</div>
+        <ul class="footer-links">
+          <li><a href="#">Extensions</a></li>
+          <li><a href="#">Raycast AI</a></li>
+          <li><a href="#">Raycast Pro</a></li>
+          <li><a href="#">Raycast Teams</a></li>
+          <li><a href="#">Changelog</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Developers</div>
+        <ul class="footer-links">
+          <li><a href="#">API Documentation</a></li>
+          <li><a href="#">Extension Store</a></li>
+          <li><a href="#">Script Commands</a></li>
+          <li><a href="#">GitHub</a></li>
+          <li><a href="#">Raycast Conf</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Resources</div>
+        <ul class="footer-links">
+          <li><a href="#">Manual</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Community</a></li>
+          <li><a href="#">Wallpapers</a></li>
+          <li><a href="#">Merch</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Company</div>
+        <ul class="footer-links">
+          <li><a href="#">About</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Brand Assets</a></li>
+          <li><a href="#">X / Twitter</a></li>
+          <li><a href="#">Discord</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 Raycast Technologies Inc. All rights reserved.</p>
+      <ul class="footer-legal">
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+        <li><a href="#">Security</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

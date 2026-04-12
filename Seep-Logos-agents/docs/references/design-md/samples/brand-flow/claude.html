@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude — Design Reference</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --parchment: #f5f4ed;
+    --ivory: #faf9f5;
+    --white: #ffffff;
+    --warm-sand: #e8e6dc;
+    --near-black: #141413;
+    --dark-surface: #30302e;
+    --charcoal-warm: #4d4c48;
+    --olive-gray: #5e5d59;
+    --stone-gray: #87867f;
+    --warm-silver: #b0aea5;
+    --terracotta: #c96442;
+    --coral: #d97757;
+    --border-cream: #f0eee6;
+    --border-warm: #e8e6dc;
+    --focus-blue: #3898ec;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    background: var(--parchment);
+    color: var(--near-black);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--parchment);
+    border-bottom: 1px solid var(--border-cream);
+    padding: 0 32px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+
+  .nav-logo-mark {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--terracotta);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ivory);
+    font-family: Arial, sans-serif;
+  }
+
+  .nav-logo-text {
+    font-family: Georgia, serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--near-black);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 4px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    display: flex;
+    align-items: center;
+    height: 36px;
+    padding: 0 16px;
+    font-family: Arial, sans-serif;
+    font-size: 17px;
+    font-weight: 400;
+    color: var(--olive-gray);
+    text-decoration: none;
+    border-radius: 12px;
+    transition: color 200ms;
+  }
+
+  .nav-links a:hover { color: var(--near-black); }
+
+  .nav-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 36px;
+    padding: 0 16px;
+    background: var(--terracotta);
+    color: var(--ivory);
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: opacity 200ms;
+  }
+
+  .nav-cta:hover { opacity: 0.85; }
+
+  /* HERO — CHAT UI */
+  .hero {
+    padding: 80px 32px;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .hero-text h1 {
+    font-family: Georgia, serif;
+    font-size: 64px;
+    font-weight: 500;
+    line-height: 1.1;
+    color: var(--near-black);
+    margin-bottom: 24px;
+  }
+
+  .hero-text p {
+    font-family: Arial, sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--olive-gray);
+    line-height: 1.6;
+    margin-bottom: 40px;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .btn-terracotta {
+    display: inline-flex;
+    align-items: center;
+    height: 40px;
+    padding: 8px 16px 8px 12px;
+    background: var(--terracotta);
+    color: var(--ivory);
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    border-radius: 12px;
+    text-decoration: none;
+  }
+
+  .btn-sand {
+    display: inline-flex;
+    align-items: center;
+    height: 40px;
+    padding: 0 12px 0 8px;
+    background: var(--warm-sand);
+    color: var(--charcoal-warm);
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    border-radius: 8px;
+    text-decoration: none;
+    box-shadow: var(--warm-sand) 0px 0px 0px 0px, #d1cfc5 0px 0px 0px 1px;
+  }
+
+  /* CHAT UI MOCKUP */
+  .chat-ui {
+    background: var(--ivory);
+    border: 1px solid var(--border-cream);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: rgba(0,0,0,0.05) 0px 4px 24px;
+  }
+
+  .chat-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-cream);
+  }
+
+  .chat-logo-sm {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--terracotta);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ivory);
+    font-family: Arial;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .chat-model-name {
+    font-family: Georgia, serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--near-black);
+  }
+
+  .chat-model-badge {
+    margin-left: auto;
+    background: var(--warm-sand);
+    color: var(--charcoal-warm);
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    padding: 2px 8px;
+    border-radius: 24px;
+  }
+
+  .chat-messages {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 280px;
+  }
+
+  .msg-user {
+    align-self: flex-end;
+    max-width: 75%;
+    background: var(--warm-sand);
+    color: var(--charcoal-warm);
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    padding: 10px 14px;
+    border-radius: 16px 16px 4px 16px;
+    line-height: 1.5;
+  }
+
+  .msg-claude {
+    align-self: flex-start;
+    max-width: 85%;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .msg-claude-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--terracotta);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ivory);
+    font-family: Arial;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .msg-claude-bubble {
+    background: var(--white);
+    border: 1px solid var(--border-cream);
+    color: var(--near-black);
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    padding: 10px 14px;
+    border-radius: 4px 16px 16px 16px;
+    line-height: 1.6;
+  }
+
+  .chat-input-area {
+    padding: 12px 16px;
+    border-top: 1px solid var(--border-cream);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--white);
+  }
+
+  .chat-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    color: var(--near-black);
+    outline: none;
+  }
+
+  .chat-input::placeholder { color: var(--stone-gray); }
+
+  .chat-send-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--terracotta);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ivory);
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  /* PROMPT EXAMPLES */
+  .prompts-section {
+    padding: 24px 32px;
+    border-top: 1px solid var(--border-cream);
+    border-bottom: 1px solid var(--border-cream);
+  }
+
+  .prompts-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .prompts-label {
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--stone-gray);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .prompts-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+
+  .prompt-chip {
+    background: var(--ivory);
+    border: 1px solid var(--border-warm);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: var(--charcoal-warm);
+    cursor: pointer;
+    transition: border-color 200ms;
+    text-decoration: none;
+    display: block;
+    line-height: 1.4;
+  }
+
+  .prompt-chip:hover { border-color: var(--terracotta); }
+
+  .prompt-chip-icon { font-size: 16px; margin-bottom: 4px; display: block; }
+
+  /* FEATURES — DARK SECTION */
+  .dark-section {
+    background: var(--near-black);
+    padding: 100px 32px;
+  }
+
+  .dark-section-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .dark-section h2 {
+    font-family: Georgia, serif;
+    font-size: 52px;
+    font-weight: 500;
+    color: var(--ivory);
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+
+  .dark-section-subtitle {
+    font-family: Arial, sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--warm-silver);
+    margin-bottom: 64px;
+    line-height: 1.6;
+    max-width: 560px;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .feature-card {
+    background: var(--dark-surface);
+    border: 1px solid rgba(48,48,46,1);
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: rgba(0,0,0,0.05) 0px 4px 24px;
+  }
+
+  .feature-card-icon {
+    font-size: 28px;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .feature-card-title {
+    font-family: Georgia, serif;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--ivory);
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  .feature-card-body {
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--warm-silver);
+    line-height: 1.6;
+  }
+
+  /* MODEL COMPARISON */
+  .model-section {
+    background: var(--parchment);
+    padding: 100px 32px;
+  }
+
+  .model-section-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .model-section h2 {
+    font-family: Georgia, serif;
+    font-size: 52px;
+    font-weight: 500;
+    color: var(--near-black);
+    margin-bottom: 16px;
+  }
+
+  .model-section-subtitle {
+    font-family: Arial, sans-serif;
+    font-size: 20px;
+    color: var(--olive-gray);
+    margin-bottom: 48px;
+    line-height: 1.6;
+  }
+
+  .model-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .model-card {
+    background: var(--ivory);
+    border: 1px solid var(--border-cream);
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: rgba(0,0,0,0.05) 0px 4px 24px;
+  }
+
+  .model-card-top-border {
+    height: 3px;
+    border-radius: 3px;
+    margin-bottom: 20px;
+  }
+
+  .opus-border { background: var(--terracotta); }
+  .sonnet-border { background: var(--coral); }
+  .haiku-border { background: var(--stone-gray); }
+
+  .model-name {
+    font-family: Georgia, serif;
+    font-size: 25px;
+    font-weight: 500;
+    color: var(--near-black);
+    margin-bottom: 8px;
+  }
+
+  .model-desc {
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--olive-gray);
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+
+  .model-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .model-badge {
+    background: var(--warm-sand);
+    color: var(--charcoal-warm);
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    padding: 3px 8px;
+    border-radius: 24px;
+    letter-spacing: 0.12px;
+  }
+
+  /* EDITORIAL SECTION */
+  .editorial-section {
+    background: var(--ivory);
+    padding: 100px 32px;
+    border-top: 1px solid var(--border-cream);
+    border-bottom: 1px solid var(--border-cream);
+  }
+
+  .editorial-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .editorial-text h2 {
+    font-family: Georgia, serif;
+    font-size: 36px;
+    font-weight: 500;
+    color: var(--near-black);
+    margin-bottom: 16px;
+    line-height: 1.3;
+  }
+
+  .editorial-text p {
+    font-family: Arial, sans-serif;
+    font-size: 17px;
+    font-weight: 400;
+    color: var(--olive-gray);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  .illustration-block {
+    background: var(--parchment);
+    border: 1px solid var(--border-warm);
+    border-radius: 32px;
+    height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 96px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .illustration-block::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: rgba(201,100,66,0.1);
+  }
+
+  .illustration-block::after {
+    content: '';
+    position: absolute;
+    bottom: -30px;
+    right: -30px;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: rgba(201,100,66,0.07);
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--near-black);
+    padding: 64px 32px;
+  }
+
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr repeat(3, auto);
+    gap: 48px;
+    margin-bottom: 40px;
+  }
+
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .footer-logo-mark {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--terracotta);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ivory);
+    font-family: Arial;
+  }
+
+  .footer-brand-name {
+    font-family: Georgia, serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--ivory);
+  }
+
+  .footer-tagline {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: var(--warm-silver);
+    line-height: 1.6;
+    max-width: 240px;
+  }
+
+  .footer-col-title {
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ivory);
+    margin-bottom: 16px;
+  }
+
+  .footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .footer-links a {
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--warm-silver);
+    text-decoration: none;
+    transition: color 200ms;
+  }
+
+  .footer-links a:hover { color: var(--ivory); }
+
+  .footer-bottom {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 24px;
+    border-top: 1px solid var(--dark-surface);
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: var(--stone-gray);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 0 16px; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; padding: 48px 16px; gap: 40px; }
+    .hero-text h1 { font-size: 36px; }
+    .prompts-section { padding: 24px 16px; }
+    .prompts-grid { grid-template-columns: repeat(2, 1fr); }
+    .dark-section { padding: 60px 16px; }
+    .dark-section h2 { font-size: 32px; }
+    .features-grid { grid-template-columns: 1fr; }
+    .model-section { padding: 60px 16px; }
+    .model-section h2 { font-size: 32px; }
+    .model-grid { grid-template-columns: 1fr; }
+    .editorial-section { padding: 60px 16px; }
+    .editorial-inner { grid-template-columns: 1fr; gap: 40px; }
+    footer { padding: 48px 16px; }
+    .footer-inner { grid-template-columns: 1fr 1fr; }
+    .footer-bottom { flex-direction: column; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-mark">C</div>
+    <span class="nav-logo-text">Claude</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#">Solutions</a></li>
+    <li><a href="#">Research</a></li>
+    <li><a href="#">Pricing</a></li>
+    <li><a href="#">Docs</a></li>
+    <li><a href="#">Blog</a></li>
+  </ul>
+  <div style="display:flex; gap:8px; align-items:center;">
+    <a href="#" class="btn-sand">Log in</a>
+    <a href="#" class="nav-cta">Try Claude</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-text">
+    <h1>A thoughtful companion for everything that matters</h1>
+    <p>Claude is an AI assistant built by Anthropic that's capable, harmless, and honest — designed to help you think, write, and create.</p>
+    <div class="hero-actions">
+      <a href="#" class="btn-terracotta">Start for free &#8594;</a>
+      <a href="#" class="btn-sand">Explore Claude API</a>
+    </div>
+  </div>
+
+  <!-- CHAT MOCKUP -->
+  <div class="chat-ui">
+    <div class="chat-header">
+      <div class="chat-logo-sm">C</div>
+      <span class="chat-model-name">Claude</span>
+      <span class="chat-model-badge">Sonnet 4</span>
+    </div>
+    <div class="chat-messages">
+      <div class="msg-user">Can you help me write a short story opening set in a rain-soaked city at night?</div>
+      <div class="msg-claude">
+        <div class="msg-claude-avatar">C</div>
+        <div class="msg-claude-bubble">The rain had been falling for three days straight when Keiko noticed the light was on in the apartment above the bookshop — the one that had been empty since March. She stood under her umbrella at the corner of Idobata Street, watching the warm glow shift and move behind the frosted glass, and thought: someone is searching for something up there.</div>
+      </div>
+      <div class="msg-user">That's perfect. Now set the same scene in winter daylight instead.</div>
+      <div class="msg-claude">
+        <div class="msg-claude-avatar">C</div>
+        <div class="msg-claude-bubble">The winter sun hung low and pale over Idobata Street, casting long shadows from the bookshop awning across the icy pavement. Keiko squinted up at the apartment window — empty since March, until today. A silhouette moved through the white winter light, slow and deliberate, as if cataloguing a room that had been waiting to be found.</div>
+      </div>
+    </div>
+    <div class="chat-input-area">
+      <input type="text" class="chat-input" placeholder="Ask Claude anything...">
+      <button class="chat-send-btn">&#8593;</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROMPT EXAMPLES -->
+<div class="prompts-section">
+  <div class="prompts-inner">
+    <div class="prompts-label">Try asking Claude</div>
+    <div class="prompts-grid">
+      <a href="#" class="prompt-chip">
+        <span class="prompt-chip-icon">&#9997;</span>
+        Help me draft a thoughtful email to a difficult colleague
+      </a>
+      <a href="#" class="prompt-chip">
+        <span class="prompt-chip-icon">&#128202;</span>
+        Explain this Python error and suggest a fix
+      </a>
+      <a href="#" class="prompt-chip">
+        <span class="prompt-chip-icon">&#128218;</span>
+        Summarize this research paper in plain language
+      </a>
+      <a href="#" class="prompt-chip">
+        <span class="prompt-chip-icon">&#128161;</span>
+        Help me think through this difficult decision
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- DARK FEATURES SECTION -->
+<section class="dark-section">
+  <div class="dark-section-inner">
+    <h2>Capable across every domain</h2>
+    <p class="dark-section-subtitle">From creative writing to code, analysis to conversation — Claude adapts to what you need.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <span class="feature-card-icon">&#9997;</span>
+        <div class="feature-card-title">Writing & Editing</div>
+        <p class="feature-card-body">Drafting emails, essays, creative fiction, and more. Claude understands tone, audience, and context.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-card-icon">&#128187;</span>
+        <div class="feature-card-title">Coding</div>
+        <p class="feature-card-body">Debug, explain, and write code across dozens of languages. Understands complex systems and architecture.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-card-icon">&#128202;</span>
+        <div class="feature-card-title">Analysis & Research</div>
+        <p class="feature-card-body">Synthesize documents, extract insights, and reason through complex problems step by step.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-card-icon">&#128483;</span>
+        <div class="feature-card-title">Conversation</div>
+        <p class="feature-card-body">Extended thinking across long contexts. Claude remembers what matters throughout your conversation.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-card-icon">&#128161;</span>
+        <div class="feature-card-title">Problem Solving</div>
+        <p class="feature-card-body">Work through difficult decisions, brainstorm ideas, and challenge assumptions thoughtfully.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-card-icon">&#128274;</span>
+        <div class="feature-card-title">Safe & Honest</div>
+        <p class="feature-card-body">Built on Constitutional AI. Claude is designed to be helpful, harmless, and honest by principle.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODEL COMPARISON -->
+<section class="model-section">
+  <div class="model-section-inner">
+    <h2>Choose your Claude</h2>
+    <p class="model-section-subtitle">Different models for different needs — from everyday tasks to frontier research.</p>
+    <div class="model-grid">
+      <div class="model-card">
+        <div class="model-card-top-border opus-border"></div>
+        <div class="model-name">Claude Opus 4.5</div>
+        <p class="model-desc">Our most intelligent model. For complex reasoning, nuanced writing, and frontier research tasks.</p>
+        <div class="model-badges">
+          <span class="model-badge">Extended thinking</span>
+          <span class="model-badge">200K context</span>
+          <span class="model-badge">Highest capability</span>
+        </div>
+      </div>
+      <div class="model-card">
+        <div class="model-card-top-border sonnet-border"></div>
+        <div class="model-name">Claude Sonnet 4.5</div>
+        <p class="model-desc">The ideal balance of speed and intelligence. Excellent for most tasks and production workloads.</p>
+        <div class="model-badges">
+          <span class="model-badge">Fast response</span>
+          <span class="model-badge">200K context</span>
+          <span class="model-badge">Best value</span>
+        </div>
+      </div>
+      <div class="model-card">
+        <div class="model-card-top-border haiku-border"></div>
+        <div class="model-name">Claude Haiku 4.5</div>
+        <p class="model-desc">Near-instant responses for lightweight tasks. Built for high-volume, latency-sensitive applications.</p>
+        <div class="model-badges">
+          <span class="model-badge">Fastest</span>
+          <span class="model-badge">Cost efficient</span>
+          <span class="model-badge">High volume</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDITORIAL -->
+<section class="editorial-section">
+  <div class="editorial-inner">
+    <div class="editorial-text">
+      <h2>Built on a foundation of safety and trust</h2>
+      <p>Anthropic was founded with a single mission: the responsible development of AI for the long-term benefit of humanity. Claude is the expression of that mission — a model designed not just to be capable, but to be trustworthy.</p>
+      <p>Our Constitutional AI approach means Claude is trained to reason about its own responses, to identify potential harms, and to choose the most helpful path that avoids them.</p>
+      <a href="#" class="btn-terracotta">Learn about our safety research &#8594;</a>
+    </div>
+    <div class="illustration-block">&#129504;</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">
+        <div class="footer-logo-mark">C</div>
+        <span class="footer-brand-name">Claude</span>
+      </div>
+      <p class="footer-tagline">An AI assistant by Anthropic, built for the long-term benefit of humanity.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Product</div>
+      <ul class="footer-links">
+        <li><a href="#">Claude.ai</a></li>
+        <li><a href="#">API Access</a></li>
+        <li><a href="#">Claude for Teams</a></li>
+        <li><a href="#">Claude for Enterprise</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Research</div>
+      <ul class="footer-links">
+        <li><a href="#">Constitutional AI</a></li>
+        <li><a href="#">Safety Research</a></li>
+        <li><a href="#">Publications</a></li>
+        <li><a href="#">Model Card</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Anthropic</div>
+      <ul class="footer-links">
+        <li><a href="#">About</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&#169; 2026 Anthropic PBC. All rights reserved.</span>
+    <div style="display:flex; gap:16px;">
+      <a href="#" style="color:var(--stone-gray); text-decoration:none; font-family:Arial; font-size:14px;">Terms</a>
+      <a href="#" style="color:var(--stone-gray); text-decoration:none; font-family:Arial; font-size:14px;">Privacy</a>
+      <a href="#" style="color:var(--stone-gray); text-decoration:none; font-family:Arial; font-size:14px;">Usage Policy</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

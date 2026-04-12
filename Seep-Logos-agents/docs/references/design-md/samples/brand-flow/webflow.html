@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Webflow — The visual web development platform</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --blue: #146ef5;
+    --blue-400: #3b89ff;
+    --blue-hover: #0055d4;
+    --purple: #7a3dff;
+    --pink: #ed52cb;
+    --green: #00d722;
+    --orange: #ff6b00;
+    --yellow: #ffae13;
+    --red: #ee1d36;
+    --black: #080808;
+    --gray-800: #222222;
+    --gray-700: #363636;
+    --gray-300: #ababab;
+    --gray-mid: #5a5a5a;
+    --border: #d8d8d8;
+    --shadow: 0 84px 24px rgba(0,0,0,0), 0 54px 22px rgba(0,0,0,0.01), 0 30px 18px rgba(0,0,0,0.04), 0 13px 13px rgba(0,0,0,0.08), 0 3px 7px rgba(0,0,0,0.09);
+  }
+  html { background: #fff; color: var(--black); font-family: Arial, 'Helvetica Neue', sans-serif; }
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: #fff; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px; height: 64px;
+  }
+  .nav-logo { font-size: 20px; font-weight: 600; color: var(--black); display: flex; align-items: center; gap: 8px; }
+  .nav-logo-icon {
+    width: 32px; height: 32px; background: var(--blue);
+    border-radius: 6px; display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 16px; font-weight: 700;
+  }
+  .nav-links { display: flex; gap: 28px; }
+  .nav-links a { font-size: 16px; font-weight: 500; color: var(--gray-mid); }
+  .nav-links a:hover { color: var(--black); text-decoration: none; }
+  .nav-right { display: flex; gap: 12px; align-items: center; }
+  .btn-nav-ghost { font-size: 16px; font-weight: 500; color: var(--black); padding: 8px 16px; background: transparent; border: none; cursor: pointer; }
+  .btn-nav-blue {
+    background: var(--blue); color: #fff;
+    padding: 10px 24px; border-radius: 4px; font-size: 16px; font-weight: 500;
+    border: none; cursor: pointer;
+    transition: transform 0.15s, background 0.15s;
+  }
+  .btn-nav-blue:hover { background: var(--blue-hover); transform: translateY(-2px); }
+
+  /* HERO */
+  .hero {
+    padding: 100px 40px 80px; text-align: center;
+    background: #fff;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(20, 110, 245, 0.1); color: var(--blue);
+    padding: 4px 12px; border-radius: 4px;
+    font-size: 12.8px; font-weight: 550; text-transform: uppercase;
+    letter-spacing: 0.6px; margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-size: 80px; font-weight: 600; line-height: 1.04;
+    letter-spacing: -0.8px; color: var(--black);
+    max-width: 900px; margin: 0 auto 24px;
+  }
+  .hero h1 .highlight { color: var(--blue); }
+  .hero p {
+    font-size: 20px; font-weight: 400; line-height: 1.5;
+    color: var(--gray-700); max-width: 560px; margin: 0 auto 40px;
+  }
+  .hero-ctas { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .btn-hero-primary {
+    background: var(--blue); color: #fff;
+    padding: 14px 32px; border-radius: 4px;
+    font-size: 16px; font-weight: 500;
+    box-shadow: var(--shadow);
+    border: none; cursor: pointer;
+    transition: transform 0.15s, background 0.15s;
+    display: inline-block;
+  }
+  .btn-hero-primary:hover { background: var(--blue-hover); transform: translateY(-6px); }
+  .btn-hero-ghost {
+    background: transparent; color: var(--black);
+    padding: 14px 32px; font-size: 16px; font-weight: 500;
+    border: 1px solid var(--border); border-radius: 4px;
+    cursor: pointer; display: inline-block;
+    transition: transform 0.15s;
+  }
+  .btn-hero-ghost:hover { transform: translateY(-6px); text-decoration: none; }
+
+  /* CANVAS PREVIEW */
+  .canvas-preview {
+    max-width: 1200px; margin: 60px auto 0;
+    padding: 0 40px;
+  }
+  .canvas-ui {
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 8px; box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .canvas-toolbar {
+    background: var(--black); display: flex; align-items: center;
+    padding: 10px 16px; gap: 16px;
+  }
+  .toolbar-dots { display: flex; gap: 6px; }
+  .toolbar-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .toolbar-tools { display: flex; gap: 8px; margin-left: 16px; }
+  .toolbar-tool {
+    width: 28px; height: 28px; border-radius: 4px;
+    background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center;
+    font-size: 12px; color: #fff; cursor: pointer;
+  }
+  .toolbar-tool.active { background: var(--blue); }
+  .canvas-body { display: grid; grid-template-columns: 220px 1fr 220px; min-height: 400px; }
+  .canvas-left {
+    background: #1a1a1a; padding: 16px;
+    border-right: 1px solid #333;
+  }
+  .panel-title { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #666; margin-bottom: 12px; }
+  .panel-tree-item {
+    font-size: 12px; color: #aaa; padding: 4px 8px;
+    border-radius: 3px; cursor: pointer;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .panel-tree-item:hover { background: rgba(255,255,255,0.05); color: #fff; }
+  .panel-tree-item.selected { background: rgba(20,110,245,0.2); color: var(--blue); }
+  .panel-tree-indent { padding-left: 20px; }
+  .canvas-center {
+    background: #e5e5e5; display: flex; align-items: center; justify-content: center;
+    padding: 20px; position: relative;
+  }
+  .canvas-frame {
+    background: #fff; width: 100%; max-width: 560px;
+    border-radius: 4px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    padding: 24px; min-height: 280px;
+  }
+  .frame-nav {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border);
+  }
+  .frame-logo { width: 80px; height: 8px; background: var(--gray-300); border-radius: 2px; }
+  .frame-nav-links { display: flex; gap: 12px; }
+  .frame-nav-link { width: 40px; height: 8px; background: #e0e0e0; border-radius: 2px; }
+  .frame-hero-text {
+    width: 80%; height: 28px; background: #f0f0f0; border-radius: 2px; margin-bottom: 12px;
+  }
+  .frame-hero-sub { width: 60%; height: 16px; background: #f0f0f0; border-radius: 2px; margin-bottom: 24px; }
+  .frame-cta {
+    display: inline-block; background: var(--blue); color: #fff;
+    padding: 8px 20px; border-radius: 4px; font-size: 12px; font-weight: 600;
+  }
+  .canvas-selection-box {
+    position: absolute; top: 50px; left: 60px; right: 60px; bottom: 50px;
+    border: 2px solid var(--blue); border-radius: 2px; pointer-events: none;
+  }
+  .selection-handle {
+    position: absolute; width: 8px; height: 8px;
+    background: #fff; border: 2px solid var(--blue); border-radius: 1px;
+  }
+  .handle-tl { top: -4px; left: -4px; }
+  .handle-tr { top: -4px; right: -4px; }
+  .handle-bl { bottom: -4px; left: -4px; }
+  .handle-br { bottom: -4px; right: -4px; }
+  .canvas-right {
+    background: #1a1a1a; padding: 16px;
+    border-left: 1px solid #333;
+  }
+  .property-row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px;
+  }
+  .property-label { font-size: 11px; color: #666; }
+  .property-value {
+    font-size: 11px; color: #ccc;
+    background: #2a2a2a; padding: 2px 8px; border-radius: 3px;
+    border: 1px solid #333;
+  }
+  .property-value.blue { color: var(--blue); }
+
+  /* FEATURES */
+  .features {
+    padding: 100px 40px;
+    background: #fff;
+  }
+  .features-inner { max-width: 1200px; margin: 0 auto; }
+  .section-badge {
+    font-size: 15px; font-weight: 500; text-transform: uppercase;
+    letter-spacing: 1.5px; color: var(--gray-700); margin-bottom: 16px;
+    display: block;
+  }
+  .section-title { font-size: 56px; font-weight: 600; line-height: 1.04; color: var(--black); margin-bottom: 20px; max-width: 700px; }
+  .section-sub { font-size: 20px; color: var(--gray-700); line-height: 1.5; max-width: 540px; margin-bottom: 60px; }
+
+  .features-list { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  .feature-item { display: flex; gap: 20px; }
+  .feature-item-icon {
+    width: 48px; height: 48px; border-radius: 8px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 20px;
+  }
+  .feature-item-icon.blue { background: rgba(20,110,245,0.1); }
+  .feature-item-icon.purple { background: rgba(122,61,255,0.1); }
+  .feature-item-icon.pink { background: rgba(237,82,203,0.1); }
+  .feature-item-icon.green { background: rgba(0,215,34,0.1); }
+  .feature-item-icon.orange { background: rgba(255,107,0,0.1); }
+  .feature-item-icon.yellow { background: rgba(255,174,19,0.1); }
+  .feature-item h3 { font-size: 24px; font-weight: 500; line-height: 1.3; color: var(--black); margin-bottom: 8px; }
+  .feature-item p { font-size: 16px; color: var(--gray-mid); line-height: 1.6; }
+
+  /* TEMPLATES */
+  .templates {
+    padding: 100px 40px;
+    background: #f9f9f9; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  }
+  .templates-inner { max-width: 1200px; margin: 0 auto; }
+  .templates-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px;
+  }
+  .template-card {
+    background: #fff; border: 1px solid var(--border); border-radius: 8px;
+    overflow: hidden; box-shadow: var(--shadow);
+    transition: transform 0.2s;
+    cursor: pointer;
+  }
+  .template-card:hover { transform: translateY(-4px); }
+  .template-preview {
+    height: 200px; background: linear-gradient(135deg, #f0f4ff 0%, #e8f0fe 100%);
+    display: flex; align-items: center; justify-content: center; position: relative;
+  }
+  .template-preview.purple-theme { background: linear-gradient(135deg, #f3edff 0%, #ede0ff 100%); }
+  .template-preview.dark-theme { background: linear-gradient(135deg, #1a1a2e 0%, #0f0f23 100%); }
+  .tmpl-mock { width: 80%; background: rgba(255,255,255,0.8); border-radius: 4px; padding: 12px; }
+  .tmpl-mock-dark { width: 80%; background: rgba(255,255,255,0.1); border-radius: 4px; padding: 12px; }
+  .tmpl-bar { height: 6px; border-radius: 3px; margin-bottom: 6px; }
+  .tmpl-bar.long { width: 70%; background: var(--blue); }
+  .tmpl-bar.mid { width: 50%; background: var(--border); }
+  .tmpl-bar.short { width: 30%; background: var(--border); }
+  .tmpl-bar.purple { background: var(--purple); }
+  .tmpl-bar.light { background: rgba(255,255,255,0.3); }
+  .template-info { padding: 16px; }
+  .template-info h4 { font-size: 16px; font-weight: 600; color: var(--black); margin-bottom: 4px; }
+  .template-info p { font-size: 14px; color: var(--gray-300); }
+  .template-tag {
+    display: inline-block; margin-top: 8px;
+    font-size: 12px; font-weight: 550; text-transform: uppercase; letter-spacing: 0.6px;
+    padding: 2px 8px; border-radius: 4px;
+    background: rgba(20,110,245,0.1); color: var(--blue);
+  }
+
+  /* SOCIAL PROOF */
+  .testimonials {
+    padding: 100px 40px; background: #fff;
+  }
+  .testimonials-inner { max-width: 1200px; margin: 0 auto; }
+  .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
+  .testimonial-card {
+    border: 1px solid var(--border); border-radius: 8px; padding: 28px;
+    box-shadow: var(--shadow);
+  }
+  .testimonial-quote { font-size: 16px; line-height: 1.6; color: var(--gray-800); margin-bottom: 20px; }
+  .testimonial-author { display: flex; align-items: center; gap: 12px; }
+  .author-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700; color: #fff;
+    flex-shrink: 0;
+  }
+  .author-name { font-size: 14px; font-weight: 600; color: var(--black); }
+  .author-role { font-size: 12px; color: var(--gray-300); }
+
+  /* CTA BANNER */
+  .cta-banner {
+    background: var(--black); color: #fff; text-align: center;
+    padding: 100px 40px;
+  }
+  .cta-banner h2 { font-size: 56px; font-weight: 600; line-height: 1.04; margin-bottom: 20px; }
+  .cta-banner p { font-size: 20px; color: #aaa; margin-bottom: 40px; }
+  .cta-buttons { display: flex; gap: 16px; justify-content: center; }
+  .btn-cta-white {
+    background: #fff; color: var(--black);
+    padding: 14px 32px; border-radius: 4px; font-size: 16px; font-weight: 500;
+    display: inline-block; transition: transform 0.15s;
+  }
+  .btn-cta-white:hover { transform: translateY(-6px); text-decoration: none; }
+  .btn-cta-outline {
+    background: transparent; color: #fff;
+    padding: 14px 32px; border-radius: 4px; font-size: 16px; font-weight: 500;
+    border: 1px solid rgba(255,255,255,0.3); display: inline-block;
+    transition: transform 0.15s;
+  }
+  .btn-cta-outline:hover { transform: translateY(-6px); text-decoration: none; }
+
+  /* FOOTER */
+  footer {
+    background: #fff; border-top: 1px solid var(--border);
+    padding: 64px 40px 40px;
+  }
+  .footer-inner { max-width: 1200px; margin: 0 auto; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 48px; }
+  .footer-brand p { font-size: 14px; color: var(--gray-mid); margin-top: 12px; line-height: 1.6; }
+  .footer-col h4 { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--black); margin-bottom: 16px; }
+  .footer-col a { display: block; font-size: 14px; color: var(--gray-mid); margin-bottom: 8px; }
+  .footer-col a:hover { color: var(--black); text-decoration: none; }
+  .footer-bottom { display: flex; justify-content: space-between; padding-top: 24px; border-top: 1px solid var(--border); }
+  .footer-bottom p { font-size: 14px; color: var(--gray-300); }
+
+  @media (max-width: 992px) {
+    .hero h1 { font-size: 56px; }
+    .canvas-body { grid-template-columns: 1fr; }
+    .canvas-left, .canvas-right { display: none; }
+    .features-list { grid-template-columns: 1fr; }
+    .templates-grid { grid-template-columns: 1fr 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 479px) {
+    .hero h1 { font-size: 36px; }
+    .templates-grid { grid-template-columns: 1fr; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-icon">W</div>
+    Webflow
+  </div>
+  <div class="nav-links">
+    <a href="#">Platform</a>
+    <a href="#">Solutions</a>
+    <a href="#">Enterprise</a>
+    <a href="#">Marketplace</a>
+    <a href="#">Blog</a>
+  </div>
+  <div class="nav-right">
+    <button class="btn-nav-ghost">Log in</button>
+    <a href="#" class="btn-nav-blue">Get started — it's free</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">Visual Web Development Platform</div>
+  <h1>Design and build<br>for the <span class="highlight">web</span>, visually.</h1>
+  <p>Build production-ready websites without writing code. Webflow gives you the designer tools, CMS power, and hosting infrastructure you need.</p>
+  <div class="hero-ctas">
+    <a href="#" class="btn-hero-primary">Start building for free</a>
+    <a href="#" class="btn-hero-ghost">Watch demo &rarr;</a>
+  </div>
+
+  <div class="canvas-preview">
+    <div class="canvas-ui">
+      <div class="canvas-toolbar">
+        <div class="toolbar-dots">
+          <div class="toolbar-dot" style="background:#ff5f57"></div>
+          <div class="toolbar-dot" style="background:#febc2e"></div>
+          <div class="toolbar-dot" style="background:#28c840"></div>
+        </div>
+        <div class="toolbar-tools">
+          <div class="toolbar-tool">&#9654;</div>
+          <div class="toolbar-tool active">&#9632;</div>
+          <div class="toolbar-tool">T</div>
+          <div class="toolbar-tool">&#9650;</div>
+          <div class="toolbar-tool">&#9670;</div>
+        </div>
+        <div style="margin-left:auto; display:flex; gap:8px; align-items:center;">
+          <span style="font-size:11px; color:#666; font-family:'Courier New',monospace">Desktop ▾</span>
+          <div style="background:var(--blue); color:#fff; font-size:11px; padding:4px 12px; border-radius:3px; cursor:pointer;">Publish</div>
+        </div>
+      </div>
+      <div class="canvas-body">
+        <div class="canvas-left">
+          <div class="panel-title">Navigator</div>
+          <div class="panel-tree-item">&#9660; Body</div>
+          <div class="panel-tree-item panel-tree-indent">&#9660; Section (Hero)</div>
+          <div class="panel-tree-item panel-tree-indent" style="padding-left:32px">Navbar</div>
+          <div class="panel-tree-item panel-tree-indent selected" style="padding-left:32px">Heading</div>
+          <div class="panel-tree-item panel-tree-indent" style="padding-left:32px">Paragraph</div>
+          <div class="panel-tree-item panel-tree-indent" style="padding-left:32px">Button</div>
+          <div class="panel-tree-item panel-tree-indent">&#9660; Section (Features)</div>
+          <div class="panel-tree-item panel-tree-indent" style="padding-left:32px">Grid</div>
+        </div>
+        <div class="canvas-center">
+          <div class="canvas-frame">
+            <div class="frame-nav">
+              <div class="frame-logo"></div>
+              <div class="frame-nav-links">
+                <div class="frame-nav-link"></div>
+                <div class="frame-nav-link"></div>
+                <div class="frame-nav-link"></div>
+              </div>
+            </div>
+            <div class="frame-hero-text"></div>
+            <div class="frame-hero-sub"></div>
+            <div class="frame-cta">Get started free</div>
+          </div>
+          <div class="canvas-selection-box">
+            <div class="selection-handle handle-tl"></div>
+            <div class="selection-handle handle-tr"></div>
+            <div class="selection-handle handle-bl"></div>
+            <div class="selection-handle handle-br"></div>
+          </div>
+        </div>
+        <div class="canvas-right">
+          <div class="panel-title">Style</div>
+          <div class="property-row">
+            <span class="property-label">Width</span>
+            <span class="property-value">100%</span>
+          </div>
+          <div class="property-row">
+            <span class="property-label">Font</span>
+            <span class="property-value">80px / 600</span>
+          </div>
+          <div class="property-row">
+            <span class="property-label">Color</span>
+            <span class="property-value blue">#146ef5</span>
+          </div>
+          <div class="property-row">
+            <span class="property-label">Display</span>
+            <span class="property-value">Flex</span>
+          </div>
+          <div class="property-row">
+            <span class="property-label">Padding</span>
+            <span class="property-value">24px</span>
+          </div>
+          <div class="property-row">
+            <span class="property-label">Radius</span>
+            <span class="property-value">4px</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <div class="features-inner">
+    <span class="section-badge">Platform</span>
+    <h2 class="section-title">One platform. Infinite possibilities.</h2>
+    <p class="section-sub">From design to deployment, Webflow gives your team the tools to move faster without compromising quality.</p>
+    <div class="features-list">
+      <div class="feature-item">
+        <div class="feature-item-icon blue">&#9998;</div>
+        <div>
+          <h3>Visual Designer</h3>
+          <p>Design pixel-perfect websites with a fully visual canvas. Every element you place generates clean, semantic HTML and CSS — no abstractions, no compromises.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-item-icon purple">&#128196;</div>
+        <div>
+          <h3>CMS & Content</h3>
+          <p>Build dynamic sites with a flexible CMS. Define your content structure, connect it to your design, and let editors update content without touching the layout.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-item-icon pink">&#9889;</div>
+        <div>
+          <h3>Interactions & Animations</h3>
+          <p>Create complex multi-step animations and scroll interactions — all without code. Trigger animations on load, scroll, click, or hover with precision.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-item-icon green">&#127760;</div>
+        <div>
+          <h3>Hosting & Performance</h3>
+          <p>Deploy instantly to Webflow's global edge network. Automatic SSL, CDN-backed assets, and lightning-fast load times — included in every plan.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-item-icon orange">&#128101;</div>
+        <div>
+          <h3>Collaboration</h3>
+          <p>Design and develop in real-time with your team. Leave comments, manage roles, and publish with confidence — from one shared source of truth.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-item-icon yellow">&#128270;</div>
+        <div>
+          <h3>SEO & Optimization</h3>
+          <p>Built-in SEO controls, auto-generated sitemaps, structured data, and fast Core Web Vitals — launch sites that search engines love out of the box.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="templates">
+  <div class="templates-inner">
+    <span class="section-badge">Marketplace</span>
+    <h2 class="section-title">Start with a template.</h2>
+    <p class="section-sub">Hundreds of professionally designed templates across every category. Clone, customize, and launch.</p>
+    <div class="templates-grid">
+      <div class="template-card">
+        <div class="template-preview">
+          <div class="tmpl-mock">
+            <div class="tmpl-bar long"></div>
+            <div class="tmpl-bar mid"></div>
+            <div class="tmpl-bar short"></div>
+          </div>
+        </div>
+        <div class="template-info">
+          <h4>SaaS Landing Page</h4>
+          <p>Clean, conversion-focused layout for software products</p>
+          <span class="template-tag">Free</span>
+        </div>
+      </div>
+      <div class="template-card">
+        <div class="template-preview purple-theme">
+          <div class="tmpl-mock">
+            <div class="tmpl-bar long" style="background:var(--purple)"></div>
+            <div class="tmpl-bar mid"></div>
+            <div class="tmpl-bar short"></div>
+          </div>
+        </div>
+        <div class="template-info">
+          <h4>Agency Portfolio</h4>
+          <p>Bold, full-bleed design with smooth scroll transitions</p>
+          <span class="template-tag" style="background:rgba(122,61,255,0.1); color:var(--purple)">Premium</span>
+        </div>
+      </div>
+      <div class="template-card">
+        <div class="template-preview dark-theme">
+          <div class="tmpl-mock-dark">
+            <div class="tmpl-bar light"></div>
+            <div class="tmpl-bar light" style="width:45%"></div>
+            <div class="tmpl-bar light" style="width:25%"></div>
+          </div>
+        </div>
+        <div class="template-info">
+          <h4>Dark Mode Blog</h4>
+          <p>Minimal editorial design with built-in CMS blog setup</p>
+          <span class="template-tag">Free</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="testimonials">
+  <div class="testimonials-inner">
+    <span class="section-badge">Customers</span>
+    <h2 class="section-title">Trusted by design-forward teams.</h2>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <p class="testimonial-quote">"Webflow changed how we build. We went from a 6-week development cycle to shipping in under a week — and the quality of our sites has never been higher."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:var(--blue)">S</div>
+          <div>
+            <div class="author-name">Sarah Kim</div>
+            <div class="author-role">Design Director, Acme Studios</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <p class="testimonial-quote">"Our content team can update the site without involving developers at all. It's been a total game-changer for velocity across the whole company."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:var(--purple)">M</div>
+          <div>
+            <div class="author-name">Marcus Reyes</div>
+            <div class="author-role">Head of Growth, Northstar</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <p class="testimonial-quote">"The interactions system alone is worth it. We can prototype and ship animations that would have taken days in code — in hours with Webflow."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:var(--pink)">A</div>
+          <div>
+            <div class="author-name">Aiko Tanaka</div>
+            <div class="author-role">Lead Designer, Forma</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-banner">
+  <h2>Start building today.</h2>
+  <p>Join 3.5 million designers and developers who build with Webflow.</p>
+  <div class="cta-buttons">
+    <a href="#" class="btn-cta-white">Get started free</a>
+    <a href="#" class="btn-cta-outline">Talk to sales</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo">
+          <div class="nav-logo-icon">W</div>
+          Webflow
+        </div>
+        <p>Build professional websites, visually. The platform that gives designers and developers the power to ship exactly what they design.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <a href="#">Designer</a>
+        <a href="#">CMS</a>
+        <a href="#">Hosting</a>
+        <a href="#">Interactions</a>
+        <a href="#">Editor</a>
+      </div>
+      <div class="footer-col">
+        <h4>Solutions</h4>
+        <a href="#">For Agencies</a>
+        <a href="#">For Enterprise</a>
+        <a href="#">For Freelancers</a>
+        <a href="#">For Marketers</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="#">University</a>
+        <a href="#">Blog</a>
+        <a href="#">Showcase</a>
+        <a href="#">Templates</a>
+        <a href="#">Community</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">About</a>
+        <a href="#">Careers</a>
+        <a href="#">Press</a>
+        <a href="#">Contact</a>
+        <a href="#">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 Webflow, Inc.</p>
+      <p>Terms &middot; Privacy &middot; Cookie settings</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

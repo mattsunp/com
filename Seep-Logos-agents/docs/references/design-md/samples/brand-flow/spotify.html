@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Spotify — 音楽をもっと自由に</title>
+<style>
+  :root {
+    --bg: #121212;
+    --surface-1: #181818;
+    --surface-2: #1f1f1f;
+    --surface-3: #252525;
+    --surface-4: #272727;
+    --spotify-green: #1ed760;
+    --spotify-green-border: #1db954;
+    --text-white: #ffffff;
+    --text-silver: #b3b3b3;
+    --text-near-white: #cbcbcb;
+    --text-light: #fdfdfd;
+    --border-gray: #4d4d4d;
+    --light-border: #7c7c7c;
+    --neg-red: #f3727f;
+    --warn-orange: #ffa42b;
+    --ann-blue: #539df5;
+    --shadow-heavy: rgba(0,0,0,0.5) 0px 8px 24px;
+    --shadow-medium: rgba(0,0,0,0.3) 0px 8px 8px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', Meiryo, 'MS Gothic', sans-serif;
+    font-size: 16px;
+    line-height: normal;
+    color: var(--text-white);
+    background: var(--bg);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ---- LAYOUT ---- */
+  .app-layout {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    gap: 8px;
+    padding: 8px;
+    padding-bottom: 0;
+  }
+
+  /* ---- SIDEBAR ---- */
+  .sidebar {
+    width: 280px;
+    min-width: 280px;
+    background: var(--surface-1);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .sidebar-nav {
+    padding: 16px 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .sidebar-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+  .sidebar-nav-item:hover { background: rgba(255,255,255,0.05); }
+  .sidebar-nav-item.active { background: rgba(255,255,255,0.08); }
+  .sidebar-nav-icon {
+    font-size: 20px;
+    width: 24px;
+    text-align: center;
+  }
+  .sidebar-nav-label {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-silver);
+  }
+  .sidebar-nav-item.active .sidebar-nav-label { color: var(--text-white); }
+  .sidebar-nav-item:hover .sidebar-nav-label { color: var(--text-white); }
+
+  .sidebar-library {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+  }
+  .library-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px;
+    margin-bottom: 4px;
+  }
+  .library-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-silver);
+  }
+  .library-add-btn {
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    color: var(--text-silver);
+    transition: background 0.1s, color 0.1s;
+  }
+  .library-add-btn:hover { background: rgba(255,255,255,0.05); color: var(--text-white); }
+  .library-filter {
+    display: flex;
+    gap: 6px;
+    padding: 4px 14px 8px;
+    overflow-x: auto;
+  }
+  .library-pill {
+    padding: 4px 12px;
+    background: var(--surface-2);
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-white);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+  .library-pill:hover { background: var(--surface-3); }
+  .library-pill.active { background: var(--text-white); color: var(--bg); }
+  .playlist-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+  .playlist-item:hover { background: rgba(255,255,255,0.05); }
+  .playlist-item.active { background: rgba(255,255,255,0.08); }
+  .playlist-thumb {
+    width: 44px; height: 44px;
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  .playlist-thumb-placeholder {
+    background: var(--surface-3);
+  }
+  .playlist-info {}
+  .playlist-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-white);
+    line-height: 1.3;
+  }
+  .playlist-item.muted .playlist-name { color: var(--text-silver); }
+  .playlist-meta {
+    font-size: 12px;
+    color: var(--text-silver);
+    font-weight: 400;
+  }
+
+  /* ---- MAIN CONTENT ---- */
+  .main-content {
+    flex: 1;
+    background: var(--surface-1);
+    border-radius: 8px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .main-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(24,24,24,0.95);
+    backdrop-filter: blur(8px);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .header-nav-arrows {
+    display: flex;
+    gap: 8px;
+  }
+  .nav-arrow {
+    width: 32px; height: 32px;
+    background: rgba(0,0,0,0.6);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+    color: var(--text-white);
+    border: none;
+    transition: background 0.1s;
+  }
+  .nav-arrow:hover { background: rgba(255,255,255,0.1); }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .header-install-btn {
+    padding: 6px 16px;
+    background: transparent;
+    border: 1px solid var(--light-border);
+    border-radius: 9999px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-white);
+    cursor: pointer;
+    transition: border-color 0.1s, background 0.1s;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+  }
+  .header-install-btn:hover { border-color: var(--text-white); background: rgba(255,255,255,0.05); }
+  .header-signup-btn {
+    padding: 8px 32px;
+    background: var(--text-white);
+    color: var(--bg);
+    border: none;
+    border-radius: 500px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.1s, background 0.1s;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+  }
+  .header-signup-btn:hover { transform: scale(1.04); background: var(--text-near-white); }
+  .header-login-btn {
+    padding: 8px 20px;
+    background: transparent;
+    border: none;
+    border-radius: 500px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-silver);
+    cursor: pointer;
+    transition: color 0.1s;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+  }
+  .header-login-btn:hover { color: var(--text-white); }
+
+  /* Featured hero */
+  .featured-hero {
+    background: linear-gradient(180deg, #4a3728 0%, #2a1f18 40%, var(--surface-1) 100%);
+    padding: 32px 24px;
+    display: flex;
+    gap: 24px;
+    align-items: flex-end;
+    min-height: 280px;
+  }
+  .featured-cover {
+    width: 160px;
+    height: 160px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 72px;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-heavy);
+  }
+  .featured-info {}
+  .featured-type {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-white);
+    margin-bottom: 8px;
+  }
+  .featured-title {
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--text-white);
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .featured-desc {
+    font-size: 14px;
+    color: var(--text-silver);
+    font-weight: 400;
+    margin-bottom: 4px;
+  }
+  .featured-meta {
+    font-size: 14px;
+    color: var(--text-silver);
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .featured-meta span { color: var(--text-white); font-weight: 700; }
+
+  /* Controls bar */
+  .controls-bar {
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .play-btn-main {
+    width: 56px; height: 56px;
+    background: var(--spotify-green);
+    border: none;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    cursor: pointer;
+    color: #000;
+    transition: transform 0.1s;
+    flex-shrink: 0;
+  }
+  .play-btn-main:hover { transform: scale(1.06); }
+  .controls-follow-btn {
+    padding: 6px 20px;
+    background: transparent;
+    border: 1px solid var(--light-border);
+    border-radius: 9999px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-white);
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    transition: border-color 0.1s;
+  }
+  .controls-follow-btn:hover { border-color: var(--text-white); }
+  .controls-more-btn {
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    color: var(--text-silver);
+    cursor: pointer;
+    border-radius: 50%;
+    transition: color 0.1s, background 0.1s;
+  }
+  .controls-more-btn:hover { color: var(--text-white); background: rgba(255,255,255,0.05); }
+
+  /* Section heading */
+  .section-heading {
+    padding: 8px 24px 16px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  .section-heading h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-white);
+  }
+  .section-show-all {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-silver);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-decoration: none;
+    transition: color 0.1s;
+    cursor: pointer;
+  }
+  .section-show-all:hover { color: var(--text-white); }
+
+  /* Album grid */
+  .album-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    padding: 0 24px 24px;
+  }
+  .album-card {
+    background: var(--surface-2);
+    border-radius: 8px;
+    padding: 16px;
+    cursor: pointer;
+    transition: background 0.15s;
+    position: relative;
+  }
+  .album-card:hover { background: var(--surface-3); }
+  .album-card:hover .album-play-btn { opacity: 1; transform: translateY(0); }
+  .album-art {
+    aspect-ratio: 1;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow-medium);
+    position: relative;
+    overflow: hidden;
+  }
+  .album-art-circle {
+    border-radius: 50% !important;
+  }
+  .album-play-btn {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    width: 40px; height: 40px;
+    background: var(--spotify-green);
+    border: none;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    color: #000;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.2s, transform 0.2s;
+    box-shadow: rgba(0,0,0,0.5) 0px 4px 12px;
+  }
+  .album-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-white);
+    line-height: 1.3;
+    margin-bottom: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .album-artist {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-silver);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Track list */
+  .tracklist-section {
+    padding: 0 24px 24px;
+  }
+  .tracklist-header {
+    display: grid;
+    grid-template-columns: 40px 1fr 200px 60px;
+    gap: 8px;
+    padding: 8px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    margin-bottom: 8px;
+  }
+  .tracklist-col {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-silver);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .track-row {
+    display: grid;
+    grid-template-columns: 40px 1fr 200px 60px;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+  .track-row:hover { background: rgba(255,255,255,0.05); }
+  .track-row.playing { background: rgba(30,215,96,0.05); }
+  .track-num {
+    font-size: 14px;
+    color: var(--text-silver);
+    text-align: center;
+    font-weight: 400;
+  }
+  .track-row.playing .track-num { color: var(--spotify-green); font-weight: 700; }
+  .track-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    overflow: hidden;
+  }
+  .track-thumb {
+    width: 36px; height: 36px;
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    background: var(--surface-3);
+  }
+  .track-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-white);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .track-row.playing .track-title { color: var(--spotify-green); }
+  .track-artist-name {
+    font-size: 12px;
+    color: var(--text-silver);
+    font-weight: 400;
+  }
+  .track-album-name {
+    font-size: 14px;
+    color: var(--text-silver);
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .track-duration {
+    font-size: 14px;
+    color: var(--text-silver);
+    font-weight: 400;
+    text-align: right;
+  }
+
+  /* Podcast section */
+  .podcast-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    padding: 0 24px 24px;
+  }
+  .podcast-card {
+    display: flex;
+    gap: 12px;
+    background: var(--surface-2);
+    border-radius: 8px;
+    padding: 12px;
+    cursor: pointer;
+    transition: background 0.15s;
+    align-items: center;
+  }
+  .podcast-card:hover { background: var(--surface-3); }
+  .podcast-art {
+    width: 52px; height: 52px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+    background: var(--bg);
+  }
+  .podcast-info {}
+  .podcast-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-white);
+    line-height: 1.3;
+  }
+  .podcast-ep {
+    font-size: 12px;
+    color: var(--text-silver);
+    font-weight: 400;
+  }
+
+  /* ---- BOTTOM PLAYER ---- */
+  .bottom-player {
+    height: 90px;
+    background: #0d0d0d;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 16px;
+    flex-shrink: 0;
+    z-index: 100;
+  }
+  .player-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 280px;
+    min-width: 200px;
+  }
+  .player-current-art {
+    width: 52px; height: 52px;
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    background: var(--surface-3);
+    flex-shrink: 0;
+  }
+  .player-current-info {}
+  .player-current-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-white);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 160px;
+  }
+  .player-current-artist {
+    font-size: 12px;
+    color: var(--text-silver);
+    font-weight: 400;
+  }
+  .player-heart {
+    color: var(--spotify-green);
+    font-size: 18px;
+    cursor: pointer;
+    margin-left: 8px;
+  }
+  .player-center {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .player-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .ctrl-btn {
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: var(--text-silver);
+    cursor: pointer;
+    padding: 4px;
+    transition: color 0.1s;
+    display: flex; align-items: center;
+  }
+  .ctrl-btn:hover { color: var(--text-white); }
+  .ctrl-btn.active { color: var(--spotify-green); }
+  .play-btn-player {
+    width: 32px; height: 32px;
+    background: var(--text-white);
+    border: none;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+    color: #000;
+    transition: transform 0.1s;
+  }
+  .play-btn-player:hover { transform: scale(1.06); }
+  .progress-bar-wrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 600px;
+  }
+  .time-label {
+    font-size: 11px;
+    color: var(--text-silver);
+    min-width: 36px;
+    text-align: center;
+  }
+  .progress-bar {
+    flex: 1;
+    height: 4px;
+    background: var(--surface-3);
+    border-radius: 2px;
+    position: relative;
+    cursor: pointer;
+  }
+  .progress-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 38%;
+    background: var(--text-silver);
+    border-radius: 2px;
+    transition: background 0.1s;
+  }
+  .progress-bar:hover .progress-fill { background: var(--spotify-green); }
+  .progress-dot {
+    position: absolute;
+    top: 50%;
+    left: 38%;
+    transform: translate(-50%, -50%);
+    width: 12px; height: 12px;
+    background: var(--text-white);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.1s;
+  }
+  .progress-bar:hover .progress-dot { opacity: 1; }
+  .player-right {
+    width: 200px;
+    min-width: 160px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+  .volume-bar-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+  }
+  .vol-icon { font-size: 14px; color: var(--text-silver); cursor: pointer; }
+  .volume-bar {
+    flex: 1;
+    height: 4px;
+    background: var(--surface-3);
+    border-radius: 2px;
+    position: relative;
+    cursor: pointer;
+  }
+  .volume-fill {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 65%;
+    background: var(--text-silver);
+    border-radius: 2px;
+  }
+  .volume-bar:hover .volume-fill { background: var(--spotify-green); }
+
+  /* ---- SCROLLBAR ---- */
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
+
+  @media (max-width: 1200px) {
+    .album-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+  @media (max-width: 1024px) {
+    .sidebar { width: 220px; min-width: 220px; }
+    .album-grid { grid-template-columns: repeat(3, 1fr); }
+    .podcast-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    body { overflow: auto; }
+    .app-layout { flex-direction: column; overflow: auto; height: auto; }
+    .sidebar { width: 100%; min-width: unset; height: auto; }
+    .sidebar-library { max-height: 200px; }
+    .main-content { border-radius: 8px; overflow: visible; }
+    .album-grid { grid-template-columns: repeat(2, 1fr); }
+    .podcast-grid { grid-template-columns: 1fr; }
+    .tracklist-header, .track-row { grid-template-columns: 30px 1fr 60px; }
+    .tracklist-col:nth-child(3), .track-album-name { display: none; }
+    .player-left { width: auto; }
+    .player-right { min-width: 120px; width: 120px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- App Layout -->
+<div class="app-layout">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <!-- Main nav -->
+    <div class="sidebar-nav">
+      <div class="sidebar-nav-item active">
+        <div class="sidebar-nav-icon">&#127968;</div>
+        <span class="sidebar-nav-label">ホーム</span>
+      </div>
+      <div class="sidebar-nav-item">
+        <div class="sidebar-nav-icon">&#128269;</div>
+        <span class="sidebar-nav-label">検索</span>
+      </div>
+    </div>
+
+    <!-- Library -->
+    <div class="sidebar-library">
+      <div class="library-header">
+        <span class="library-title">&#128218; マイライブラリ</span>
+        <div class="library-add-btn">&#43;</div>
+      </div>
+      <div class="library-filter">
+        <div class="library-pill active">プレイリスト</div>
+        <div class="library-pill">アーティスト</div>
+        <div class="library-pill">アルバム</div>
+      </div>
+
+      <div class="playlist-item active">
+        <div class="playlist-thumb" style="background:linear-gradient(135deg,#1ed760,#1db954);">&#9835;</div>
+        <div class="playlist-info">
+          <div class="playlist-name">お気に入りソング</div>
+          <div class="playlist-meta">プレイリスト · 423曲</div>
+        </div>
+      </div>
+      <div class="playlist-item">
+        <div class="playlist-thumb" style="background:linear-gradient(135deg,#ff6b6b,#ee0979);">&#127926;</div>
+        <div class="playlist-info">
+          <div class="playlist-name">夜のドライブ</div>
+          <div class="playlist-meta">プレイリスト · 58曲</div>
+        </div>
+      </div>
+      <div class="playlist-item">
+        <div class="playlist-thumb" style="background:linear-gradient(135deg,#667eea,#764ba2);">&#127770;</div>
+        <div class="playlist-info">
+          <div class="playlist-name">集中 – Deep Focus</div>
+          <div class="playlist-meta">プレイリスト · Spotify · 3時間</div>
+        </div>
+      </div>
+      <div class="playlist-item muted">
+        <div class="playlist-thumb playlist-thumb-placeholder">&#127928;</div>
+        <div class="playlist-info">
+          <div class="playlist-name">Workout Hits 2026</div>
+          <div class="playlist-meta">プレイリスト · 42曲</div>
+        </div>
+      </div>
+      <div class="playlist-item muted">
+        <div class="playlist-thumb" style="background:linear-gradient(135deg,#f7971e,#ffd200);">&#127803;</div>
+        <div class="playlist-info">
+          <div class="playlist-name">モーニングコーヒー</div>
+          <div class="playlist-meta">プレイリスト · 24曲</div>
+        </div>
+      </div>
+      <div class="playlist-item muted">
+        <div class="playlist-thumb" style="background:linear-gradient(135deg,#11998e,#38ef7d);">&#127926;</div>
+        <div class="playlist-info">
+          <div class="playlist-name">J-Pop Hits</div>
+          <div class="playlist-meta">プレイリスト · 95曲</div>
+        </div>
+      </div>
+      <div class="playlist-item muted">
+        <div class="playlist-thumb playlist-thumb-placeholder">&#127925;</div>
+        <div class="playlist-info">
+          <div class="playlist-name">City Pop Classics</div>
+          <div class="playlist-meta">アルバム · 山下達郎</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="main-content">
+    <!-- Header -->
+    <div class="main-header">
+      <div class="header-nav-arrows">
+        <button class="nav-arrow">&#8592;</button>
+        <button class="nav-arrow">&#8594;</button>
+      </div>
+      <div class="header-right">
+        <button class="header-install-btn">App をインストール</button>
+        <button class="header-login-btn">ログイン</button>
+        <button class="header-signup-btn">無料で登録</button>
+      </div>
+    </div>
+
+    <!-- Featured hero -->
+    <div class="featured-hero">
+      <div class="featured-cover" style="background:linear-gradient(135deg,#ff6b6b,#ee0979,#764ba2);">&#127926;</div>
+      <div class="featured-info">
+        <div class="featured-type">プレイリスト</div>
+        <div class="featured-title">Today's Top Hits</div>
+        <p class="featured-desc">今一番聴かれている曲が毎日更新されます。</p>
+        <div class="featured-meta">
+          <span>Spotify</span>
+          ·
+          <span>50,842,110</span> 人のいいね
+          ·
+          50曲、約3時間
+        </div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls-bar">
+      <button class="play-btn-main">&#9654;</button>
+      <button class="controls-follow-btn">フォロー</button>
+      <div class="controls-more-btn">&#8226;&#8226;&#8226;</div>
+    </div>
+
+    <!-- Track list preview -->
+    <div class="tracklist-section">
+      <div class="tracklist-header">
+        <div class="tracklist-col" style="text-align:center;">#</div>
+        <div class="tracklist-col">タイトル</div>
+        <div class="tracklist-col">アルバム</div>
+        <div class="tracklist-col" style="text-align:right;">&#9677;</div>
+      </div>
+      <div class="track-row playing">
+        <div class="track-num">&#9654;</div>
+        <div class="track-info">
+          <div class="track-thumb" style="background:linear-gradient(135deg,#ff6b6b,#ee0979);">&#127926;</div>
+          <div>
+            <div class="track-title">APT.</div>
+            <div class="track-artist-name">ROSÉ, Bruno Mars</div>
+          </div>
+        </div>
+        <div class="track-album-name">rosie</div>
+        <div class="track-duration">2:59</div>
+      </div>
+      <div class="track-row">
+        <div class="track-num">2</div>
+        <div class="track-info">
+          <div class="track-thumb" style="background:linear-gradient(135deg,#667eea,#764ba2);">&#127925;</div>
+          <div>
+            <div class="track-title">Die With A Smile</div>
+            <div class="track-artist-name">Lady Gaga, Bruno Mars</div>
+          </div>
+        </div>
+        <div class="track-album-name">Die With A Smile</div>
+        <div class="track-duration">4:11</div>
+      </div>
+      <div class="track-row">
+        <div class="track-num">3</div>
+        <div class="track-info">
+          <div class="track-thumb" style="background:linear-gradient(135deg,#f7971e,#ffd200);">&#127928;</div>
+          <div>
+            <div class="track-title">Luther</div>
+            <div class="track-artist-name">Kendrick Lamar, SZA</div>
+          </div>
+        </div>
+        <div class="track-album-name">GNX</div>
+        <div class="track-duration">4:14</div>
+      </div>
+      <div class="track-row">
+        <div class="track-num">4</div>
+        <div class="track-info">
+          <div class="track-thumb" style="background:linear-gradient(135deg,#11998e,#38ef7d);">&#127925;</div>
+          <div>
+            <div class="track-title">Night Dance</div>
+            <div class="track-artist-name">Benson Boone</div>
+          </div>
+        </div>
+        <div class="track-album-name">Beautiful Things</div>
+        <div class="track-duration">3:22</div>
+      </div>
+      <div class="track-row">
+        <div class="track-num">5</div>
+        <div class="track-info">
+          <div class="track-thumb" style="background:linear-gradient(135deg,#1ed760,#1db954);">&#127803;</div>
+          <div>
+            <div class="track-title">Birds of a Feather</div>
+            <div class="track-artist-name">Billie Eilish</div>
+          </div>
+        </div>
+        <div class="track-album-name">HIT ME HARD AND SOFT</div>
+        <div class="track-duration">3:30</div>
+      </div>
+    </div>
+
+    <!-- Album grid — おすすめアルバム -->
+    <div class="section-heading">
+      <h2>おすすめアルバム</h2>
+      <span class="section-show-all">すべて表示</span>
+    </div>
+    <div class="album-grid">
+      <div class="album-card">
+        <div class="album-art" style="background:linear-gradient(135deg,#1ed760,#1db954);">&#127926;
+          <button class="album-play-btn">&#9654;</button>
+        </div>
+        <div class="album-name">rosie</div>
+        <div class="album-artist">ROSÉ</div>
+      </div>
+      <div class="album-card">
+        <div class="album-art" style="background:linear-gradient(135deg,#667eea,#764ba2);">&#127928;
+          <button class="album-play-btn">&#9654;</button>
+        </div>
+        <div class="album-name">GNX</div>
+        <div class="album-artist">Kendrick Lamar</div>
+      </div>
+      <div class="album-card">
+        <div class="album-art" style="background:linear-gradient(135deg,#f7971e,#ffd200);">&#127925;
+          <button class="album-play-btn">&#9654;</button>
+        </div>
+        <div class="album-name">HIT ME HARD AND SOFT</div>
+        <div class="album-artist">Billie Eilish</div>
+      </div>
+      <div class="album-card">
+        <div class="album-art" style="background:linear-gradient(135deg,#ff6b6b,#ee0979);">&#127803;
+          <button class="album-play-btn">&#9654;</button>
+        </div>
+        <div class="album-name">Short n' Sweet</div>
+        <div class="album-artist">Sabrina Carpenter</div>
+      </div>
+      <div class="album-card">
+        <div class="album-art" style="background:linear-gradient(135deg,#11998e,#38ef7d);">&#127928;
+          <button class="album-play-btn">&#9654;</button>
+        </div>
+        <div class="album-name">Eternal Sunshine</div>
+        <div class="album-artist">Ariana Grande</div>
+      </div>
+    </div>
+
+    <!-- Podcast section -->
+    <div class="section-heading">
+      <h2>人気のポッドキャスト</h2>
+      <span class="section-show-all">すべて表示</span>
+    </div>
+    <div class="podcast-grid">
+      <div class="podcast-card">
+        <div class="podcast-art" style="background:linear-gradient(135deg,#667eea,#764ba2);">&#127911;</div>
+        <div class="podcast-info">
+          <div class="podcast-name">Lex Fridman Podcast</div>
+          <div class="podcast-ep">最新エピソード · AI の未来</div>
+        </div>
+      </div>
+      <div class="podcast-card">
+        <div class="podcast-art" style="background:linear-gradient(135deg,#f7971e,#ffd200);">&#127899;</div>
+        <div class="podcast-info">
+          <div class="podcast-name">ゆる言語学ラジオ</div>
+          <div class="podcast-ep">最新エピソード · 日本語の謎</div>
+        </div>
+      </div>
+      <div class="podcast-card">
+        <div class="podcast-art" style="background:linear-gradient(135deg,#1ed760,#1db954);">&#127897;</div>
+        <div class="podcast-info">
+          <div class="podcast-name">COTEN RADIO</div>
+          <div class="podcast-ep">最新エピソード · 歴史の教訓</div>
+        </div>
+      </div>
+      <div class="podcast-card">
+        <div class="podcast-art" style="background:linear-gradient(135deg,#ff6b6b,#ee0979);">&#127911;</div>
+        <div class="podcast-info">
+          <div class="podcast-name">NewsPicks</div>
+          <div class="podcast-ep">最新エピソード · 2026年の経済</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Artist grid -->
+    <div class="section-heading">
+      <h2>人気アーティスト</h2>
+      <span class="section-show-all">すべて表示</span>
+    </div>
+    <div class="album-grid">
+      <div class="album-card">
+        <div class="album-art album-art-circle" style="background:linear-gradient(135deg,#ff6b6b,#ee0979);">&#128105;
+          <button class="album-play-btn">&#9654;</button>
+        </div>
+        <div class="album-name">ROSÉ</div>
+        <div class="album-artist">アーティスト</div>
+      </div>
+      <div class="album-card">
+        <div class="album-art album-art-circle" style="background:linear-gradient(135deg,#667eea,#764ba2);">&#128104;
+          <button class="album-play-btn">&#9654;</button>
+        </div>
+        <div class="album-name">Kendrick Lamar</div>
+        <div class="album-artist">アーティスト</div>
+      </div>
+      <div class="album-card">
+        <div class="album-art album-art-circle" style="background:linear-gradient(135deg,#1ed760,#1db954);">&#128105;
+          <button class="album-play-btn">&#9654;</button>
+        </div>
+        <div class="album-name">Billie Eilish</div>
+        <div class="album-artist">アーティスト</div>
+      </div>
+      <div class="album-card">
+        <div class="album-art album-art-circle" style="background:linear-gradient(135deg,#f7971e,#ffd200);">&#128104;
+          <button class="album-play-btn">&#9654;</button>
+        </div>
+        <div class="album-name">Bruno Mars</div>
+        <div class="album-artist">アーティスト</div>
+      </div>
+      <div class="album-card">
+        <div class="album-art album-art-circle" style="background:linear-gradient(135deg,#ff9a9e,#fad0c4);">&#128105;
+          <button class="album-play-btn">&#9654;</button>
+        </div>
+        <div class="album-name">Sabrina Carpenter</div>
+        <div class="album-artist">アーティスト</div>
+      </div>
+    </div>
+
+    <div style="height:24px;"></div>
+  </div>
+</div>
+
+<!-- Bottom player -->
+<div class="bottom-player">
+  <!-- Left: current track -->
+  <div class="player-left">
+    <div class="player-current-art" style="background:linear-gradient(135deg,#ff6b6b,#ee0979);">&#127926;</div>
+    <div class="player-current-info">
+      <div class="player-current-title">APT.</div>
+      <div class="player-current-artist">ROSÉ, Bruno Mars</div>
+    </div>
+    <div class="player-heart">&#9829;</div>
+  </div>
+
+  <!-- Center: controls + progress -->
+  <div class="player-center">
+    <div class="player-controls">
+      <button class="ctrl-btn active">&#8635;</button>
+      <button class="ctrl-btn">&#9664;&#9664;</button>
+      <button class="play-btn-player">&#9646;&#9646;</button>
+      <button class="ctrl-btn">&#9654;&#9654;</button>
+      <button class="ctrl-btn">&#8649;</button>
+    </div>
+    <div class="progress-bar-wrapper">
+      <span class="time-label">1:08</span>
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+        <div class="progress-dot"></div>
+      </div>
+      <span class="time-label">2:59</span>
+    </div>
+  </div>
+
+  <!-- Right: volume -->
+  <div class="player-right">
+    <button class="ctrl-btn" style="font-size:14px;">&#128250;</button>
+    <div class="volume-bar-wrapper">
+      <span class="vol-icon">&#128266;</span>
+      <div class="volume-bar">
+        <div class="volume-fill"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

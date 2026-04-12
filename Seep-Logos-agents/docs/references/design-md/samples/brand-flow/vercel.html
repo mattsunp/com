@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vercel — Design Reference</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --vercel-black: #171717;
+    --pure-white: #ffffff;
+    --gray-600: #4d4d4d;
+    --gray-500: #666666;
+    --gray-400: #808080;
+    --gray-100: #ebebeb;
+    --gray-50: #fafafa;
+    --ship-red: #ff5b4f;
+    --preview-pink: #de1d8d;
+    --develop-blue: #0a72ef;
+    --link-blue: #0072f5;
+    --badge-bg: #ebf5ff;
+    --badge-text: #0068d6;
+    --border-shadow: rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+    --card-shadow: rgba(0,0,0,0.08) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 2px, rgba(0,0,0,0.04) 0px 8px 8px -8px, #fafafa 0px 0px 0px 1px inset;
+  }
+
+  body {
+    font-family: 'Arial', system-ui, sans-serif;
+    background: var(--pure-white);
+    color: var(--vercel-black);
+    font-size: 16px;
+    line-height: 1.5;
+    font-feature-settings: "liga";
+  }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--pure-white);
+    box-shadow: var(--border-shadow);
+    padding: 0 24px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--vercel-black);
+    text-decoration: none;
+  }
+
+  .nav-logo-triangle {
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 14px solid var(--vercel-black);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 4px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    display: inline-flex;
+    align-items: center;
+    height: 32px;
+    padding: 4px 12px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--vercel-black);
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background 150ms;
+  }
+
+  .nav-links a:hover { background: var(--gray-50); }
+
+  .nav-ctas {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .btn-dark {
+    display: inline-flex;
+    align-items: center;
+    height: 32px;
+    padding: 0 12px;
+    background: var(--vercel-black);
+    color: var(--pure-white);
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: opacity 150ms;
+  }
+
+  .btn-dark:hover { opacity: 0.8; }
+
+  .btn-light {
+    display: inline-flex;
+    align-items: center;
+    height: 32px;
+    padding: 0 12px;
+    background: var(--pure-white);
+    color: var(--vercel-black);
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 6px;
+    text-decoration: none;
+    box-shadow: rgb(235,235,235) 0px 0px 0px 1px;
+    transition: background 150ms;
+  }
+
+  .btn-light:hover { background: var(--gray-50); }
+
+  /* HERO */
+  .hero {
+    padding: 100px 24px 80px;
+    text-align: center;
+    background: var(--pure-white);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--badge-bg);
+    color: var(--badge-text);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 0 10px;
+    height: 24px;
+    border-radius: 9999px;
+    margin-bottom: 32px;
+  }
+
+  .hero-title {
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 1.0;
+    letter-spacing: -2.4px;
+    color: var(--vercel-black);
+    max-width: 700px;
+    margin: 0 auto 24px;
+  }
+
+  .hero-subtitle {
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--gray-600);
+    max-width: 500px;
+    margin: 0 auto 40px;
+    line-height: 1.8;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 64px;
+  }
+
+  .btn-dark-lg {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 40px;
+    padding: 8px 16px;
+    background: var(--vercel-black);
+    color: var(--pure-white);
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 6px;
+    text-decoration: none;
+  }
+
+  .btn-light-lg {
+    display: inline-flex;
+    align-items: center;
+    height: 40px;
+    padding: 8px 16px;
+    background: var(--pure-white);
+    color: var(--vercel-black);
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 6px;
+    text-decoration: none;
+    box-shadow: rgb(235,235,235) 0px 0px 0px 1px;
+  }
+
+  /* DEPLOY LOG MOCKUP */
+  .deploy-mockup {
+    max-width: 900px;
+    margin: 0 auto;
+    background: var(--pure-white);
+    border-radius: 12px 12px 0 0;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+  }
+
+  .deploy-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--gray-50);
+    border-bottom: 1px solid var(--gray-100);
+  }
+
+  .deploy-status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #00b050;
+  }
+
+  .deploy-branch {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--vercel-black);
+    font-family: 'Courier New', monospace;
+  }
+
+  .deploy-time {
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--gray-400);
+    font-family: 'Courier New', monospace;
+  }
+
+  .deploy-log {
+    padding: 16px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    background: var(--vercel-black);
+    color: #e0e0e0;
+  }
+
+  .log-line { display: flex; gap: 12px; margin-bottom: 4px; }
+  .log-time { color: var(--gray-500); flex-shrink: 0; }
+  .log-text-success { color: #7ce38b; }
+  .log-text-info { color: #79c0ff; }
+  .log-text-dim { color: var(--gray-500); }
+  .log-text-white { color: #e0e0e0; }
+
+  /* WORKFLOW SECTION */
+  .workflow-section {
+    padding: 100px 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+    border-top: 1px solid var(--vercel-black);
+  }
+
+  .workflow-title {
+    font-size: 40px;
+    font-weight: 600;
+    letter-spacing: -2.4px;
+    color: var(--vercel-black);
+    margin-bottom: 64px;
+    text-align: center;
+  }
+
+  .workflow-pipeline {
+    display: grid;
+    grid-template-columns: 1fr 40px 1fr 40px 1fr;
+    align-items: center;
+    gap: 0;
+    max-width: 800px;
+    margin: 0 auto 64px;
+  }
+
+  .pipeline-step {
+    text-align: center;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+    background: var(--pure-white);
+  }
+
+  .pipeline-label {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .pipeline-label.develop { color: var(--develop-blue); }
+  .pipeline-label.preview { color: var(--preview-pink); }
+  .pipeline-label.ship { color: var(--ship-red); }
+
+  .pipeline-title {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.96px;
+    color: var(--vercel-black);
+  }
+
+  .pipeline-arrow {
+    text-align: center;
+    color: var(--gray-400);
+    font-size: 20px;
+  }
+
+  /* CDN MAP SECTION */
+  .cdn-section {
+    background: var(--vercel-black);
+    padding: 100px 24px;
+  }
+
+  .cdn-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+
+  .cdn-text h2 {
+    font-size: 40px;
+    font-weight: 600;
+    letter-spacing: -2.4px;
+    color: var(--pure-white);
+    margin-bottom: 16px;
+  }
+
+  .cdn-text p {
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--gray-500);
+    line-height: 1.8;
+    margin-bottom: 32px;
+  }
+
+  .btn-dark-on-dark {
+    display: inline-flex;
+    align-items: center;
+    height: 40px;
+    padding: 8px 16px;
+    background: var(--pure-white);
+    color: var(--vercel-black);
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 6px;
+    text-decoration: none;
+  }
+
+  .cdn-map {
+    background: #111;
+    border-radius: 12px;
+    height: 300px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+  }
+
+  .cdn-map-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 40%, rgba(10,114,239,0.2) 0%, transparent 40%),
+      radial-gradient(circle at 70% 30%, rgba(10,114,239,0.15) 0%, transparent 35%),
+      radial-gradient(circle at 50% 70%, rgba(10,114,239,0.1) 0%, transparent 30%);
+  }
+
+  .cdn-node {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--develop-blue);
+    box-shadow: 0 0 8px var(--develop-blue);
+  }
+
+  .cdn-node-label {
+    position: absolute;
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    color: rgba(255,255,255,0.5);
+    white-space: nowrap;
+  }
+
+  .cdn-line {
+    position: absolute;
+    background: rgba(10,114,239,0.3);
+    height: 1px;
+    transform-origin: left center;
+  }
+
+  /* METRICS SECTION */
+  .metrics-section {
+    padding: 100px 24px;
+    border-top: 1px solid var(--vercel-black);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .metric-card {
+    background: var(--pure-white);
+    border-radius: 12px;
+    padding: 32px;
+    box-shadow: var(--card-shadow);
+  }
+
+  .metric-badge {
+    display: inline-flex;
+    align-items: center;
+    background: var(--badge-bg);
+    color: var(--badge-text);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 0 10px;
+    height: 22px;
+    border-radius: 9999px;
+    margin-bottom: 16px;
+  }
+
+  .metric-number {
+    font-size: 48px;
+    font-weight: 600;
+    letter-spacing: -2.88px;
+    color: var(--vercel-black);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .metric-desc {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--gray-600);
+    line-height: 1.5;
+  }
+
+  /* TRUST BAR */
+  .trust-section {
+    padding: 60px 24px;
+    background: var(--gray-50);
+    text-align: center;
+    border-top: 1px solid var(--gray-100);
+    border-bottom: 1px solid var(--gray-100);
+  }
+
+  .trust-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--gray-400);
+    margin-bottom: 32px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .trust-logos {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .trust-logo {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--gray-400);
+    letter-spacing: -0.5px;
+  }
+
+  /* CODE SECTION */
+  .code-section {
+    padding: 100px 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+    border-top: 1px solid var(--vercel-black);
+  }
+
+  .code-section-title {
+    font-size: 40px;
+    font-weight: 600;
+    letter-spacing: -2.4px;
+    margin-bottom: 48px;
+    text-align: center;
+  }
+
+  .code-block {
+    background: var(--vercel-black);
+    border-radius: 8px;
+    padding: 24px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #e0e0e0;
+    overflow-x: auto;
+    box-shadow: var(--card-shadow);
+  }
+
+  .code-kw { color: #ff79c6; }
+  .code-fn { color: #50fa7b; }
+  .code-str { color: #f1fa8c; }
+  .code-comment { color: #6272a4; }
+  .code-num { color: #bd93f9; }
+
+  /* FOOTER */
+  footer {
+    background: var(--pure-white);
+    padding: 64px 24px;
+    border-top: 1px solid var(--vercel-black);
+  }
+
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr repeat(4, auto);
+    gap: 48px;
+    margin-bottom: 40px;
+  }
+
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--vercel-black);
+    margin-bottom: 12px;
+  }
+
+  .footer-brand-desc {
+    font-size: 14px;
+    color: var(--gray-500);
+  }
+
+  .footer-col-title {
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--vercel-black);
+    margin-bottom: 12px;
+  }
+
+  .footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .footer-links a {
+    font-size: 14px;
+    color: var(--gray-500);
+    text-decoration: none;
+    transition: color 150ms;
+  }
+
+  .footer-links a:hover { color: var(--vercel-black); }
+
+  .footer-bottom {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 24px;
+    border-top: 1px solid var(--gray-100);
+    font-size: 14px;
+    color: var(--gray-500);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 0 16px; }
+    .nav-links { display: none; }
+    .hero { padding: 60px 16px; }
+    .hero-title { font-size: 32px; letter-spacing: -1.28px; }
+    .hero-subtitle { font-size: 16px; }
+    .workflow-section { padding: 60px 16px; }
+    .workflow-title { font-size: 28px; letter-spacing: -1px; }
+    .workflow-pipeline { grid-template-columns: 1fr; gap: 16px; }
+    .pipeline-arrow { display: none; }
+    .cdn-section { padding: 60px 16px; }
+    .cdn-inner { grid-template-columns: 1fr; }
+    .metrics-section { padding: 60px 16px; }
+    .metrics-grid { grid-template-columns: 1fr; }
+    footer { padding: 40px 16px; }
+    .footer-inner { grid-template-columns: 1fr 1fr; }
+    .footer-bottom { flex-direction: column; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-triangle"></div>
+    Vercel
+  </a>
+  <ul class="nav-links">
+    <li><a href="#">Products</a></li>
+    <li><a href="#">Solutions</a></li>
+    <li><a href="#">Resources</a></li>
+    <li><a href="#">Enterprise</a></li>
+    <li><a href="#">Pricing</a></li>
+    <li><a href="#">Docs</a></li>
+  </ul>
+  <div class="nav-ctas">
+    <a href="#" class="btn-light">Contact Sales</a>
+    <a href="#" class="btn-dark">Start Deploying</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">&#9889; New: v0 AI Component Generation</div>
+  <h1 class="hero-title">Deploy faster.<br>Ship everywhere.</h1>
+  <p class="hero-subtitle">The platform for frontend teams. Build, scale, and secure the web with confidence.</p>
+  <div class="hero-actions">
+    <a href="#" class="btn-dark-lg">&#9654; Start Deploying</a>
+    <a href="#" class="btn-light-lg">Get a demo</a>
+  </div>
+
+  <!-- DEPLOY LOG -->
+  <div class="deploy-mockup">
+    <div class="deploy-header">
+      <div class="deploy-status-dot"></div>
+      <span class="deploy-branch">main &#8592; feat/new-homepage</span>
+      <span class="deploy-time">12s ago</span>
+    </div>
+    <div class="deploy-log">
+      <div class="log-line">
+        <span class="log-time">00:01</span>
+        <span class="log-text-info">&#9658; Cloning repository...</span>
+      </div>
+      <div class="log-line">
+        <span class="log-time">00:02</span>
+        <span class="log-text-dim">&#8250; Installing dependencies</span>
+      </div>
+      <div class="log-line">
+        <span class="log-time">00:08</span>
+        <span class="log-text-white">&#8250; Building Next.js app</span>
+      </div>
+      <div class="log-line">
+        <span class="log-time">00:11</span>
+        <span class="log-text-dim">  Route (app)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Size&nbsp;&nbsp;&nbsp;&nbsp;First Load JS</span>
+      </div>
+      <div class="log-line">
+        <span class="log-time">00:11</span>
+        <span class="log-text-success">  &#9679; /&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;142 B&nbsp;&nbsp;&nbsp;&nbsp;87.3 kB</span>
+      </div>
+      <div class="log-line">
+        <span class="log-time">00:12</span>
+        <span class="log-text-success">&#10003; Deployment completed in 12s</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TRUST BAR -->
+<div class="trust-section">
+  <div class="trust-label">Trusted by teams at</div>
+  <div class="trust-logos">
+    <span class="trust-logo">Perplexity</span>
+    <span class="trust-logo">OpenAI</span>
+    <span class="trust-logo">Cursor</span>
+    <span class="trust-logo">Stripe</span>
+    <span class="trust-logo">Shopify</span>
+    <span class="trust-logo">Linear</span>
+  </div>
+</div>
+
+<!-- WORKFLOW PIPELINE -->
+<section class="workflow-section">
+  <h2 class="workflow-title">From code to global in seconds</h2>
+  <div class="workflow-pipeline">
+    <div class="pipeline-step">
+      <div class="pipeline-label develop">Develop</div>
+      <div class="pipeline-title">Local preview with instant feedback</div>
+    </div>
+    <div class="pipeline-arrow">&#8594;</div>
+    <div class="pipeline-step">
+      <div class="pipeline-label preview">Preview</div>
+      <div class="pipeline-title">Every PR gets a unique URL</div>
+    </div>
+    <div class="pipeline-arrow">&#8594;</div>
+    <div class="pipeline-step">
+      <div class="pipeline-label ship">Ship</div>
+      <div class="pipeline-title">Deploy to production globally</div>
+    </div>
+  </div>
+</section>
+
+<!-- CDN MAP -->
+<section class="cdn-section">
+  <div class="cdn-inner">
+    <div class="cdn-text">
+      <h2>Edge Network. Everywhere.</h2>
+      <p>Serve your content from 100+ cities worldwide. Automatic CDN propagation on every deployment.</p>
+      <a href="#" class="btn-dark-on-dark">Explore the network &#8594;</a>
+    </div>
+    <div class="cdn-map">
+      <div class="cdn-map-bg"></div>
+      <div class="cdn-node" style="top:35%; left:18%;"></div>
+      <div class="cdn-node-label" style="top:28%; left:14%;">SFO</div>
+      <div class="cdn-node" style="top:42%; left:28%;"></div>
+      <div class="cdn-node-label" style="top:35%; left:24%;">IAD</div>
+      <div class="cdn-node" style="top:28%; left:50%;"></div>
+      <div class="cdn-node-label" style="top:20%; left:46%;">LHR</div>
+      <div class="cdn-node" style="top:35%; left:60%;"></div>
+      <div class="cdn-node-label" style="top:27%; left:58%;">FRA</div>
+      <div class="cdn-node" style="top:55%; left:75%;"></div>
+      <div class="cdn-node-label" style="top:47%; left:71%;">SIN</div>
+      <div class="cdn-node" style="top:60%; left:85%;"></div>
+      <div class="cdn-node-label" style="top:52%; left:83%;">NRT</div>
+      <div class="cdn-line" style="top:37%; left:20%; width:120px; transform: rotate(10deg);"></div>
+      <div class="cdn-line" style="top:30%; left:32%; width:180px; transform: rotate(-5deg);"></div>
+    </div>
+  </div>
+</section>
+
+<!-- METRICS -->
+<section class="metrics-section">
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="metric-badge">&#9889; Performance</div>
+      <div class="metric-number">10x</div>
+      <p class="metric-desc">faster page loads with Vercel's Edge Network vs. traditional hosting</p>
+    </div>
+    <div class="metric-card">
+      <div class="metric-badge" style="background:#f0fff4; color:#00801f;">&#10003; Reliability</div>
+      <div class="metric-number">99.99%</div>
+      <p class="metric-desc">uptime SLA for Enterprise customers with global redundancy</p>
+    </div>
+    <div class="metric-card">
+      <div class="metric-badge" style="background:#fff0f8; color:#8b0060;">&#128201; Scale</div>
+      <div class="metric-number">6M+</div>
+      <p class="metric-desc">deployments per week across the Vercel platform</p>
+    </div>
+  </div>
+</section>
+
+<!-- CODE BLOCK -->
+<section class="code-section">
+  <h2 class="code-section-title">Zero-config deployments</h2>
+  <div class="code-block">
+    <div><span class="code-comment">// Install Vercel CLI and deploy</span></div>
+    <div><span class="code-kw">npm</span> <span class="code-fn">install</span> <span class="code-str">-g vercel</span></div>
+    <div>&nbsp;</div>
+    <div><span class="code-comment">// In your project directory</span></div>
+    <div><span class="code-fn">vercel</span></div>
+    <div>&nbsp;</div>
+    <div><span class="code-comment">// Output</span></div>
+    <div><span class="code-str">&#10003; Deployed to https://your-project.vercel.app</span></div>
+    <div><span class="code-str">  Production: https://your-domain.com [<span class="code-num">2.4s</span>]</span></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">
+        <div class="nav-logo-triangle"></div>
+        Vercel
+      </div>
+      <div class="footer-brand-desc">The platform for frontend teams</div>
+    </div>
+    <div>
+      <div class="footer-col-title">Products</div>
+      <ul class="footer-links">
+        <li><a href="#">Next.js</a></li>
+        <li><a href="#">v0</a></li>
+        <li><a href="#">AI SDK</a></li>
+        <li><a href="#">Turborepo</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Company</div>
+      <ul class="footer-links">
+        <li><a href="#">About</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Partners</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Resources</div>
+      <ul class="footer-links">
+        <li><a href="#">Docs</a></li>
+        <li><a href="#">Templates</a></li>
+        <li><a href="#">Guides</a></li>
+        <li><a href="#">Changelog</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Legal</div>
+      <ul class="footer-links">
+        <li><a href="#">Privacy</a></li>
+        <li><a href="#">Terms</a></li>
+        <li><a href="#">Security</a></li>
+        <li><a href="#">Status</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&#169; 2026 Vercel Inc.</span>
+    <span>Status: &#129001; All systems operational</span>
+  </div>
+</footer>
+
+</body>
+</html>

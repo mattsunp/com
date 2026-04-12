@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shopify — Design Reference</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --void: #000000;
+    --deep-teal: #02090A;
+    --dark-forest: #061A1C;
+    --forest: #102620;
+    --dark-card-border: #1E2C31;
+    --neon-green: #36F4A4;
+    --aloe: #C1FBD4;
+    --white: #FFFFFF;
+    --muted-text: #A1A1AA;
+    --shade-50: #71717A;
+    --shade-60: #52525B;
+    --shade-70: #3F3F46;
+  }
+
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: var(--void);
+    color: var(--white);
+    font-size: 18px;
+    line-height: 1.56;
+    font-feature-settings: "ss03";
+  }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 64px;
+    height: 64px;
+    background: transparent;
+    transition: background 300ms ease;
+  }
+
+  nav.scrolled { background: var(--forest); }
+
+  .nav-logo {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--white);
+    text-decoration: none;
+    letter-spacing: -0.5px;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--white);
+    text-decoration: none;
+    letter-spacing: 0.72px;
+    transition: color 200ms ease;
+  }
+
+  .nav-links a:hover { color: var(--muted-text); }
+
+  .nav-cta {
+    display: inline-flex;
+    align-items: center;
+    height: 48px;
+    padding: 12px 26px;
+    background: var(--white);
+    color: var(--void);
+    font-size: 16px;
+    font-weight: 400;
+    border-radius: 9999px;
+    text-decoration: none;
+    transition: opacity 200ms ease;
+  }
+
+  .nav-cta:hover { opacity: 0.85; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    background: var(--void);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 120px 64px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(ellipse, rgba(16,38,32,0.8) 0%, rgba(2,9,10,0.4) 50%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-overline {
+    font-size: 15.36px;
+    font-weight: 400;
+    color: var(--aloe);
+    letter-spacing: 1.54px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    position: relative;
+  }
+
+  .hero-title {
+    font-size: 96px;
+    font-weight: 330;
+    line-height: 0.96;
+    color: var(--white);
+    margin-bottom: 32px;
+    position: relative;
+    max-width: 900px;
+  }
+
+  .hero-title strong {
+    font-weight: 750;
+    letter-spacing: 4.54px;
+    display: block;
+  }
+
+  .hero-subtitle {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--muted-text);
+    letter-spacing: 0.3px;
+    margin-bottom: 48px;
+    max-width: 560px;
+    position: relative;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    position: relative;
+  }
+
+  .btn-white-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 48px;
+    padding: 12px 26px 12px 16px;
+    background: var(--white);
+    color: var(--void);
+    font-size: 16px;
+    font-weight: 400;
+    border-radius: 9999px;
+    text-decoration: none;
+    border: 2px solid transparent;
+    transition: all 200ms ease;
+  }
+
+  .btn-white-pill:hover { opacity: 0.85; }
+
+  .btn-ghost-pill {
+    display: inline-flex;
+    align-items: center;
+    height: 48px;
+    padding: 12px 26px 12px 16px;
+    background: transparent;
+    color: var(--white);
+    font-size: 16px;
+    font-weight: 400;
+    border-radius: 9999px;
+    text-decoration: none;
+    border: 2px solid var(--white);
+    transition: all 200ms ease;
+  }
+
+  .btn-ghost-pill:hover {
+    background: var(--white);
+    color: var(--void);
+  }
+
+  /* STATS SECTION */
+  .stats-section {
+    background: var(--dark-forest);
+    padding: 100px 64px;
+    display: flex;
+    justify-content: center;
+    gap: 80px;
+    flex-wrap: wrap;
+  }
+
+  .stat-block {
+    text-align: center;
+  }
+
+  .stat-number {
+    font-size: 96px;
+    font-weight: 750;
+    color: var(--white);
+    line-height: 1;
+    letter-spacing: 4.54px;
+    display: block;
+  }
+
+  .stat-label {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--muted-text);
+    margin-top: 12px;
+  }
+
+  /* FEATURE SECTION */
+  .feature-section {
+    background: var(--void);
+    padding: 100px 64px;
+  }
+
+  .feature-section-title {
+    font-size: 70px;
+    font-weight: 330;
+    line-height: 1.0;
+    color: var(--white);
+    margin-bottom: 64px;
+    max-width: 700px;
+  }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .feature-card {
+    background: var(--deep-teal);
+    border: 1px solid var(--dark-card-border);
+    border-radius: 12px;
+    padding: 32px;
+    box-shadow:
+      rgba(0,0,0,0.1) 0px 0px 0px 1px,
+      rgba(0,0,0,0.1) 0px 2px 2px,
+      rgba(0,0,0,0.1) 0px 4px 4px,
+      rgba(0,0,0,0.1) 0px 8px 8px,
+      rgba(255,255,255,0.03) 0px 1px 0px inset;
+    transition: box-shadow 300ms ease;
+  }
+
+  .feature-card:hover {
+    box-shadow:
+      rgba(0,0,0,0.2) 0px 0px 0px 1px,
+      rgba(0,0,0,0.15) 0px 4px 8px,
+      rgba(0,0,0,0.1) 0px 8px 16px,
+      rgba(255,255,255,0.05) 0px 1px 0px inset;
+  }
+
+  .feature-card-icon {
+    font-size: 32px;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .feature-card-title {
+    font-size: 32px;
+    font-weight: 360;
+    color: var(--white);
+    line-height: 1.14;
+    letter-spacing: 0.32px;
+    margin-bottom: 16px;
+  }
+
+  .feature-card-body {
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--muted-text);
+    line-height: 1.56;
+  }
+
+  /* PRODUCT SHOWCASE */
+  .showcase-section {
+    background: var(--dark-forest);
+    padding: 100px 64px;
+    text-align: center;
+  }
+
+  .showcase-tag {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255,255,255,0.2);
+    color: var(--white);
+    font-size: 16px;
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin-bottom: 40px;
+  }
+
+  .showcase-title {
+    font-size: 55px;
+    font-weight: 330;
+    color: var(--white);
+    line-height: 1.16;
+    margin-bottom: 24px;
+  }
+
+  .showcase-subtitle {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--muted-text);
+    margin-bottom: 48px;
+    letter-spacing: 0.3px;
+  }
+
+  .dashboard-mockup {
+    max-width: 900px;
+    margin: 0 auto;
+    background: var(--deep-teal);
+    border: 1px solid var(--dark-card-border);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow:
+      rgba(0,0,0,0.1) 0px 0px 0px 1px,
+      rgba(0,0,0,0.1) 0px 4px 4px,
+      rgba(0,0,0,0.1) 0px 16px 16px,
+      rgba(255,255,255,0.03) 0px 1px 0px inset;
+  }
+
+  .dashboard-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--dark-card-border);
+  }
+
+  .dashboard-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--shade-70);
+  }
+
+  .dashboard-title-bar {
+    flex: 1;
+    height: 10px;
+    background: var(--shade-70);
+    border-radius: 5px;
+    max-width: 200px;
+  }
+
+  .dashboard-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .metric-card {
+    background: var(--forest);
+    border: 1px solid var(--dark-card-border);
+    border-radius: 8px;
+    padding: 16px;
+  }
+
+  .metric-label {
+    font-size: 12px;
+    color: var(--shade-50);
+    font-weight: 500;
+    letter-spacing: 0.28px;
+    margin-bottom: 8px;
+  }
+
+  .metric-value {
+    font-size: 24px;
+    font-weight: 750;
+    color: var(--white);
+  }
+
+  .metric-change {
+    font-size: 13px;
+    color: var(--neon-green);
+    font-weight: 500;
+    margin-top: 4px;
+  }
+
+  .chart-area {
+    background: var(--forest);
+    border: 1px solid var(--dark-card-border);
+    border-radius: 8px;
+    height: 120px;
+    display: flex;
+    align-items: flex-end;
+    padding: 16px;
+    gap: 8px;
+  }
+
+  .chart-bar {
+    flex: 1;
+    background: linear-gradient(180deg, var(--neon-green) 0%, rgba(54,244,164,0.3) 100%);
+    border-radius: 3px 3px 0 0;
+    min-height: 8px;
+  }
+
+  /* APP STORE GRID */
+  .apps-section {
+    background: var(--void);
+    padding: 100px 64px;
+  }
+
+  .apps-section-title {
+    font-size: 48px;
+    font-weight: 330;
+    color: var(--white);
+    margin-bottom: 48px;
+    line-height: 1.14;
+  }
+
+  .apps-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    max-width: 1100px;
+  }
+
+  .app-card {
+    background: var(--deep-teal);
+    border: 1px solid var(--dark-card-border);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow:
+      rgba(0,0,0,0.1) 0px 0px 0px 1px,
+      rgba(255,255,255,0.03) 0px 1px 0px inset;
+  }
+
+  .app-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .app-name {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+
+  .app-desc {
+    font-size: 14px;
+    color: var(--muted-text);
+    line-height: 1.49;
+    letter-spacing: 0.28px;
+  }
+
+  .app-install {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 12px;
+    height: 32px;
+    padding: 8px 16px;
+    background: transparent;
+    color: var(--white);
+    font-size: 14px;
+    border-radius: 9999px;
+    border: 1px solid var(--shade-70);
+    text-decoration: none;
+    cursor: pointer;
+    transition: border-color 200ms ease;
+  }
+
+  .app-install:hover { border-color: var(--white); }
+
+  /* FOOTER */
+  footer {
+    background: var(--forest);
+    padding: 80px 64px;
+    border-top: 1px solid var(--dark-card-border);
+  }
+
+  .footer-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 48px;
+  }
+
+  .footer-logo {
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--white);
+  }
+
+  .footer-cols {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    margin-bottom: 48px;
+  }
+
+  .footer-col-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+
+  .footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .footer-links a {
+    font-size: 16px;
+    color: var(--muted-text);
+    text-decoration: underline;
+    transition: color 200ms ease;
+  }
+
+  .footer-links a:hover { color: var(--white); }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 32px;
+    border-top: 1px solid var(--dark-card-border);
+    font-size: 14px;
+    color: var(--shade-50);
+    letter-spacing: 0.28px;
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 0 16px; }
+    .nav-links { display: none; }
+    .hero { padding: 80px 16px; }
+    .hero-title { font-size: 48px; }
+    .stats-section { padding: 64px 16px; gap: 40px; }
+    .stat-number { font-size: 64px; }
+    .feature-section { padding: 64px 16px; }
+    .feature-section-title { font-size: 36px; }
+    .feature-grid { grid-template-columns: 1fr; }
+    .showcase-section { padding: 64px 16px; }
+    .showcase-title { font-size: 36px; }
+    .dashboard-metrics { grid-template-columns: repeat(2, 1fr); }
+    .apps-section { padding: 64px 16px; }
+    .apps-grid { grid-template-columns: repeat(2, 1fr); }
+    footer { padding: 48px 16px; }
+    .footer-cols { grid-template-columns: repeat(2, 1fr); }
+    .footer-top { flex-direction: column; gap: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">&#9679; Shopify</a>
+  <ul class="nav-links">
+    <li><a href="#">Solutions</a></li>
+    <li><a href="#">Pricing</a></li>
+    <li><a href="#">Resources</a></li>
+    <li><a href="#">Blog</a></li>
+  </ul>
+  <div style="display:flex; gap:12px; align-items:center;">
+    <a href="#" style="color:var(--white); font-size:16px; font-weight:500; text-decoration:none; letter-spacing:0.72px;">Log in</a>
+    <a href="#" class="nav-cta">Start for free</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-overline">Commerce Platform</div>
+  <h1 class="hero-title">
+    Build your
+    <strong>business</strong>
+    here
+  </h1>
+  <p class="hero-subtitle">Millions of the world's most successful brands trust Shopify to sell, ship, and process payments anywhere.</p>
+  <div class="hero-actions">
+    <a href="#" class="btn-white-pill">Start free trial &#8594;</a>
+    <a href="#" class="btn-ghost-pill">Watch demo</a>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats-section">
+  <div class="stat-block">
+    <span class="stat-number">15+</span>
+    <div class="stat-label">Years powering commerce</div>
+  </div>
+  <div class="stat-block">
+    <span class="stat-number">150M+</span>
+    <div class="stat-label">Buyers on the platform</div>
+  </div>
+  <div class="stat-block">
+    <span class="stat-number">$700B+</span>
+    <div class="stat-label">Total commerce volume</div>
+  </div>
+</section>
+
+<!-- FEATURE CARDS -->
+<section class="feature-section">
+  <h2 class="feature-section-title">Everything you need to sell everywhere</h2>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <span class="feature-card-icon">&#128722;</span>
+      <div class="feature-card-title">Online Store</div>
+      <p class="feature-card-body">Build a beautiful storefront with customizable themes and no coding required.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-card-icon">&#128179;</span>
+      <div class="feature-card-title">Payments</div>
+      <p class="feature-card-body">Accept every payment method. Lower rates as your business grows.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-card-icon">&#128230;</span>
+      <div class="feature-card-title">Shipping</div>
+      <p class="feature-card-body">Fulfillment made simple. Discounted rates from major carriers built in.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-card-icon">&#128202;</span>
+      <div class="feature-card-title">Analytics</div>
+      <p class="feature-card-body">Real-time insights into your store's performance, customers, and growth.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-card-icon">&#128241;</span>
+      <div class="feature-card-title">Mobile POS</div>
+      <p class="feature-card-body">Sell in person at markets, pop-ups, and retail locations worldwide.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-card-icon">&#127758;</span>
+      <div class="feature-card-title">International</div>
+      <p class="feature-card-body">Reach customers globally with local currencies and multilingual storefronts.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DASHBOARD SHOWCASE -->
+<section class="showcase-section">
+  <span class="showcase-tag">&#128200; Merchant Dashboard</span>
+  <h2 class="showcase-title">Your business at a glance</h2>
+  <p class="showcase-subtitle">Real-time analytics, orders, and inventory management in one place.</p>
+  <div class="dashboard-mockup">
+    <div class="dashboard-header">
+      <div class="dashboard-dot"></div>
+      <div class="dashboard-dot"></div>
+      <div class="dashboard-dot"></div>
+      <div class="dashboard-title-bar"></div>
+    </div>
+    <div class="dashboard-metrics">
+      <div class="metric-card">
+        <div class="metric-label">TOTAL SALES</div>
+        <div class="metric-value">$48,291</div>
+        <div class="metric-change">+12.3% &#8593;</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">ORDERS</div>
+        <div class="metric-value">1,240</div>
+        <div class="metric-change">+8.1% &#8593;</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">AVG ORDER VALUE</div>
+        <div class="metric-value">$38.94</div>
+        <div class="metric-change">+3.4% &#8593;</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">CONVERSION</div>
+        <div class="metric-value">4.2%</div>
+        <div class="metric-change">+0.6% &#8593;</div>
+      </div>
+    </div>
+    <div class="chart-area">
+      <div class="chart-bar" style="height:40%;"></div>
+      <div class="chart-bar" style="height:55%;"></div>
+      <div class="chart-bar" style="height:45%;"></div>
+      <div class="chart-bar" style="height:70%;"></div>
+      <div class="chart-bar" style="height:60%;"></div>
+      <div class="chart-bar" style="height:80%;"></div>
+      <div class="chart-bar" style="height:75%;"></div>
+      <div class="chart-bar" style="height:90%;"></div>
+      <div class="chart-bar" style="height:85%;"></div>
+      <div class="chart-bar" style="height:95%;"></div>
+      <div class="chart-bar" style="height:100%;"></div>
+      <div class="chart-bar" style="height:88%;"></div>
+    </div>
+  </div>
+</section>
+
+<!-- APP STORE -->
+<section class="apps-section">
+  <h2 class="apps-section-title">Extend with 8,000+ apps</h2>
+  <div class="apps-grid">
+    <div class="app-card">
+      <span class="app-icon">&#128233;</span>
+      <div class="app-name">Klaviyo</div>
+      <div class="app-desc">Email & SMS marketing automation</div>
+      <a href="#" class="app-install">Add app</a>
+    </div>
+    <div class="app-card">
+      <span class="app-icon">&#127760;</span>
+      <div class="app-name">Aftership</div>
+      <div class="app-desc">Shipment tracking & delivery</div>
+      <a href="#" class="app-install">Add app</a>
+    </div>
+    <div class="app-card">
+      <span class="app-icon">&#11088;</span>
+      <div class="app-name">Yotpo</div>
+      <div class="app-desc">Product reviews and ratings</div>
+      <a href="#" class="app-install">Add app</a>
+    </div>
+    <div class="app-card">
+      <span class="app-icon">&#128100;</span>
+      <div class="app-name">Loyalty Lion</div>
+      <div class="app-desc">Customer loyalty programs</div>
+      <a href="#" class="app-install">Add app</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-logo">&#9679; Shopify</div>
+    <a href="#" class="btn-white-pill">Start for free &#8594;</a>
+  </div>
+  <div class="footer-cols">
+    <div>
+      <div class="footer-col-title">Solutions</div>
+      <ul class="footer-links">
+        <li><a href="#">Online Store</a></li>
+        <li><a href="#">Point of Sale</a></li>
+        <li><a href="#">Shopify Plus</a></li>
+        <li><a href="#">Wholesale</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Developers</div>
+      <ul class="footer-links">
+        <li><a href="#">API Reference</a></li>
+        <li><a href="#">Partner Portal</a></li>
+        <li><a href="#">Theme Kit</a></li>
+        <li><a href="#">Polaris</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Company</div>
+      <ul class="footer-links">
+        <li><a href="#">About</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Press</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Support</div>
+      <ul class="footer-links">
+        <li><a href="#">Help Center</a></li>
+        <li><a href="#">Community</a></li>
+        <li><a href="#">Status Page</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&#169; 2026 Shopify Inc.</span>
+    <div style="display:flex; gap:24px;">
+      <a href="#" style="color:var(--shade-50); text-decoration:none;">Privacy</a>
+      <a href="#" style="color:var(--shade-50); text-decoration:none;">Terms</a>
+      <a href="#" style="color:var(--shade-50); text-decoration:none;">Cookie Policy</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

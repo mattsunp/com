@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revolut — One app for all things money</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --dark: #191c1f;
+    --white: #ffffff;
+    --surface: #f4f4f4;
+    --blue: #494fdf;
+    --teal: #00a87e;
+    --danger: #e23b4a;
+    --mid-slate: #505a63;
+    --cool-gray: #8d969e;
+    --gray-tone: #c9c9cd;
+  }
+  html { background: var(--white); color: var(--dark); font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+  a { color: var(--dark); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--white); border-bottom: 1px solid #e8e8e8;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 48px; height: 64px;
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; }
+  .revolut-icon {
+    width: 32px; height: 32px;
+    background: var(--dark); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .revolut-icon svg { width: 20px; height: 20px; }
+  .nav-logo-text { font-size: 18px; font-weight: 700; color: var(--dark); letter-spacing: -0.3px; }
+  .nav-links { display: flex; gap: 28px; }
+  .nav-links a { font-size: 16px; font-weight: 500; color: var(--dark); letter-spacing: 0.24px; }
+  .nav-links a:hover { text-decoration: underline; }
+  .nav-right { display: flex; gap: 12px; align-items: center; }
+  .btn-ghost-nav { font-size: 16px; font-weight: 500; color: var(--dark); padding: 10px 16px; background: none; border: none; cursor: pointer; }
+  .btn-pill-dark {
+    background: var(--dark); color: var(--white);
+    padding: 14px 32px; border-radius: 9999px;
+    font-size: 16px; font-weight: 500;
+    border: none; cursor: pointer; display: inline-block;
+  }
+  .btn-pill-dark:hover { opacity: 0.85; text-decoration: none; }
+  .btn-pill-outline {
+    background: transparent; color: var(--dark);
+    padding: 14px 32px; border-radius: 9999px;
+    font-size: 16px; font-weight: 500;
+    border: 2px solid var(--dark); cursor: pointer; display: inline-block;
+  }
+  .btn-pill-outline:hover { opacity: 0.75; text-decoration: none; }
+  .btn-pill-light {
+    background: var(--surface); color: #000;
+    padding: 14px 34px; border-radius: 9999px;
+    font-size: 16px; font-weight: 500;
+    border: none; cursor: pointer; display: inline-block;
+  }
+  .btn-pill-light:hover { opacity: 0.85; text-decoration: none; }
+
+  /* HERO */
+  .hero {
+    padding: 120px 48px 100px;
+    background: var(--white);
+  }
+  .hero-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+  .hero-text h1 {
+    font-size: 80px; font-weight: 500; line-height: 1.00;
+    letter-spacing: -0.8px; color: var(--dark);
+    margin-bottom: 32px;
+  }
+  .hero-text h1 .small-line { font-size: 136px; display: block; letter-spacing: -2.72px; }
+  .hero-text p {
+    font-size: 18px; font-weight: 400; line-height: 1.56;
+    letter-spacing: -0.09px; color: var(--mid-slate);
+    margin-bottom: 40px; max-width: 480px;
+  }
+  .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; }
+  .hero-badges { display: flex; gap: 16px; margin-top: 40px; align-items: center; }
+  .badge { font-size: 12px; color: var(--cool-gray); letter-spacing: 0.24px; display: flex; align-items: center; gap: 6px; }
+  .badge-icon { font-size: 14px; }
+
+  /* CARD VISUAL */
+  .hero-card-wrap {
+    display: flex; flex-direction: column; gap: 20px; align-items: center;
+  }
+  .revolut-card {
+    width: 340px; height: 200px; border-radius: 20px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: 24px; position: relative; overflow: hidden;
+  }
+  .card-black { background: linear-gradient(135deg, var(--dark) 0%, #2a2d31 100%); color: var(--white); }
+  .card-metal { background: linear-gradient(135deg, #8a8a8a 0%, #6a6a6a 50%, #9a9a9a 100%); color: var(--white); }
+  .card-gradient { background: linear-gradient(135deg, var(--blue) 0%, #7c82ff 50%, #494fdf 100%); color: var(--white); }
+  .card-chip { width: 32px; height: 24px; background: rgba(255,215,0,0.7); border-radius: 4px; }
+  .card-logo { font-size: 14px; font-weight: 700; letter-spacing: 1px; }
+  .card-number { font-size: 12px; letter-spacing: 2px; opacity: 0.7; font-family: 'Courier New', monospace; }
+  .card-bottom { display: flex; justify-content: space-between; align-items: flex-end; }
+  .card-name { font-size: 13px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; }
+  .card-expiry { font-size: 11px; opacity: 0.7; }
+  .card-visa { font-size: 18px; font-weight: 700; font-style: italic; opacity: 0.9; }
+  .card-glow {
+    position: absolute; top: -40px; right: -40px;
+    width: 140px; height: 140px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1), transparent 70%);
+  }
+
+  /* FOREX TICKER */
+  .forex-strip {
+    background: var(--surface); border-top: 1px solid var(--gray-tone); border-bottom: 1px solid var(--gray-tone);
+    padding: 16px 0; overflow: hidden; position: relative;
+  }
+  .forex-track {
+    display: flex; gap: 40px; white-space: nowrap;
+    animation: scroll-forex 30s linear infinite;
+  }
+  @keyframes scroll-forex {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .forex-item { display: flex; align-items: center; gap: 8px; }
+  .forex-pair { font-size: 14px; font-weight: 600; color: var(--dark); letter-spacing: 0.16px; }
+  .forex-rate { font-size: 14px; color: var(--mid-slate); letter-spacing: 0.24px; }
+  .forex-change { font-size: 12px; font-weight: 600; letter-spacing: 0.16px; padding: 2px 6px; border-radius: 4px; }
+  .up { color: var(--teal); background: rgba(0,168,126,0.1); }
+  .down { color: var(--danger); background: rgba(226,59,74,0.1); }
+
+  /* FEATURES */
+  .features {
+    padding: 120px 48px; background: var(--white);
+  }
+  .features-inner { max-width: 1200px; margin: 0 auto; }
+  .feat-header { margin-bottom: 64px; }
+  .feat-header h2 { font-size: 48px; font-weight: 500; line-height: 1.21; letter-spacing: -0.48px; color: var(--dark); margin-bottom: 16px; }
+  .feat-header p { font-size: 18px; color: var(--mid-slate); letter-spacing: -0.09px; line-height: 1.56; max-width: 520px; }
+  .features-bento { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: auto auto; gap: 16px; }
+  .feat-card {
+    background: var(--surface); border-radius: 20px; padding: 32px;
+    position: relative; overflow: hidden;
+  }
+  .feat-card.tall { grid-row: span 2; }
+  .feat-card.wide { grid-column: span 2; }
+  .feat-card.dark { background: var(--dark); color: var(--white); }
+  .feat-card.blue { background: var(--blue); color: var(--white); }
+  .feat-icon { font-size: 32px; margin-bottom: 16px; display: block; }
+  .feat-title { font-size: 24px; font-weight: 500; letter-spacing: -0.32px; color: var(--dark); margin-bottom: 8px; }
+  .feat-card.dark .feat-title, .feat-card.blue .feat-title { color: var(--white); }
+  .feat-desc { font-size: 16px; color: var(--mid-slate); letter-spacing: 0.24px; line-height: 1.5; }
+  .feat-card.dark .feat-desc, .feat-card.blue .feat-desc { color: rgba(255,255,255,0.75); }
+
+  /* Forex mini widget */
+  .mini-forex {
+    margin-top: 24px; background: rgba(255,255,255,0.1); border-radius: 12px; padding: 16px;
+  }
+  .mf-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .mf-row:last-child { border-bottom: none; }
+  .mf-pair { font-size: 14px; font-weight: 600; color: var(--white); }
+  .mf-rate { font-size: 14px; color: rgba(255,255,255,0.7); }
+  .mf-trend { font-size: 12px; color: #00d4a0; }
+
+  /* Transfer mini widget */
+  .mini-transfer {
+    margin-top: 24px;
+  }
+  .mt-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--gray-tone); }
+  .mt-item:last-child { border-bottom: none; }
+  .mt-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: var(--white); flex-shrink: 0; }
+  .mt-info { flex: 1; }
+  .mt-name { font-size: 14px; font-weight: 600; color: var(--dark); }
+  .mt-when { font-size: 12px; color: var(--cool-gray); letter-spacing: 0.24px; }
+  .mt-amount { font-size: 14px; font-weight: 600; }
+  .mt-amount.positive { color: var(--teal); }
+  .mt-amount.negative { color: var(--dark); }
+
+  /* DARK SECTION */
+  .dark-section {
+    background: var(--dark); padding: 120px 48px;
+    color: var(--white);
+  }
+  .dark-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+  .ds-text h2 { font-size: 48px; font-weight: 500; line-height: 1.21; letter-spacing: -0.48px; color: var(--white); margin-bottom: 16px; }
+  .ds-text p { font-size: 18px; color: rgba(255,255,255,0.65); letter-spacing: -0.09px; line-height: 1.56; margin-bottom: 32px; }
+  .ds-ctas { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn-ghost-dark {
+    background: rgba(244,244,244,0.1); color: var(--surface);
+    padding: 14px 32px; border-radius: 9999px;
+    border: 2px solid var(--surface);
+    font-size: 16px; font-weight: 500; display: inline-block;
+  }
+  .btn-ghost-dark:hover { opacity: 0.85; text-decoration: none; }
+  .ds-visual { display: flex; flex-direction: column; gap: 12px; }
+  .ds-card {
+    background: rgba(255,255,255,0.06); border-radius: 20px; padding: 24px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .dsc-label { font-size: 12px; color: rgba(255,255,255,0.4); letter-spacing: 0.24px; margin-bottom: 8px; text-transform: uppercase; }
+  .dsc-value { font-size: 40px; font-weight: 500; letter-spacing: -0.4px; color: var(--white); line-height: 1.19; }
+  .dsc-sub { font-size: 14px; color: var(--teal); margin-top: 4px; letter-spacing: 0.24px; }
+  .dsc-bar { margin-top: 16px; height: 6px; background: rgba(255,255,255,0.1); border-radius: 9999px; overflow: hidden; }
+  .dsc-bar-fill { height: 100%; background: linear-gradient(to right, var(--teal), var(--blue)); border-radius: 9999px; }
+
+  /* PLANS -->*/
+  .plans { padding: 120px 48px; background: var(--white); }
+  .plans-inner { max-width: 1200px; margin: 0 auto; }
+  .plans-header { text-align: center; margin-bottom: 64px; }
+  .plans-header h2 { font-size: 48px; font-weight: 500; letter-spacing: -0.48px; color: var(--dark); margin-bottom: 16px; }
+  .plans-header p { font-size: 18px; color: var(--mid-slate); letter-spacing: -0.09px; }
+  .plans-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .plan-card { border-radius: 20px; overflow: hidden; }
+  .plan-card.standard { background: var(--surface); }
+  .plan-card.plus { background: var(--dark); color: var(--white); }
+  .plan-card.premium { background: linear-gradient(135deg, #1a1a2e, #2a2a4e); color: var(--white); }
+  .plan-card.metal { background: linear-gradient(135deg, #5a5a5a, #3a3a3a); color: var(--white); }
+  .plan-header { padding: 28px 24px 20px; }
+  .plan-name { font-size: 20px; font-weight: 500; letter-spacing: -0.4px; margin-bottom: 4px; }
+  .plan-price { font-size: 32px; font-weight: 500; letter-spacing: -0.32px; }
+  .plan-price-period { font-size: 16px; font-weight: 400; opacity: 0.6; }
+  .plan-desc { font-size: 14px; opacity: 0.7; margin-top: 8px; letter-spacing: 0.16px; line-height: 1.5; }
+  .plan-divider { height: 1px; background: rgba(0,0,0,0.1); margin: 0; }
+  .plan-card.plus .plan-divider, .plan-card.premium .plan-divider, .plan-card.metal .plan-divider { background: rgba(255,255,255,0.15); }
+  .plan-features { padding: 20px 24px; }
+  .plan-features ul { list-style: none; }
+  .plan-features li { font-size: 14px; padding: 8px 0; border-bottom: 1px solid rgba(0,0,0,0.05); display: flex; gap: 8px; align-items: flex-start; letter-spacing: 0.16px; line-height: 1.5; }
+  .plan-card.plus li, .plan-card.premium li, .plan-card.metal li { border-bottom-color: rgba(255,255,255,0.08); }
+  .plan-features li::before { content: '✓'; flex-shrink: 0; font-weight: 700; }
+  .plan-card.standard li::before { color: var(--teal); }
+  .plan-card.plus li::before, .plan-card.premium li::before, .plan-card.metal li::before { color: var(--teal); }
+  .plan-cta { padding: 0 24px 24px; }
+  .plan-cta a { display: block; text-align: center; }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark); color: var(--white);
+    padding: 80px 48px 48px;
+  }
+  .footer-inner { max-width: 1200px; margin: 0 auto; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 64px; }
+  .footer-brand p { font-size: 14px; color: rgba(255,255,255,0.5); margin-top: 16px; line-height: 1.5; letter-spacing: 0.24px; }
+  .footer-col h4 { font-size: 13px; font-weight: 600; color: var(--white); margin-bottom: 16px; letter-spacing: 0.24px; }
+  .footer-col a { display: block; font-size: 14px; color: rgba(255,255,255,0.5); margin-bottom: 10px; letter-spacing: 0.24px; }
+  .footer-col a:hover { color: var(--white); text-decoration: none; }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 32px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+  .footer-bottom p { font-size: 13px; color: rgba(255,255,255,0.4); letter-spacing: 0.24px; }
+
+  @media (max-width: 1024px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .features-bento { grid-template-columns: 1fr 1fr; }
+    .feat-card.wide { grid-column: span 2; }
+    .plans-grid { grid-template-columns: 1fr 1fr; }
+    .dark-inner { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 720px) {
+    .hero-text h1 { font-size: 48px; }
+    .hero-text h1 .small-line { font-size: 80px; }
+    .features-bento { grid-template-columns: 1fr; }
+    .feat-card.wide { grid-column: span 1; }
+    .plans-grid { grid-template-columns: 1fr; }
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <div class="revolut-icon">
+      <svg viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+    </div>
+    <span class="nav-logo-text">Revolut</span>
+  </div>
+  <div class="nav-links">
+    <a href="#">Personal</a>
+    <a href="#">Business</a>
+    <a href="#">Features</a>
+    <a href="#">Plans</a>
+    <a href="#">Company</a>
+  </div>
+  <div class="nav-right">
+    <button class="btn-ghost-nav">Log in</button>
+    <a href="#" class="btn-pill-dark">Get Revolut</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <h1>One app<span class="small-line">for all</span>things money.</h1>
+      <p>Send, save, spend, invest and exchange currencies in over 150 countries — all from one beautifully designed account.</p>
+      <div class="hero-ctas">
+        <a href="#" class="btn-pill-dark">Get started — it's free</a>
+        <a href="#" class="btn-pill-outline">See plans</a>
+      </div>
+      <div class="hero-badges">
+        <span class="badge"><span class="badge-icon">&#9733;</span>4.9 App Store</span>
+        <span class="badge"><span class="badge-icon">&#9733;</span>4.6 Google Play</span>
+        <span class="badge"><span class="badge-icon">&#9632;</span>50M+ customers</span>
+      </div>
+    </div>
+    <div class="hero-card-wrap">
+      <div class="revolut-card card-black">
+        <div class="card-glow"></div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div class="card-chip"></div>
+          <div class="card-logo" style="font-size:13px; letter-spacing:2px; color:rgba(255,255,255,0.9)">REVOLUT</div>
+        </div>
+        <div class="card-number">•••• •••• •••• 4872</div>
+        <div class="card-bottom">
+          <div>
+            <div class="card-name">Alex Johnson</div>
+            <div class="card-expiry">12 / 27</div>
+          </div>
+          <div class="card-visa">VISA</div>
+        </div>
+      </div>
+      <div class="revolut-card card-gradient" style="transform:translateX(24px) scale(0.95); opacity:0.8; margin-top:-20px;">
+        <div class="card-glow"></div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div class="card-chip" style="background:rgba(255,255,255,0.5);"></div>
+          <div class="card-logo" style="font-size:13px; letter-spacing:2px;">REVOLUT</div>
+        </div>
+        <div class="card-number">•••• •••• •••• 2931</div>
+        <div class="card-bottom">
+          <div>
+            <div class="card-name">Alex Johnson</div>
+            <div class="card-expiry">08 / 26</div>
+          </div>
+          <div class="card-visa" style="color:rgba(255,255,255,0.9)">MC</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOREX TICKER -->
+<div class="forex-strip">
+  <div class="forex-track">
+    <div class="forex-item"><span class="forex-pair">USD/JPY</span><span class="forex-rate">149.82</span><span class="forex-change up">+0.14%</span></div>
+    <div class="forex-item"><span class="forex-pair">EUR/USD</span><span class="forex-rate">1.0891</span><span class="forex-change down">-0.08%</span></div>
+    <div class="forex-item"><span class="forex-pair">GBP/USD</span><span class="forex-rate">1.2703</span><span class="forex-change up">+0.22%</span></div>
+    <div class="forex-item"><span class="forex-pair">EUR/JPY</span><span class="forex-rate">163.14</span><span class="forex-change up">+0.06%</span></div>
+    <div class="forex-item"><span class="forex-pair">AUD/USD</span><span class="forex-rate">0.6621</span><span class="forex-change down">-0.11%</span></div>
+    <div class="forex-item"><span class="forex-pair">USD/CHF</span><span class="forex-rate">0.8932</span><span class="forex-change up">+0.04%</span></div>
+    <div class="forex-item"><span class="forex-pair">NZD/USD</span><span class="forex-rate">0.6042</span><span class="forex-change down">-0.19%</span></div>
+    <div class="forex-item"><span class="forex-pair">CAD/JPY</span><span class="forex-rate">110.44</span><span class="forex-change up">+0.31%</span></div>
+    <!-- Duplicate for seamless scroll -->
+    <div class="forex-item"><span class="forex-pair">USD/JPY</span><span class="forex-rate">149.82</span><span class="forex-change up">+0.14%</span></div>
+    <div class="forex-item"><span class="forex-pair">EUR/USD</span><span class="forex-rate">1.0891</span><span class="forex-change down">-0.08%</span></div>
+    <div class="forex-item"><span class="forex-pair">GBP/USD</span><span class="forex-rate">1.2703</span><span class="forex-change up">+0.22%</span></div>
+    <div class="forex-item"><span class="forex-pair">EUR/JPY</span><span class="forex-rate">163.14</span><span class="forex-change up">+0.06%</span></div>
+    <div class="forex-item"><span class="forex-pair">AUD/USD</span><span class="forex-rate">0.6621</span><span class="forex-change down">-0.11%</span></div>
+    <div class="forex-item"><span class="forex-pair">USD/CHF</span><span class="forex-rate">0.8932</span><span class="forex-change up">+0.04%</span></div>
+    <div class="forex-item"><span class="forex-pair">NZD/USD</span><span class="forex-rate">0.6042</span><span class="forex-change down">-0.19%</span></div>
+    <div class="forex-item"><span class="forex-pair">CAD/JPY</span><span class="forex-rate">110.44</span><span class="forex-change up">+0.31%</span></div>
+  </div>
+</div>
+
+<!-- FEATURES BENTO -->
+<section class="features">
+  <div class="features-inner">
+    <div class="feat-header">
+      <h2>Everything your money needs.</h2>
+      <p>From everyday spending to long-term investing — Revolut has a plan for your financial life.</p>
+    </div>
+    <div class="features-bento">
+      <div class="feat-card tall dark">
+        <span class="feat-icon">&#128178;</span>
+        <div class="feat-title">Exchange Rates</div>
+        <div class="feat-desc">Get real exchange rates with no hidden markups. Exchange in 30+ currencies at the interbank rate.</div>
+        <div class="mini-forex">
+          <div class="mf-row">
+            <span class="mf-pair">USD/JPY</span>
+            <span class="mf-rate">149.82</span>
+            <span class="mf-trend">&#8593; +0.14%</span>
+          </div>
+          <div class="mf-row">
+            <span class="mf-pair">EUR/USD</span>
+            <span class="mf-rate">1.0891</span>
+            <span class="mf-trend" style="color:#e23b4a">&#8595; -0.08%</span>
+          </div>
+          <div class="mf-row">
+            <span class="mf-pair">GBP/JPY</span>
+            <span class="mf-rate">190.24</span>
+            <span class="mf-trend">&#8593; +0.22%</span>
+          </div>
+          <div class="mf-row">
+            <span class="mf-pair">AUD/JPY</span>
+            <span class="mf-rate">99.14</span>
+            <span class="mf-trend">&#8593; +0.08%</span>
+          </div>
+        </div>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">&#128196;</span>
+        <div class="feat-title">Instant Transfers</div>
+        <div class="feat-desc">Send money to anyone, anywhere. Free instant transfers to other Revolut users. Fast bank transfers in 150+ countries.</div>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">&#128200;</span>
+        <div class="feat-title">Invest in Stocks</div>
+        <div class="feat-desc">Trade stocks and ETFs with no commission. Fractional shares from $1. Access to 1,500+ stocks.</div>
+      </div>
+      <div class="feat-card wide">
+        <span class="feat-icon">&#128248;</span>
+        <div class="feat-title">Recent Transfers</div>
+        <div class="mini-transfer">
+          <div class="mt-item">
+            <div class="mt-avatar" style="background:#494fdf">S</div>
+            <div class="mt-info">
+              <div class="mt-name">Sarah Kim</div>
+              <div class="mt-when">Today, 14:22</div>
+            </div>
+            <div class="mt-amount positive">+ ¥4,800</div>
+          </div>
+          <div class="mt-item">
+            <div class="mt-avatar" style="background:#e23b4a">M</div>
+            <div class="mt-info">
+              <div class="mt-name">Marcus Reyes</div>
+              <div class="mt-when">Yesterday, 09:10</div>
+            </div>
+            <div class="mt-amount negative">- $45.00</div>
+          </div>
+          <div class="mt-item">
+            <div class="mt-avatar" style="background:#00a87e">A</div>
+            <div class="mt-info">
+              <div class="mt-name">Aiko Tanaka</div>
+              <div class="mt-when">Apr 10, 20:48</div>
+            </div>
+            <div class="mt-amount positive">+ €120.00</div>
+          </div>
+        </div>
+      </div>
+      <div class="feat-card blue">
+        <span class="feat-icon">&#128274;</span>
+        <div class="feat-title">Metal Card</div>
+        <div class="feat-desc">Premium metal card. Exclusive lounge access. Concierge service. Only on Metal plan.</div>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">&#128736;</span>
+        <div class="feat-title">Crypto</div>
+        <div class="feat-desc">Buy, sell and hold 30+ cryptocurrencies. Set auto-exchanges and price alerts for every market move.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DARK: SAVINGS VAULT -->
+<section class="dark-section">
+  <div class="dark-inner">
+    <div class="ds-text">
+      <h2>Grow your money with Savings Vaults.</h2>
+      <p>Earn competitive interest on your savings — daily interest, flexible withdrawals, no lock-in periods. Up to 5.26% AER on USD vaults.</p>
+      <div class="ds-ctas">
+        <a href="#" class="btn-pill-light">Open a Vault</a>
+        <a href="#" class="btn-ghost-dark">Learn More</a>
+      </div>
+    </div>
+    <div class="ds-visual">
+      <div class="ds-card" style="margin-bottom:0">
+        <div class="dsc-label">USD Savings Vault</div>
+        <div class="dsc-value">$12,480.50</div>
+        <div class="dsc-sub">+$64.23 this month (5.26% AER)</div>
+        <div class="dsc-bar">
+          <div class="dsc-bar-fill" style="width:78%"></div>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px;">
+        <div class="ds-card">
+          <div class="dsc-label">EUR Vault</div>
+          <div class="dsc-value" style="font-size:28px">€4,200.00</div>
+          <div class="dsc-sub" style="font-size:12px">3.80% AER</div>
+        </div>
+        <div class="ds-card">
+          <div class="dsc-label">GBP Vault</div>
+          <div class="dsc-value" style="font-size:28px">£1,850.00</div>
+          <div class="dsc-sub" style="font-size:12px">4.95% AER</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANS -->
+<section class="plans">
+  <div class="plans-inner">
+    <div class="plans-header">
+      <h2>Choose your plan.</h2>
+      <p>Start free. Upgrade when you're ready to do more.</p>
+    </div>
+    <div class="plans-grid">
+      <div class="plan-card standard">
+        <div class="plan-header">
+          <div class="plan-name">Standard</div>
+          <div class="plan-price">Free</div>
+          <div class="plan-desc">Everything you need to get started with smart banking.</div>
+        </div>
+        <div class="plan-divider"></div>
+        <div class="plan-features">
+          <ul>
+            <li>Free international transfers</li>
+            <li>Real exchange rates</li>
+            <li>Instant notifications</li>
+            <li>Multi-currency accounts</li>
+          </ul>
+        </div>
+        <div class="plan-cta"><a href="#" class="btn-pill-outline" style="width:100%; box-sizing:border-box; text-align:center; font-size:14px; padding:10px 0;">Get Standard</a></div>
+      </div>
+      <div class="plan-card plus">
+        <div class="plan-header">
+          <div class="plan-name">Plus</div>
+          <div class="plan-price">$3.99 <span class="plan-price-period">/ month</span></div>
+          <div class="plan-desc">Priority support and higher limits for growing needs.</div>
+        </div>
+        <div class="plan-divider"></div>
+        <div class="plan-features">
+          <ul>
+            <li>Everything in Standard</li>
+            <li>Priority customer support</li>
+            <li>Higher ATM withdrawals</li>
+            <li>Savings Vaults (3.0% AER)</li>
+          </ul>
+        </div>
+        <div class="plan-cta"><a href="#" class="btn-pill-dark" style="width:100%; box-sizing:border-box; text-align:center; font-size:14px; padding:10px 0; background:rgba(244,244,244,0.2); border:2px solid rgba(244,244,244,0.5);">Get Plus</a></div>
+      </div>
+      <div class="plan-card premium">
+        <div class="plan-header">
+          <div class="plan-name">Premium</div>
+          <div class="plan-price">$9.99 <span class="plan-price-period">/ month</span></div>
+          <div class="plan-desc">Premium card, higher rates, and investment tools.</div>
+        </div>
+        <div class="plan-divider"></div>
+        <div class="plan-features">
+          <ul>
+            <li>Everything in Plus</li>
+            <li>Premium virtual card</li>
+            <li>Stock trading (unlimited)</li>
+            <li>Savings Vaults (5.0% AER)</li>
+          </ul>
+        </div>
+        <div class="plan-cta"><a href="#" class="btn-pill-light" style="width:100%; box-sizing:border-box; text-align:center; font-size:14px; padding:10px 0;">Get Premium</a></div>
+      </div>
+      <div class="plan-card metal">
+        <div class="plan-header">
+          <div class="plan-name" style="color:#d4af37">Metal</div>
+          <div class="plan-price">$16.99 <span class="plan-price-period">/ month</span></div>
+          <div class="plan-desc">The exclusive plan. Metal card, concierge, lounge access.</div>
+        </div>
+        <div class="plan-divider"></div>
+        <div class="plan-features">
+          <ul>
+            <li>Everything in Premium</li>
+            <li>Metal debit card</li>
+            <li>Airport lounge access</li>
+            <li>Concierge service</li>
+          </ul>
+        </div>
+        <div class="plan-cta"><a href="#" class="btn-pill-dark" style="width:100%; box-sizing:border-box; text-align:center; font-size:14px; padding:10px 0; background:rgba(212,175,55,0.2); border:2px solid rgba(212,175,55,0.6); color:#d4af37;">Get Metal</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div class="revolut-icon" style="background:rgba(255,255,255,0.1);">
+            <svg viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+          </div>
+          <span style="font-size:18px; font-weight:700; color:var(--white);">Revolut</span>
+        </div>
+        <p>One app for all things money. Trusted by 50 million customers in 150+ countries.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Personal</h4>
+        <a href="#">Current Account</a>
+        <a href="#">Savings Vaults</a>
+        <a href="#">Stocks & ETFs</a>
+        <a href="#">Crypto</a>
+        <a href="#">Insurance</a>
+      </div>
+      <div class="footer-col">
+        <h4>Business</h4>
+        <a href="#">Business Account</a>
+        <a href="#">Expense Cards</a>
+        <a href="#">Multi-currency</a>
+        <a href="#">Bill Payments</a>
+      </div>
+      <div class="footer-col">
+        <h4>Plans</h4>
+        <a href="#">Standard</a>
+        <a href="#">Plus</a>
+        <a href="#">Premium</a>
+        <a href="#">Metal</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">About Revolut</a>
+        <a href="#">Careers</a>
+        <a href="#">Press</a>
+        <a href="#">Security</a>
+        <a href="#">Privacy Policy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 Revolut Ltd. All rights reserved. Revolut Ltd is registered in England and Wales.</p>
+      <p>FCA authorised electronic money institution</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

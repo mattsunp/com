@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toyota — 信頼とイノベーション</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --toyota-red: #eb0a1e;
+    --text-primary: #222222;
+    --neutral-border: #dddddd;
+    --surface: #f5f5f5;
+    --white: #ffffff;
+    --font: "SF Pro", -apple-system, "system-ui", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+  }
+
+  body {
+    font-family: var(--font);
+    font-size: 16px;
+    line-height: 1.5;
+    letter-spacing: 0.04em;
+    color: var(--text-primary);
+    background: var(--white);
+  }
+
+  /* ─── NAVIGATION ─── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--white);
+    border-bottom: 1px solid var(--neutral-border);
+    padding: 0 20px;
+  }
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+  .nav-logo {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--toyota-red);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nav-logo .logo-mark {
+    width: 36px;
+    height: 36px;
+    background: var(--toyota-red);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .nav-logo .logo-mark::before {
+    content: '';
+    position: absolute;
+    width: 22px;
+    height: 14px;
+    border: 2px solid var(--white);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .nav-logo .logo-mark::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 18px;
+    border: 2px solid var(--white);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+  .nav-links a {
+    text-decoration: none;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    padding: 4px 0;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .nav-links a:hover { border-color: var(--toyota-red); color: var(--toyota-red); }
+  .nav-cta {
+    background: var(--toyota-red);
+    color: var(--white);
+    padding: 10px 24px;
+    border: none;
+    border-radius: 2px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .nav-cta:hover { opacity: 0.85; }
+
+  /* ─── HERO ─── */
+  .hero {
+    background: var(--text-primary);
+    color: var(--white);
+    padding: 80px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 55%;
+    height: 100%;
+    background: linear-gradient(135deg, #3a3a3a 0%, #1a1a1a 100%);
+    clip-path: polygon(15% 0%, 100% 0%, 100% 100%, 0% 100%);
+  }
+  .hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .hero-tag {
+    display: inline-block;
+    background: var(--toyota-red);
+    color: var(--white);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: 0.04em;
+    margin-bottom: 24px;
+  }
+  .hero p {
+    font-size: 16px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 32px;
+    max-width: 480px;
+  }
+  .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--toyota-red);
+    color: var(--white);
+    padding: 14px 32px;
+    border: 2px solid var(--toyota-red);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: opacity 0.2s;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-ghost {
+    background: transparent;
+    color: var(--white);
+    padding: 14px 32px;
+    border: 2px solid rgba(255,255,255,0.5);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: border-color 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--white); }
+  .hero-visual {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .hero-car-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .hero-car-icon {
+    font-size: 40px;
+    flex-shrink: 0;
+  }
+  .hero-car-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .hero-car-card p { font-size: 13px; color: rgba(255,255,255,0.6); }
+
+  /* ─── STATS BAR ─── */
+  .stats-bar {
+    background: var(--toyota-red);
+    color: var(--white);
+    padding: 24px 20px;
+  }
+  .stats-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+  .stat-item {
+    text-align: center;
+    padding: 0 16px;
+    border-right: 1px solid rgba(255,255,255,0.3);
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-number { font-size: 32px; font-weight: 700; letter-spacing: 0.02em; }
+  .stat-label { font-size: 12px; letter-spacing: 0.06em; opacity: 0.85; margin-top: 4px; }
+
+  /* ─── SECTION HEADERS ─── */
+  .section { padding: 64px 20px; }
+  .section-inner { max-width: 1200px; margin: 0 auto; }
+  .section-header { margin-bottom: 48px; }
+  .section-tag {
+    display: inline-block;
+    color: var(--toyota-red);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-left: 3px solid var(--toyota-red);
+    padding-left: 10px;
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1.3;
+  }
+  .section-title span { color: var(--toyota-red); }
+
+  /* ─── LINEUP GRID ─── */
+  .lineup-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--neutral-border);
+    border: 1px solid var(--neutral-border);
+  }
+  .lineup-card {
+    background: var(--white);
+    padding: 32px 24px;
+    transition: transform 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .lineup-card:hover { transform: translateY(-4px); box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+  .lineup-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--toyota-red);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+  }
+  .lineup-card:hover::before { transform: scaleX(1); }
+  .car-visual {
+    font-size: 72px;
+    text-align: center;
+    margin-bottom: 16px;
+    display: block;
+  }
+  .car-category {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--toyota-red);
+    margin-bottom: 8px;
+  }
+  .car-name {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin-bottom: 8px;
+  }
+  .car-desc {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+  .car-price {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--toyota-red);
+    letter-spacing: 0.04em;
+  }
+  .car-link {
+    display: inline-block;
+    margin-top: 16px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid var(--text-primary);
+    padding-bottom: 2px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .car-link:hover { color: var(--toyota-red); border-color: var(--toyota-red); }
+
+  /* ─── TECHNOLOGY ─── */
+  .section-gray { background: var(--surface); }
+  .tech-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  .tech-main {
+    background: var(--text-primary);
+    color: var(--white);
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .tech-main::before {
+    content: '';
+    position: absolute;
+    bottom: -20px; right: -20px;
+    width: 140px;
+    height: 140px;
+    border: 2px solid var(--toyota-red);
+    border-radius: 50%;
+    opacity: 0.3;
+  }
+  .tech-main::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; right: -40px;
+    width: 200px;
+    height: 200px;
+    border: 2px solid var(--toyota-red);
+    border-radius: 50%;
+    opacity: 0.15;
+  }
+  .tech-main .tech-icon { font-size: 48px; margin-bottom: 20px; display: block; }
+  .tech-main h3 { font-size: 24px; font-weight: 700; margin-bottom: 12px; }
+  .tech-main p { font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.75); margin-bottom: 24px; }
+  .tech-items { display: flex; flex-direction: column; gap: 16px; }
+  .tech-item {
+    background: var(--white);
+    padding: 24px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    border-left: 3px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .tech-item:hover { border-left-color: var(--toyota-red); }
+  .tech-item-icon { font-size: 28px; flex-shrink: 0; }
+  .tech-item h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .tech-item p { font-size: 13px; color: #666; line-height: 1.6; }
+
+  /* ─── SAFETY ─── */
+  .safety-strip {
+    background: var(--text-primary);
+    color: var(--white);
+    padding: 48px 20px;
+  }
+  .safety-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 48px;
+    align-items: center;
+  }
+  .safety-headline h2 { font-size: 40px; font-weight: 700; line-height: 1.2; }
+  .safety-headline h2 span { color: var(--toyota-red); }
+  .safety-headline p { margin-top: 16px; font-size: 14px; color: rgba(255,255,255,0.6); }
+  .safety-features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .safety-feat {
+    text-align: center;
+    padding: 20px;
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+  .safety-feat .icon { font-size: 32px; margin-bottom: 10px; display: block; }
+  .safety-feat h4 { font-size: 13px; font-weight: 700; letter-spacing: 0.04em; }
+  .safety-feat p { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 4px; }
+
+  /* ─── SERVICES ─── */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+  .service-card {
+    background: var(--surface);
+    padding: 28px 20px;
+    text-align: center;
+    transition: background 0.2s;
+  }
+  .service-card:hover { background: var(--neutral-border); }
+  .service-icon { font-size: 36px; margin-bottom: 12px; display: block; }
+  .service-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+  .service-desc { font-size: 12px; color: #666; line-height: 1.6; }
+
+  /* ─── DEALER CTA ─── */
+  .dealer-cta {
+    background: var(--toyota-red);
+    color: var(--white);
+    padding: 64px 20px;
+    text-align: center;
+  }
+  .dealer-cta h2 { font-size: 32px; font-weight: 700; margin-bottom: 12px; }
+  .dealer-cta p { font-size: 16px; opacity: 0.85; margin-bottom: 32px; }
+  .cta-group { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .btn-white {
+    background: var(--white);
+    color: var(--toyota-red);
+    padding: 14px 40px;
+    border: none;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: opacity 0.2s;
+  }
+  .btn-white:hover { opacity: 0.9; }
+  .btn-ghost-white {
+    background: transparent;
+    color: var(--white);
+    padding: 14px 40px;
+    border: 2px solid rgba(255,255,255,0.6);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: border-color 0.2s;
+  }
+  .btn-ghost-white:hover { border-color: var(--white); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: #1a1a1a;
+    color: rgba(255,255,255,0.7);
+    padding: 48px 20px 24px;
+  }
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .footer-brand .logo { font-size: 20px; font-weight: 700; color: var(--white); letter-spacing: 0.08em; }
+  .footer-brand .logo span { color: var(--toyota-red); }
+  .footer-brand p { font-size: 13px; line-height: 1.7; margin-top: 12px; }
+  .footer-col h5 { font-size: 13px; font-weight: 700; color: var(--white); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 16px; }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 10px; }
+  .footer-col ul li a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 13px; transition: color 0.2s; }
+  .footer-col ul li a:hover { color: var(--toyota-red); }
+  .footer-bottom { display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
+  .footer-bottom span { color: rgba(255,255,255,0.4); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 1024px) {
+    .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+    .hero::before { display: none; }
+    .lineup-grid { grid-template-columns: repeat(2, 1fr); }
+    .stats-inner { grid-template-columns: repeat(2, 1fr); }
+    .tech-grid { grid-template-columns: 1fr; }
+    .safety-inner { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 767px) {
+    .hero h1 { font-size: 28px; }
+    .lineup-grid { grid-template-columns: 1fr; }
+    .stats-inner { grid-template-columns: repeat(2, 1fr); }
+    .safety-features { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .services-grid { grid-template-columns: 1fr; }
+    .section-title { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <div class="logo-mark"></div>
+      TOYOTA
+    </div>
+    <ul class="nav-links">
+      <li><a href="#">車種・ラインナップ</a></li>
+      <li><a href="#">電動化技術</a></li>
+      <li><a href="#">安全技術</a></li>
+      <li><a href="#">サービス</a></li>
+      <li><a href="#">販売店を探す</a></li>
+    </ul>
+    <button class="nav-cta">試乗予約</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-tag">2026 NEW MODEL</div>
+      <h1>未来を、もっと<br>遠くへ連れていく。</h1>
+      <p>革新的なハイブリッド技術と安心の品質で、あなたとご家族の毎日をより豊かに。トヨタが描く、新時代のモビリティ。</p>
+      <div class="hero-btns">
+        <a href="#" class="btn-primary">車種を探す</a>
+        <a href="#" class="btn-ghost">カタログ請求</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-car-card">
+        <div class="hero-car-icon">&#128664;</div>
+        <div>
+          <h3>新型 CROWN CROSSOVER</h3>
+          <p>HYBRID / PHEV — 圧倒的な走行性能と洗練されたデザイン</p>
+        </div>
+      </div>
+      <div class="hero-car-card">
+        <div class="hero-car-icon">&#9889;</div>
+        <div>
+          <h3>bZ4X — BEVで進む世界</h3>
+          <p>フル電気自動車 — 航続距離559km、急速充電対応</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <div class="stat-number">90+</div>
+      <div class="stat-label">年の製造歴史</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">170</div>
+      <div class="stat-label">販売国・地域</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">1,000万</div>
+      <div class="stat-label">年間販売台数</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">No.1</div>
+      <div class="stat-label">ハイブリッド累計販売</div>
+    </div>
+  </div>
+</div>
+
+<!-- LINEUP -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-tag">LINEUP</div>
+      <h2 class="section-title">あなたにぴったりの<span>一台</span>を見つけよう</h2>
+    </div>
+    <div class="lineup-grid">
+      <div class="lineup-card">
+        <span class="car-visual">&#128664;</span>
+        <div class="car-category">SEDAN / EXECUTIVE</div>
+        <h3 class="car-name">CROWN CROSSOVER</h3>
+        <p class="car-desc">スポーティなデザインと上質な走りを両立。HYBRID・PHEV・4WDをラインナップ。都市から郊外まで力強くサポートします。</p>
+        <div class="car-price">メーカー希望小売価格 4,299,000円〜</div>
+        <a href="#" class="car-link">詳細を見る &#8594;</a>
+      </div>
+      <div class="lineup-card">
+        <span class="car-visual">&#128663;</span>
+        <div class="car-category">SUV / FAMILY</div>
+        <h3 class="car-name">LAND CRUISER 250</h3>
+        <p class="car-desc">世界中のオフロードを制覇してきたDNAが進化。最新の安全技術とコネクティッド機能を搭載した、究極のSUV。</p>
+        <div class="car-price">メーカー希望小売価格 5,490,000円〜</div>
+        <a href="#" class="car-link">詳細を見る &#8594;</a>
+      </div>
+      <div class="lineup-card">
+        <span class="car-visual">&#9889;</span>
+        <div class="car-category">EV / ZERO EMISSION</div>
+        <h3 class="car-name">bZ4X</h3>
+        <p class="car-desc">ゼロエミッションで走る次世代SUV。スマート充電管理と広い室内空間で、新しい電気自動車の体験を。</p>
+        <div class="car-price">メーカー希望小売価格 6,000,000円〜</div>
+        <a href="#" class="car-link">詳細を見る &#8594;</a>
+      </div>
+      <div class="lineup-card">
+        <span class="car-visual">&#128661;</span>
+        <div class="car-category">MINIVAN / WELFARE</div>
+        <h3 class="car-name">ALPHARD</h3>
+        <p class="car-desc">圧倒的な存在感と極上の乗り心地。ショーファーカーとしても人気の、プレミアムミニバン。HYBRID設定あり。</p>
+        <div class="car-price">メーカー希望小売価格 7,190,000円〜</div>
+        <a href="#" class="car-link">詳細を見る &#8594;</a>
+      </div>
+      <div class="lineup-card">
+        <span class="car-visual">&#128660;</span>
+        <div class="car-category">HATCHBACK / HYBRID</div>
+        <h3 class="car-name">YARIS CROSS</h3>
+        <p class="car-desc">コンパクトなボディに充実装備。燃費性能と使いやすさを高次元で実現したベストセラーコンパクトSUV。</p>
+        <div class="car-price">メーカー希望小売価格 2,310,000円〜</div>
+        <a href="#" class="car-link">詳細を見る &#8594;</a>
+      </div>
+      <div class="lineup-card">
+        <span class="car-visual">&#128652;</span>
+        <div class="car-category">SPORTS / GR</div>
+        <h3 class="car-name">GR86</h3>
+        <p class="car-desc">モータースポーツの血が流れる純粋なスポーツカー。水平対向エンジンが生み出すドライビングプレジャーを体感せよ。</p>
+        <div class="car-price">メーカー希望小売価格 3,025,000円〜</div>
+        <a href="#" class="car-link">詳細を見る &#8594;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECHNOLOGY -->
+<section class="section section-gray">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-tag">TECHNOLOGY</div>
+      <h2 class="section-title">電動化技術が、<span>移動の未来</span>を変える</h2>
+    </div>
+    <div class="tech-grid">
+      <div class="tech-main">
+        <span class="tech-icon">&#9889;</span>
+        <h3>Toyota HYBRID SYSTEM II</h3>
+        <p>40年以上にわたるハイブリッド開発の集大成。エネルギー効率を極限まで高め、走る喜びとエコを両立する第2世代システム。累計2,000万台以上の実績が信頼の証。</p>
+        <div style="display:flex; gap:16px; margin-top:8px;">
+          <div style="text-align:center;">
+            <div style="font-size:28px; font-weight:700; color:var(--toyota-red);">47.6</div>
+            <div style="font-size:11px; opacity:0.6;">km/L WLTCモード</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:28px; font-weight:700; color:var(--toyota-red);">CO2 60%</div>
+            <div style="font-size:11px; opacity:0.6;">従来エンジン比削減</div>
+          </div>
+        </div>
+      </div>
+      <div class="tech-items">
+        <div class="tech-item">
+          <div class="tech-item-icon">&#128171;</div>
+          <div>
+            <h4>PHEV — プラグインハイブリッド</h4>
+            <p>外部充電で電気のみで最大95km走行可能。日常の通勤はEVとして使い、長距離はハイブリッドで。CO2排出量をさらに削減。</p>
+          </div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-item-icon">&#128225;</div>
+          <div>
+            <h4>Toyota Teammate — ADAS</h4>
+            <p>高速道路での渋滞時ハンズオフ走行、自動車線変更。次世代の自動運転支援技術がドライバーをサポートします。</p>
+          </div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-item-icon">&#128247;</div>
+          <div>
+            <h4>Toyota Connected — クラウド連携</h4>
+            <p>リモートエンジンスタート、駐車位置確認、車両診断をスマートフォンから操作。愛車とつながるコネクティッドサービス。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SAFETY -->
+<div class="safety-strip">
+  <div class="safety-inner">
+    <div class="safety-headline">
+      <h2>Toyota Safety<br><span>Sense</span></h2>
+      <p>全車標準装備。先進の安全技術で、すべてのドライバーを守る。</p>
+    </div>
+    <div class="safety-features">
+      <div class="safety-feat">
+        <span class="icon">&#128065;</span>
+        <h4>プリクラッシュ<br>セーフティ</h4>
+        <p>衝突被害軽減ブレーキ昼夜・歩行者・自転車対応</p>
+      </div>
+      <div class="safety-feat">
+        <span class="icon">&#128663;</span>
+        <h4>レーンディパーチャー<br>アラート</h4>
+        <p>車線逸脱防止と車線中央維持をアシスト</p>
+      </div>
+      <div class="safety-feat">
+        <span class="icon">&#9728;</span>
+        <h4>オートマチック<br>ハイビーム</h4>
+        <p>対向車・先行車を検知し自動でハイ/ロービーム切替</p>
+      </div>
+      <div class="safety-feat">
+        <span class="icon">&#128694;</span>
+        <h4>レーダー<br>クルーズコントロール</h4>
+        <p>全車速対応。前走車との車間距離を自動維持</p>
+      </div>
+      <div class="safety-feat">
+        <span class="icon">&#128683;</span>
+        <h4>インテリジェント<br>パーキングアシスト</h4>
+        <p>縦列・並列駐車を自動でサポート</p>
+      </div>
+      <div class="safety-feat">
+        <span class="icon">&#9995;</span>
+        <h4>ブラインド<br>スポットモニター</h4>
+        <p>死角の車両を検知し車線変更をサポート</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-tag">SERVICES</div>
+      <h2 class="section-title">購入から乗り続けるまで、<span>全力でサポート</span></h2>
+    </div>
+    <div class="services-grid">
+      <div class="service-card">
+        <span class="service-icon">&#128188;</span>
+        <h3 class="service-title">ファイナンス・ローン</h3>
+        <p class="service-desc">トヨタ独自の低金利ローンや残価設定型クレジット。お支払いプランはあなたのライフスタイルに合わせてカスタマイズ可能。</p>
+      </div>
+      <div class="service-card">
+        <span class="service-icon">&#128274;</span>
+        <h3 class="service-title">Toyota Care — 保証</h3>
+        <p class="service-desc">新車保証3年・走行無制限。独自の延長保証プログラムで最長10年のカバレッジ。安心して乗り続けられます。</p>
+      </div>
+      <div class="service-card">
+        <span class="service-icon">&#128295;</span>
+        <h3 class="service-title">メンテナンスパック</h3>
+        <p class="service-desc">定期点検・オイル交換・消耗品交換をお得なパックで。全国5,000店以上のトヨタ販売店でサービスを受けられます。</p>
+      </div>
+      <div class="service-card">
+        <span class="service-icon">&#9650;</span>
+        <h3 class="service-title">Toyota Share</h3>
+        <p class="service-desc">カーシェアリングサービス。必要な時だけ乗れる手軽さ。スマートフォンで予約・解錠できる次世代カーシェア。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEALER CTA -->
+<div class="dealer-cta">
+  <h2>あなたの街のトヨタ販売店へ</h2>
+  <p>全国5,000店以上のネットワーク。専任スタッフが丁寧にご案内します。</p>
+  <div class="cta-group">
+    <a href="#" class="btn-white">販売店を検索</a>
+    <a href="#" class="btn-ghost-white">試乗予約をする</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo">TOY<span>O</span>TA</div>
+        <p>「もっといいクルマづくり」を目指して。<br>環境・安全・快適の三位一体で、<br>世界中の人々の移動をより豊かに。</p>
+      </div>
+      <div class="footer-col">
+        <h5>車種・ラインナップ</h5>
+        <ul>
+          <li><a href="#">セダン・スポーツ</a></li>
+          <li><a href="#">SUV・クロスオーバー</a></li>
+          <li><a href="#">ミニバン</a></li>
+          <li><a href="#">コンパクト・軽</a></li>
+          <li><a href="#">電気・PHEV</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>テクノロジー</h5>
+        <ul>
+          <li><a href="#">ハイブリッドシステム</a></li>
+          <li><a href="#">Toyota Safety Sense</a></li>
+          <li><a href="#">Connected</a></li>
+          <li><a href="#">自動運転</a></li>
+          <li><a href="#">水素燃料電池</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>サービス・サポート</h5>
+        <ul>
+          <li><a href="#">販売店を探す</a></li>
+          <li><a href="#">試乗予約</a></li>
+          <li><a href="#">カタログ請求</a></li>
+          <li><a href="#">保証・アフターサービス</a></li>
+          <li><a href="#">お問い合わせ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Toyota Motor Corporation. All Rights Reserved.</span>
+      <span>プライバシーポリシー &#47; サイトポリシー</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

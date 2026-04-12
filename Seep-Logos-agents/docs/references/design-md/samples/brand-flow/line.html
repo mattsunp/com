@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LINE — 日本最大のメッセージングアプリ</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --line-green: #06c755;
+    --line-green-dark: #05b34c;
+    --black: #000000;
+    --gray-secondary: #666666;
+    --gray-disabled: #999999;
+    --border: #e5e5e5;
+    --bg: #ffffff;
+    --surface: #f7f8f9;
+  }
+  html { background: var(--bg); color: var(--black); font-family: SFPro, Arial, "Noto Sans JP", "Noto Sans KR", sans-serif; font-size: 20px; }
+  a { color: var(--black); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--bg); border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px; height: 64px;
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; }
+  .line-icon {
+    width: 40px; height: 40px; background: var(--line-green);
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
+  }
+  .line-icon svg { width: 24px; height: 24px; }
+  .nav-logo-text { font-size: 22px; font-weight: 700; color: var(--black); }
+  .nav-links { display: flex; gap: 32px; }
+  .nav-links a { font-size: 16px; font-weight: 400; color: var(--gray-secondary); }
+  .nav-links a:hover { color: var(--black); text-decoration: none; }
+  .nav-right { display: flex; gap: 12px; align-items: center; }
+  .btn-nav-outline {
+    font-size: 16px; font-weight: 700; color: var(--black);
+    padding: 10px 24px; border: 2px solid var(--black); border-radius: 8px;
+    background: none; cursor: pointer; display: inline-block;
+  }
+  .btn-nav-green {
+    font-size: 16px; font-weight: 700; color: #fff;
+    padding: 10px 24px; border-radius: 8px;
+    background: var(--line-green); border: none; cursor: pointer; display: inline-block;
+  }
+  .btn-nav-green:hover { background: var(--line-green-dark); text-decoration: none; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(160deg, #edfaf3 0%, #f0fdf4 50%, #ffffff 100%);
+    padding: 100px 40px;
+    text-align: center;
+  }
+  .hero-badge {
+    display: inline-block; background: rgba(6,199,85,0.15);
+    color: var(--line-green-dark); font-size: 14px; font-weight: 700;
+    padding: 6px 16px; border-radius: 100px; margin-bottom: 32px;
+  }
+  .hero h1 {
+    font-size: 70px; font-weight: 700; line-height: normal;
+    color: var(--black); max-width: 800px; margin: 0 auto 24px;
+  }
+  .hero h1 span { color: var(--line-green); }
+  .hero p {
+    font-size: 20px; font-weight: 400; line-height: normal;
+    color: var(--gray-secondary); max-width: 600px; margin: 0 auto 48px;
+  }
+  .hero-ctas { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 80px; }
+  .btn-green-large {
+    font-size: 18px; font-weight: 700; color: #fff;
+    padding: 16px 40px; border-radius: 8px;
+    background: var(--line-green); border: none; cursor: pointer; display: inline-block;
+  }
+  .btn-green-large:hover { background: var(--line-green-dark); text-decoration: none; }
+  .btn-outline-large {
+    font-size: 18px; font-weight: 700; color: var(--black);
+    padding: 16px 40px; border-radius: 8px;
+    background: none; border: 2px solid var(--black); cursor: pointer; display: inline-block;
+  }
+  .btn-outline-large:hover { background: var(--surface); text-decoration: none; }
+
+  /* APP MOCKUP */
+  .hero-mockup {
+    max-width: 800px; margin: 0 auto;
+    display: flex; justify-content: center; gap: 24px;
+  }
+  .phone-wrap {
+    width: 220px; background: #fff;
+    border-radius: 32px; border: 2px solid var(--border);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06);
+    overflow: hidden; flex-shrink: 0;
+  }
+  .phone-status { height: 32px; background: var(--line-green); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; font-size: 10px; color: #fff; font-weight: 700; }
+  .phone-app-header { background: var(--line-green); padding: 12px 16px; }
+  .ph-app-title { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+  .ph-search { background: rgba(255,255,255,0.2); border-radius: 8px; padding: 6px 10px; font-size: 11px; color: rgba(255,255,255,0.8); }
+  .phone-chat-list { }
+  .chat-item { display: flex; gap: 10px; padding: 12px 14px; border-bottom: 1px solid #f0f0f0; align-items: flex-start; }
+  .chat-avatar { width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; color: #fff; }
+  .chat-info { flex: 1; min-width: 0; }
+  .chat-name { font-size: 13px; font-weight: 700; color: #000; }
+  .chat-preview { font-size: 11px; color: #999; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .chat-time { font-size: 10px; color: #bbb; flex-shrink: 0; }
+  .chat-badge { width: 16px; height: 16px; border-radius: 50%; background: var(--line-green); font-size: 9px; font-weight: 700; color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .phone-tabs { display: flex; background: var(--bg); border-top: 1px solid var(--border); }
+  .phone-tab { flex: 1; padding: 10px 4px; text-align: center; font-size: 8px; color: #bbb; }
+  .phone-tab.active { color: var(--line-green); }
+  .phone-tab-icon { font-size: 16px; display: block; margin-bottom: 2px; }
+
+  /* STATS -->*/
+  .stats {
+    padding: 80px 40px; background: var(--surface);
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  }
+  .stats-inner { max-width: 1120px; margin: 0 auto; }
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+  .stat-item { padding: 32px 24px; border-right: 1px solid var(--border); text-align: center; }
+  .stat-item:last-child { border-right: none; }
+  .stat-num { font-size: 60px; font-weight: 700; line-height: 1.3; color: var(--line-green); }
+  .stat-label { font-size: 20px; font-weight: 400; color: var(--gray-secondary); line-height: normal; margin-top: 4px; }
+
+  /* SERVICES -->*/
+  .services { padding: 80px 40px; }
+  .services-inner { max-width: 1120px; margin: 0 auto; }
+  .services h2 { font-size: 60px; font-weight: 700; line-height: 1.3; color: var(--black); margin-bottom: 12px; text-align: center; }
+  .services-sub { font-size: 20px; color: var(--gray-secondary); text-align: center; margin-bottom: 64px; }
+  .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .service-card {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 12px;
+    padding: 32px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+  }
+  .service-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+  .service-icon { width: 64px; height: 64px; border-radius: 16px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; font-size: 28px; }
+  .service-title { font-size: 22px; font-weight: 700; color: var(--black); margin-bottom: 10px; }
+  .service-desc { font-size: 16px; color: var(--gray-secondary); line-height: normal; }
+  .service-link { display: inline-block; margin-top: 16px; font-size: 16px; font-weight: 700; color: var(--line-green); }
+
+  /* STAMPS -->*/
+  .stamps { padding: 80px 40px; background: var(--surface); }
+  .stamps-inner { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+  .stamps-text h2 { font-size: 60px; font-weight: 700; line-height: 1.3; color: var(--black); margin-bottom: 16px; }
+  .stamps-text p { font-size: 20px; color: var(--gray-secondary); line-height: normal; margin-bottom: 32px; }
+  .stamps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .stamp {
+    aspect-ratio: 1; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center; font-size: 36px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+
+  /* LINE PAY / FINANCIAL -->*/
+  .financial { padding: 80px 40px; }
+  .financial-inner { max-width: 1120px; margin: 0 auto; }
+  .financial h2 { font-size: 60px; font-weight: 700; line-height: 1.3; color: var(--black); margin-bottom: 12px; text-align: center; }
+  .financial-sub { font-size: 20px; color: var(--gray-secondary); text-align: center; margin-bottom: 64px; }
+  .financial-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .fin-card {
+    border-radius: 12px; padding: 40px;
+    display: flex; align-items: center; gap: 24px;
+  }
+  .fin-card.green { background: linear-gradient(135deg, var(--line-green), var(--line-green-dark)); color: #fff; }
+  .fin-card.white { background: var(--bg); border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .fin-icon { font-size: 48px; flex-shrink: 0; }
+  .fin-title { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+  .fin-desc { font-size: 16px; line-height: normal; opacity: 0.85; }
+  .fin-card.white .fin-desc { color: var(--gray-secondary); opacity: 1; }
+
+  /* APP DOWNLOAD CTA -->*/
+  .download-cta {
+    background: var(--line-green); padding: 80px 40px; text-align: center;
+  }
+  .download-cta h2 { font-size: 60px; font-weight: 700; line-height: 1.3; color: #fff; margin-bottom: 16px; }
+  .download-cta p { font-size: 20px; color: rgba(255,255,255,0.85); line-height: normal; margin-bottom: 48px; }
+  .store-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .store-btn {
+    background: var(--black); color: #fff;
+    padding: 14px 28px; border-radius: 12px;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 16px; font-weight: 700;
+    transition: opacity 0.2s;
+  }
+  .store-btn:hover { opacity: 0.85; text-decoration: none; }
+  .store-btn-icon { font-size: 24px; }
+  .store-btn-sub { font-size: 11px; font-weight: 400; opacity: 0.7; display: block; }
+
+  /* FOOTER -->*/
+  footer { background: var(--black); padding: 64px 40px 40px; }
+  .footer-inner { max-width: 1120px; margin: 0 auto; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 48px; }
+  .footer-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .footer-logo-icon { width: 40px; height: 40px; background: var(--line-green); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+  .footer-logo-text { font-size: 20px; font-weight: 700; color: #fff; }
+  .footer-brand p { font-size: 14px; color: rgba(255,255,255,0.5); line-height: 1.5; }
+  .footer-col h4 { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 16px; }
+  .footer-col a { display: block; font-size: 14px; color: rgba(255,255,255,0.5); margin-bottom: 8px; }
+  .footer-col a:hover { color: #fff; text-decoration: none; }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  .footer-bottom p { font-size: 12px; color: rgba(255,255,255,0.3); }
+
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 40px; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .services-grid { grid-template-columns: 1fr; }
+    .stamps-inner { grid-template-columns: 1fr; }
+    .financial-cards { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .hero-mockup { flex-direction: column; align-items: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <div class="line-icon">
+      <svg viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 11c0 3.2 1.74 6.01 4.36 7.65L5.5 22l4.12-2.2C10.41 19.93 11.19 20 12 20c5.52 0 10-4.03 10-9S17.52 2 12 2zm-2 12H8v-5h2v5zm4 0h-2V9h2v5z"/></svg>
+    </div>
+    <span class="nav-logo-text">LINE</span>
+  </div>
+  <div class="nav-links">
+    <a href="#">サービス</a>
+    <a href="#">スタンプ</a>
+    <a href="#">LINE Pay</a>
+    <a href="#">ビジネス</a>
+    <a href="#">会社情報</a>
+  </div>
+  <div class="nav-right">
+    <a href="#" class="btn-nav-outline">ログイン</a>
+    <a href="#" class="btn-nav-green">ダウンロード</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">&#127759; 世界95か国・地域で利用可能</div>
+  <h1>つながる、毎日が<br><span>もっと便利</span>に。</h1>
+  <p>LINEはメッセージ・通話・お金・エンタメをひとつにまとめた、あなたの毎日に寄り添うスーパーアプリです。</p>
+  <div class="hero-ctas">
+    <a href="#" class="btn-green-large">&#128247; App Storeでダウンロード</a>
+    <a href="#" class="btn-outline-large">Google Play でダウンロード</a>
+  </div>
+
+  <div class="hero-mockup">
+    <div class="phone-wrap">
+      <div class="phone-status">
+        <span>9:41</span>
+        <span>&#9679;&#9679;&#9679;</span>
+      </div>
+      <div class="phone-app-header">
+        <div class="ph-app-title">トーク</div>
+        <div class="ph-search">&#128269; 検索</div>
+      </div>
+      <div class="phone-chat-list">
+        <div class="chat-item">
+          <div class="chat-avatar" style="background:var(--line-green)">T</div>
+          <div class="chat-info">
+            <div class="chat-name">田中さん</div>
+            <div class="chat-preview">今日の飲み会、楽しかったね！</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+            <span class="chat-time">14:32</span>
+            <div class="chat-badge">3</div>
+          </div>
+        </div>
+        <div class="chat-item">
+          <div class="chat-avatar" style="background:#ff6b6b">家</div>
+          <div class="chat-info">
+            <div class="chat-name">家族グループ</div>
+            <div class="chat-preview">お母さん: 夕ご飯の準備できたよ</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+            <span class="chat-time">12:15</span>
+            <div class="chat-badge">1</div>
+          </div>
+        </div>
+        <div class="chat-item">
+          <div class="chat-avatar" style="background:#4a9eff">友</div>
+          <div class="chat-info">
+            <div class="chat-name">友達グループ (12)</div>
+            <div class="chat-preview">鈴木: 次の旅行どこ行く？</div>
+          </div>
+          <span class="chat-time">昨日</span>
+        </div>
+        <div class="chat-item">
+          <div class="chat-avatar" style="background:#a855f7">L</div>
+          <div class="chat-info">
+            <div class="chat-name">LINEニュース</div>
+            <div class="chat-preview">今日のニュースまとめ</div>
+          </div>
+          <span class="chat-time">昨日</span>
+        </div>
+        <div class="chat-item">
+          <div class="chat-avatar" style="background:#f59e0b">&#128722;</div>
+          <div class="chat-info">
+            <div class="chat-name">LINE Pay</div>
+            <div class="chat-preview">&#127880;ポイントが付与されました</div>
+          </div>
+          <span class="chat-time">月曜日</span>
+        </div>
+      </div>
+      <div class="phone-tabs">
+        <div class="phone-tab active"><span class="phone-tab-icon">&#128172;</span>トーク</div>
+        <div class="phone-tab"><span class="phone-tab-icon">&#8635;</span>タイムライン</div>
+        <div class="phone-tab"><span class="phone-tab-icon">&#128248;</span>VOOM</div>
+        <div class="phone-tab"><span class="phone-tab-icon">&#128506;</span>ウォレット</div>
+        <div class="phone-tab"><span class="phone-tab-icon">&#9881;</span>設定</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="stats-inner">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-num">9,500万人</div>
+        <div class="stat-label">月間アクティブユーザー（日本）</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">95</div>
+        <div class="stat-label">利用可能な国・地域</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">10億+</div>
+        <div class="stat-label">スタンプ提供数</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">1位</div>
+        <div class="stat-label">日本のアプリダウンロード数</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services">
+  <div class="services-inner">
+    <h2>LINEのサービス</h2>
+    <p class="services-sub">コミュニケーションから生活まで、すべてをひとつのアプリで。</p>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon" style="background:rgba(6,199,85,0.1)">&#128172;</div>
+        <div class="service-title">メッセージ・通話</div>
+        <div class="service-desc">テキスト、スタンプ、写真・動画の送受信。音声・ビデオ通話が無料で使えます。グループトークも最大499名まで対応。</div>
+        <a href="#" class="service-link">詳しく見る &rsaquo;</a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon" style="background:rgba(255,107,107,0.1)">&#128248;</div>
+        <div class="service-title">VOOM</div>
+        <div class="service-desc">短尺動画、ライブ配信、ストーリーが楽しめる動画SNSサービス。好きなクリエイターのコンテンツを毎日チェック。</div>
+        <a href="#" class="service-link">詳しく見る &rsaquo;</a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon" style="background:rgba(74,158,255,0.1)">&#128240;</div>
+        <div class="service-title">LINEニュース</div>
+        <div class="service-desc">国内外のニュースをリアルタイムで配信。自分の興味に合わせたパーソナライズドニュースフィードが利用できます。</div>
+        <a href="#" class="service-link">詳しく見る &rsaquo;</a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon" style="background:rgba(168,85,247,0.1)">&#127931;</div>
+        <div class="service-title">LINE MUSIC</div>
+        <div class="service-desc">1億曲以上が聴き放題。好きな曲をトークで共有したり、プロフィールのBGMに設定したりできます。</div>
+        <a href="#" class="service-link">詳しく見る &rsaquo;</a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon" style="background:rgba(245,158,11,0.1)">&#128506;</div>
+        <div class="service-title">LINEウォレット</div>
+        <div class="service-desc">LINE Pay、LINEポイント、クーポン、保険など、生活に必要な金融・ライフサービスをまとめて管理。</div>
+        <a href="#" class="service-link">詳しく見る &rsaquo;</a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon" style="background:rgba(6,199,85,0.1)">&#128083;</div>
+        <div class="service-title">LINE通知メッセージ</div>
+        <div class="service-desc">本人確認・パスワードレスログイン対応。銀行、ECサイト、行政など、生活に必要な通知がLINEに届きます。</div>
+        <a href="#" class="service-link">詳しく見る &rsaquo;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STAMPS -->
+<section class="stamps">
+  <div class="stamps-inner">
+    <div class="stamps-text">
+      <h2>スタンプで<br>もっと楽しく。</h2>
+      <p>感情や気持ちを豊かに表現できるスタンプ。人気キャラクターから個性的なクリエイター作品まで、10億点以上が揃っています。</p>
+      <a href="#" class="btn-green-large" style="display:inline-block;">スタンプショップを見る</a>
+    </div>
+    <div>
+      <div class="stamps-grid">
+        <div class="stamp" style="background:#fff3cd">&#128005;</div>
+        <div class="stamp" style="background:#fde8f7">&#128007;</div>
+        <div class="stamp" style="background:#e8f5e9">&#128049;</div>
+        <div class="stamp" style="background:#e3f2fd">&#128047;</div>
+        <div class="stamp" style="background:#fce4ec">&#128008;</div>
+        <div class="stamp" style="background:#f3e5f5">&#128014;</div>
+        <div class="stamp" style="background:#e8f5e9">&#128040;</div>
+        <div class="stamp" style="background:#fff8e1">&#128060;</div>
+        <div class="stamp" style="background:#e1f5fe">&#128044;</div>
+        <div class="stamp" style="background:#fbe9e7">&#128039;</div>
+        <div class="stamp" style="background:#f1f8e9">&#128045;</div>
+        <div class="stamp" style="background:#fff3e0">&#128046;</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINANCIAL -->
+<section class="financial">
+  <div class="financial-inner">
+    <h2>LINE Pay</h2>
+    <p class="financial-sub">LINEひとつで送金・支払い・ポイント管理がすべてできる。</p>
+    <div class="financial-cards">
+      <div class="fin-card green">
+        <div class="fin-icon">&#128179;</div>
+        <div>
+          <div class="fin-title">かんたん送金</div>
+          <div class="fin-desc">友達へのお金の送り合いが、LINEトークから直接できます。割り勘や立替返済がスムーズに。</div>
+        </div>
+      </div>
+      <div class="fin-card white">
+        <div class="fin-icon" style="color:var(--line-green)">&#127878;</div>
+        <div>
+          <div class="fin-title">LINEポイント</div>
+          <div class="fin-desc">利用するほどポイントが貯まる。スタンプ購入や加盟店での支払いに使えます。</div>
+        </div>
+      </div>
+      <div class="fin-card white">
+        <div class="fin-icon" style="color:var(--line-green)">&#128722;</div>
+        <div>
+          <div class="fin-title">コード支払い</div>
+          <div class="fin-desc">コンビニ・スーパー・飲食店など全国200万か所以上で使えるQRコード決済。</div>
+        </div>
+      </div>
+      <div class="fin-card green">
+        <div class="fin-icon">&#128200;</div>
+        <div>
+          <div class="fin-title">LINE証券</div>
+          <div class="fin-desc">100円から始められる少額投資。株式・投資信託をLINEアプリから手軽に運用。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DOWNLOAD CTA -->
+<section class="download-cta">
+  <h2>今すぐ無料で始める</h2>
+  <p>インストール無料。メッセージも通話も、すべて無料で使えます。</p>
+  <div class="store-buttons">
+    <a href="#" class="store-btn">
+      <span class="store-btn-icon">&#63743;</span>
+      <div>
+        <span class="store-btn-sub">Download on the</span>
+        App Store
+      </div>
+    </a>
+    <a href="#" class="store-btn">
+      <span class="store-btn-icon">&#9654;</span>
+      <div>
+        <span class="store-btn-sub">GET IT ON</span>
+        Google Play
+      </div>
+    </a>
+    <a href="#" class="store-btn">
+      <span class="store-btn-icon">&#128187;</span>
+      <div>
+        <span class="store-btn-sub">GET IT ON</span>
+        PC/Mac版
+      </div>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <div class="footer-logo-icon">
+            <svg viewBox="0 0 24 24" fill="white" width="24" height="24"><path d="M12 2C6.48 2 2 6.48 2 11c0 3.2 1.74 6.01 4.36 7.65L5.5 22l4.12-2.2C10.41 19.93 11.19 20 12 20c5.52 0 10-4.03 10-9S17.52 2 12 2z"/></svg>
+          </div>
+          <span class="footer-logo-text">LINE</span>
+        </div>
+        <p>LINEは、日本最大のコミュニケーションサービスです。メッセージ・通話から始まり、エンタメ・金融まで幅広いサービスを提供しています。</p>
+      </div>
+      <div class="footer-col">
+        <h4>サービス</h4>
+        <a href="#">メッセージ・通話</a>
+        <a href="#">VOOM</a>
+        <a href="#">LINEニュース</a>
+        <a href="#">LINE MUSIC</a>
+        <a href="#">スタンプ</a>
+      </div>
+      <div class="footer-col">
+        <h4>ビジネス</h4>
+        <a href="#">LINE公式アカウント</a>
+        <a href="#">LINE広告</a>
+        <a href="#">LINE Pay加盟店</a>
+        <a href="#">LINE WORKS</a>
+      </div>
+      <div class="footer-col">
+        <h4>会社情報</h4>
+        <a href="#">会社概要</a>
+        <a href="#">採用情報</a>
+        <a href="#">プレスリリース</a>
+        <a href="#">CSR</a>
+      </div>
+      <div class="footer-col">
+        <h4>ヘルプ</h4>
+        <a href="#">ヘルプセンター</a>
+        <a href="#">利用規約</a>
+        <a href="#">プライバシーポリシー</a>
+        <a href="#">お問い合わせ</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 LINE Corporation</p>
+      <p>プライバシーポリシー &middot; 利用規約 &middot; Cookie設定</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

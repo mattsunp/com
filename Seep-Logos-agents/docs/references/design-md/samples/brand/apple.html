@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Apple — Design Template</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#000;
+  --gray:#f5f5f7;
+  --near-black:#1d1d1f;
+  --blue:#0071e3;
+  --blue-link:#0066cc;
+  --blue-dark:#2997ff;
+  --white:#fff;
+  --text-80:rgba(0,0,0,0.80);
+  --text-48:rgba(0,0,0,0.48);
+}
+body{background:var(--gray);color:var(--near-black);font-family:"SF Pro Display","SF Pro Text","Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+
+/* ─── NAV ─── */
+nav{
+  position:sticky;top:0;z-index:999;
+  height:48px;
+  background:rgba(0,0,0,0.80);
+  backdrop-filter:saturate(180%) blur(20px);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  display:flex;align-items:center;justify-content:center;gap:28px;
+  padding:0 22px;
+}
+nav a{color:#fff;font-size:12px;font-weight:400;text-decoration:none;letter-spacing:-0.12px;opacity:0.8;transition:opacity .2s}
+nav a:hover{opacity:1}
+.nav-logo{font-size:18px;color:#fff;text-decoration:none;letter-spacing:-0.3px;font-weight:600;margin-right:8px}
+.nav-cta{background:var(--blue);color:#fff;font-size:12px;padding:5px 12px;border-radius:980px;text-decoration:none;font-weight:400;margin-left:8px;transition:background .2s}
+.nav-cta:hover{background:#0077ed}
+
+/* ─── HERO: BLACK ─── */
+.hero{
+  background:#000;
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:80px 24px 100px;
+  gap:16px;
+}
+.hero-eyebrow{color:#888;font-size:17px;font-weight:400;letter-spacing:-0.374px}
+.hero h1{color:#fff;font-size:56px;font-weight:600;line-height:1.07;letter-spacing:-0.28px;max-width:640px}
+.hero h2{color:rgba(255,255,255,0.7);font-size:21px;font-weight:400;line-height:1.19;letter-spacing:0.231px}
+.hero-product{
+  width:320px;height:400px;margin:40px 0;
+  background:linear-gradient(160deg,#1a1a2e 0%,#16213e 40%,#0f3460 100%);
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:80px;
+  box-shadow:rgba(0,0,0,0.22) 3px 5px 30px 0px;
+}
+.hero-ctarow{display:flex;gap:16px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:12px}
+.pill-link{
+  display:inline-flex;align-items:center;gap:4px;
+  color:var(--blue-dark);font-size:17px;font-weight:400;text-decoration:none;
+  border:1px solid var(--blue-dark);padding:8px 20px;border-radius:980px;
+  transition:background .15s;
+}
+.pill-link:hover{background:rgba(41,151,255,0.1)}
+.pill-fill{
+  background:var(--blue);color:#fff;font-size:17px;font-weight:400;text-decoration:none;
+  padding:8px 20px;border-radius:980px;border:1px solid transparent;
+  transition:background .15s;
+}
+.pill-fill:hover{background:#0077ed}
+
+/* ─── SECTION: GRAY ─── */
+.section-gray{
+  background:var(--gray);padding:120px 24px;text-align:center;
+}
+.section-gray h2{font-size:40px;font-weight:600;line-height:1.10;letter-spacing:-0.28px;color:var(--near-black);margin-bottom:16px}
+.section-gray p{font-size:17px;line-height:1.47;letter-spacing:-0.374px;color:var(--text-80);max-width:580px;margin:0 auto 32px}
+.section-gray .pill-link{color:var(--blue-link);border-color:var(--blue-link)}
+.section-gray .pill-link:hover{background:rgba(0,102,204,0.06)}
+
+/* ─── PRODUCT GRID ─── */
+.section-gray .product-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;
+  max-width:980px;margin:48px auto 0;text-align:left;
+}
+.product-tile{
+  background:#fff;border-radius:8px;padding:36px 24px 28px;
+  box-shadow:rgba(0,0,0,0.22) 3px 5px 30px 0px;
+  display:flex;flex-direction:column;gap:8px;
+}
+.product-tile-img{
+  height:160px;background:var(--gray);border-radius:4px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:48px;margin-bottom:12px;
+}
+.product-tile h3{font-size:21px;font-weight:400;line-height:1.19;letter-spacing:0.231px;color:var(--near-black)}
+.product-tile p{font-size:14px;line-height:1.29;letter-spacing:-0.224px;color:var(--text-80)}
+.product-tile-links{display:flex;gap:12px;margin-top:12px}
+.product-tile-links a{color:var(--blue-link);font-size:14px;letter-spacing:-0.224px;text-decoration:none}
+.product-tile-links a:hover{text-decoration:underline}
+
+/* ─── SECTION: BLACK 2 ─── */
+.section-black{
+  background:#000;padding:120px 24px;text-align:center;
+}
+.section-black h2{color:#fff;font-size:40px;font-weight:600;line-height:1.10;letter-spacing:-0.28px;margin-bottom:16px}
+.section-black p{font-size:17px;line-height:1.47;letter-spacing:-0.374px;color:rgba(255,255,255,0.7);max-width:580px;margin:0 auto 32px}
+
+/* ─── FEATURE STRIP ─── */
+.section-black .feature-strip{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  max-width:960px;margin:0 auto;border-top:1px solid rgba(255,255,255,0.12);
+}
+.feature-item{padding:40px 24px;text-align:center;border-right:1px solid rgba(255,255,255,0.12)}
+.feature-item:last-child{border-right:none}
+.feature-icon{font-size:36px;margin-bottom:16px}
+.feature-item h4{color:#fff;font-size:21px;font-weight:600;line-height:1.19;margin-bottom:8px}
+.feature-item p{font-size:14px;color:rgba(255,255,255,0.6);line-height:1.43;letter-spacing:-0.224px}
+
+/* ─── SECTION: GRAY 2 ─── */
+.section-gray-2{background:#fff;padding:100px 24px;text-align:center}
+.section-gray-2 h2{font-size:40px;font-weight:600;line-height:1.10;color:var(--near-black);margin-bottom:40px}
+
+.comparison-strip{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:16px;
+  max-width:780px;margin:0 auto;
+}
+.compare-card{
+  background:var(--gray);border-radius:8px;padding:32px 20px;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+}
+.compare-card .model-img{font-size:48px;margin-bottom:8px}
+.compare-card h3{font-size:21px;font-weight:400;color:var(--near-black)}
+.compare-card .price{font-size:14px;color:var(--text-80);letter-spacing:-0.224px}
+.compare-card .from{font-size:12px;color:var(--text-48);letter-spacing:-0.12px}
+.compare-card-links{display:flex;gap:12px;margin-top:8px}
+.compare-card-links a{color:var(--blue-link);font-size:12px;text-decoration:none}
+.compare-card-links a:hover{text-decoration:underline}
+
+/* ─── FOOTER ─── */
+footer{
+  background:#f5f5f7;border-top:1px solid rgba(0,0,0,0.12);
+  padding:28px 24px;text-align:center;
+}
+footer p{font-size:12px;color:var(--text-48);letter-spacing:-0.12px;margin-bottom:8px}
+footer nav{position:static;height:auto;background:none;backdrop-filter:none;flex-wrap:wrap;gap:12px;justify-content:center;padding:0}
+footer nav a{color:rgba(0,0,0,0.48);font-size:12px;opacity:1}
+footer nav a:hover{color:var(--near-black)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">&#63743;</a>
+  <a href="#">Mac</a>
+  <a href="#">iPad</a>
+  <a href="#">iPhone</a>
+  <a href="#">Watch</a>
+  <a href="#">Vision</a>
+  <a href="#">AirPods</a>
+  <a href="#">TV &amp; Home</a>
+  <a href="#">Entertainment</a>
+  <a href="#">Support</a>
+  <a class="nav-cta" href="#">購入</a>
+</nav>
+
+<!-- HERO: BLACK -->
+<section class="hero">
+  <p class="hero-eyebrow">登場</p>
+  <h1>iPhone 16 Pro</h1>
+  <h2>A18 Pro. より深く。より速く。</h2>
+  <div class="hero-product">📱</div>
+  <div class="hero-ctarow">
+    <a class="pill-link" href="#">詳しく見る</a>
+    <a class="pill-fill" href="#">購入</a>
+  </div>
+</section>
+
+<!-- SECTION: GRAY — product grid -->
+<section class="section-gray">
+  <h2>今日のラインアップ</h2>
+  <p>どのモデルも、突出したパフォーマンスと美しさを備えています。あなたにぴったりの一台を。</p>
+  <div class="product-grid">
+    <div class="product-tile">
+      <div class="product-tile-img">💻</div>
+      <h3>MacBook Air</h3>
+      <p>M3チップ搭載。薄さ、軽さ、パワー — すべてを兼ね備えたノートブック。</p>
+      <div class="product-tile-links">
+        <a href="#">詳しく見る &rsaquo;</a>
+        <a href="#">購入 &rsaquo;</a>
+      </div>
+    </div>
+    <div class="product-tile">
+      <div class="product-tile-img">🖥</div>
+      <h3>iMac</h3>
+      <p>M3チップと24インチRetina 4.5Kディスプレイ。机の上が変わる。</p>
+      <div class="product-tile-links">
+        <a href="#">詳しく見る &rsaquo;</a>
+        <a href="#">購入 &rsaquo;</a>
+      </div>
+    </div>
+    <div class="product-tile">
+      <div class="product-tile-img">⌚</div>
+      <h3>Apple Watch Series 9</h3>
+      <p>より高精度なヘルスセンサーと、新しいダブルタップジェスチャー。</p>
+      <div class="product-tile-links">
+        <a href="#">詳しく見る &rsaquo;</a>
+        <a href="#">購入 &rsaquo;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: BLACK — features -->
+<section class="section-black">
+  <h2>Apple Intelligenceとは</h2>
+  <p>パーソナルインテリジェンスのシステム。あなたのことを理解して、あなたを助けます。</p>
+  <div class="feature-strip">
+    <div class="feature-item">
+      <div class="feature-icon">✍️</div>
+      <h4>Writing Tools</h4>
+      <p>文章の校正、改善、書き直しをどのアプリでもサポート。</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">🖼</div>
+      <h4>Image Playground</h4>
+      <p>あなたのアイデアを、数秒で画像に変換します。</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">🎙</div>
+      <h4>Siri強化</h4>
+      <p>個人的なコンテキストを理解する、まったく新しいSiri。</p>
+    </div>
+  </div>
+  <div class="hero-ctarow" style="margin-top:48px">
+    <a class="pill-link" href="#" style="color:var(--blue-dark);border-color:var(--blue-dark)">Apple Intelligenceについて詳しく</a>
+  </div>
+</section>
+
+<!-- SECTION: WHITE — comparison -->
+<section class="section-gray-2">
+  <h2>iPhone を比べる</h2>
+  <div class="comparison-strip">
+    <div class="compare-card">
+      <div class="model-img">📱</div>
+      <h3>iPhone 16 Pro</h3>
+      <div class="price">¥159,800から</div>
+      <div class="from">A18 Pro / 6.3インチ</div>
+      <div class="compare-card-links">
+        <a href="#">詳しく見る</a>
+        <a href="#">購入</a>
+      </div>
+    </div>
+    <div class="compare-card">
+      <div class="model-img">📱</div>
+      <h3>iPhone 16</h3>
+      <div class="price">¥124,800から</div>
+      <div class="from">A18 / 6.1インチ</div>
+      <div class="compare-card-links">
+        <a href="#">詳しく見る</a>
+        <a href="#">購入</a>
+      </div>
+    </div>
+    <div class="compare-card">
+      <div class="model-img">📱</div>
+      <h3>iPhone 15</h3>
+      <div class="price">¥99,800から</div>
+      <div class="from">A16 Bionic / 6.1インチ</div>
+      <div class="compare-card-links">
+        <a href="#">詳しく見る</a>
+        <a href="#">購入</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>Copyright &copy; 2026 Apple Inc. All rights reserved. — Design Template</p>
+  <nav>
+    <a href="#">プライバシーポリシー</a>
+    <a href="#">利用規約</a>
+    <a href="#">セールスポリシー</a>
+    <a href="#">法的情報</a>
+    <a href="#">サイトマップ</a>
+  </nav>
+</footer>
+
+</body>
+</html>

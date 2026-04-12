@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IBM — Let's Create</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ibm-blue-60: #0f62fe;
+    --ibm-blue-70: #0043ce;
+    --ibm-blue-80: #002d9c;
+    --ibm-blue-10: #edf5ff;
+    --gray-100: #161616;
+    --gray-90: #262626;
+    --gray-80: #393939;
+    --gray-70: #525252;
+    --gray-60: #6f6f6f;
+    --gray-50: #8d8d8d;
+    --gray-30: #c6c6c6;
+    --gray-20: #e0e0e0;
+    --gray-10: #f4f4f4;
+    --gray-10-hover: #e8e8e8;
+    --white: #ffffff;
+    --red-60: #da1e28;
+    --green-50: #24a148;
+    --yellow-30: #f1c21b;
+    --font: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+    --font-mono: "IBM Plex Mono", Menlo, Courier, monospace;
+  }
+
+  html { font-size: 16px; }
+  body {
+    font-family: var(--font);
+    color: var(--gray-100);
+    background: var(--white);
+    line-height: 1.5;
+  }
+
+  /* ─── MASTHEAD / NAV ─── */
+  .masthead {
+    background: var(--gray-100);
+    height: 48px;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    padding: 0 32px;
+  }
+  .masthead-inner {
+    max-width: 1584px;
+    margin: 0 auto;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+  .ibm-logo {
+    margin-right: 32px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+  .logo-bars {
+    display: grid;
+    grid-template-columns: repeat(4, 4px);
+    grid-template-rows: repeat(4, 4px);
+    gap: 2px;
+  }
+  .logo-bars div {
+    background: var(--ibm-blue-60);
+    width: 4px; height: 4px;
+  }
+  .logo-bars div:nth-child(4n+2), .logo-bars div:nth-child(4n+3) { opacity: 0; }
+  .ibm-wordmark { font-size: 16px; font-weight: 700; color: var(--white); letter-spacing: 0.16em; }
+  .masthead-nav { display: flex; gap: 0; list-style: none; flex: 1; }
+  .masthead-nav li a {
+    display: block;
+    padding: 0 16px;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--gray-30);
+    text-decoration: none;
+    line-height: 48px;
+    transition: color 0.15s;
+  }
+  .masthead-nav li a:hover { color: var(--white); }
+  .masthead-nav li a.active { color: var(--white); border-bottom: 2px solid var(--white); }
+  .masthead-search {
+    width: 32px; height: 48px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gray-30);
+    cursor: pointer;
+    font-size: 16px;
+    transition: color 0.15s;
+    flex-shrink: 0;
+  }
+  .masthead-search:hover { color: var(--white); }
+
+  /* ─── HERO BLOCK ─── */
+  .hero {
+    background: var(--white);
+    padding: 96px 32px 80px;
+    border-bottom: 1px solid var(--gray-20);
+  }
+  .hero-inner {
+    max-width: 1584px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 7fr 5fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .hero-eyebrow {
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.32px;
+    color: var(--ibm-blue-60);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-size: 60px;
+    font-weight: 300;
+    line-height: 1.17;
+    color: var(--gray-100);
+    margin-bottom: 24px;
+    letter-spacing: 0;
+  }
+  .hero h1 strong { font-weight: 300; color: var(--ibm-blue-60); }
+  .hero p {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--gray-70);
+    margin-bottom: 40px;
+    max-width: 640px;
+  }
+  .hero-btns { display: flex; gap: 0; }
+  .btn-primary {
+    background: var(--ibm-blue-60);
+    color: var(--white);
+    padding: 14px 63px 14px 15px;
+    border: 1px solid transparent;
+    border-radius: 0;
+    font-size: 14px;
+    font-weight: 400;
+    font-family: var(--font);
+    height: 48px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    letter-spacing: 0.16px;
+    transition: background 0.15s;
+  }
+  .btn-primary:hover { background: var(--ibm-blue-70); }
+  .btn-secondary-ibm {
+    background: var(--gray-80);
+    color: var(--white);
+    padding: 14px 63px 14px 15px;
+    border: 1px solid transparent;
+    border-radius: 0;
+    font-size: 14px;
+    font-weight: 400;
+    font-family: var(--font);
+    height: 48px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    letter-spacing: 0.16px;
+    transition: background 0.15s;
+  }
+  .btn-secondary-ibm:hover { background: #4c4c4c; }
+
+  /* HERO VISUAL: Feature block */
+  .hero-feature-block { }
+  .hero-tile {
+    background: var(--gray-10);
+    padding: 32px;
+    margin-bottom: 1px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .hero-tile:hover { background: var(--gray-10-hover); }
+  .tile-eyebrow { font-size: 12px; font-weight: 400; letter-spacing: 0.32px; color: var(--gray-70); margin-bottom: 8px; }
+  .tile-title { font-size: 20px; font-weight: 600; line-height: 1.4; color: var(--gray-100); margin-bottom: 8px; }
+  .tile-desc { font-size: 14px; font-weight: 400; letter-spacing: 0.16px; color: var(--gray-70); line-height: 1.29; }
+  .tile-arrow {
+    position: absolute;
+    bottom: 16px; right: 16px;
+    color: var(--ibm-blue-60);
+    font-size: 20px;
+  }
+  .tag-blue {
+    display: inline-block;
+    background: var(--ibm-blue-10);
+    color: var(--ibm-blue-60);
+    padding: 4px 8px;
+    border-radius: 24px;
+    font-size: 12px;
+    font-weight: 400;
+    margin-bottom: 8px;
+  }
+  .tag-green {
+    display: inline-block;
+    background: rgba(36,161,72,0.1);
+    color: var(--green-50);
+    padding: 4px 8px;
+    border-radius: 24px;
+    font-size: 12px;
+    font-weight: 400;
+    margin-bottom: 8px;
+  }
+
+  /* ─── BAND SECTIONS ─── */
+  .section-white { background: var(--white); padding: 64px 32px; border-bottom: 1px solid var(--gray-20); }
+  .section-gray10 { background: var(--gray-10); padding: 64px 32px; border-bottom: 1px solid var(--gray-20); }
+  .section-dark { background: var(--gray-100); padding: 64px 32px; border-bottom: 1px solid var(--gray-80); color: var(--white); }
+  .section-blue { background: var(--ibm-blue-60); padding: 64px 32px; color: var(--white); }
+  .section-inner { max-width: 1584px; margin: 0 auto; }
+
+  .section-eyebrow {
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.32px;
+    color: var(--ibm-blue-60);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .section-eyebrow-light { color: rgba(255,255,255,0.7); }
+  .section-title {
+    font-size: 48px;
+    font-weight: 300;
+    line-height: 1.17;
+    color: var(--gray-100);
+    margin-bottom: 16px;
+    letter-spacing: 0;
+  }
+  .section-title-light { color: var(--white); }
+  .section-lead { font-size: 16px; color: var(--gray-70); line-height: 1.5; max-width: 640px; margin-bottom: 40px; }
+  .section-lead-light { color: rgba(255,255,255,0.8); }
+
+  /* ─── TILE GRID ─── */
+  .tiles-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--gray-20);
+    border: 1px solid var(--gray-20);
+  }
+  .tiles-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--gray-20);
+    border: 1px solid var(--gray-20);
+  }
+  .tile {
+    background: var(--white);
+    padding: 32px;
+    cursor: pointer;
+    transition: background 0.15s;
+    position: relative;
+    min-height: 200px;
+  }
+  .tile:hover { background: var(--gray-10-hover); }
+  .tile.on-gray { background: var(--gray-10); }
+  .tile.on-gray:hover { background: var(--gray-20); }
+  .tile.on-dark { background: var(--gray-90); }
+  .tile.on-dark:hover { background: var(--gray-80); }
+  .tile-icon { font-size: 28px; margin-bottom: 16px; display: block; }
+  .tile-title { font-size: 20px; font-weight: 600; line-height: 1.4; color: var(--gray-100); margin-bottom: 8px; }
+  .tile-title-light { color: var(--white); }
+  .tile-body { font-size: 14px; font-weight: 400; letter-spacing: 0.16px; line-height: 1.29; color: var(--gray-70); }
+  .tile-body-light { color: var(--gray-30); }
+  .tile-cta {
+    display: block;
+    margin-top: 16px;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--ibm-blue-60);
+    text-decoration: none;
+    letter-spacing: 0.16px;
+    transition: color 0.15s;
+  }
+  .tile-cta:hover { color: var(--ibm-blue-70); text-decoration: underline; }
+  .tile-cta-light {
+    color: #78a9ff;
+  }
+  .tile-cta-light:hover { color: var(--white); }
+  .tile-arrow-corner {
+    position: absolute;
+    bottom: 16px; right: 16px;
+    color: var(--ibm-blue-60);
+    font-size: 18px;
+  }
+
+  /* ─── NOTIFICATION BANNER ─── */
+  .notification {
+    background: var(--ibm-blue-60);
+    color: var(--white);
+    padding: 12px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+  }
+  .notif-content { display: flex; align-items: center; gap: 12px; }
+  .notif-icon { font-size: 16px; }
+  .notif-close { cursor: pointer; font-size: 18px; opacity: 0.7; }
+
+  /* ─── FEATURE TWO-COL ─── */
+  .feat-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--gray-20); }
+  .feat-col { background: var(--white); padding: 48px; }
+  .feat-col.gray { background: var(--gray-10); }
+  .feat-col h3 { font-size: 32px; font-weight: 400; line-height: 1.25; color: var(--gray-100); margin-bottom: 16px; letter-spacing: 0; }
+  .feat-col p { font-size: 16px; color: var(--gray-70); line-height: 1.5; margin-bottom: 24px; }
+  .feat-col .eyebrow { font-size: 12px; font-weight: 400; letter-spacing: 0.32px; color: var(--ibm-blue-60); text-transform: uppercase; margin-bottom: 12px; }
+
+  /* ─── CODE BLOCK FEATURE ─── */
+  .code-feature {
+    background: var(--gray-100);
+    padding: 32px;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    line-height: 1.43;
+    letter-spacing: 0.16px;
+    border-radius: 0;
+    color: var(--gray-30);
+    overflow-x: auto;
+  }
+  .code-feature .keyword { color: #78a9ff; }
+  .code-feature .string { color: #42be65; }
+  .code-feature .comment { color: var(--gray-60); }
+  .code-feature .number { color: #ff832b; }
+
+  /* ─── WATSON AI ─── */
+  .watson-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  .watson-left {
+    background: var(--gray-100);
+    padding: 64px 48px;
+    color: var(--white);
+  }
+  .watson-right {
+    background: var(--ibm-blue-60);
+    padding: 64px 48px;
+    color: var(--white);
+  }
+  .watson-left h2, .watson-right h2 {
+    font-size: 42px;
+    font-weight: 300;
+    line-height: 1.19;
+    margin-bottom: 20px;
+  }
+  .watson-left p, .watson-right p {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 32px;
+    opacity: 0.8;
+  }
+  .watson-features { list-style: none; margin-bottom: 32px; }
+  .watson-features li {
+    display: flex; gap: 12px;
+    font-size: 14px; letter-spacing: 0.16px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.8);
+  }
+  .watson-features li .check { color: var(--green-50); font-size: 16px; flex-shrink: 0; }
+  .btn-ghost-blue {
+    background: transparent;
+    color: var(--white);
+    padding: 14px 15px;
+    border: 1px solid var(--white);
+    border-radius: 0;
+    font-size: 14px;
+    font-weight: 400;
+    font-family: var(--font);
+    height: 48px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    letter-spacing: 0.16px;
+    transition: background 0.15s;
+    min-width: 200px;
+  }
+  .btn-ghost-blue:hover { background: rgba(255,255,255,0.1); }
+
+  /* ─── STATS ─── */
+  .stats-band { background: var(--gray-10); padding: 48px 32px; border-bottom: 1px solid var(--gray-20); }
+  .stats-inner { max-width: 1584px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+  .stat-item { padding: 24px 32px; border-right: 1px solid var(--gray-20); }
+  .stat-item:last-child { border-right: none; }
+  .stat-number { font-size: 48px; font-weight: 300; color: var(--ibm-blue-60); line-height: 1; margin-bottom: 8px; }
+  .stat-desc { font-size: 14px; font-weight: 400; letter-spacing: 0.16px; color: var(--gray-70); line-height: 1.43; }
+
+  /* ─── FOOTER ─── */
+  footer { background: var(--gray-100); color: var(--gray-30); padding: 48px 32px 24px; }
+  .footer-inner { max-width: 1584px; margin: 0 auto; }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 32px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--gray-80);
+  }
+  .footer-brand-name { font-size: 20px; font-weight: 700; color: var(--white); letter-spacing: 0.16em; margin-bottom: 12px; }
+  .footer-brand p { font-size: 12px; line-height: 1.67; letter-spacing: 0.32px; color: var(--gray-50); }
+  .footer-col h5 { font-size: 12px; font-weight: 400; letter-spacing: 0.32px; color: var(--gray-50); margin-bottom: 12px; text-transform: uppercase; }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 8px; }
+  .footer-col ul li a { font-size: 14px; color: var(--gray-30); text-decoration: none; transition: color 0.15s; }
+  .footer-col ul li a:hover { color: var(--white); text-decoration: underline; }
+  .footer-bottom { display: flex; justify-content: space-between; font-size: 12px; color: var(--gray-60); letter-spacing: 0.32px; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 1056px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .tiles-4 { grid-template-columns: repeat(2, 1fr); }
+    .tiles-3 { grid-template-columns: repeat(2, 1fr); }
+    .watson-section { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: repeat(2, 1fr); }
+    .feat-two-col { grid-template-columns: 1fr; }
+    .stats-inner { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 672px) {
+    .masthead-nav { display: none; }
+    .hero h1 { font-size: 32px; }
+    .section-title { font-size: 32px; }
+    .tiles-4, .tiles-3 { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .stats-inner { grid-template-columns: 1fr; }
+    .hero-btns { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NOTIFICATION BANNER -->
+<div class="notification">
+  <div class="notif-content">
+    <span class="notif-icon">&#9432;</span>
+    <span>IBM Think 2026 — May 5-8, Las Vegas. Register now for early-bird pricing.</span>
+    <a href="#" style="color:var(--white); font-weight:700; text-decoration:underline;">Register &#8594;</a>
+  </div>
+  <span class="notif-close">&#10005;</span>
+</div>
+
+<!-- MASTHEAD -->
+<nav class="masthead">
+  <div class="masthead-inner">
+    <div class="ibm-logo">
+      <div class="logo-bars">
+        <div></div><div></div><div></div><div></div>
+        <div></div><div></div><div></div><div></div>
+        <div></div><div></div><div></div><div></div>
+        <div></div><div></div><div></div><div></div>
+      </div>
+      <span class="ibm-wordmark">IBM</span>
+    </div>
+    <ul class="masthead-nav">
+      <li><a href="#" class="active">Products</a></li>
+      <li><a href="#">Solutions</a></li>
+      <li><a href="#">AI &amp; Watson</a></li>
+      <li><a href="#">Consulting</a></li>
+      <li><a href="#">Research</a></li>
+      <li><a href="#">Support</a></li>
+      <li><a href="#">Think</a></li>
+    </ul>
+    <div class="masthead-search">&#128269;</div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">Enterprise AI Platform</div>
+      <h1>Let's create<br>what's <strong>next.</strong></h1>
+      <p>IBM helps you transform your business with AI that's purpose-built for the enterprise. From hybrid cloud infrastructure to AI governance, IBM provides the technology and expertise to unlock value at scale.</p>
+      <div class="hero-btns">
+        <a href="#" class="btn-primary">Explore AI solutions &#8594;</a>
+        <a href="#" class="btn-secondary-ibm">Talk to a specialist</a>
+      </div>
+    </div>
+    <div class="hero-feature-block">
+      <div class="hero-tile">
+        <div class="tag-blue">IBM watsonx</div>
+        <div class="tile-title">AI and data platform for enterprise</div>
+        <div class="tile-desc">Train, tune, and deploy AI with trust and transparency. watsonx brings generative AI plus traditional ML into a unified studio.</div>
+        <div class="tile-arrow">&#8599;</div>
+      </div>
+      <div class="hero-tile">
+        <div class="tag-green">Hybrid Cloud</div>
+        <div class="tile-title">IBM Cloud — where business runs</div>
+        <div class="tile-desc">Flexible, open, and secure. 60+ cloud services built on open-source foundations with enterprise-grade SLAs and compliance.</div>
+        <div class="tile-arrow">&#8599;</div>
+      </div>
+      <div class="hero-tile">
+        <div class="tile-eyebrow">IBM Consulting</div>
+        <div class="tile-title">Strategy to implementation</div>
+        <div class="tile-desc">160,000 consulting practitioners. Deep industry expertise. End-to-end transformation from strategy through execution.</div>
+        <div class="tile-arrow">&#8599;</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-band">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <div class="stat-number">95%</div>
+      <div class="stat-desc">of Fortune 500 companies work with IBM</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">180+</div>
+      <div class="stat-desc">countries where IBM operates</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">3,000+</div>
+      <div class="stat-desc">active patents filed annually</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">$5B+</div>
+      <div class="stat-desc">invested in R&amp;D per year</div>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCTS GRID -->
+<section class="section-white">
+  <div class="section-inner">
+    <div class="section-eyebrow">Products &amp; Platforms</div>
+    <h2 class="section-title">Technology that<br>works for you</h2>
+    <p class="section-lead">From AI to security to hybrid cloud, IBM's product portfolio addresses every enterprise challenge with depth and integration.</p>
+    <div class="tiles-4">
+      <div class="tile">
+        <span class="tile-icon">&#129302;</span>
+        <div class="tile-title">IBM watsonx</div>
+        <div class="tile-body">Enterprise AI &amp; data platform. watsonx.ai, watsonx.data, watsonx.governance for responsible AI at scale.</div>
+        <a href="#" class="tile-cta">Explore watsonx &#8594;</a>
+        <div class="tile-arrow-corner">&#8599;</div>
+      </div>
+      <div class="tile">
+        <span class="tile-icon">&#9729;</span>
+        <div class="tile-title">IBM Cloud</div>
+        <div class="tile-body">Hybrid cloud infrastructure. Red Hat OpenShift, IBM Cloud Satellite, and 190+ cloud services with enterprise SLAs.</div>
+        <a href="#" class="tile-cta">Explore IBM Cloud &#8594;</a>
+        <div class="tile-arrow-corner">&#8599;</div>
+      </div>
+      <div class="tile">
+        <span class="tile-icon">&#128274;</span>
+        <div class="tile-title">IBM Security</div>
+        <div class="tile-body">Zero-trust security framework. QRadar SIEM, Guardium data security, Verify IAM, and X-Force threat intelligence.</div>
+        <a href="#" class="tile-cta">Explore Security &#8594;</a>
+        <div class="tile-arrow-corner">&#8599;</div>
+      </div>
+      <div class="tile">
+        <span class="tile-icon">&#128203;</span>
+        <div class="tile-title">IBM Automation</div>
+        <div class="tile-body">Business automation with AI. IBM Business Automation Workflow, RPA, and AI-powered document processing.</div>
+        <a href="#" class="tile-cta">Explore Automation &#8594;</a>
+        <div class="tile-arrow-corner">&#8599;</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WATSON AI TWO-SECTION -->
+<div class="watson-section">
+  <div class="watson-left">
+    <div style="color:rgba(255,255,255,0.5); font-size:12px; letter-spacing:0.32px; text-transform:uppercase; margin-bottom:12px;">IBM watsonx.ai</div>
+    <h2>AI built for<br>the enterprise</h2>
+    <p>Train, fine-tune, and deploy foundation models and machine learning on trusted data. With watsonx.ai, you govern the entire AI lifecycle — from training data to deployed models.</p>
+    <ul class="watson-features">
+      <li><span class="check">&#10003;</span>Open-source Granite LLMs from IBM Research</li>
+      <li><span class="check">&#10003;</span>Third-party model support (Llama, Mistral)</li>
+      <li><span class="check">&#10003;</span>Automated AI governance and auditability</li>
+      <li><span class="check">&#10003;</span>Integrated with Red Hat OpenShift</li>
+      <li><span class="check">&#10003;</span>On-premise, cloud, or hybrid deployment</li>
+    </ul>
+    <a href="#" class="btn-primary">Try watsonx.ai free &#8594;</a>
+  </div>
+  <div class="watson-right">
+    <div style="color:rgba(255,255,255,0.7); font-size:12px; letter-spacing:0.32px; text-transform:uppercase; margin-bottom:12px;">CODE EXAMPLE</div>
+    <div class="code-feature">
+      <span class="comment">// watsonx.ai — Python SDK</span><br>
+      <span class="keyword">from</span> ibm_watson_machine_learning <span class="keyword">import</span> APIClient<br>
+      <br>
+      client = APIClient({<br>
+      &nbsp;&nbsp;<span class="string">"url"</span>: <span class="string">"https://us-south.ml.cloud.ibm.com"</span>,<br>
+      &nbsp;&nbsp;<span class="string">"apikey"</span>: api_key<br>
+      })<br>
+      <br>
+      model = client.foundation_models.TextGenModel(<br>
+      &nbsp;&nbsp;model_id=<span class="string">"ibm/granite-13b-instruct-v2"</span>,<br>
+      &nbsp;&nbsp;params={<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"max_new_tokens"</span>: <span class="number">512</span>,<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"decoding_method"</span>: <span class="string">"greedy"</span><br>
+      &nbsp;&nbsp;}<br>
+      )<br>
+      <br>
+      response = model.generate_text(<span class="string">"Summarize this document:"</span>)<br>
+      <span class="comment"># Enterprise-grade, governed AI</span>
+    </div>
+    <div style="margin-top:24px;">
+      <a href="#" class="btn-ghost-blue">Documentation &#8594;</a>
+    </div>
+  </div>
+</div>
+
+<!-- SOLUTIONS GRAY SECTION -->
+<section class="section-gray10">
+  <div class="section-inner">
+    <div class="section-eyebrow">Industry Solutions</div>
+    <h2 class="section-title">Proven across<br>every industry</h2>
+    <p class="section-lead">IBM combines deep industry expertise with the latest AI and hybrid cloud technology to solve complex enterprise problems.</p>
+    <div class="tiles-3">
+      <div class="tile on-gray">
+        <span class="tile-icon">&#127973;</span>
+        <div class="tile-title">Financial Services</div>
+        <div class="tile-body">AI-powered risk management, fraud detection, and regulatory compliance. Trusted by 90% of the world's top 100 banks.</div>
+        <a href="#" class="tile-cta">Learn more &#8594;</a>
+      </div>
+      <div class="tile on-gray">
+        <span class="tile-icon">&#127973;</span>
+        <div class="tile-title">Healthcare &amp; Life Sciences</div>
+        <div class="tile-body">Accelerate drug discovery, clinical trials, and patient outcomes with AI. IBM Watson Health serving major health systems worldwide.</div>
+        <a href="#" class="tile-cta">Learn more &#8594;</a>
+      </div>
+      <div class="tile on-gray">
+        <span class="tile-icon">&#9889;</span>
+        <div class="tile-title">Energy &amp; Utilities</div>
+        <div class="tile-body">Grid modernization, predictive maintenance, and sustainability reporting. Helping utilities achieve net-zero with intelligent operations.</div>
+        <a href="#" class="tile-cta">Learn more &#8594;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEAT TWO COL -->
+<section class="section-white" style="padding:0;">
+  <div class="section-inner" style="max-width:100%;">
+    <div class="feat-two-col">
+      <div class="feat-col">
+        <div class="eyebrow">IBM Quantum</div>
+        <h3>The quantum era<br>is here</h3>
+        <p>IBM Quantum Network connects organizations to real quantum hardware. Over 400 quantum computers deployed to universities, research institutions, and enterprises worldwide.</p>
+        <ul style="list-style:none; margin-bottom:24px;">
+          <li style="display:flex; gap:12px; padding:10px 0; border-bottom:1px solid var(--gray-20); font-size:14px; color:var(--gray-70);">
+            <span style="color:var(--ibm-blue-60);">&#10003;</span> 1,000+ qubit systems available via cloud
+          </li>
+          <li style="display:flex; gap:12px; padding:10px 0; border-bottom:1px solid var(--gray-20); font-size:14px; color:var(--gray-70);">
+            <span style="color:var(--ibm-blue-60);">&#10003;</span> Qiskit open-source SDK with 500K+ users
+          </li>
+          <li style="display:flex; gap:12px; padding:10px 0; font-size:14px; color:var(--gray-70);">
+            <span style="color:var(--ibm-blue-60);">&#10003;</span> Error correction research at the frontier
+          </li>
+        </ul>
+        <a href="#" class="btn-primary">Explore IBM Quantum &#8594;</a>
+      </div>
+      <div class="feat-col gray">
+        <div class="eyebrow">IBM Consulting</div>
+        <h3>Strategy through<br>execution</h3>
+        <p>160,000 consultants working across 170 countries. From AI strategy and implementation to managed services, IBM Consulting delivers end-to-end transformation.</p>
+        <ul style="list-style:none; margin-bottom:24px;">
+          <li style="display:flex; gap:12px; padding:10px 0; border-bottom:1px solid var(--gray-20); font-size:14px; color:var(--gray-70);">
+            <span style="color:var(--ibm-blue-60);">&#10003;</span> Industry-specific accelerators and frameworks
+          </li>
+          <li style="display:flex; gap:12px; padding:10px 0; border-bottom:1px solid var(--gray-20); font-size:14px; color:var(--gray-70);">
+            <span style="color:var(--ibm-blue-60);">&#10003;</span> Partnership with SAP, Salesforce, AWS
+          </li>
+          <li style="display:flex; gap:12px; padding:10px 0; font-size:14px; color:var(--gray-70);">
+            <span style="color:var(--ibm-blue-60);">&#10003;</span> Managed services and operations
+          </li>
+        </ul>
+        <a href="#" class="btn-primary">Talk to consulting &#8594;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-brand-name">IBM</div>
+        <p>International Business Machines Corporation. Building smarter business through AI, hybrid cloud, and consulting. Founded 1911. Headquartered in Armonk, New York.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Products</h5>
+        <ul>
+          <li><a href="#">IBM watsonx</a></li>
+          <li><a href="#">IBM Cloud</a></li>
+          <li><a href="#">IBM Security</a></li>
+          <li><a href="#">IBM Z Systems</a></li>
+          <li><a href="#">Red Hat</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Solutions</h5>
+        <ul>
+          <li><a href="#">AI Solutions</a></li>
+          <li><a href="#">Hybrid Cloud</a></li>
+          <li><a href="#">Automation</a></li>
+          <li><a href="#">Data &amp; Analytics</a></li>
+          <li><a href="#">Sustainability</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Learn</h5>
+        <ul>
+          <li><a href="#">IBM Think</a></li>
+          <li><a href="#">IBM Research</a></li>
+          <li><a href="#">IBM Quantum</a></li>
+          <li><a href="#">Developer Hub</a></li>
+          <li><a href="#">Documentation</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <ul>
+          <li><a href="#">About IBM</a></li>
+          <li><a href="#">Investor Relations</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">News &amp; Press</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 IBM Corp. All Rights Reserved.</span>
+      <span>Privacy &#47; Terms &#47; Accessibility &#47; Cookie Preferences</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

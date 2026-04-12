@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Figma — Design Reference</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #000000;
+    --white: #ffffff;
+    --glass-dark: rgba(0, 0, 0, 0.08);
+    --glass-light: rgba(255, 255, 255, 0.16);
+  }
+
+  body {
+    font-family: 'Arial', system-ui, sans-serif;
+    background: var(--white);
+    color: var(--black);
+    font-size: 16px;
+    line-height: 1.4;
+    font-kerning: normal;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--white);
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    padding: 0 32px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--black);
+    text-decoration: none;
+    letter-spacing: -0.3px;
+  }
+
+  .nav-tabs {
+    display: flex;
+    gap: 4px;
+    list-style: none;
+  }
+
+  .nav-tab {
+    display: flex;
+    align-items: center;
+    height: 36px;
+    padding: 8px 16px;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--black);
+    text-decoration: none;
+    border-radius: 50px;
+    letter-spacing: -0.14px;
+    transition: background 150ms;
+  }
+
+  .nav-tab:hover, .nav-tab.active {
+    background: var(--black);
+    color: var(--white);
+  }
+
+  .nav-cta-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .btn-black-pill {
+    display: inline-flex;
+    align-items: center;
+    height: 36px;
+    padding: 8px 18px 10px;
+    background: var(--black);
+    color: var(--white);
+    font-size: 16px;
+    font-weight: 400;
+    border-radius: 50px;
+    text-decoration: none;
+    letter-spacing: -0.14px;
+    transition: opacity 150ms;
+  }
+
+  .btn-black-pill:focus { outline: dashed 2px var(--black); outline-offset: 3px; }
+
+  .btn-ghost-pill {
+    display: inline-flex;
+    align-items: center;
+    height: 36px;
+    padding: 8px 18px 10px;
+    background: transparent;
+    color: var(--black);
+    font-size: 16px;
+    font-weight: 400;
+    border-radius: 50px;
+    text-decoration: none;
+    letter-spacing: -0.14px;
+    border: 1px solid rgba(0,0,0,0.2);
+    transition: background 150ms;
+  }
+
+  .btn-ghost-pill:hover { background: rgba(0,0,0,0.05); }
+  .btn-ghost-pill:focus { outline: dashed 2px var(--black); outline-offset: 3px; }
+
+  /* HERO — GRADIENT CANVAS */
+  .hero {
+    width: 100%;
+    min-height: 100vh;
+    background: linear-gradient(135deg,
+      #7af080 0%,
+      #f0f060 20%,
+      #ff80f0 40%,
+      #a060ff 55%,
+      #ff4090 70%,
+      #60c0ff 85%,
+      #7af080 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-mono-label {
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--white);
+    letter-spacing: 0.54px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+
+  .hero-title {
+    font-size: 86px;
+    font-weight: 400;
+    line-height: 1.0;
+    letter-spacing: -1.72px;
+    color: var(--white);
+    max-width: 900px;
+    margin-bottom: 40px;
+  }
+
+  .hero-subtitle {
+    font-size: 20px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.9);
+    max-width: 560px;
+    margin-bottom: 48px;
+    line-height: 1.4;
+    letter-spacing: -0.14px;
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 64px;
+  }
+
+  .btn-white-pill-hero {
+    display: inline-flex;
+    align-items: center;
+    height: 48px;
+    padding: 8px 24px 10px;
+    background: var(--white);
+    color: var(--black);
+    font-size: 16px;
+    font-weight: 400;
+    border-radius: 50px;
+    text-decoration: none;
+    letter-spacing: -0.14px;
+  }
+
+  .btn-white-pill-hero:focus { outline: dashed 2px var(--white); outline-offset: 3px; }
+
+  .btn-glass-hero {
+    display: inline-flex;
+    align-items: center;
+    height: 48px;
+    padding: 8px 24px 10px;
+    background: rgba(255,255,255,0.16);
+    color: var(--white);
+    font-size: 16px;
+    font-weight: 400;
+    border-radius: 50%;
+    width: 48px;
+    justify-content: center;
+    text-decoration: none;
+  }
+
+  /* PRODUCT MOCKUP in HERO */
+  .hero-product-mockup {
+    background: rgba(255,255,255,0.92);
+    border-radius: 8px;
+    padding: 16px;
+    max-width: 800px;
+    width: 100%;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.2);
+  }
+
+  .mockup-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+  }
+
+  .mockup-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.15);
+  }
+
+  .mockup-tool-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--glass-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  .mockup-tool-btn.active {
+    background: var(--black);
+    color: var(--white);
+  }
+
+  .mockup-canvas {
+    background: #f0f0f0;
+    border-radius: 4px;
+    height: 200px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .canvas-component {
+    background: var(--white);
+    border-radius: 6px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--black);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    letter-spacing: -0.14px;
+  }
+
+  .canvas-component.selected {
+    outline: 2px solid var(--black);
+    outline-style: dashed;
+  }
+
+  .canvas-shape {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #a060ff, #ff4090);
+    border-radius: 8px;
+  }
+
+  .canvas-text-block {
+    background: transparent;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+
+  /* PRODUCT TABS SECTION */
+  .tabs-section {
+    padding: 80px 32px;
+    background: var(--white);
+  }
+
+  .tabs-nav {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    margin-bottom: 48px;
+    flex-wrap: wrap;
+  }
+
+  .tab-btn {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--black);
+    text-decoration: none;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    letter-spacing: -0.14px;
+    transition: background 150ms;
+  }
+
+  .tab-btn.active {
+    background: var(--black);
+    color: var(--white);
+  }
+
+  .tab-btn:hover:not(.active) { background: rgba(0,0,0,0.06); }
+  .tab-btn:focus { outline: dashed 2px var(--black); outline-offset: 3px; }
+
+  .tabs-content {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+
+  .tabs-text h2 {
+    font-size: 64px;
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.96px;
+    color: var(--black);
+    margin-bottom: 24px;
+  }
+
+  .tabs-text p {
+    font-size: 20px;
+    font-weight: 400;
+    color: rgba(0,0,0,0.6);
+    line-height: 1.4;
+    letter-spacing: -0.14px;
+    margin-bottom: 32px;
+  }
+
+  .tabs-visual {
+    background: #f5f5f5;
+    border-radius: 8px;
+    height: 360px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .component-preview {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 24px;
+  }
+
+  .comp-chip {
+    background: var(--white);
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--black);
+    text-align: center;
+    letter-spacing: -0.14px;
+  }
+
+  .comp-chip.variant-filled {
+    background: var(--black);
+    color: var(--white);
+    border-color: var(--black);
+  }
+
+  .comp-chip.variant-gradient {
+    background: linear-gradient(135deg, #a060ff, #ff4090);
+    color: var(--white);
+    border: none;
+  }
+
+  /* FEATURES SECTION */
+  .features-section {
+    background: var(--black);
+    padding: 80px 32px;
+  }
+
+  .features-section-label {
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.54px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    text-align: center;
+  }
+
+  .features-section-title {
+    font-size: 64px;
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.96px;
+    color: var(--white);
+    text-align: center;
+    margin-bottom: 64px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .feature-item {
+    background: #111;
+    padding: 32px;
+  }
+
+  .feature-item:first-child { border-radius: 8px 0 0 0; }
+  .feature-item:nth-child(3) { border-radius: 0 8px 0 0; }
+  .feature-item:nth-child(4) { border-radius: 0 0 0 8px; }
+  .feature-item:last-child { border-radius: 0 0 8px 0; }
+
+  .feature-item-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+
+  .feature-item-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.45;
+    margin-bottom: 8px;
+    letter-spacing: normal;
+  }
+
+  .feature-item-body {
+    font-size: 16px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.45;
+    letter-spacing: -0.14px;
+  }
+
+  /* COLLAB SECTION */
+  .collab-section {
+    background: var(--white);
+    padding: 80px 32px;
+    text-align: center;
+  }
+
+  .collab-title {
+    font-size: 64px;
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.96px;
+    color: var(--black);
+    margin-bottom: 24px;
+  }
+
+  .collab-desc {
+    font-size: 20px;
+    font-weight: 400;
+    color: rgba(0,0,0,0.5);
+    max-width: 520px;
+    margin: 0 auto 48px;
+    letter-spacing: -0.14px;
+    line-height: 1.4;
+  }
+
+  .collab-avatars {
+    display: flex;
+    justify-content: center;
+    gap: -8px;
+    margin-bottom: 48px;
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--white);
+    margin-left: -8px;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .avatar:first-child { margin-left: 0; }
+
+  .av1 { background: #ff9090; }
+  .av2 { background: #90ff90; }
+  .av3 { background: #9090ff; }
+  .av4 { background: #ffff90; }
+  .av5 { background: #ff90ff; }
+
+  /* FOOTER */
+  footer {
+    background: var(--black);
+    padding: 64px 32px;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 32px;
+  }
+
+  .footer-logo {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+  }
+
+  .footer-tagline {
+    font-size: 16px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: -0.14px;
+  }
+
+  .footer-nav {
+    display: flex;
+    gap: 64px;
+    flex-wrap: wrap;
+  }
+
+  .footer-col-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 12px;
+    letter-spacing: normal;
+  }
+
+  .footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .footer-links a {
+    font-size: 16px;
+    color: rgba(255,255,255,0.4);
+    text-decoration: none;
+    letter-spacing: -0.14px;
+    transition: color 150ms;
+  }
+
+  .footer-links a:hover { color: var(--white); }
+
+  .footer-bottom {
+    max-width: 1100px;
+    margin: 40px auto 0;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    font-size: 14px;
+    color: rgba(255,255,255,0.3);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 0 16px; }
+    .nav-tabs { display: none; }
+    .hero-title { font-size: 48px; letter-spacing: -0.96px; }
+    .hero-mono-label { font-size: 14px; }
+    .tabs-section { padding: 48px 16px; }
+    .tabs-content { grid-template-columns: 1fr; }
+    .tabs-text h2 { font-size: 36px; }
+    .features-section { padding: 48px 16px; }
+    .features-section-title { font-size: 36px; }
+    .features-grid { grid-template-columns: 1fr; gap: 2px; }
+    .collab-section { padding: 48px 16px; }
+    .collab-title { font-size: 36px; }
+    footer { padding: 48px 16px; }
+    .footer-inner { flex-direction: column; }
+    .footer-nav { gap: 32px; }
+    .footer-bottom { flex-direction: column; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Figma</a>
+  <ul class="nav-tabs">
+    <li><a href="#" class="nav-tab active">Design</a></li>
+    <li><a href="#" class="nav-tab">Prototype</a></li>
+    <li><a href="#" class="nav-tab">Dev Mode</a></li>
+    <li><a href="#" class="nav-tab">Slides</a></li>
+    <li><a href="#" class="nav-tab">Community</a></li>
+  </ul>
+  <div class="nav-cta-group">
+    <a href="#" class="btn-ghost-pill">Log in</a>
+    <a href="#" class="btn-black-pill">Get started free</a>
+  </div>
+</nav>
+
+<!-- HERO — GRADIENT CANVAS -->
+<section class="hero">
+  <div class="hero-mono-label">Design · Prototype · Build</div>
+  <h1 class="hero-title">Design everything,<br>together</h1>
+  <p class="hero-subtitle">Figma brings design and development together in one collaborative canvas.</p>
+  <div class="hero-ctas">
+    <a href="#" class="btn-white-pill-hero">Get started free</a>
+    <a href="#" class="btn-glass-hero">&#9654;</a>
+  </div>
+
+  <!-- CANVAS MOCKUP -->
+  <div class="hero-product-mockup">
+    <div class="mockup-toolbar">
+      <div class="mockup-dot"></div>
+      <div class="mockup-dot"></div>
+      <div class="mockup-dot"></div>
+      <div style="flex:1; display:flex; gap:8px; margin-left:16px;">
+        <div class="mockup-tool-btn">&#9654;</div>
+        <div class="mockup-tool-btn active">&#9633;</div>
+        <div class="mockup-tool-btn">&#9650;</div>
+        <div class="mockup-tool-btn">T</div>
+        <div class="mockup-tool-btn">&#128065;</div>
+      </div>
+      <div style="display:flex; gap:6px; align-items:center;">
+        <div style="width:20px; height:20px; border-radius:50%; background:#ff9090; font-size:10px; display:flex; align-items:center; justify-content:center; color:white;">A</div>
+        <div style="width:20px; height:20px; border-radius:50%; background:#90ff90; font-size:10px; display:flex; align-items:center; justify-content:center;">B</div>
+      </div>
+    </div>
+    <div class="mockup-canvas">
+      <div class="canvas-component selected">Button Component</div>
+      <div class="canvas-shape"></div>
+      <div class="canvas-component">&#128100; User Card</div>
+      <div class="canvas-text-block">Aa</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCT TABS -->
+<section class="tabs-section">
+  <div class="tabs-nav">
+    <button class="tab-btn active">Design</button>
+    <button class="tab-btn">FigJam</button>
+    <button class="tab-btn">Prototype</button>
+    <button class="tab-btn">Dev Mode</button>
+    <button class="tab-btn">Variables</button>
+  </div>
+  <div class="tabs-content">
+    <div class="tabs-text">
+      <h2>Design with components that scale</h2>
+      <p>Build reusable components. Maintain consistency across your entire design system with live updates.</p>
+      <a href="#" class="btn-black-pill">Explore design tools &#8594;</a>
+    </div>
+    <div class="tabs-visual">
+      <div class="component-preview">
+        <div class="comp-chip">Default</div>
+        <div class="comp-chip variant-filled">Primary</div>
+        <div class="comp-chip variant-gradient">Accent</div>
+        <div class="comp-chip" style="border-style:dashed;">Ghost</div>
+        <div class="comp-chip" style="opacity:0.4;">Disabled</div>
+        <div class="comp-chip" style="background:#f0f8ff; border-color:#90c0ff;">Info</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-section">
+  <div class="features-section-label">Everything in one tool</div>
+  <h2 class="features-section-title">From wireframe to production</h2>
+  <div class="features-grid">
+    <div class="feature-item">
+      <div class="feature-item-icon">&#128257;</div>
+      <div class="feature-item-title">Auto Layout</div>
+      <p class="feature-item-body">Build responsive components that adapt automatically to content changes.</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-item-icon">&#127808;</div>
+      <div class="feature-item-title">Variables</div>
+      <p class="feature-item-body">Token-based design decisions across all your projects and themes.</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-item-icon">&#128279;</div>
+      <div class="feature-item-title">Dev Mode</div>
+      <p class="feature-item-body">Inspect designs, copy code, and link to your codebase directly.</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-item-icon">&#9855;</div>
+      <div class="feature-item-title">Prototyping</div>
+      <p class="feature-item-body">Interactive prototypes with smart animations and scroll behaviors.</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-item-icon">&#128202;</div>
+      <div class="feature-item-title">Analytics</div>
+      <p class="feature-item-body">Track engagement with prototypes. See where users drop off.</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-item-icon">&#127759;</div>
+      <div class="feature-item-title">Multiplayer</div>
+      <p class="feature-item-body">Real-time collaboration. See your team designing live alongside you.</p>
+    </div>
+  </div>
+</section>
+
+<!-- COLLAB -->
+<section class="collab-section">
+  <h2 class="collab-title">Your whole team,<br>one canvas</h2>
+  <p class="collab-desc">From product managers to engineers, everyone can contribute in Figma.</p>
+  <div class="collab-avatars">
+    <div class="avatar av1">A</div>
+    <div class="avatar av2">B</div>
+    <div class="avatar av3">C</div>
+    <div class="avatar av4">D</div>
+    <div class="avatar av5">E</div>
+  </div>
+  <a href="#" class="btn-black-pill" style="font-size:18px; padding:12px 32px;">Start collaborating free</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">Figma</div>
+      <div class="footer-tagline">Design without boundaries</div>
+    </div>
+    <div class="footer-nav">
+      <div>
+        <div class="footer-col-title">Product</div>
+        <ul class="footer-links">
+          <li><a href="#">Design</a></li>
+          <li><a href="#">Prototype</a></li>
+          <li><a href="#">FigJam</a></li>
+          <li><a href="#">Dev Mode</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Company</div>
+        <ul class="footer-links">
+          <li><a href="#">About</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Press</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Resources</div>
+        <ul class="footer-links">
+          <li><a href="#">Community</a></li>
+          <li><a href="#">Templates</a></li>
+          <li><a href="#">Plugins</a></li>
+          <li><a href="#">Help Center</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&#169; 2026 Figma, Inc.</span>
+    <div style="display:flex; gap:16px;">
+      <a href="#" style="color:rgba(255,255,255,0.3); text-decoration:none; font-size:14px;">Privacy</a>
+      <a href="#" style="color:rgba(255,255,255,0.3); text-decoration:none; font-size:14px;">Terms</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,60 @@
+task_id: brand-flow-html-2026-04-11
+task_summary: 10ブランド brand-flow HTML制作（web-director→web-designer→web-coder）
+status: completed
+created_at: "2026-04-11"
+last_updated: "2026-04-11"
+
+brands:
+  - id: supabase
+    output: docs/references/design-md/samples/brand-flow/supabase.html
+    status: completed
+  - id: webflow
+    output: docs/references/design-md/samples/brand-flow/webflow.html
+    status: completed
+  - id: spacex
+    output: docs/references/design-md/samples/brand-flow/spacex.html
+    status: completed
+  - id: bmw
+    output: docs/references/design-md/samples/brand-flow/bmw.html
+    status: completed
+  - id: meta
+    output: docs/references/design-md/samples/brand-flow/meta.html
+    status: completed
+  - id: revolut
+    output: docs/references/design-md/samples/brand-flow/revolut.html
+    status: completed
+  - id: warp
+    output: docs/references/design-md/samples/brand-flow/warp.html
+    status: completed
+  - id: elevenlabs
+    output: docs/references/design-md/samples/brand-flow/elevenlabs.html
+    status: completed
+  - id: line
+    output: docs/references/design-md/samples/brand-flow/line.html
+    status: completed
+  - id: tabelog
+    output: docs/references/design-md/samples/brand-flow/tabelog.html
+    status: completed
+
+agents_completed:
+  - Web管理者
+  - Webデザイナー
+  - 構築人
+
+rounds:
+  round1:
+    description: 全10ブランド並列HTML実装
+    status: completed
+    started_at: "2026-04-11"
+    completed_at: "2026-04-11"
+    output:
+      - docs/references/design-md/samples/brand-flow/supabase.html
+      - docs/references/design-md/samples/brand-flow/webflow.html
+      - docs/references/design-md/samples/brand-flow/spacex.html
+      - docs/references/design-md/samples/brand-flow/bmw.html
+      - docs/references/design-md/samples/brand-flow/meta.html
+      - docs/references/design-md/samples/brand-flow/revolut.html
+      - docs/references/design-md/samples/brand-flow/warp.html
+      - docs/references/design-md/samples/brand-flow/elevenlabs.html
+      - docs/references/design-md/samples/brand-flow/line.html
+      - docs/references/design-md/samples/brand-flow/tabelog.html

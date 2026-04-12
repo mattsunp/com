@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Stripe — Brand Flow Template</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --purple:#533afd;
+  --purple-hover:#4434d4;
+  --purple-deep:#2e2b8c;
+  --purple-light:#b9b9f9;
+  --navy:#061b31;
+  --brand-dark:#1c1e54;
+  --dark-navy:#0d253d;
+  --white:#ffffff;
+  --slate:#64748d;
+  --label:#273951;
+  --border:#e5edf5;
+  --border-purple:#b9b9f9;
+  --ruby:#ea2261;
+  --magenta:#f96bee;
+  --success-green:#15be53;
+  --success-text:#108c3d;
+  --shadow-blue:rgba(50,50,93,0.25);
+  --shadow-black:rgba(0,0,0,0.1);
+  --shadow-ambient:rgba(23,23,23,0.08);
+  --card-shadow:rgba(50,50,93,0.25) 0px 30px 45px -30px,rgba(0,0,0,0.1) 0px 18px 36px -18px;
+}
+
+/* ─ font-feature-settings: "ss01" applied everywhere ─ */
+*{font-feature-settings:"ss01"}
+
+html{scroll-behavior:smooth}
+body{
+  background:var(--white);
+  color:var(--navy);
+  font-family:"sohne-var","SF Pro Display",-apple-system,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  font-weight:300;
+}
+
+/* ─── STICKY NAV ─── */
+.nav{
+  position:sticky;top:0;z-index:999;
+  background:rgba(255,255,255,0.94);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:0 24px;
+}
+.nav-inner{
+  max-width:1080px;margin:0 auto;
+  height:60px;display:flex;align-items:center;justify-content:space-between;
+}
+.logo{
+  color:var(--navy);text-decoration:none;
+  font-size:22px;font-weight:400;letter-spacing:-0.22px;
+  display:flex;align-items:center;gap:8px;
+}
+.logo-mark{
+  width:32px;height:32px;
+  background:linear-gradient(135deg,var(--purple) 0%,var(--magenta) 100%);
+  border-radius:6px;display:flex;align-items:center;
+  justify-content:center;color:white;font-size:16px;font-weight:400;
+}
+.nav-links{
+  display:flex;align-items:center;gap:4px;list-style:none;
+}
+.nav-links a{
+  color:var(--navy);font-size:14px;font-weight:400;
+  text-decoration:none;padding:6px 12px;border-radius:6px;
+  transition:background .15s;
+}
+.nav-links a:hover{background:rgba(83,58,253,0.05)}
+.nav-right{display:flex;align-items:center;gap:8px}
+.btn-signin{
+  color:var(--navy);font-size:14px;font-weight:400;
+  text-decoration:none;padding:6px 12px;border-radius:4px;
+}
+.btn-signin:hover{color:var(--purple)}
+.btn-start{
+  background:var(--purple);color:var(--white);
+  font-size:16px;font-weight:400;
+  padding:8px 16px;border-radius:4px;text-decoration:none;
+  transition:background .2s;
+}
+.btn-start:hover{background:var(--purple-hover)}
+
+/* ─── HERO ─── */
+.hero{
+  max-width:1080px;margin:0 auto;
+  padding:96px 24px 80px;
+  display:grid;grid-template-columns:1fr 1fr;gap:64px;
+  align-items:center;
+}
+.hero-text{}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--white);border:1px solid var(--border);
+  border-radius:4px;padding:4px 10px;
+  font-size:12px;color:var(--slate);font-weight:300;
+  margin-bottom:24px;
+  box-shadow:var(--shadow-ambient) 0px 15px 35px;
+}
+.badge-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--success-green);display:inline-block;
+}
+.hero h1{
+  font-size:56px;font-weight:300;line-height:1.03;
+  letter-spacing:-1.4px;color:var(--navy);
+  margin-bottom:20px;
+}
+.hero-sub{
+  font-size:18px;font-weight:300;line-height:1.40;
+  color:var(--slate);max-width:480px;margin-bottom:32px;
+}
+.hero-ctas{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.btn-hero-primary{
+  background:var(--purple);color:var(--white);
+  font-size:16px;font-weight:400;
+  padding:8px 20px;border-radius:4px;text-decoration:none;
+  transition:background .2s;
+}
+.btn-hero-primary:hover{background:var(--purple-hover)}
+.btn-hero-ghost{
+  background:transparent;color:var(--purple);
+  font-size:16px;font-weight:400;
+  padding:8px 20px;border-radius:4px;text-decoration:none;
+  border:1px solid var(--border-purple);
+  transition:background .2s;
+}
+.btn-hero-ghost:hover{background:rgba(83,58,253,0.05)}
+.hero-visual{
+  position:relative;
+}
+.dashboard-card{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:8px;padding:24px;
+  box-shadow:var(--card-shadow);
+}
+.dashboard-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:20px;
+}
+.dashboard-title{
+  font-size:13px;font-weight:400;color:var(--slate);
+}
+.badge-success{
+  background:rgba(21,190,83,0.2);color:var(--success-text);
+  font-size:10px;font-weight:300;
+  padding:1px 6px;border-radius:4px;
+  border:1px solid rgba(21,190,83,0.4);
+}
+.revenue-num{
+  font-size:32px;font-weight:300;letter-spacing:-0.64px;
+  color:var(--navy);margin-bottom:4px;
+}
+.revenue-sub{
+  font-size:12px;font-weight:300;color:var(--slate);margin-bottom:20px;
+}
+.chart-bars{
+  display:flex;align-items:flex-end;gap:4px;height:60px;
+}
+.bar{
+  flex:1;border-radius:2px 2px 0 0;
+  background:rgba(83,58,253,0.15);
+  transition:background .2s;
+}
+.bar:hover{background:var(--purple)}
+.bar.active{background:var(--purple)}
+.transactions{margin-top:20px;border-top:1px solid var(--border);padding-top:16px}
+.tx-item{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:6px 0;
+  border-bottom:1px solid rgba(0,0,0,0.04);
+  font-size:12px;font-weight:300;
+}
+.tx-merchant{color:var(--navy)}
+.tx-amount{color:var(--navy);font-weight:400}
+.tx-time{color:var(--slate);font-size:11px}
+.mini-card{
+  position:absolute;top:-20px;right:-20px;
+  background:var(--white);border:1px solid var(--border);
+  border-radius:6px;padding:12px 16px;
+  box-shadow:var(--card-shadow);
+  font-size:11px;font-weight:300;color:var(--slate);
+}
+.mini-card strong{color:var(--navy);font-weight:400;font-size:16px;letter-spacing:-0.32px}
+
+/* ─── FEATURES SECTION ─── */
+.section-features{
+  max-width:1080px;margin:0 auto;
+  padding:80px 24px;
+}
+.section-label{
+  font-size:12px;font-weight:400;color:var(--purple);
+  letter-spacing:0.5px;text-transform:uppercase;margin-bottom:16px;display:block;
+}
+.section-features h2{
+  font-size:32px;font-weight:300;line-height:1.10;
+  letter-spacing:-0.64px;color:var(--navy);
+  max-width:560px;margin-bottom:8px;
+}
+.section-features .section-sub{
+  font-size:18px;font-weight:300;line-height:1.40;
+  color:var(--slate);max-width:560px;margin-bottom:56px;
+}
+.features-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+}
+.feature-card{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:6px;padding:32px 24px;
+  box-shadow:var(--shadow-ambient) 0px 15px 35px;
+  transition:box-shadow .2s;
+}
+.feature-card:hover{
+  box-shadow:var(--card-shadow);
+}
+.feature-icon{
+  width:40px;height:40px;border-radius:4px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;margin-bottom:16px;
+  background:rgba(83,58,253,0.08);
+}
+.feature-card h3{
+  font-size:22px;font-weight:300;line-height:1.10;
+  letter-spacing:-0.22px;color:var(--navy);margin-bottom:10px;
+}
+.feature-card p{
+  font-size:16px;font-weight:300;line-height:1.40;color:var(--slate);
+}
+
+/* ─── DARK BRAND SECTION ─── */
+.section-brand{
+  background:var(--brand-dark);
+  padding:80px 24px;position:relative;overflow:hidden;
+}
+.brand-gradient{
+  position:absolute;top:-200px;right:-200px;
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(249,107,238,0.15) 0%,transparent 70%);
+  pointer-events:none;
+}
+.section-brand-inner{max-width:1080px;margin:0 auto;position:relative;z-index:1}
+.section-brand h2{
+  font-size:32px;font-weight:300;line-height:1.10;
+  letter-spacing:-0.64px;color:var(--white);
+  margin-bottom:12px;max-width:560px;
+}
+.section-brand .brand-sub{
+  font-size:18px;font-weight:300;line-height:1.40;
+  color:rgba(255,255,255,0.65);margin-bottom:40px;max-width:480px;
+}
+.brand-cards{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:16px;
+}
+.brand-card{
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:6px;padding:28px 24px;
+}
+.brand-card-num{
+  font-size:26px;font-weight:300;letter-spacing:-0.26px;
+  color:var(--white);margin-bottom:6px;
+}
+.brand-card-label{
+  font-size:14px;font-weight:300;color:rgba(255,255,255,0.5);
+}
+.brand-ctas{
+  margin-top:40px;display:flex;gap:12px;flex-wrap:wrap;
+}
+.btn-brand-primary{
+  background:var(--white);color:var(--brand-dark);
+  font-size:16px;font-weight:400;padding:8px 20px;
+  border-radius:4px;text-decoration:none;
+  transition:opacity .2s;
+}
+.btn-brand-primary:hover{opacity:0.9}
+.btn-brand-outline{
+  background:transparent;color:rgba(255,255,255,0.8);
+  font-size:16px;font-weight:400;padding:8px 20px;
+  border-radius:4px;text-decoration:none;
+  border:1px solid rgba(255,255,255,0.2);
+  transition:border-color .2s;
+}
+.btn-brand-outline:hover{border-color:rgba(255,255,255,0.5)}
+
+/* ─── DEVELOPER SECTION ─── */
+.section-dev{
+  max-width:1080px;margin:0 auto;
+  padding:80px 24px;
+  display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;
+}
+.dev-code{
+  background:var(--navy);border-radius:6px;
+  box-shadow:var(--card-shadow);overflow:hidden;
+}
+.code-header{
+  background:rgba(255,255,255,0.05);
+  padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.06);
+  display:flex;align-items:center;gap:8px;
+}
+.code-dot{width:10px;height:10px;border-radius:50%}
+.code-dot.r{background:#ff5f56}
+.code-dot.y{background:#ffbd2e}
+.code-dot.g{background:#27c93f}
+.code-lang{
+  margin-left:auto;color:rgba(255,255,255,0.3);
+  font-size:11px;font-weight:500;
+  font-family:"SourceCodePro","SFMono-Regular",Menlo,Monaco,monospace;
+  text-transform:uppercase;letter-spacing:0.5px;
+}
+.code-body{
+  padding:24px 20px;
+  font-family:"SourceCodePro","SFMono-Regular",Menlo,Monaco,Consolas,monospace;
+  font-size:12px;line-height:2.00;color:rgba(255,255,255,0.75);
+}
+.c-purple{color:#b9b9f9}
+.c-green{color:#7ec8a0}
+.c-yellow{color:#f0e68c}
+.c-orange{color:#f4a460}
+.dev-text h2{
+  font-size:32px;font-weight:300;letter-spacing:-0.64px;
+  color:var(--navy);line-height:1.10;margin-bottom:12px;
+}
+.dev-text p{
+  font-size:18px;font-weight:300;line-height:1.40;
+  color:var(--slate);margin-bottom:28px;
+}
+.dev-links{display:flex;flex-direction:column;gap:8px}
+.dev-link{
+  color:var(--purple);font-size:14px;font-weight:400;
+  text-decoration:none;display:flex;align-items:center;gap:6px;
+}
+.dev-link:hover{text-decoration:underline}
+
+/* ─── TRUST SECTION ─── */
+.section-trust{
+  background:rgba(83,58,253,0.03);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:64px 24px;
+}
+.trust-inner{max-width:1080px;margin:0 auto;text-align:center}
+.trust-inner h2{
+  font-size:32px;font-weight:300;letter-spacing:-0.64px;
+  color:var(--navy);margin-bottom:8px;
+}
+.trust-inner p{
+  font-size:18px;font-weight:300;color:var(--slate);margin-bottom:48px;
+}
+.trust-stats{
+  display:flex;justify-content:center;gap:64px;flex-wrap:wrap;
+}
+.trust-stat{text-align:center}
+.trust-num{
+  font-size:48px;font-weight:300;letter-spacing:-0.96px;
+  color:var(--navy);line-height:1.15;margin-bottom:4px;
+}
+.trust-label{font-size:14px;font-weight:300;color:var(--slate)}
+
+/* ─── PRICING SECTION ─── */
+.section-pricing{
+  max-width:1080px;margin:0 auto;
+  padding:80px 24px;
+}
+.section-pricing h2{
+  font-size:32px;font-weight:300;letter-spacing:-0.64px;
+  color:var(--navy);margin-bottom:8px;text-align:center;
+}
+.section-pricing .pricing-sub{
+  font-size:18px;font-weight:300;color:var(--slate);
+  margin-bottom:48px;text-align:center;
+}
+.pricing-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:24px;
+}
+.pricing-card{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:8px;padding:40px 32px;
+  box-shadow:var(--shadow-ambient) 0px 15px 35px;
+}
+.pricing-card.featured{
+  border-color:var(--navy);
+  box-shadow:var(--card-shadow);
+}
+.pricing-plan{
+  font-size:22px;font-weight:300;letter-spacing:-0.22px;
+  color:var(--navy);margin-bottom:8px;
+}
+.pricing-desc{
+  font-size:14px;font-weight:300;color:var(--slate);margin-bottom:24px;
+}
+.pricing-price{
+  font-size:48px;font-weight:300;letter-spacing:-0.96px;
+  color:var(--navy);margin-bottom:4px;line-height:1.15;
+}
+.pricing-price span{font-size:18px;vertical-align:top;margin-top:8px;display:inline-block}
+.pricing-period{
+  font-size:13px;font-weight:300;color:var(--slate);margin-bottom:32px;
+}
+.pricing-features{list-style:none;margin-bottom:32px}
+.pricing-features li{
+  display:flex;align-items:flex-start;gap:8px;
+  font-size:14px;font-weight:300;color:var(--label);
+  padding:8px 0;border-bottom:1px solid var(--border);
+}
+.pricing-features li::before{
+  content:"✓";color:var(--success-text);font-size:12px;
+  margin-top:2px;flex-shrink:0;
+}
+.btn-pricing-primary{
+  display:block;width:100%;text-align:center;
+  background:var(--purple);color:var(--white);
+  font-size:16px;font-weight:400;padding:10px;
+  border-radius:4px;text-decoration:none;
+  transition:background .2s;
+}
+.btn-pricing-primary:hover{background:var(--purple-hover)}
+.btn-pricing-outline{
+  display:block;width:100%;text-align:center;
+  background:transparent;color:var(--purple);
+  font-size:16px;font-weight:400;padding:10px;
+  border-radius:4px;text-decoration:none;
+  border:1px solid var(--border-purple);
+  transition:background .2s;
+}
+.btn-pricing-outline:hover{background:rgba(83,58,253,0.05)}
+
+/* ─── FOOTER ─── */
+footer{
+  background:var(--navy);
+  padding:64px 24px 32px;
+}
+.footer-inner{max-width:1080px;margin:0 auto}
+.footer-top{
+  display:grid;grid-template-columns:2fr repeat(4,1fr);
+  gap:40px;margin-bottom:48px;
+}
+.footer-brand{
+  color:var(--white);text-decoration:none;
+  font-size:18px;font-weight:300;letter-spacing:-0.18px;
+  display:flex;align-items:center;gap:8px;margin-bottom:16px;
+}
+.footer-mark{
+  width:28px;height:28px;
+  background:linear-gradient(135deg,var(--purple) 0%,var(--magenta) 100%);
+  border-radius:5px;display:flex;align-items:center;
+  justify-content:center;color:white;font-size:14px;
+}
+.footer-tagline{
+  font-size:14px;font-weight:300;
+  color:rgba(255,255,255,0.5);line-height:1.43;
+  max-width:220px;
+}
+.footer-col h5{
+  color:rgba(255,255,255,0.4);font-size:12px;font-weight:400;
+  letter-spacing:0.5px;text-transform:uppercase;margin-bottom:16px;
+}
+.footer-col ul{list-style:none}
+.footer-col li{margin-bottom:10px}
+.footer-col a{
+  color:rgba(255,255,255,0.65);font-size:13px;font-weight:300;
+  text-decoration:none;transition:color .15s;
+}
+.footer-col a:hover{color:var(--white)}
+.footer-bottom{
+  border-top:1px solid rgba(255,255,255,0.08);
+  padding-top:24px;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:12px;
+}
+.footer-bottom p{
+  color:rgba(255,255,255,0.3);font-size:12px;font-weight:300;
+}
+.footer-legal{display:flex;gap:16px}
+.footer-legal a{
+  color:rgba(255,255,255,0.3);font-size:12px;font-weight:300;
+  text-decoration:none;
+}
+.footer-legal a:hover{color:rgba(255,255,255,0.6)}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:1024px){
+  .features-grid{grid-template-columns:repeat(2,1fr)}
+  .brand-cards{grid-template-columns:1fr 1fr}
+  .footer-top{grid-template-columns:1fr 1fr 1fr}
+}
+@media(max-width:768px){
+  .hero{grid-template-columns:1fr;gap:48px}
+  .section-dev{grid-template-columns:1fr;gap:40px}
+  .features-grid{grid-template-columns:1fr}
+  .brand-cards{grid-template-columns:1fr}
+  .pricing-grid{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr 1fr}
+  .trust-stats{gap:32px}
+  .hero h1{font-size:40px;letter-spacing:-0.8px}
+  .nav-links{display:none}
+}
+@media(max-width:480px){
+  .hero h1{font-size:32px;letter-spacing:-0.64px}
+  .footer-top{grid-template-columns:1fr}
+  .mini-card{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- STICKY NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <span class="logo-mark">S</span>
+      Stripe
+    </a>
+    <ul class="nav-links">
+      <li><a href="#">製品</a></li>
+      <li><a href="#">ソリューション</a></li>
+      <li><a href="#">開発者</a></li>
+      <li><a href="#">料金</a></li>
+      <li><a href="#">リソース</a></li>
+    </ul>
+    <div class="nav-right">
+      <a href="#" class="btn-signin">サインイン</a>
+      <a href="#" class="btn-start">今すぐ始める</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      Stripe AI — パーソナライズされた決済体験
+    </div>
+    <h1>インターネット経済のインフラ</h1>
+    <p class="hero-sub">
+      世界中の企業がStripeを使って、支払いを受け付け、収益を成長させ、新しいビジネスモデルを開拓しています。
+    </p>
+    <div class="hero-ctas">
+      <a href="#" class="btn-hero-primary">今すぐ始める</a>
+      <a href="#" class="btn-hero-ghost">営業に相談する</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="mini-card">
+      <div>今月の収益</div>
+      <strong>&#165;12,483,200</strong>
+    </div>
+    <div class="dashboard-card">
+      <div class="dashboard-header">
+        <span class="dashboard-title">総収益（今月）</span>
+        <span class="badge-success">&#8593; 18.4%</span>
+      </div>
+      <div class="revenue-num">&#165;12,483,200</div>
+      <div class="revenue-sub">先月比 &#43;&#165;1,945,600</div>
+      <div class="chart-bars">
+        <div class="bar" style="height:35%"></div>
+        <div class="bar" style="height:52%"></div>
+        <div class="bar" style="height:44%"></div>
+        <div class="bar" style="height:68%"></div>
+        <div class="bar" style="height:57%"></div>
+        <div class="bar" style="height:73%"></div>
+        <div class="bar active" style="height:86%"></div>
+        <div class="bar" style="height:78%"></div>
+        <div class="bar" style="height:92%"></div>
+        <div class="bar" style="height:88%"></div>
+        <div class="bar" style="height:96%"></div>
+        <div class="bar active" style="height:100%"></div>
+      </div>
+      <div class="transactions">
+        <div class="tx-item">
+          <span class="tx-merchant">Shopify決済</span>
+          <span class="tx-time">2分前</span>
+          <span class="tx-amount">&#43;&#165;84,000</span>
+        </div>
+        <div class="tx-item">
+          <span class="tx-merchant">サブスクリプション更新</span>
+          <span class="tx-time">5分前</span>
+          <span class="tx-amount">&#43;&#165;12,800</span>
+        </div>
+        <div class="tx-item">
+          <span class="tx-merchant">B2B請求書決済</span>
+          <span class="tx-time">12分前</span>
+          <span class="tx-amount">&#43;&#165;320,000</span>
+        </div>
+        <div class="tx-item">
+          <span class="tx-merchant">国際送金</span>
+          <span class="tx-time">28分前</span>
+          <span class="tx-amount">&#43;&#165;56,400</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES SECTION -->
+<section class="section-features">
+  <span class="section-label">製品</span>
+  <h2>ビジネスのすべての決済を一元化</h2>
+  <p class="section-sub">ECから定期課金、B2B請求まで。Stripeはあらゆる収益モデルに対応します。</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">&#128179;</div>
+      <h3>Payments</h3>
+      <p>135以上の通貨と決済手段に対応。ワンクリック決済から複雑な分割払いまで、あらゆる支払いシナリオを処理できます。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">&#128257;</div>
+      <h3>Billing</h3>
+      <p>サブスクリプション管理から使用量課金まで。柔軟な料金体系を自動化し、チャーンを削減。MRRとARRを可視化します。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">&#128190;</div>
+      <h3>Connect</h3>
+      <p>マーケットプレイスや決済プラットフォーム構築に最適。複数の受取人への自動送金と手数料設計を一元管理できます。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">&#128208;</div>
+      <h3>Invoicing</h3>
+      <p>スマート請求書を自動生成し、メールで送付。支払いリマインダーと支払い状況のリアルタイム追跡が可能です。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">&#128196;</div>
+      <h3>Radar</h3>
+      <p>機械学習による不正検知。10億以上の取引から学習したモデルが、リアルタイムで不正リスクを評価します。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">&#128200;</div>
+      <h3>Sigma</h3>
+      <p>SQLで決済データを直接分析。あなたのStripeデータに対してカスタムレポートを作成し、ビジネスインサイトを抽出します。</p>
+    </div>
+  </div>
+</section>
+
+<!-- DARK BRAND SECTION -->
+<section class="section-brand">
+  <div class="brand-gradient"></div>
+  <div class="section-brand-inner">
+    <h2>135以上の国と地域でビジネスを拡大</h2>
+    <p class="brand-sub">ローカライズされた決済体験、通貨変換、コンプライアンス対応をすべてStripeが処理します。</p>
+    <div class="brand-cards">
+      <div class="brand-card">
+        <div class="brand-card-num">135&#43;</div>
+        <div class="brand-card-label">対応国・地域</div>
+      </div>
+      <div class="brand-card">
+        <div class="brand-card-num">135</div>
+        <div class="brand-card-label">対応通貨</div>
+      </div>
+      <div class="brand-card">
+        <div class="brand-card-num">99.99%</div>
+        <div class="brand-card-label">稼働率SLA</div>
+      </div>
+    </div>
+    <div class="brand-ctas">
+      <a href="#" class="btn-brand-primary">グローバル対応を見る</a>
+      <a href="#" class="btn-brand-outline">ドキュメントを確認する</a>
+    </div>
+  </div>
+</section>
+
+<!-- DEVELOPER SECTION -->
+<section class="section-dev">
+  <div class="dev-code">
+    <div class="code-header">
+      <span class="code-dot r"></span>
+      <span class="code-dot y"></span>
+      <span class="code-dot g"></span>
+      <span class="code-lang">Node.js</span>
+    </div>
+    <div class="code-body">
+<span class="c-purple">const</span> stripe = <span class="c-green">require</span>(<span class="c-yellow">'stripe'</span>)(<span class="c-orange">process.env.STRIPE_SECRET_KEY</span>);<br>
+<br>
+<span class="c-purple">const</span> paymentIntent = <span class="c-purple">await</span> stripe.paymentIntents.<span class="c-green">create</span>({<br>
+&nbsp;&nbsp;amount: <span class="c-orange">5000</span>,<br>
+&nbsp;&nbsp;currency: <span class="c-yellow">'jpy'</span>,<br>
+&nbsp;&nbsp;payment_method_types: [<span class="c-yellow">'card'</span>],<br>
+&nbsp;&nbsp;metadata: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;order_id: <span class="c-yellow">'order_JP_1234'</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;customer: <span class="c-yellow">'cus_abc123'</span><br>
+&nbsp;&nbsp;}<br>
+});<br>
+<br>
+<span class="c-purple">console</span>.<span class="c-green">log</span>(paymentIntent.client_secret);
+    </div>
+  </div>
+  <div class="dev-text">
+    <span class="section-label">開発者向け</span>
+    <h2>数行のコードで決済を統合</h2>
+    <p>包括的なAPIドキュメント、各言語向けSDK、Webhookによるリアルタイム通知。Stripeは開発者のために設計されています。</p>
+    <div class="dev-links">
+      <a href="#" class="dev-link">&#8594; APIリファレンスを読む</a>
+      <a href="#" class="dev-link">&#8594; クイックスタートガイド</a>
+      <a href="#" class="dev-link">&#8594; Stripeダッシュボードを試す</a>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST SECTION -->
+<section class="section-trust">
+  <div class="trust-inner">
+    <h2>世界中の企業がStripeを選ぶ理由</h2>
+    <p>スタートアップからFortune 500まで、あらゆる規模のビジネスが信頼しています。</p>
+    <div class="trust-stats">
+      <div class="trust-stat">
+        <div class="trust-num">&#36;1T&#43;</div>
+        <div class="trust-label">年間処理金額</div>
+      </div>
+      <div class="trust-stat">
+        <div class="trust-num">50M&#43;</div>
+        <div class="trust-label">企業・開発者が利用</div>
+      </div>
+      <div class="trust-stat">
+        <div class="trust-num">99.9%</div>
+        <div class="trust-label">決済成功率</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING SECTION -->
+<section class="section-pricing">
+  <h2>シンプルで透明な料金</h2>
+  <p class="pricing-sub">初期費用不要。月額固定費不要。決済が成功したときだけ手数料をいただきます。</p>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <p class="pricing-plan">統合型スタンダード</p>
+      <p class="pricing-desc">小規模ビジネスや個人開発者に最適なシンプルプラン</p>
+      <p class="pricing-price"><span>3.6</span>&#37;</p>
+      <p class="pricing-period">&#43; &#165;40 / 成功した決済</p>
+      <ul class="pricing-features">
+        <li>135通貨・決済手段対応</li>
+        <li>不正検知（Radar）組み込み済み</li>
+        <li>リアルタイム分析ダッシュボード</li>
+        <li>メールサポート</li>
+      </ul>
+      <a href="#" class="btn-pricing-outline">無料で始める</a>
+    </div>
+    <div class="pricing-card featured">
+      <p class="pricing-plan">カスタムプライシング</p>
+      <p class="pricing-desc">大量決済処理や複雑な要件をお持ちのエンタープライズ向け</p>
+      <p class="pricing-price">カスタム</p>
+      <p class="pricing-period">取引量に応じた最適プラン</p>
+      <ul class="pricing-features">
+        <li>カスタム決済手数料</li>
+        <li>マルチプロダクト割引</li>
+        <li>専任アカウントマネージャー</li>
+        <li>SLAとアップタイム保証</li>
+        <li>カスタムレポート（Sigma）</li>
+      </ul>
+      <a href="#" class="btn-pricing-primary">営業に問い合わせる</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <a href="#" class="footer-brand">
+          <span class="footer-mark">S</span>
+          Stripe
+        </a>
+        <p class="footer-tagline">インターネット経済のインフラを構築しています。</p>
+      </div>
+      <div class="footer-col">
+        <h5>製品</h5>
+        <ul>
+          <li><a href="#">Payments</a></li>
+          <li><a href="#">Billing</a></li>
+          <li><a href="#">Connect</a></li>
+          <li><a href="#">Invoicing</a></li>
+          <li><a href="#">Radar</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>開発者</h5>
+        <ul>
+          <li><a href="#">ドキュメント</a></li>
+          <li><a href="#">APIリファレンス</a></li>
+          <li><a href="#">SDKとライブラリ</a></li>
+          <li><a href="#">Stripe CLI</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>会社</h5>
+        <ul>
+          <li><a href="#">Stripeについて</a></li>
+          <li><a href="#">採用情報</a></li>
+          <li><a href="#">Stripeブログ</a></li>
+          <li><a href="#">パートナー</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>サポート</h5>
+        <ul>
+          <li><a href="#">ヘルプセンター</a></li>
+          <li><a href="#">お問い合わせ</a></li>
+          <li><a href="#">Stripeステータス</a></li>
+          <li><a href="#">コミュニティ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Stripe, Inc. All rights reserved.</p>
+      <div class="footer-legal">
+        <a href="#">プライバシーポリシー</a>
+        <a href="#">利用規約</a>
+        <a href="#">Cookie設定</a>
+        <a href="#">サイトマップ</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

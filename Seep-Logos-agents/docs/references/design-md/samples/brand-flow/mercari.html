@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>メルカリ — Design Reference</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --red: #ff333f;
+    --link: #0073cc;
+    --text: #333333;
+    --secondary: #666666;
+    --bg: #ffffff;
+    --grid-gutter: 24px;
+    --grid-inset: 16px;
+  }
+
+  body {
+    font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Meiryo", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.4;
+    letter-spacing: normal;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--bg);
+    border-bottom: 1px solid #f0f0f0;
+    position: sticky;
+    top: 0;
+    z-index: 1200;
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 0 var(--grid-inset);
+    height: 56px;
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+
+  .header-logo {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+
+  .logo-mark {
+    width: 32px;
+    height: 32px;
+    background: var(--red);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  .logo-text {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--red);
+    letter-spacing: -0.5px;
+  }
+
+  .header-search {
+    flex: 1;
+    max-width: 560px;
+    display: flex;
+    align-items: center;
+    background: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    border-radius: 0;
+    height: 40px;
+    padding: 0 12px;
+    gap: 8px;
+  }
+
+  .header-search input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    color: var(--text);
+    outline: none;
+    font-family: inherit;
+  }
+
+  .header-search input::placeholder { color: #999; }
+
+  .search-btn {
+    background: var(--red);
+    color: white;
+    border: none;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 0;
+  }
+
+  .header-nav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0;
+    list-style: none;
+  }
+
+  .header-nav a {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .header-nav a:hover { color: var(--red); }
+
+  .header-cta {
+    display: inline-flex;
+    align-items: center;
+    height: 36px;
+    padding: 0 14px;
+    background: var(--red);
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 4px;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  /* TAB NAV */
+  .tab-nav {
+    background: var(--bg);
+    border-bottom: 2px solid #f0f0f0;
+  }
+
+  .tab-nav-inner {
+    display: flex;
+    gap: 0;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 var(--grid-inset);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .tab-nav-inner::-webkit-scrollbar { display: none; }
+
+  .tab-item {
+    display: inline-flex;
+    align-items: center;
+    height: 44px;
+    padding: 0 16px;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--secondary);
+    text-decoration: none;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: color 150ms, border-color 150ms;
+    flex-shrink: 0;
+  }
+
+  .tab-item:hover { color: var(--text); }
+
+  .tab-item.active {
+    color: var(--red);
+    font-weight: 700;
+    border-bottom-color: var(--red);
+  }
+
+  /* HERO BANNER */
+  .hero-banner {
+    background: linear-gradient(120deg, #fff5f5 0%, #fff0f0 50%, #ffebeb 100%);
+    padding: 40px var(--grid-inset);
+    border-bottom: 1px solid #f0e0e0;
+  }
+
+  .hero-banner-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    align-items: center;
+  }
+
+  .hero-banner-text h1 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--secondary);
+    margin-bottom: 8px;
+  }
+
+  .hero-banner-text p {
+    font-size: 15px;
+    color: var(--text);
+    margin-bottom: 16px;
+    line-height: 1.4;
+  }
+
+  .hero-banner-app {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .app-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 36px;
+    padding: 0 14px;
+    background: var(--text);
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 4px;
+    text-decoration: none;
+  }
+
+  .hero-banner-visual {
+    display: flex;
+    gap: 8px;
+  }
+
+  .banner-item-card {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+  }
+
+  .bi1 { background: linear-gradient(135deg, #ffd8e0, #ffb0c0); }
+  .bi2 { background: linear-gradient(135deg, #d8eaff, #b0caff); }
+  .bi3 { background: linear-gradient(135deg, #d8ffd8, #b0f0b0); }
+
+  /* MAIN CONTENT */
+  .main-content {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 40px var(--grid-inset) 64px;
+  }
+
+  /* SECTION */
+  .content-section {
+    margin-bottom: 40px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .section-heading {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--secondary);
+    line-height: 1.4;
+  }
+
+  .section-more {
+    font-size: 15px;
+    color: var(--link);
+    text-decoration: none;
+  }
+
+  .section-more:hover { text-decoration: underline; }
+
+  /* PRODUCT GRID */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: var(--grid-gutter);
+  }
+
+  .product-card {
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--text);
+  }
+
+  .product-image {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 6px;
+    position: relative;
+  }
+
+  .product-image-inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+  }
+
+  .product-image:hover .product-like-btn {
+    opacity: 1;
+  }
+
+  .product-like-btn {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 150ms;
+    cursor: pointer;
+  }
+
+  .pi1 { background: linear-gradient(135deg, #ffd8e0, #f0b0c0); }
+  .pi2 { background: linear-gradient(135deg, #d8eaff, #b0c8f0); }
+  .pi3 { background: linear-gradient(135deg, #fff8d8, #f0dfa0); }
+  .pi4 { background: linear-gradient(135deg, #d8ffd8, #a0e0a0); }
+  .pi5 { background: linear-gradient(135deg, #f0d8ff, #d0a0f0); }
+  .pi6 { background: linear-gradient(135deg, #ffd8c0, #f0b090); }
+  .pi7 { background: linear-gradient(135deg, #d8f8ff, #a0e0f8); }
+  .pi8 { background: linear-gradient(135deg, #ffe0d8, #f0c0b0); }
+  .pi9 { background: linear-gradient(135deg, #e8ffd8, #c0f0a0); }
+  .pi10 { background: linear-gradient(135deg, #ffe8f0, #f0c8d8); }
+
+  .product-price {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
+  .product-price strong {
+    font-weight: 700;
+    color: var(--red);
+  }
+
+  .product-name {
+    font-size: 15px;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.4;
+  }
+
+  .product-sold {
+    font-size: 12px;
+    color: var(--secondary);
+    background: #f0f0f0;
+    padding: 2px 6px;
+    border-radius: 2px;
+    display: inline-flex;
+    margin-top: 2px;
+  }
+
+  /* CATEGORY GRID */
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 8px;
+  }
+
+  .category-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    color: var(--text);
+    padding: 12px 8px;
+    border-radius: 4px;
+    transition: background 150ms;
+  }
+
+  .category-item:hover { background: #f9f9f9; }
+
+  .category-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+  }
+
+  .cat1 { background: #fff0f0; }
+  .cat2 { background: #f0f0ff; }
+  .cat3 { background: #f0fff0; }
+  .cat4 { background: #fffff0; }
+  .cat5 { background: #fff0ff; }
+  .cat6 { background: #f0ffff; }
+  .cat7 { background: #fff5e0; }
+  .cat8 { background: #e8f5ff; }
+
+  .category-label {
+    font-size: 12px;
+    color: var(--text);
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  /* BANNER ROW */
+  .banner-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+
+  .promo-banner {
+    border-radius: 4px;
+    overflow: hidden;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    position: relative;
+  }
+
+  .promo-banner-main {
+    background: linear-gradient(120deg, #fff0f0 0%, #ffe0e0 100%);
+    border: 1px solid #ffd0d0;
+  }
+
+  .promo-banner-sub {
+    background: linear-gradient(120deg, #f0f5ff 0%, #e0e8ff 100%);
+    border: 1px solid #d0d8ff;
+  }
+
+  .promo-text h3 {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--secondary);
+    margin-bottom: 4px;
+  }
+
+  .promo-text p {
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.4;
+  }
+
+  .promo-badge {
+    background: var(--red);
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  /* FOOTER */
+  footer {
+    background: #f8f8f8;
+    border-top: 1px solid #e8e8e8;
+    padding: 40px var(--grid-inset) 64px;
+  }
+
+  .footer-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+
+  .footer-logo-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .footer-cols {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  .footer-col-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--secondary);
+    margin-bottom: 12px;
+  }
+
+  .footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .footer-links a {
+    font-size: 15px;
+    color: var(--link);
+    text-decoration: none;
+    line-height: 1.4;
+  }
+
+  .footer-links a:hover { text-decoration: underline; }
+
+  .footer-bottom {
+    padding-top: 24px;
+    border-top: 1px solid #e0e0e0;
+    font-size: 15px;
+    color: var(--secondary);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  @media (max-width: 768px) {
+    .header-inner { padding: 0 8px; }
+    .header-nav { display: none; }
+    .hero-banner-inner { grid-template-columns: 1fr; }
+    .hero-banner-visual { display: none; }
+    .product-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .category-grid { grid-template-columns: repeat(4, 1fr); }
+    .banner-row { grid-template-columns: 1fr; }
+    .footer-cols { grid-template-columns: repeat(2, 1fr); }
+    .footer-bottom { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <a href="#" class="header-logo">
+      <div class="logo-mark">m</div>
+      <span class="logo-text">mercari</span>
+    </a>
+    <div class="header-search">
+      <input type="text" placeholder="なんでも売り買いできる">
+      <button class="search-btn">&#128269;</button>
+    </div>
+    <ul class="header-nav">
+      <li><a href="#">出品する</a></li>
+      <li><a href="#">ログイン</a></li>
+      <li><a href="#" class="header-cta">会員登録</a></li>
+    </ul>
+  </div>
+</header>
+
+<!-- TAB NAV -->
+<div class="tab-nav">
+  <div class="tab-nav-inner">
+    <a href="#" class="tab-item active">おすすめ</a>
+    <a href="#" class="tab-item">フォロー中</a>
+    <a href="#" class="tab-item">ブランド</a>
+    <a href="#" class="tab-item">新着</a>
+    <a href="#" class="tab-item">値下げ</a>
+    <a href="#" class="tab-item">売り切れ</a>
+    <a href="#" class="tab-item">レディース</a>
+    <a href="#" class="tab-item">メンズ</a>
+    <a href="#" class="tab-item">キッズ・ベビー</a>
+    <a href="#" class="tab-item">家電・スマホ</a>
+    <a href="#" class="tab-item">スポーツ・レジャー</a>
+    <a href="#" class="tab-item">本・音楽</a>
+  </div>
+</div>
+
+<!-- HERO BANNER -->
+<div class="hero-banner">
+  <div class="hero-banner-inner">
+    <div class="hero-banner-text">
+      <h1>日本最大のフリマアプリ</h1>
+      <p>スマホひとつで、かんたん・安心に売り買いできる。<br>不要なものを出品して、お小遣い稼ぎしよう。</p>
+      <div class="hero-banner-app">
+        <a href="#" class="app-badge">&#128241; App Store</a>
+        <a href="#" class="app-badge">&#9654; Google Play</a>
+      </div>
+    </div>
+    <div class="hero-banner-visual">
+      <div class="banner-item-card bi1">&#128083;</div>
+      <div class="banner-item-card bi2">&#128241;</div>
+      <div class="banner-item-card bi3">&#128218;</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main-content">
+
+  <!-- PROMO BANNERS -->
+  <div class="banner-row">
+    <div class="promo-banner promo-banner-main">
+      <div class="promo-text">
+        <h3>はじめての出品で送料無料</h3>
+        <p>今なら初回限定クーポンプレゼント中</p>
+      </div>
+      <div class="promo-badge">詳しく見る &#8594;</div>
+    </div>
+    <div class="promo-banner promo-banner-sub">
+      <div class="promo-text">
+        <h3>ポイント増量キャンペーン</h3>
+        <p>条件達成でポイント3倍</p>
+      </div>
+      <div class="promo-badge" style="background:#0073cc;">確認する</div>
+    </div>
+  </div>
+
+  <!-- CATEGORIES -->
+  <div class="content-section">
+    <div class="section-header">
+      <h2 class="section-heading">カテゴリーから探す</h2>
+    </div>
+    <div class="category-grid">
+      <a href="#" class="category-item">
+        <div class="category-icon cat1">&#128083;</div>
+        <span class="category-label">レディース</span>
+      </a>
+      <a href="#" class="category-item">
+        <div class="category-icon cat2">&#128084;</div>
+        <span class="category-label">メンズ</span>
+      </a>
+      <a href="#" class="category-item">
+        <div class="category-icon cat3">&#128218;</div>
+        <span class="category-label">本・音楽</span>
+      </a>
+      <a href="#" class="category-item">
+        <div class="category-icon cat4">&#128241;</div>
+        <span class="category-label">スマホ・家電</span>
+      </a>
+      <a href="#" class="category-item">
+        <div class="category-icon cat5">&#127821;</div>
+        <span class="category-label">おもちゃ</span>
+      </a>
+      <a href="#" class="category-item">
+        <div class="category-icon cat6">&#9978;</div>
+        <span class="category-label">スポーツ</span>
+      </a>
+      <a href="#" class="category-item">
+        <div class="category-icon cat7">&#127769;</div>
+        <span class="category-label">インテリア</span>
+      </a>
+      <a href="#" class="category-item">
+        <div class="category-icon cat8">&#127912;</div>
+        <span class="category-label">ハンドメイド</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- RECOMMENDED PRODUCTS -->
+  <div class="content-section">
+    <div class="section-header">
+      <h2 class="section-heading">おすすめの商品</h2>
+      <a href="#" class="section-more">もっと見る</a>
+    </div>
+    <div class="product-grid">
+      <a href="#" class="product-card">
+        <div class="product-image pi1">
+          <div class="product-image-inner">&#128083;</div>
+          <div class="product-like-btn">&#9825;</div>
+        </div>
+        <div class="product-price">&#165;<strong>2,800</strong></div>
+        <div class="product-name">ハンドバッグ 未使用品</div>
+      </a>
+      <a href="#" class="product-card">
+        <div class="product-image pi2">
+          <div class="product-image-inner">&#128241;</div>
+          <div class="product-like-btn">&#9825;</div>
+        </div>
+        <div class="product-price">&#165;<strong>15,000</strong></div>
+        <div class="product-name">iPhone 13 Pro 美品</div>
+        <div class="product-sold">SOLD</div>
+      </a>
+      <a href="#" class="product-card">
+        <div class="product-image pi3">
+          <div class="product-image-inner">&#128218;</div>
+          <div class="product-like-btn">&#9825;</div>
+        </div>
+        <div class="product-price">&#165;<strong>480</strong></div>
+        <div class="product-name">鬼滅の刃 全23巻セット</div>
+      </a>
+      <a href="#" class="product-card">
+        <div class="product-image pi4">
+          <div class="product-image-inner">&#128637;</div>
+          <div class="product-like-btn">&#9825;</div>
+        </div>
+        <div class="product-price">&#165;<strong>45,000</strong></div>
+        <div class="product-name">ロードバイク 軽量</div>
+      </a>
+      <a href="#" class="product-card">
+        <div class="product-image pi5">
+          <div class="product-image-inner">&#128084;</div>
+          <div class="product-like-btn">&#9825;</div>
+        </div>
+        <div class="product-price">&#165;<strong>3,200</strong></div>
+        <div class="product-name">ネクタイ ブランド品</div>
+      </a>
+      <a href="#" class="product-card">
+        <div class="product-image pi6">
+          <div class="product-image-inner">&#128247;</div>
+          <div class="product-like-btn">&#9825;</div>
+        </div>
+        <div class="product-price">&#165;<strong>28,000</strong></div>
+        <div class="product-name">一眼レフカメラ</div>
+      </a>
+      <a href="#" class="product-card">
+        <div class="product-image pi7">
+          <div class="product-image-inner">&#127966;</div>
+          <div class="product-like-btn">&#9825;</div>
+        </div>
+        <div class="product-price">&#165;<strong>1,200</strong></div>
+        <div class="product-name">観葉植物 ポトス</div>
+      </a>
+      <a href="#" class="product-card">
+        <div class="product-image pi8">
+          <div class="product-image-inner">&#127794;</div>
+          <div class="product-like-btn">&#9825;</div>
+        </div>
+        <div class="product-price">&#165;<strong>5,500</strong></div>
+        <div class="product-name">コーヒーメーカー</div>
+      </a>
+      <a href="#" class="product-card">
+        <div class="product-image pi9">
+          <div class="product-image-inner">&#129535;</div>
+          <div class="product-like-btn">&#9825;</div>
+        </div>
+        <div class="product-price">&#165;<strong>8,000</strong></div>
+        <div class="product-name">Switch ソフトまとめ売り</div>
+      </a>
+      <a href="#" class="product-card">
+        <div class="product-image pi10">
+          <div class="product-image-inner">&#128140;</div>
+          <div class="product-like-btn">&#9825;</div>
+        </div>
+        <div class="product-price">&#165;<strong>2,100</strong></div>
+        <div class="product-name">メイクセット まとめ</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- RECENTLY VIEWED -->
+  <div class="content-section">
+    <div class="section-header">
+      <h2 class="section-heading">最近チェックした商品</h2>
+      <a href="#" class="section-more">もっと見る</a>
+    </div>
+    <div class="product-grid">
+      <a href="#" class="product-card">
+        <div class="product-image pi3">
+          <div class="product-image-inner">&#9965;</div>
+        </div>
+        <div class="product-price">&#165;<strong>12,500</strong></div>
+        <div class="product-name">ダウンジャケット Mサイズ</div>
+      </a>
+      <a href="#" class="product-card">
+        <div class="product-image pi1">
+          <div class="product-image-inner">&#127897;</div>
+        </div>
+        <div class="product-price">&#165;<strong>6,800</strong></div>
+        <div class="product-name">ワイヤレスイヤホン</div>
+        <div class="product-sold">SOLD</div>
+      </a>
+      <a href="#" class="product-card">
+        <div class="product-image pi5">
+          <div class="product-image-inner">&#128216;</div>
+        </div>
+        <div class="product-price">&#165;<strong>890</strong></div>
+        <div class="product-name">英会話テキスト 新品</div>
+      </a>
+      <a href="#" class="product-card">
+        <div class="product-image pi7">
+          <div class="product-image-inner">&#127754;</div>
+        </div>
+        <div class="product-price">&#165;<strong>3,400</strong></div>
+        <div class="product-name">水族館グッズセット</div>
+      </a>
+      <a href="#" class="product-card">
+        <div class="product-image pi9">
+          <div class="product-image-inner">&#128187;</div>
+        </div>
+        <div class="product-price">&#165;<strong>35,000</strong></div>
+        <div class="product-name">MacBook Air M2</div>
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo-row">
+      <div class="logo-mark" style="width:28px; height:28px; font-size:12px;">m</div>
+      <span class="logo-text">mercari</span>
+    </div>
+    <div class="footer-cols">
+      <div>
+        <div class="footer-col-title">メルカリについて</div>
+        <ul class="footer-links">
+          <li><a href="#">会社概要</a></li>
+          <li><a href="#">ニュース</a></li>
+          <li><a href="#">採用情報</a></li>
+          <li><a href="#">メルカリグループ</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">サービス</div>
+        <ul class="footer-links">
+          <li><a href="#">メルカリShops</a></li>
+          <li><a href="#">メルペイ</a></li>
+          <li><a href="#">メルカードポイント</a></li>
+          <li><a href="#">メルカリ便</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">サポート</div>
+        <ul class="footer-links">
+          <li><a href="#">ヘルプセンター</a></li>
+          <li><a href="#">お問い合わせ</a></li>
+          <li><a href="#">安全への取組み</a></li>
+          <li><a href="#">特定商取引法に基づく表記</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">ポリシー</div>
+        <ul class="footer-links">
+          <li><a href="#">利用規約</a></li>
+          <li><a href="#">プライバシーポリシー</a></li>
+          <li><a href="#">Cookieポリシー</a></li>
+          <li><a href="#">禁止されている行為</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&#169; 2026 Mercari, Inc.</span>
+      <span>日本語</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

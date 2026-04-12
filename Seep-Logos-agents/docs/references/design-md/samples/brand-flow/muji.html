@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>無印良品 — MUJI</title>
+<style>
+  :root {
+    --muji-red: #7f0019;
+    --red: #dd0c14;
+    --kinari: #f4eede;
+    --beige: #e0ceaa;
+    --text-primary: #3c3c43;
+    --text-secondary: #6d6d72;
+    --text-tertiary: #76767b;
+    --border: #d8d8d9;
+    --border-light: #ebebec;
+    --bg: #fff;
+    --bg-secondary: #f5f5f5;
+    /* Spacing */
+    --sp-xxxs: 8px;
+    --sp-xxs: 12px;
+    --sp-xs: 16px;
+    --sp-s: 20px;
+    --sp-sm: 24px;
+    --sp-m: 32px;
+    --sp-ml: 40px;
+    --sp-l: 48px;
+    --sp-xl: 56px;
+    --sp-xxl: 64px;
+    --sp-xxxl: 80px;
+    --sp-xxxxl: 96px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: "Helvetica Neue", Arial, "Noto Sans JP", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    background: var(--bg);
+  }
+
+  /* Navigation */
+  .nav-top {
+    background: var(--bg);
+    border-bottom: 1px solid var(--border-light);
+    padding: 0;
+  }
+  .nav-utility {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 8px var(--sp-m);
+    gap: var(--sp-sm);
+    border-bottom: 1px solid var(--border-light);
+  }
+  .nav-util-link {
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .nav-util-link:hover { color: var(--text-primary); }
+  .nav-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--sp-sm) var(--sp-m);
+  }
+  .nav-logo {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+  }
+  .nav-logo-ja {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    letter-spacing: 2px;
+    line-height: 1.6;
+  }
+  .nav-logo-en {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--muji-red);
+    letter-spacing: 4px;
+    line-height: 1.15;
+  }
+  .nav-center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+  .nav-links {
+    display: flex;
+    gap: 0;
+    list-style: none;
+  }
+  .nav-links a {
+    padding: var(--sp-xxs) var(--sp-sm);
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .nav-links a:hover { color: var(--muji-red); }
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-xs);
+  }
+  .nav-icon {
+    font-size: 18px;
+    cursor: pointer;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    padding: 6px;
+  }
+  .nav-icon:hover { color: var(--muji-red); }
+  .nav-category {
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-light);
+    padding: 0 var(--sp-m);
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+  }
+  .nav-category a {
+    padding: var(--sp-xxs) var(--sp-sm);
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    text-decoration: none;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .nav-category a:hover,
+  .nav-category a.active {
+    color: var(--text-primary);
+    border-bottom-color: var(--text-primary);
+  }
+
+  /* Hero */
+  .hero {
+    background: var(--kinari);
+    padding: var(--sp-xxxxl) var(--sp-m);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-xxl);
+    align-items: center;
+    max-width: 100%;
+  }
+  .hero-text {
+    padding-left: 40px;
+  }
+  .hero-label {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    letter-spacing: 2.4px;
+    text-transform: uppercase;
+    margin-bottom: var(--sp-s);
+    line-height: 1.15;
+  }
+  .hero-title {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.6;
+    color: var(--text-primary);
+    margin-bottom: var(--sp-sm);
+  }
+  .hero-desc {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: var(--sp-m);
+  }
+  .btn-primary-muji {
+    display: inline-block;
+    padding: 10px 28px;
+    background: var(--text-primary);
+    color: var(--bg);
+    font-size: 12px;
+    font-weight: 700;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-primary-muji:hover { background: #555; }
+  .btn-outline-muji {
+    display: inline-block;
+    padding: 10px 28px;
+    background: transparent;
+    color: var(--text-primary);
+    font-size: 12px;
+    font-weight: 700;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    margin-left: var(--sp-xxs);
+    transition: border-color 0.15s;
+  }
+  .btn-outline-muji:hover { border-color: var(--text-primary); }
+  .hero-visual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 120px;
+    background: var(--beige);
+    aspect-ratio: 4/3;
+  }
+
+  /* Breadcrumb */
+  .breadcrumb {
+    padding: var(--sp-sm) var(--sp-m);
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .breadcrumb a {
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-decoration: none;
+  }
+  .breadcrumb span {
+    font-size: 12px;
+    color: var(--text-tertiary);
+  }
+
+  /* Category Section */
+  .section {
+    padding: var(--sp-xxxl) var(--sp-m);
+  }
+  .section-title {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: 2.4px;
+    color: var(--text-primary);
+    margin-bottom: var(--sp-m);
+    padding-bottom: var(--sp-sm);
+    border-bottom: 1px solid var(--border-light);
+  }
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: var(--sp-m);
+    padding-bottom: var(--sp-sm);
+    border-bottom: 1px solid var(--border-light);
+  }
+  .view-more {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .view-more:hover { color: var(--text-primary); }
+
+  /* Category grid */
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: var(--sp-xs);
+  }
+  .category-item {
+    text-align: center;
+    cursor: pointer;
+  }
+  .category-img {
+    background: var(--bg-secondary);
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    margin-bottom: var(--sp-xxs);
+    border: 1px solid var(--border-light);
+  }
+  .category-name {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  .category-name-ja {
+    font-size: 11px;
+    color: var(--text-tertiary);
+  }
+
+  /* Product grid */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-xs);
+  }
+  .product-card {
+    border: 1px solid var(--border-light);
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .product-card:hover { border-color: var(--border); }
+  .product-img {
+    background: var(--bg-secondary);
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .product-info {
+    padding: var(--sp-xxs) var(--sp-xs);
+  }
+  .product-name {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-primary);
+    line-height: 1.6;
+    margin-bottom: 4px;
+  }
+  .product-desc-short {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--sp-xxs);
+  }
+  .product-price-muji {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+  .product-price-tax {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    margin-left: 4px;
+  }
+  .product-sale {
+    color: var(--red);
+  }
+  .product-sale-original {
+    text-decoration: line-through;
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 400;
+    margin-left: 4px;
+  }
+
+  /* Feature banner */
+  .feature-banner {
+    background: var(--kinari);
+    padding: var(--sp-xxxl) var(--sp-m);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-xxl);
+    align-items: center;
+  }
+  .feature-banner.reverse { direction: rtl; }
+  .feature-banner.reverse > * { direction: ltr; }
+  .feature-visual-large {
+    background: var(--beige);
+    aspect-ratio: 4/3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 96px;
+  }
+  .feature-text {
+    padding: var(--sp-m);
+  }
+  .feature-label {
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 2.4px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    margin-bottom: var(--sp-s);
+  }
+  .feature-title {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.6;
+    letter-spacing: 2.4px;
+    color: var(--text-primary);
+    margin-bottom: var(--sp-sm);
+  }
+  .feature-body {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: var(--sp-m);
+  }
+
+  /* Philosophy section */
+  .philosophy {
+    background: var(--bg);
+    padding: var(--sp-xxxxl) var(--sp-m);
+    text-align: center;
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
+  }
+  .philosophy-label {
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 2.4px;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    margin-bottom: var(--sp-m);
+  }
+  .philosophy-title {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.6;
+    color: var(--text-primary);
+    margin-bottom: var(--sp-m);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .philosophy-body {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    max-width: 640px;
+    margin: 0 auto var(--sp-xxl);
+  }
+  .philosophy-values {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-l);
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .philosophy-value {}
+  .philosophy-value-icon {
+    font-size: 32px;
+    margin-bottom: var(--sp-sm);
+  }
+  .philosophy-value-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--sp-xxs);
+  }
+  .philosophy-value-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* Campaign section */
+  .campaign-section {
+    background: var(--text-primary);
+    padding: var(--sp-xxxl) var(--sp-m);
+    text-align: center;
+    color: var(--bg);
+  }
+  .campaign-label {
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 2.4px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: var(--sp-sm);
+  }
+  .campaign-title {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 2.4px;
+    line-height: 1.15;
+    color: var(--bg);
+    margin-bottom: var(--sp-sm);
+  }
+  .campaign-desc {
+    font-size: 16px;
+    color: rgba(255,255,255,0.7);
+    max-width: 480px;
+    margin: 0 auto var(--sp-m);
+  }
+  .btn-primary-inv {
+    display: inline-block;
+    padding: 10px 32px;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  /* Info bar */
+  .info-bar {
+    background: var(--kinari);
+    padding: var(--sp-l) var(--sp-m);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-m);
+    border-top: 1px solid var(--beige);
+    border-bottom: 1px solid var(--beige);
+  }
+  .info-item {
+    text-align: center;
+  }
+  .info-icon {
+    font-size: 28px;
+    margin-bottom: var(--sp-xxs);
+  }
+  .info-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+  .info-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* Footer */
+  footer {
+    background: var(--bg);
+    border-top: 1px solid var(--border-light);
+    padding: var(--sp-xxl) var(--sp-m) var(--sp-m);
+  }
+  .footer-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--sp-xxl);
+    padding-bottom: var(--sp-xxl);
+    border-bottom: 1px solid var(--border-light);
+  }
+  .footer-logo-area .nav-logo-en {
+    font-size: 18px;
+    letter-spacing: 3px;
+  }
+  .footer-logo-area .nav-logo-ja {
+    margin-bottom: 12px;
+  }
+  .footer-tagline {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    max-width: 200px;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-m);
+    flex: 1;
+    margin-left: var(--sp-xxl);
+  }
+  .footer-col-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--sp-sm);
+    padding-bottom: var(--sp-xxs);
+    border-bottom: 1px solid var(--border-light);
+  }
+  .footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-xxs);
+  }
+  .footer-links a {
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .footer-links a:hover { color: var(--muji-red); }
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .footer-copy {
+    font-size: 12px;
+    color: var(--text-tertiary);
+  }
+  .footer-bottom-links {
+    display: flex;
+    gap: 16px;
+  }
+  .footer-bottom-links a {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    text-decoration: none;
+  }
+
+  @media (max-width: 1024px) {
+    .category-grid { grid-template-columns: repeat(4, 1fr); }
+    .product-grid { grid-template-columns: repeat(3, 1fr); }
+    .footer-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; padding: var(--sp-xxl) var(--sp-sm); }
+    .hero-text { padding-left: 0; }
+    .hero-visual { display: none; }
+    .category-grid { grid-template-columns: repeat(3, 1fr); }
+    .product-grid { grid-template-columns: repeat(2, 1fr); }
+    .feature-banner { grid-template-columns: 1fr; padding: var(--sp-xxl) var(--sp-sm); }
+    .philosophy-values { grid-template-columns: 1fr; }
+    .info-bar { grid-template-columns: repeat(2, 1fr); }
+    .footer-top { flex-direction: column; gap: var(--sp-m); }
+    .footer-grid { margin-left: 0; }
+    .section { padding: var(--sp-l) var(--sp-sm); }
+  }
+  @media (max-width: 480px) {
+    .category-grid { grid-template-columns: repeat(2, 1fr); }
+    .product-grid { grid-template-columns: 1fr 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .info-bar { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="nav-top">
+  <div class="nav-utility">
+    <a href="#" class="nav-util-link">店舗を探す</a>
+    <a href="#" class="nav-util-link">会員登録</a>
+    <a href="#" class="nav-util-link">ログイン</a>
+    <a href="#" class="nav-util-link">お気に入り</a>
+    <a href="#" class="nav-util-link">ご注文履歴</a>
+  </div>
+  <div class="nav-main">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-ja">無印良品</div>
+      <div class="nav-logo-en">MUJI</div>
+    </a>
+    <div class="nav-center">
+      <ul class="nav-links">
+        <li><a href="#">服・布</a></li>
+        <li><a href="#">生活雑貨</a></li>
+        <li><a href="#">食品・飲料</a></li>
+        <li><a href="#">家具・照明</a></li>
+        <li><a href="#">美容・健康</a></li>
+        <li><a href="#">新着</a></li>
+      </ul>
+    </div>
+    <div class="nav-right">
+      <div class="nav-icon">&#128269; 検索</div>
+      <div class="nav-icon">&#9825; お気に入り</div>
+      <div class="nav-icon">&#128717; カート</div>
+    </div>
+  </div>
+  <div class="nav-category">
+    <a href="#" class="active">すべて</a>
+    <a href="#">衣服</a>
+    <a href="#">靴・バッグ</a>
+    <a href="#">インテリア</a>
+    <a href="#">キッチン</a>
+    <a href="#">文具・事務</a>
+    <a href="#">旅・アウトドア</a>
+    <a href="#">ヘルス＆ビューティー</a>
+    <a href="#">キッズ</a>
+    <a href="#">セール</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-text">
+    <div class="hero-label">Spring 2026 Collection</div>
+    <h1 class="hero-title">素材を感じる、<br>シンプルな日常。</h1>
+    <p class="hero-desc">余分なものを削ぎ落とした、無印良品の春コレクション。自然素材と機能性が融合した、長く使える道具たちをご紹介します。</p>
+    <a href="#" class="btn-primary-muji">コレクションを見る</a>
+    <a href="#" class="btn-outline-muji">新着一覧</a>
+  </div>
+  <div class="hero-visual">&#127807;</div>
+</div>
+
+<!-- Breadcrumb -->
+<div class="breadcrumb">
+  <a href="#">ホーム</a>
+  <span>/</span>
+  <a href="#">新着・おすすめ</a>
+</div>
+
+<!-- Category section -->
+<section class="section">
+  <h2 class="section-title">カテゴリから探す</h2>
+  <div class="category-grid">
+    <div class="category-item">
+      <div class="category-img">&#128084;</div>
+      <div class="category-name">衣服</div>
+      <div class="category-name-ja">Clothing</div>
+    </div>
+    <div class="category-item">
+      <div class="category-img">&#127968;</div>
+      <div class="category-name">インテリア</div>
+      <div class="category-name-ja">Interior</div>
+    </div>
+    <div class="category-item">
+      <div class="category-img">&#129294;</div>
+      <div class="category-name">キッチン</div>
+      <div class="category-name-ja">Kitchen</div>
+    </div>
+    <div class="category-item">
+      <div class="category-img">&#128196;</div>
+      <div class="category-name">文具</div>
+      <div class="category-name-ja">Stationery</div>
+    </div>
+    <div class="category-item">
+      <div class="category-img">&#129491;</div>
+      <div class="category-name">ヘルス＆ビューティー</div>
+      <div class="category-name-ja">Health</div>
+    </div>
+    <div class="category-item">
+      <div class="category-img">&#127826;</div>
+      <div class="category-name">食品</div>
+      <div class="category-name-ja">Food</div>
+    </div>
+  </div>
+</section>
+
+<!-- Product section -->
+<section class="section" style="background:var(--bg-secondary);padding-top:var(--sp-xxxl);padding-bottom:var(--sp-xxxl);">
+  <div class="section-header">
+    <h2 class="section-title" style="border:none;margin:0;padding:0;">新着商品</h2>
+    <a href="#" class="view-more">すべての新着を見る &rarr;</a>
+  </div>
+  <div class="product-grid">
+    <div class="product-card">
+      <div class="product-img">&#128084;</div>
+      <div class="product-info">
+        <div class="product-name">オーガニックコットンフランネルシャツ</div>
+        <div class="product-desc-short">天然素材。柔らかな肌触り。洗うほど味が出る。</div>
+        <div class="product-price-muji">¥4,990<span class="product-price-tax">（税込）</span></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img" style="background:var(--kinari);">&#127968;</div>
+      <div class="product-info">
+        <div class="product-name">スタッキングシェルフ・追加用</div>
+        <div class="product-desc-short">組み合わせて使うシェルフ。ウォールナット材。</div>
+        <div class="product-price-muji">¥9,990<span class="product-price-tax">（税込）</span></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img" style="background:#f0f5f0;">&#129294;</div>
+      <div class="product-info">
+        <div class="product-name">野田琺瑯 ホーロー保存容器</div>
+        <div class="product-desc-short">汚れがつきにくく、清潔に保てる。電子レンジ対応外。</div>
+        <div class="product-price-muji product-sale">¥1,490<span class="product-price-tax">（税込）</span><span class="product-sale-original">¥1,990</span></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img" style="background:#f5f5f0;">&#128196;</div>
+      <div class="product-info">
+        <div class="product-name">六角形鉛筆・12本入</div>
+        <div class="product-desc-short">丸みを帯びない六角形。転がらない。濃さ：HB。</div>
+        <div class="product-price-muji">¥290<span class="product-price-tax">（税込）</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Feature banner 1 -->
+<div class="feature-banner">
+  <div class="feature-visual-large">&#127807;</div>
+  <div class="feature-text">
+    <div class="feature-label">Natural Material</div>
+    <h2 class="feature-title">オーガニックコットンの<br>やさしさ</h2>
+    <p class="feature-body">農薬・化学肥料を使用せずに栽培されたオーガニックコットン100%。肌への刺激が少なく、長く使うほど柔らかさが増します。環境への配慮と日常の快適さを両立させた素材選びです。</p>
+    <a href="#" class="btn-primary-muji">オーガニックコットンを見る</a>
+  </div>
+</div>
+
+<!-- Feature banner 2 -->
+<div class="feature-banner reverse" style="background:var(--bg-secondary);">
+  <div class="feature-visual-large" style="background:var(--bg-secondary);">&#127968;</div>
+  <div class="feature-text">
+    <div class="feature-label">Good Design</div>
+    <h2 class="feature-title">シンプルで<br>長く使える家具</h2>
+    <p class="feature-body">無印良品の家具は、余分な装飾を省いたシンプルなデザインです。流行に左右されず、どんな部屋にも馴染む。10年後も使い続けられる、本当に良いものを作り続けます。</p>
+    <a href="#" class="btn-primary-muji">家具を見る</a>
+  </div>
+</div>
+
+<!-- Philosophy -->
+<div class="philosophy">
+  <div class="philosophy-label">MUJI Philosophy</div>
+  <h2 class="philosophy-title">「これでいい」から<br>「これがいい」へ</h2>
+  <p class="philosophy-body">無印良品は「わけあって、安い」という発想からはじまりました。余分なものを省いた先にある、本当に必要なものだけを届ける。それが無印良品の考え方です。</p>
+  <div class="philosophy-values">
+    <div class="philosophy-value">
+      <div class="philosophy-value-icon">&#127816;</div>
+      <div class="philosophy-value-title">素材の厳選</div>
+      <p class="philosophy-value-desc">天然素材を中心に、安全で環境への負荷が少ない素材を世界中から厳選しています。</p>
+    </div>
+    <div class="philosophy-value">
+      <div class="philosophy-value-icon">&#9973;</div>
+      <div class="philosophy-value-title">工程の見直し</div>
+      <p class="philosophy-value-desc">製造工程を徹底的に見直し、必要な工程だけを残すことで品質を高めながら価格を抑えます。</p>
+    </div>
+    <div class="philosophy-value">
+      <div class="philosophy-value-icon">&#128230;</div>
+      <div class="philosophy-value-title">包装の簡略化</div>
+      <p class="philosophy-value-desc">過剰な包装を省いた簡素なパッケージ。環境への配慮と、取り出しやすさの両立を目指しています。</p>
+    </div>
+  </div>
+</div>
+
+<!-- Campaign -->
+<div class="campaign-section">
+  <div class="campaign-label">Membership</div>
+  <div class="campaign-title">MUJI passport で<br>もっとおトクに</div>
+  <p class="campaign-desc">アプリをダウンロードして、ポイントをためよう。マイル、特別クーポン、限定アイテムが手に入る。</p>
+  <a href="#" class="btn-primary-inv">アプリをダウンロード（無料）</a>
+</div>
+
+<!-- Info bar -->
+<div class="info-bar">
+  <div class="info-item">
+    <div class="info-icon">&#128230;</div>
+    <div class="info-title">5,000円以上で送料無料</div>
+    <p class="info-desc">税込5,000円以上のご購入で、全国一律送料無料</p>
+  </div>
+  <div class="info-item">
+    <div class="info-icon">&#128260;</div>
+    <div class="info-title">30日間返品保証</div>
+    <p class="info-desc">未使用品に限り、購入から30日以内は返品・交換可能</p>
+  </div>
+  <div class="info-item">
+    <div class="info-icon">&#127978;</div>
+    <div class="info-title">全国890店舗</div>
+    <p class="info-desc">全国の無印良品の店舗でも同じ商品をご購入いただけます</p>
+  </div>
+  <div class="info-item">
+    <div class="info-icon">&#9749;</div>
+    <div class="info-title">MUJI Cafe</div>
+    <p class="info-desc">一部の大型店舗では、無印良品のカフェをご利用いただけます</p>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-logo-area">
+      <div class="nav-logo-ja" style="font-size:11px;letter-spacing:2px;color:var(--text-secondary);margin-bottom:4px;">無印良品</div>
+      <div class="nav-logo-en" style="font-size:18px;letter-spacing:3px;margin-bottom:12px;">MUJI</div>
+      <p class="footer-tagline">素材を活かした、<br>シンプルで長く使えるものを。</p>
+    </div>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-col-title">カテゴリ</div>
+        <ul class="footer-links">
+          <li><a href="#">衣服・布製品・靴</a></li>
+          <li><a href="#">生活雑貨</a></li>
+          <li><a href="#">食品・飲料</a></li>
+          <li><a href="#">家具・インテリア</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">ご利用ガイド</div>
+        <ul class="footer-links">
+          <li><a href="#">ご注文・お届け</a></li>
+          <li><a href="#">返品・交換</a></li>
+          <li><a href="#">サイズガイド</a></li>
+          <li><a href="#">ラッピング</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">サービス</div>
+        <ul class="footer-links">
+          <li><a href="#">MUJI passport</a></li>
+          <li><a href="#">MUJI CARD</a></li>
+          <li><a href="#">法人向けサービス</a></li>
+          <li><a href="#">ギフト</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">会社情報</div>
+        <ul class="footer-links">
+          <li><a href="#">良品計画について</a></li>
+          <li><a href="#">CSR・環境への取組み</a></li>
+          <li><a href="#">採用情報</a></li>
+          <li><a href="#">プレスリリース</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">&copy; 2026 株式会社良品計画</span>
+    <div class="footer-bottom-links">
+      <a href="#">プライバシーポリシー</a>
+      <a href="#">利用規約</a>
+      <a href="#">特定商取引法</a>
+      <a href="#">お問い合わせ</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

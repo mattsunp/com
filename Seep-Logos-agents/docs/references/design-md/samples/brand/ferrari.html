@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ferrari — Design Template</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#DA291C;
+  --red-dark:#B01E0A;
+  --black:#000;
+  --dark-surface:#303030;
+  --near-black:#181818;
+  --dark-gray:#666;
+  --mid-gray:#8F8F8F;
+  --silver:#969696;
+  --border:#CCCCCC;
+  --border-light:#D2D2D2;
+  --white:#FFF;
+  --yellow:#FFF200;
+  --teal:#1EAEDB;
+}
+body{
+  background:var(--black);color:var(--white);
+  font-family:Arial,Helvetica,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  font-size:14px;line-height:1.5;
+}
+
+/* ─── LOGO HEADER (Prancing Horse on black) ─── */
+.logo-header{
+  background:var(--black);
+  padding:56px 0 40px;
+  display:flex;flex-direction:column;align-items:center;gap:16px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.logo-emblem{
+  font-size:56px;line-height:1;
+  /* Prancing horse – シンボル的表現 */
+  display:flex;align-items:center;justify-content:center;
+  width:80px;height:80px;
+}
+.logo-wordmark{
+  font-size:13px;font-weight:600;letter-spacing:4px;text-transform:uppercase;
+  color:var(--white);text-decoration:none;
+}
+
+/* ─── PRIMARY NAV ─── */
+.primary-nav{
+  background:var(--black);
+  padding:0 40px;height:52px;
+  display:flex;align-items:center;justify-content:center;gap:40px;
+  border-bottom:1px solid rgba(255,255,255,0.12);
+  position:sticky;top:0;z-index:100;
+}
+.primary-nav a{
+  font-size:13px;font-weight:600;letter-spacing:0.13px;
+  color:var(--white);text-decoration:none;
+  transition:opacity .15s;opacity:0.85;
+}
+.primary-nav a:hover{opacity:1}
+
+/* ─── HERO CAROUSEL (full black, editorial) ─── */
+.hero-carousel{
+  position:relative;background:var(--black);
+  height:70vh;min-height:480px;
+  display:flex;align-items:flex-end;
+  overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:200px;opacity:0.07;
+  pointer-events:none;user-select:none;
+}
+.hero-content{
+  position:relative;z-index:2;
+  padding:0 60px 60px;
+  max-width:600px;
+}
+.hero-label{
+  font-size:12px;font-weight:400;letter-spacing:1px;text-transform:uppercase;
+  color:var(--silver);margin-bottom:16px;
+  font-family:Arial,sans-serif;
+}
+.hero-content h1{
+  font-size:26px;font-weight:500;line-height:1.2;
+  color:var(--white);margin-bottom:20px;
+  letter-spacing:0.08px;
+}
+.hero-content p{font-size:13px;color:rgba(255,255,255,0.6);line-height:1.5;margin-bottom:28px;max-width:440px}
+.btn-ghost{
+  display:inline-block;padding:12px 28px;border:1px solid var(--white);
+  border-radius:2px;font-size:16px;letter-spacing:1.28px;
+  color:var(--white);text-decoration:none;background:transparent;cursor:pointer;
+  transition:background .15s,color .15s;
+}
+.btn-ghost:hover{background:var(--teal);border-color:var(--teal)}
+
+.hero-nav{
+  position:absolute;bottom:24px;right:60px;z-index:3;
+  display:flex;align-items:center;gap:12px;
+}
+.hero-dots{display:flex;gap:6px}
+.hero-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.4);cursor:pointer}
+.hero-dot.active{background:#fff}
+.hero-arrow{
+  width:36px;height:36px;border:1px solid rgba(255,255,255,0.3);border-radius:50%;
+  background:none;color:#fff;cursor:pointer;font-size:14px;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .15s;
+}
+.hero-arrow:hover{background:rgba(255,255,255,0.1)}
+
+/* ─── EDITORIAL: WHITE section ─── */
+.section-white{
+  background:var(--white);padding:80px 60px;
+}
+.section-white h2{
+  font-size:26px;font-weight:500;line-height:1.2;color:var(--near-black);
+  margin-bottom:8px;
+}
+.section-white .section-meta{
+  font-size:11px;letter-spacing:1px;text-transform:uppercase;
+  color:var(--mid-gray);margin-bottom:48px;
+  font-family:Arial,sans-serif;
+}
+
+.editorial-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.editorial-card{}
+.editorial-card .card-img{
+  background:var(--border-light);aspect-ratio:16/10;
+  display:flex;align-items:center;justify-content:center;
+  font-size:64px;margin-bottom:16px;
+  overflow:hidden;
+}
+.editorial-card h3{font-size:16px;font-weight:700;color:var(--near-black);margin-bottom:6px;line-height:1.3}
+.editorial-card .card-meta{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--mid-gray);margin-bottom:8px}
+.editorial-card p{font-size:13px;color:var(--dark-gray);line-height:1.5}
+.editorial-card a{
+  display:inline-block;margin-top:12px;
+  font-size:13px;color:var(--near-black);text-decoration:underline;
+  transition:color .15s;
+}
+.editorial-card a:hover{color:var(--red)}
+
+/* ─── VEHICLE LINEUP: WHITE ─── */
+.section-lineup{background:var(--white);padding:64px 0 80px;border-top:1px solid var(--border-light)}
+.lineup-header{padding:0 60px 40px;display:flex;justify-content:space-between;align-items:flex-end}
+.lineup-header h2{font-size:26px;font-weight:500;color:var(--near-black)}
+.lineup-header a{font-size:13px;color:var(--near-black);text-decoration:underline}
+.lineup-scroll{
+  display:flex;gap:0;overflow-x:auto;padding:0 60px;
+  scrollbar-width:none;
+}
+.lineup-scroll::-webkit-scrollbar{display:none}
+.lineup-item{
+  flex-shrink:0;width:220px;padding:0 20px 0 0;cursor:pointer;
+  border-right:1px solid var(--border-light);margin-right:20px;
+}
+.lineup-item:last-child{border-right:none}
+.lineup-img{height:120px;display:flex;align-items:center;justify-content:center;font-size:56px;background:#f8f8f8;margin-bottom:12px}
+.lineup-item h4{font-size:16px;font-weight:500;color:var(--near-black);margin-bottom:4px}
+.lineup-item .lineup-type{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--mid-gray)}
+
+/* ─── SECTION: DARK SURFACE (subscribe) ─── */
+.section-dark{
+  background:var(--dark-surface);padding:80px 60px;
+  display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;
+}
+.section-dark h2{font-size:24px;font-weight:400;color:var(--white);margin-bottom:8px}
+.section-dark p{font-size:13px;color:var(--mid-gray);line-height:1.5;margin-bottom:4px}
+.subscribe-form{display:flex;flex-direction:column;gap:12px}
+.input-group label{
+  display:block;font-size:12px;letter-spacing:1px;text-transform:uppercase;
+  color:var(--silver);margin-bottom:6px;
+}
+.input-field{
+  width:100%;padding:12px 0;background:transparent;
+  border:none;border-bottom:1px solid var(--border);
+  color:var(--white);font-size:14px;outline:none;
+  transition:border-color .15s;
+}
+.input-field::placeholder{color:var(--silver)}
+.input-field:focus{border-bottom-color:var(--white)}
+.btn-red{
+  display:inline-block;padding:12px 28px;background:var(--red);
+  border-radius:2px;border:none;font-size:16px;letter-spacing:1.28px;
+  color:var(--white);cursor:pointer;text-align:center;
+  transition:background .15s;align-self:flex-start;margin-top:8px;
+}
+.btn-red:hover{background:var(--red-dark)}
+
+/* ─── CINEMATIC SECTION (black) ─── */
+.section-cinematic{
+  background:var(--black);padding:80px 60px;
+  display:flex;align-items:center;gap:80px;
+}
+.cinematic-text{flex:1}
+.cinematic-text .eyebrow{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--silver);margin-bottom:16px}
+.cinematic-text h2{font-size:26px;font-weight:500;color:var(--white);margin-bottom:16px;line-height:1.2}
+.cinematic-text p{font-size:13px;color:rgba(255,255,255,0.6);line-height:1.6;margin-bottom:28px}
+.cinematic-visual{
+  flex:1;aspect-ratio:16/10;background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.08);
+  display:flex;align-items:center;justify-content:center;
+  font-size:80px;
+}
+
+/* ─── FOOTER ─── */
+footer{
+  background:var(--dark-surface);
+  padding:48px 60px;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:32px;
+  border-top:1px solid rgba(255,255,255,0.08);
+}
+.footer-col h4{font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--silver);margin-bottom:16px}
+.footer-col a{display:block;font-size:13px;color:rgba(255,255,255,0.5);text-decoration:none;margin-bottom:8px;font-weight:600;letter-spacing:0.13px}
+.footer-col a:hover{color:var(--white)}
+.footer-bottom{background:var(--black);padding:20px 60px;display:flex;justify-content:space-between;align-items:center}
+.footer-bottom p{font-size:11px;color:var(--silver);letter-spacing:0.195px}
+</style>
+</head>
+<body>
+
+<!-- LOGO HEADER -->
+<div class="logo-header">
+  <div class="logo-emblem">🐎</div>
+  <a class="logo-wordmark" href="#">Ferrari</a>
+</div>
+
+<!-- PRIMARY NAV -->
+<nav class="primary-nav">
+  <a href="#">モデル</a>
+  <a href="#">レーシング</a>
+  <a href="#">ライフスタイル</a>
+  <a href="#">マガジン</a>
+  <a href="#">ストア</a>
+  <a href="#">ディーラー</a>
+  <a href="#">コンフィギュレーター</a>
+</nav>
+
+<!-- HERO CAROUSEL -->
+<div class="hero-carousel">
+  <div class="hero-bg">🐎</div>
+  <div class="hero-content">
+    <div class="hero-label">ワールドプレミア</div>
+    <h1>Ferrari 12Cilindri<br>純粋な自然吸気の頂点</h1>
+    <p>12気筒NAエンジンが奏でる交響楽。830馬力、830Nm。フェラーリが追求し続けてきた感動の結晶。</p>
+    <a class="btn-ghost" href="#">詳しく見る</a>
+  </div>
+  <div class="hero-nav">
+    <div class="hero-dots">
+      <div class="hero-dot active"></div>
+      <div class="hero-dot"></div>
+      <div class="hero-dot"></div>
+      <div class="hero-dot"></div>
+    </div>
+    <button class="hero-arrow">‹</button>
+    <button class="hero-arrow">›</button>
+  </div>
+</div>
+
+<!-- EDITORIAL: WHITE -->
+<section class="section-white">
+  <h2>最新情報</h2>
+  <div class="section-meta">マガジン</div>
+  <div class="editorial-grid">
+    <div class="editorial-card">
+      <div class="card-img">🏎</div>
+      <div class="card-meta">モータースポーツ</div>
+      <h3>スクーデリア・フェラーリ、モナコGP優勝</h3>
+      <p>ルクレールがモナコ市街地コースで圧倒的なパフォーマンスを見せ、地元凱旋優勝を果たした。</p>
+      <a href="#">続きを読む</a>
+    </div>
+    <div class="editorial-card">
+      <div class="card-img">🎨</div>
+      <div class="card-meta">ライフスタイル</div>
+      <h3>Tailor Made — あなただけの一台</h3>
+      <p>フェラーリのカスタマイゼーションプログラム「Tailor Made」が提供する、唯一無二のパーソナリゼーション体験。</p>
+      <a href="#">続きを読む</a>
+    </div>
+  </div>
+</section>
+
+<!-- VEHICLE LINEUP -->
+<section class="section-lineup">
+  <div class="lineup-header">
+    <h2>モデルラインアップ</h2>
+    <a href="#">すべてのモデルを見る</a>
+  </div>
+  <div class="lineup-scroll">
+    <div class="lineup-item">
+      <div class="lineup-img">🔴</div>
+      <h4>296 GTB</h4>
+      <div class="lineup-type">Berlinetta</div>
+    </div>
+    <div class="lineup-item">
+      <div class="lineup-img">🟡</div>
+      <h4>SF90 Stradale</h4>
+      <div class="lineup-type">Berlinetta PHEV</div>
+    </div>
+    <div class="lineup-item">
+      <div class="lineup-img">⚫</div>
+      <h4>Roma</h4>
+      <div class="lineup-type">2+ Coupé</div>
+    </div>
+    <div class="lineup-item">
+      <div class="lineup-img">⚪</div>
+      <h4>Purosangue</h4>
+      <div class="lineup-type">SUV</div>
+    </div>
+    <div class="lineup-item">
+      <div class="lineup-img">🔵</div>
+      <h4>12Cilindri</h4>
+      <div class="lineup-type">Berlinetta</div>
+    </div>
+  </div>
+</section>
+
+<!-- CINEMATIC: BLACK -->
+<section class="section-cinematic">
+  <div class="cinematic-text">
+    <div class="eyebrow">フォーミュラ1</div>
+    <h2>スクーデリア・フェラーリ<br>2026シーズンへ</h2>
+    <p>76年にわたりF1の頂点を目指し続けるスクーデリア・フェラーリ。新レギュレーションに向けた挑戦が始まった。</p>
+    <a class="btn-ghost" href="#">チームを見る</a>
+  </div>
+  <div class="cinematic-visual">🏁</div>
+</section>
+
+<!-- SUBSCRIBE: DARK SURFACE -->
+<section class="section-dark">
+  <div>
+    <h2>フェラーリの世界へ</h2>
+    <p>最新モデル情報、イベント招待、レーシングニュース。<br>フェラーリの最新情報をいち早くお届けします。</p>
+  </div>
+  <div class="subscribe-form">
+    <div class="input-group">
+      <label>メールアドレス</label>
+      <input class="input-field" type="email" placeholder="your@email.com">
+    </div>
+    <div class="input-group">
+      <label>お名前</label>
+      <input class="input-field" type="text" placeholder="Your Name">
+    </div>
+    <button class="btn-red">登録する</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-col">
+    <h4>モデル</h4>
+    <a href="#">スポーツカー</a>
+    <a href="#">GT</a>
+    <a href="#">特別限定車</a>
+    <a href="#">過去のモデル</a>
+  </div>
+  <div class="footer-col">
+    <h4>レーシング</h4>
+    <a href="#">スクーデリア・フェラーリ</a>
+    <a href="#">GTレース</a>
+    <a href="#">フェラーリ・チャレンジ</a>
+    <a href="#">プログラム</a>
+  </div>
+  <div class="footer-col">
+    <h4>フェラーリ</h4>
+    <a href="#">企業情報</a>
+    <a href="#">マガジン</a>
+    <a href="#">ミュゼオ</a>
+    <a href="#">採用情報</a>
+  </div>
+  <div class="footer-col">
+    <h4>サービス</h4>
+    <a href="#">ディーラー</a>
+    <a href="#">コンフィギュレーター</a>
+    <a href="#">Tailor Made</a>
+    <a href="#">Ferrari Store</a>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <p>© 2026 Ferrari N.V. — Design Template</p>
+  <p style="font-size:11px;color:#666">All models and specifications are for reference only.</p>
+</div>
+
+</body>
+</html>

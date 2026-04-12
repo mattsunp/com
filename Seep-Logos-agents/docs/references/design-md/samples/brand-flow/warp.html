@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Warp — The intelligent terminal</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --parchment: #faf9f6;
+    --ash: #afaeac;
+    --stone: #868584;
+    --earth: #353534;
+    --mist: rgba(226,226,226,0.35);
+    --mist-solid: rgba(227,227,227,0.337);
+    --purple-link: #666469;
+    --bg: #1a1917;
+  }
+  html { background: var(--bg); color: var(--parchment); font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+  a { color: var(--purple-link); text-decoration: underline; }
+  a:hover { color: var(--parchment); }
+  body { overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--bg);
+    border-bottom: 1px solid var(--mist-solid);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px; height: 60px;
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; }
+  .warp-icon {
+    width: 28px; height: 28px; background: var(--parchment);
+    border-radius: 6px; display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 900; color: var(--bg);
+  }
+  .nav-logo-text { font-size: 18px; font-weight: 400; color: var(--parchment); letter-spacing: -0.2px; }
+  .nav-links { display: flex; gap: 28px; }
+  .nav-links a { font-size: 16px; font-weight: 400; color: var(--stone); text-decoration: none; }
+  .nav-links a:hover { color: var(--parchment); }
+  .nav-cta {
+    background: var(--earth); color: var(--ash);
+    padding: 10px 24px; border-radius: 50px;
+    font-size: 16px; font-weight: 500; border: none; cursor: pointer;
+    display: inline-block; text-decoration: none;
+  }
+  .nav-cta:hover { color: var(--parchment); }
+
+  /* HERO */
+  .hero {
+    padding: 120px 40px 80px;
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+  }
+  .hero-text { }
+  .hero-label {
+    font-size: 12px; font-weight: 400; text-transform: uppercase;
+    letter-spacing: 2.4px; color: var(--stone);
+    display: block; margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-size: 80px; font-weight: 400; line-height: 1.00;
+    letter-spacing: -2.4px; color: var(--parchment);
+    margin-bottom: 32px;
+  }
+  .hero p {
+    font-size: 20px; font-weight: 400; line-height: 1.40;
+    letter-spacing: -0.2px; color: var(--ash);
+    margin-bottom: 40px;
+  }
+  .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn-dark-pill {
+    background: var(--earth); color: var(--ash);
+    padding: 10px 24px; border-radius: 50px;
+    font-size: 16px; font-weight: 500;
+    border: none; cursor: pointer; display: inline-block;
+    text-decoration: none;
+  }
+  .btn-dark-pill:hover { color: var(--parchment); }
+  .btn-ghost {
+    color: var(--stone); font-size: 16px; font-weight: 400;
+    background: transparent; border: none; cursor: pointer;
+    text-decoration: underline; padding: 10px 0;
+    display: inline-block;
+  }
+  .btn-ghost:hover { color: var(--parchment); }
+
+  /* TERMINAL VISUAL */
+  .terminal-wrap {
+    border: 1px solid var(--mist); border-radius: 14px; overflow: hidden;
+    background: #111110;
+  }
+  .terminal-titlebar {
+    background: #1e1d1c; padding: 12px 16px;
+    display: flex; align-items: center; gap: 8px;
+    border-bottom: 1px solid var(--mist);
+  }
+  .term-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .term-title { font-size: 12px; color: var(--stone); margin-left: 8px; font-family: 'Courier New', monospace; letter-spacing: 0.5px; }
+  .terminal-body { padding: 20px 20px 8px; font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.7; }
+  .t-prompt { color: var(--stone); }
+  .t-cmd { color: var(--parchment); }
+  .t-output { color: var(--ash); }
+  .t-green { color: #28c840; }
+  .t-yellow { color: #febc2e; }
+  .t-blue { color: #5eb0f7; }
+  .t-purple { color: #c678dd; }
+  .t-line { display: flex; gap: 8px; margin-bottom: 4px; }
+  .t-cursor { display: inline-block; width: 8px; height: 16px; background: var(--parchment); vertical-align: text-bottom; animation: blink 1s step-end infinite; }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+  /* AI suggestion */
+  .ai-suggestion {
+    margin: 8px 0; padding: 10px 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--mist);
+    border-radius: 8px;
+  }
+  .ai-tag { font-size: 10px; text-transform: uppercase; letter-spacing: 1.4px; color: var(--stone); margin-bottom: 6px; }
+  .ai-suggestion-text { font-size: 13px; color: var(--ash); }
+  .ai-cmd { color: var(--parchment); }
+
+  /* LANDSCAPE SECTION */
+  .landscape {
+    padding: 80px 40px;
+    position: relative; overflow: hidden;
+  }
+  .landscape-inner { max-width: 1200px; margin: 0 auto; }
+  .landscape-visual {
+    position: relative; height: 400px; border-radius: 12px; overflow: hidden;
+    display: flex; align-items: flex-end;
+  }
+  .landscape-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, #1a0f08 0%, #2d1810 30%, #1a1409 60%, #0d0d0d 100%);
+  }
+  .landscape-bg::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 70% 30%, rgba(180,120,40,0.2), transparent 60%),
+                radial-gradient(ellipse at 10% 60%, rgba(60,40,20,0.3), transparent 50%);
+  }
+  /* Trees silhouette */
+  .tree-line {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    display: flex; align-items: flex-end; justify-content: center; gap: 0;
+  }
+  .tree {
+    flex-shrink: 0; position: relative;
+  }
+  .tree-trunk { background: rgba(40,20,10,0.8); margin: 0 auto; }
+  .tree-crown { clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
+  .tree-t1 .tree-crown { width: 40px; height: 80px; background: rgba(20,40,10,0.7); }
+  .tree-t1 .tree-trunk { width: 6px; height: 20px; }
+  .tree-t2 .tree-crown { width: 60px; height: 120px; background: rgba(15,35,8,0.8); }
+  .tree-t2 .tree-trunk { width: 8px; height: 30px; }
+  .tree-t3 .tree-crown { width: 80px; height: 160px; background: rgba(10,30,6,0.9); }
+  .tree-t3 .tree-trunk { width: 10px; height: 40px; }
+  /* Moon -->*/
+  .moon {
+    position: absolute; top: 60px; right: 15%;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: radial-gradient(circle at 40% 40%, #faf9f6, #e0ddd8);
+    box-shadow: 0 0 40px rgba(250,249,246,0.15);
+  }
+  .landscape-content {
+    position: relative; z-index: 2; padding: 32px; width: 100%;
+  }
+  .landscape-label { font-size: 12px; text-transform: uppercase; letter-spacing: 2.4px; color: var(--stone); margin-bottom: 12px; }
+  .landscape-title { font-size: 48px; font-weight: 400; line-height: 1.20; letter-spacing: -0.48px; color: var(--parchment); max-width: 500px; }
+
+  /* FEATURES -->*/
+  .features { padding: 80px 40px; }
+  .features-inner { max-width: 1200px; margin: 0 auto; }
+  .feat-label { font-size: 12px; text-transform: uppercase; letter-spacing: 2.4px; color: var(--stone); margin-bottom: 12px; display: block; }
+  .feat-title { font-size: 56px; font-weight: 400; line-height: 1.20; letter-spacing: -0.56px; color: var(--parchment); margin-bottom: 64px; }
+  .feat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: var(--mist); border: 1px solid var(--mist); border-radius: 14px; overflow: hidden; }
+  .feat-item { background: var(--bg); padding: 40px; }
+  .feat-icon { font-size: 28px; margin-bottom: 20px; display: block; }
+  .feat-item h3 { font-size: 24px; font-weight: 400; line-height: 1.20; letter-spacing: -0.72px; color: var(--parchment); margin-bottom: 12px; }
+  .feat-item p { font-size: 18px; font-weight: 400; line-height: 1.30; letter-spacing: -0.18px; color: var(--ash); }
+
+  /* AI FEATURES -->*/
+  .ai-section {
+    padding: 80px 40px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .ai-text .feat-label { }
+  .ai-text h2 { font-size: 40px; font-weight: 400; line-height: 1.10; letter-spacing: -0.4px; color: var(--parchment); margin-bottom: 16px; }
+  .ai-text p { font-size: 18px; color: var(--ash); line-height: 1.30; letter-spacing: -0.18px; margin-bottom: 32px; }
+  .ai-visual {
+    background: #111110; border: 1px solid var(--mist);
+    border-radius: 14px; padding: 24px; overflow: hidden;
+  }
+  .command-palette {
+    background: #1a1917; border: 1px solid var(--mist);
+    border-radius: 10px; overflow: hidden;
+  }
+  .cp-search {
+    padding: 14px 16px; display: flex; align-items: center; gap: 10px;
+    border-bottom: 1px solid var(--mist);
+  }
+  .cp-search-icon { color: var(--stone); font-size: 14px; }
+  .cp-input { flex: 1; font-size: 14px; color: var(--parchment); background: none; border: none; outline: none; font-family: 'Courier New', monospace; }
+  .cp-items { }
+  .cp-item {
+    display: flex; align-items: center; gap: 12px; padding: 10px 16px;
+    cursor: pointer;
+  }
+  .cp-item:hover, .cp-item.active { background: rgba(255,255,255,0.04); }
+  .cp-item-icon { width: 28px; height: 28px; border-radius: 6px; background: var(--earth); display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
+  .cp-item-text { font-size: 13px; color: var(--parchment); font-family: 'Courier New', monospace; flex: 1; }
+  .cp-item-sub { font-size: 11px; color: var(--stone); }
+  .cp-item-badge { font-size: 10px; padding: 2px 6px; border-radius: 4px; background: rgba(255,255,255,0.08); color: var(--stone); text-transform: uppercase; letter-spacing: 1px; }
+
+  /* TESTIMONIALS -->*/
+  .testimonials { padding: 80px 40px; }
+  .testimonials-inner { max-width: 1200px; margin: 0 auto; }
+  .t-label { font-size: 12px; text-transform: uppercase; letter-spacing: 2.4px; color: var(--stone); margin-bottom: 12px; display: block; }
+  .t-title { font-size: 36px; font-weight: 400; line-height: 1.15; letter-spacing: -0.72px; color: var(--parchment); margin-bottom: 48px; }
+  .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .testi-card {
+    border: 1px solid var(--mist); border-radius: 12px; padding: 28px;
+    background: rgba(255,255,255,0.02);
+  }
+  .testi-quote { font-size: 18px; font-weight: 400; line-height: 1.30; letter-spacing: -0.18px; color: var(--parchment); margin-bottom: 24px; }
+  .testi-author { display: flex; gap: 12px; align-items: center; }
+  .testi-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--earth); display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--ash); flex-shrink: 0; }
+  .testi-name { font-size: 14px; font-weight: 500; color: var(--parchment); margin-bottom: 2px; }
+  .testi-role { font-size: 12px; color: var(--stone); letter-spacing: 0.5px; }
+
+  /* CTA SECTION -->*/
+  .cta-section {
+    padding: 80px 40px; text-align: center;
+  }
+  .cta-inner { max-width: 600px; margin: 0 auto; }
+  .cta-section h2 { font-size: 48px; font-weight: 400; line-height: 1.20; letter-spacing: -0.48px; color: var(--parchment); margin-bottom: 16px; }
+  .cta-section p { font-size: 18px; color: var(--ash); line-height: 1.30; margin-bottom: 32px; }
+  .os-badges { display: flex; gap: 12px; justify-content: center; margin-top: 24px; flex-wrap: wrap; }
+  .os-badge { font-size: 12px; color: var(--stone); padding: 4px 12px; border: 1px solid var(--mist); border-radius: 50px; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* FOOTER -->*/
+  footer {
+    border-top: 1px solid var(--mist); padding: 60px 40px 40px;
+  }
+  .footer-inner { max-width: 1200px; margin: 0 auto; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 48px; }
+  .footer-brand p { font-size: 14px; color: var(--stone); margin-top: 12px; line-height: 1.5; }
+  .footer-col h4 { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--stone); margin-bottom: 16px; }
+  .footer-col a { display: block; font-size: 14px; color: var(--stone); margin-bottom: 8px; text-decoration: none; }
+  .footer-col a:hover { color: var(--parchment); }
+  .footer-bottom { border-top: 1px solid var(--mist); padding-top: 24px; display: flex; justify-content: space-between; }
+  .footer-bottom p { font-size: 12px; color: var(--stone); }
+
+  @media (max-width: 810px) {
+    .hero { grid-template-columns: 1fr; }
+    .ai-section { grid-template-columns: 1fr; }
+    .feat-grid { grid-template-columns: 1fr; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 48px; }
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <div class="warp-icon">W</div>
+    <span class="nav-logo-text">Warp</span>
+  </div>
+  <div class="nav-links">
+    <a href="#">Features</a>
+    <a href="#">Blog</a>
+    <a href="#">Docs</a>
+    <a href="#">Changelog</a>
+    <a href="#">Pricing</a>
+  </div>
+  <a href="#" class="nav-cta">Download for free</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <span class="hero-label">AI-Powered Terminal</span>
+    <h1>The terminal for the 21st century.</h1>
+    <p>Warp is a Rust-based terminal reimagined from scratch to work like a modern app — with AI built in to help you work faster.</p>
+    <div class="hero-ctas">
+      <a href="#" class="btn-dark-pill">Download Warp for free</a>
+      <a href="#" class="btn-ghost">Learn more &darr;</a>
+    </div>
+  </div>
+  <div class="terminal-wrap">
+    <div class="terminal-titlebar">
+      <div class="term-dot" style="background:#ff5f57"></div>
+      <div class="term-dot" style="background:#febc2e"></div>
+      <div class="term-dot" style="background:#28c840"></div>
+      <span class="term-title">warp — zsh — 120x38</span>
+    </div>
+    <div class="terminal-body">
+      <div class="t-line"><span class="t-prompt">~/projects/myapp</span>&nbsp;<span class="t-cmd">git status</span></div>
+      <div class="t-line"><span class="t-output">On branch </span><span class="t-blue">main</span></div>
+      <div class="t-line"><span class="t-output">Changes not staged for commit:</span></div>
+      <div class="t-line">&nbsp;&nbsp;<span class="t-yellow">modified: src/index.ts</span></div>
+      <div class="t-line">&nbsp;&nbsp;<span class="t-yellow">modified: package.json</span></div>
+      <div class="t-line">&nbsp;&nbsp;<span class="t-green">new file: src/api/routes.ts</span></div>
+      <br>
+      <div class="t-line"><span class="t-prompt">~/projects/myapp</span>&nbsp;<span class="t-cmd">npm run build</span></div>
+      <div class="t-line"><span class="t-output">&gt; myapp@1.0.0 build</span></div>
+      <div class="t-line"><span class="t-output">&gt; </span><span class="t-blue">tsc && vite build</span></div>
+      <br>
+      <div class="ai-suggestion">
+        <div class="ai-tag">Warp AI suggests</div>
+        <div class="ai-suggestion-text">Did you mean: <span class="ai-cmd">npm run build:watch</span> to rebuild on file changes?</div>
+      </div>
+      <div class="t-line"><span class="t-green">&#10003;</span> <span class="t-output">Build completed in 2.4s</span></div>
+      <div class="t-line"><span class="t-prompt">~/projects/myapp</span>&nbsp;<span class="t-cursor"></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- LANDSCAPE BREAK -->
+<section class="landscape">
+  <div class="landscape-inner">
+    <div class="landscape-visual">
+      <div class="landscape-bg"></div>
+      <div class="moon"></div>
+      <div class="tree-line">
+        <div class="tree tree-t1"><div class="tree-crown"></div><div class="tree-trunk"></div></div>
+        <div class="tree tree-t2"><div class="tree-crown"></div><div class="tree-trunk"></div></div>
+        <div class="tree tree-t3"><div class="tree-crown"></div><div class="tree-trunk"></div></div>
+        <div class="tree tree-t2"><div class="tree-crown"></div><div class="tree-trunk"></div></div>
+        <div class="tree tree-t3"><div class="tree-crown"></div><div class="tree-trunk"></div></div>
+        <div class="tree tree-t1"><div class="tree-crown"></div><div class="tree-trunk"></div></div>
+        <div class="tree tree-t2"><div class="tree-crown"></div><div class="tree-trunk"></div></div>
+        <div class="tree tree-t3"><div class="tree-crown"></div><div class="tree-trunk"></div></div>
+        <div class="tree tree-t1"><div class="tree-crown"></div><div class="tree-trunk"></div></div>
+        <div class="tree tree-t3"><div class="tree-crown"></div><div class="tree-trunk"></div></div>
+        <div class="tree tree-t2"><div class="tree-crown"></div><div class="tree-trunk"></div></div>
+      </div>
+      <div class="landscape-content">
+        <div class="landscape-label">Find your flow</div>
+        <div class="landscape-title">Built for developers who want to go deeper.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="features-inner">
+    <span class="feat-label">Platform Features</span>
+    <h2 class="feat-title">A terminal that<br>thinks with you.</h2>
+    <div class="feat-grid">
+      <div class="feat-item">
+        <span class="feat-icon">&#9889;</span>
+        <h3>Blocks, not lines</h3>
+        <p>Commands and their output are grouped into blocks — select, copy, share, or rerun any block instantly. Stop scrolling through walls of text.</p>
+      </div>
+      <div class="feat-item">
+        <span class="feat-icon">&#129504;</span>
+        <h3>AI command search</h3>
+        <p>Type what you want in plain English — Warp translates it to the right command. Powered by AI, trained on thousands of real-world terminal workflows.</p>
+      </div>
+      <div class="feat-item">
+        <span class="feat-icon">&#128196;</span>
+        <h3>Input editor</h3>
+        <p>A proper text editor inside your terminal. Cut, paste, multi-cursor, syntax highlighting — write complex commands without fighting with readline.</p>
+      </div>
+      <div class="feat-item">
+        <span class="feat-icon">&#127808;</span>
+        <h3>Workflows & notebooks</h3>
+        <p>Save command sequences as shareable Notebooks. Onboard teammates, document runbooks, and share your most-used commands with your team.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI COMMAND PALETTE -->
+<section style="padding:0 40px; max-width:1200px; margin:0 auto;">
+  <div class="ai-section" style="padding:0; max-width:none;">
+    <div class="ai-text">
+      <span class="feat-label">Warp AI</span>
+      <h2>Command palette for everything you need to do.</h2>
+      <p>Hit ⌘K to open the AI command palette. Search for any command, action, or Warp feature — or just describe what you want to happen in plain English.</p>
+      <a href="#" class="btn-dark-pill">Try Warp AI</a>
+    </div>
+    <div class="ai-visual">
+      <div class="command-palette">
+        <div class="cp-search">
+          <span class="cp-search-icon">&#128269;</span>
+          <input class="cp-input" type="text" value="find large files in current directory" readonly>
+        </div>
+        <div class="cp-items">
+          <div class="cp-item active">
+            <div class="cp-item-icon">&#9889;</div>
+            <div>
+              <div class="cp-item-text">find . -type f -size +100M</div>
+              <div class="cp-item-sub">Find files larger than 100MB</div>
+            </div>
+            <span class="cp-item-badge">AI</span>
+          </div>
+          <div class="cp-item">
+            <div class="cp-item-icon">&#128196;</div>
+            <div>
+              <div class="cp-item-text">du -sh * | sort -hr | head -20</div>
+              <div class="cp-item-sub">Show top 20 largest items</div>
+            </div>
+            <span class="cp-item-badge">AI</span>
+          </div>
+          <div class="cp-item">
+            <div class="cp-item-icon">&#9881;</div>
+            <div>
+              <div class="cp-item-text">ncdu .</div>
+              <div class="cp-item-sub">Interactive disk usage viewer</div>
+            </div>
+          </div>
+          <div class="cp-item">
+            <div class="cp-item-icon">&#128200;</div>
+            <div>
+              <div class="cp-item-text">df -h</div>
+              <div class="cp-item-sub">Display disk space usage</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="testimonials-inner">
+    <span class="t-label">What developers say</span>
+    <h2 class="t-title">Don't take our word for it.</h2>
+    <div class="testimonials-grid">
+      <div class="testi-card">
+        <p class="testi-quote">"Warp is the first terminal that actually feels like a modern app. The block UI alone is worth switching — I can't imagine going back to iTerm2."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">T</div>
+          <div>
+            <div class="testi-name">Tom Bradley</div>
+            <div class="testi-role">Senior Engineer, Stripe</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <p class="testi-quote">"The AI command completion has saved me hours. I don't memorize flags anymore — I just describe what I want and Warp figures it out."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">N</div>
+          <div>
+            <div class="testi-name">Noa Chen</div>
+            <div class="testi-role">DevOps Lead, Vercel</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <p class="testi-quote">"Sharing Notebooks with my team has completely changed how we onboard. New engineers are productive on day one instead of fumbling with docs."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">R</div>
+          <div>
+            <div class="testi-name">Riya Patel</div>
+            <div class="testi-role">Engineering Manager, Linear</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-inner">
+    <h2>Start your best work in the terminal.</h2>
+    <p>Warp is free to download. No credit card. No setup required.</p>
+    <a href="#" class="btn-dark-pill" style="font-size:18px; padding:14px 36px;">Download Warp for free</a>
+    <div class="os-badges">
+      <span class="os-badge">macOS</span>
+      <span class="os-badge">Linux</span>
+      <span class="os-badge">Windows Beta</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo">
+          <div class="warp-icon">W</div>
+          <span class="nav-logo-text">Warp</span>
+        </div>
+        <p>The intelligent terminal for modern developers. Built with Rust. Free to use.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="#">Features</a>
+        <a href="#">AI Commands</a>
+        <a href="#">Notebooks</a>
+        <a href="#">Pricing</a>
+        <a href="#">Changelog</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="#">Documentation</a>
+        <a href="#">Blog</a>
+        <a href="#">GitHub</a>
+        <a href="#">Community</a>
+        <a href="#">Status</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">About</a>
+        <a href="#">Careers</a>
+        <a href="#">Press</a>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 Warp Inc. All rights reserved.</p>
+      <p style="color:var(--stone); font-size:12px;">Built with &#9829; in San Francisco</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

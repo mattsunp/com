@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Linear — 製品チームのための課題管理</title>
+<style>
+  :root {
+    --mkt-black: #08090a;
+    --panel-dark: #0f1011;
+    --surface-3: #191a1b;
+    --surface-2: #28282c;
+    --text-primary: #f7f8f8;
+    --text-secondary: #d0d6e0;
+    --text-tertiary: #8a8f98;
+    --text-quaternary: #62666d;
+    --brand-indigo: #5e6ad2;
+    --accent-violet: #7170ff;
+    --accent-hover: #828fff;
+    --green: #27a644;
+    --emerald: #10b981;
+    --border-subtle: rgba(255,255,255,0.05);
+    --border-standard: rgba(255,255,255,0.08);
+    --border-primary: #23252a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    font-feature-settings: "cv01", "ss03";
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    background: var(--mkt-black);
+  }
+
+  /* Navigation */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--panel-dark);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 0 24px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-left {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 590;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-feature-settings: "cv01", "ss03";
+  }
+  .nav-logo-mark {
+    width: 24px; height: 24px;
+    background: linear-gradient(135deg, var(--brand-indigo), var(--accent-violet));
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; color: white; font-weight: 700;
+  }
+  .nav-links {
+    display: flex;
+    gap: 0;
+    list-style: none;
+  }
+  .nav-links a {
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 510;
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: 6px;
+    transition: color 0.1s, background 0.1s;
+    font-feature-settings: "cv01", "ss03";
+  }
+  .nav-links a:hover {
+    color: var(--text-primary);
+    background: rgba(255,255,255,0.04);
+  }
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-ghost-dark {
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 510;
+    color: var(--text-secondary);
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border-primary);
+    cursor: pointer;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+    font-feature-settings: "cv01", "ss03";
+  }
+  .btn-ghost-dark:hover {
+    color: var(--text-primary);
+    background: rgba(255,255,255,0.05);
+  }
+  .btn-brand {
+    padding: 7px 16px;
+    font-size: 13px;
+    font-weight: 510;
+    color: white;
+    background: var(--brand-indigo);
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background 0.15s;
+    font-feature-settings: "cv01", "ss03";
+    display: inline-block;
+  }
+  .btn-brand:hover { background: var(--accent-hover); }
+  .kbd-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border-subtle);
+    border-radius: 2px;
+    font-size: 10px;
+    font-weight: 510;
+    color: var(--text-quaternary);
+    font-family: 'Berkeley Mono', 'SF Mono', monospace;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 120px 24px 80px;
+    text-align: center;
+    max-width: 880px;
+    margin: 0 auto;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 1px solid var(--border-primary);
+    color: var(--text-secondary);
+    padding: 4px 12px 4px 6px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 510;
+    margin-bottom: 40px;
+    font-feature-settings: "cv01", "ss03";
+  }
+  .hero-badge-dot {
+    width: 6px; height: 6px;
+    background: var(--emerald);
+    border-radius: 50%;
+  }
+  .hero h1 {
+    font-size: 72px;
+    font-weight: 510;
+    line-height: 1.0;
+    letter-spacing: -1.584px;
+    color: var(--text-primary);
+    margin-bottom: 24px;
+    font-feature-settings: "cv01", "ss03";
+  }
+  .hero-sub {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.6;
+    letter-spacing: -0.165px;
+    color: var(--text-tertiary);
+    max-width: 560px;
+    margin: 0 auto 48px;
+    font-feature-settings: "cv01", "ss03";
+  }
+  .hero-cta {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn-brand-large {
+    padding: 10px 24px;
+    font-size: 15px;
+    font-weight: 510;
+    color: white;
+    background: var(--brand-indigo);
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background 0.15s;
+    font-feature-settings: "cv01", "ss03";
+    display: inline-block;
+  }
+  .btn-brand-large:hover { background: var(--accent-hover); }
+
+  /* Stats bar */
+  .stats-bar {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 48px 24px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border-subtle);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 80px;
+  }
+  .stat-cell {
+    background: var(--panel-dark);
+    padding: 32px 24px;
+    text-align: center;
+  }
+  .stat-number {
+    font-size: 48px;
+    font-weight: 510;
+    color: var(--text-primary);
+    letter-spacing: -1.056px;
+    line-height: 1.0;
+    margin-bottom: 8px;
+    font-feature-settings: "cv01", "ss03";
+  }
+  .stat-label {
+    font-size: 14px;
+    font-weight: 510;
+    color: var(--text-tertiary);
+    letter-spacing: -0.182px;
+    font-feature-settings: "cv01", "ss03";
+  }
+
+  /* Product screenshot */
+  .product-section {
+    max-width: 1200px;
+    margin: 0 auto 80px;
+    padding: 0 24px;
+  }
+  .product-window {
+    background: var(--surface-3);
+    border: 1px solid var(--border-standard);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: rgba(0,0,0,0.4) 0px 8px 32px;
+  }
+  .window-bar {
+    background: var(--panel-dark);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .win-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+  }
+  .window-title {
+    margin-left: 8px;
+    font-size: 12px;
+    font-weight: 510;
+    color: var(--text-quaternary);
+    font-feature-settings: "cv01", "ss03";
+  }
+  .window-body {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    min-height: 400px;
+  }
+  .app-sidebar {
+    background: var(--panel-dark);
+    border-right: 1px solid var(--border-subtle);
+    padding: 16px 12px;
+  }
+  .app-sidebar-section {
+    margin-bottom: 20px;
+  }
+  .app-sidebar-label {
+    font-size: 11px;
+    font-weight: 590;
+    color: var(--text-quaternary);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 0 8px;
+    margin-bottom: 4px;
+    font-feature-settings: "cv01", "ss03";
+  }
+  .app-sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 510;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    font-feature-settings: "cv01", "ss03";
+  }
+  .app-sidebar-item:hover,
+  .app-sidebar-item.active {
+    background: rgba(255,255,255,0.05);
+    color: var(--text-primary);
+  }
+  .status-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+  }
+  .status-dot.in-progress { background: var(--green); }
+  .status-dot.todo { background: var(--text-quaternary); }
+  .status-dot.done { background: var(--emerald); }
+  .app-main {
+    padding: 24px 28px;
+    overflow: hidden;
+  }
+  .issues-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .issues-title {
+    font-size: 20px;
+    font-weight: 590;
+    color: var(--text-primary);
+    letter-spacing: -0.24px;
+    font-feature-settings: "cv01", "ss03";
+  }
+  .issues-actions {
+    display: flex;
+    gap: 6px;
+  }
+  .issue-action-btn {
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 510;
+    color: var(--text-tertiary);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    cursor: pointer;
+    font-feature-settings: "cv01", "ss03";
+  }
+  .issues-group {
+    margin-bottom: 20px;
+  }
+  .issues-group-label {
+    font-size: 12px;
+    font-weight: 590;
+    color: var(--text-quaternary);
+    letter-spacing: -0.182px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-feature-settings: "cv01", "ss03";
+  }
+  .issue-count-badge {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border-subtle);
+    padding: 0px 6px;
+    border-radius: 2px;
+    font-size: 10px;
+    font-weight: 510;
+  }
+  .issue-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    margin-bottom: 2px;
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+  .issue-row:hover { background: rgba(255,255,255,0.04); }
+  .issue-id {
+    font-size: 12px;
+    font-weight: 510;
+    color: var(--text-quaternary);
+    font-family: 'Berkeley Mono', 'SF Mono', monospace;
+    min-width: 60px;
+  }
+  .issue-title {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 510;
+    color: var(--text-secondary);
+    font-feature-settings: "cv01", "ss03";
+  }
+  .issue-priority {
+    width: 16px; height: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    color: var(--text-quaternary);
+  }
+  .priority-urgent { color: #eb5757; }
+  .priority-high { color: #f2994a; }
+  .priority-medium { color: #f2c94c; }
+
+  /* Features section */
+  .features-section {
+    padding: 80px 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .features-header {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+  .section-label {
+    font-size: 12px;
+    font-weight: 590;
+    color: var(--accent-violet);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    font-feature-settings: "cv01", "ss03";
+  }
+  .section-h2 {
+    font-size: 48px;
+    font-weight: 510;
+    line-height: 1.0;
+    letter-spacing: -1.056px;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    font-feature-settings: "cv01", "ss03";
+  }
+  .section-desc {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--text-tertiary);
+    max-width: 560px;
+    margin: 0 auto;
+    letter-spacing: -0.165px;
+    font-feature-settings: "cv01", "ss03";
+  }
+  .feature-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .feature-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border-standard);
+    border-radius: 12px;
+    padding: 28px;
+    transition: background 0.2s;
+  }
+  .feature-card:hover { background: rgba(255,255,255,0.04); }
+  .feature-card-icon {
+    width: 36px; height: 36px;
+    background: rgba(94,106,210,0.15);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+  .feature-card-title {
+    font-size: 20px;
+    font-weight: 590;
+    color: var(--text-primary);
+    letter-spacing: -0.24px;
+    margin-bottom: 8px;
+    font-feature-settings: "cv01", "ss03";
+  }
+  .feature-card-desc {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--text-tertiary);
+    line-height: 1.6;
+    letter-spacing: -0.165px;
+    font-feature-settings: "cv01", "ss03";
+  }
+
+  /* Keyboard shortcut section */
+  .kbd-section {
+    padding: 80px 24px;
+    background: var(--panel-dark);
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .kbd-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .kbd-text {}
+  .kbd-grid {
+    display: grid;
+    gap: 10px;
+  }
+  .kbd-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+  }
+  .kbd-action {
+    font-size: 13px;
+    font-weight: 510;
+    color: var(--text-secondary);
+    font-feature-settings: "cv01", "ss03";
+  }
+  .kbd-keys {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+  .kbd-key {
+    padding: 2px 6px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border-standard);
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 510;
+    color: var(--text-tertiary);
+    font-family: 'Berkeley Mono', 'SF Mono', monospace;
+    box-shadow: rgba(0,0,0,0.2) 0px 1px 0px;
+  }
+
+  /* Changelog */
+  .changelog-section {
+    padding: 80px 24px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .changelog-entry {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 32px;
+    padding-bottom: 40px;
+    margin-bottom: 40px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .changelog-date {
+    font-size: 13px;
+    font-weight: 510;
+    color: var(--text-quaternary);
+    padding-top: 4px;
+    font-feature-settings: "cv01", "ss03";
+    font-family: 'Berkeley Mono', 'SF Mono', monospace;
+  }
+  .changelog-content {}
+  .changelog-title {
+    font-size: 18px;
+    font-weight: 590;
+    color: var(--text-primary);
+    letter-spacing: -0.24px;
+    margin-bottom: 8px;
+    font-feature-settings: "cv01", "ss03";
+  }
+  .changelog-desc {
+    font-size: 15px;
+    color: var(--text-tertiary);
+    line-height: 1.6;
+    font-feature-settings: "cv01", "ss03";
+  }
+  .changelog-tags {
+    display: flex;
+    gap: 6px;
+    margin-top: 12px;
+  }
+  .changelog-tag {
+    padding: 2px 10px 2px 6px;
+    border: 1px solid var(--border-primary);
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 510;
+    color: var(--text-secondary);
+    font-feature-settings: "cv01", "ss03";
+  }
+
+  /* CTA */
+  .cta-section {
+    background: var(--surface-3);
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 96px 24px;
+    text-align: center;
+  }
+  .cta-section h2 {
+    font-size: 48px;
+    font-weight: 510;
+    letter-spacing: -1.056px;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    font-feature-settings: "cv01", "ss03";
+  }
+  .cta-section p {
+    font-size: 18px;
+    color: var(--text-tertiary);
+    margin-bottom: 40px;
+    font-feature-settings: "cv01", "ss03";
+  }
+
+  /* Footer */
+  footer {
+    background: var(--panel-dark);
+    border-top: 1px solid var(--border-subtle);
+    padding: 64px 24px 40px;
+  }
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 180px repeat(4, 1fr);
+    gap: 40px;
+    margin-bottom: 48px;
+  }
+  .footer-brand {
+    font-size: 18px;
+    font-weight: 590;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    font-feature-settings: "cv01", "ss03";
+  }
+  .footer-tagline {
+    font-size: 13px;
+    color: var(--text-quaternary);
+    line-height: 1.6;
+    font-feature-settings: "cv01", "ss03";
+  }
+  .footer-col-title {
+    font-size: 11px;
+    font-weight: 590;
+    color: var(--text-primary);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    font-feature-settings: "cv01", "ss03";
+  }
+  .footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .footer-links a {
+    font-size: 13px;
+    font-weight: 510;
+    color: var(--text-tertiary);
+    text-decoration: none;
+    transition: color 0.15s;
+    font-feature-settings: "cv01", "ss03";
+  }
+  .footer-links a:hover { color: var(--text-primary); }
+  .footer-bottom {
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-copy {
+    font-size: 13px;
+    color: var(--text-quaternary);
+    font-feature-settings: "cv01", "ss03";
+  }
+
+  @media (max-width: 1024px) {
+    .feature-cards { grid-template-columns: repeat(2, 1fr); }
+    .footer-grid { grid-template-columns: 1fr 1fr 1fr; }
+    .kbd-inner { grid-template-columns: 1fr; gap: 40px; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 48px; letter-spacing: -1.056px; }
+    .section-h2 { font-size: 32px; letter-spacing: -0.7px; }
+    .nav-links { display: none; }
+    .feature-cards { grid-template-columns: 1fr; }
+    .stats-bar { grid-template-columns: 1fr 1fr; }
+    .window-body { grid-template-columns: 1fr; }
+    .app-sidebar { display: none; }
+    .changelog-entry { grid-template-columns: 1fr; gap: 8px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="nav">
+  <div class="nav-left">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-mark">L</div>
+      Linear
+    </a>
+    <ul class="nav-links">
+      <li><a href="#">プロダクト</a></li>
+      <li><a href="#">チェンジログ</a></li>
+      <li><a href="#">料金</a></li>
+      <li><a href="#">会社情報</a></li>
+    </ul>
+  </div>
+  <div class="nav-right">
+    <div class="kbd-badge">&#8984; K</div>
+    <a href="#" class="btn-ghost-dark">ログイン</a>
+    <a href="#" class="btn-brand">無料で始める</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-badge">
+    <div class="hero-badge-dot"></div>
+    Linear 2.0 — 全機能リリース済み
+  </div>
+  <h1>スピードのために<br>設計された<br>課題管理</h1>
+  <p class="hero-sub">Linear は最も合理化された課題追跡ツール。チームは高速に動き、コードを出荷し、より多くを達成する。</p>
+  <div class="hero-cta">
+    <a href="#" class="btn-brand-large">無料で始める</a>
+    <a href="#" class="btn-ghost-dark" style="padding:10px 24px;font-size:15px;">デモを見る</a>
+  </div>
+</div>
+
+<!-- Stats -->
+<div style="max-width:1200px;margin:0 auto;padding:0 24px 80px;">
+  <div class="stats-bar">
+    <div class="stat-cell">
+      <div class="stat-number">250k+</div>
+      <div class="stat-label">チーム数</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number">~50ms</div>
+      <div class="stat-label">平均レスポンスタイム</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number">99.9%</div>
+      <div class="stat-label">稼働率</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number">2x</div>
+      <div class="stat-label">生産性向上</div>
+    </div>
+  </div>
+</div>
+
+<!-- Product Window -->
+<div class="product-section">
+  <div class="product-window">
+    <div class="window-bar">
+      <div class="win-dot"></div>
+      <div class="win-dot"></div>
+      <div class="win-dot"></div>
+      <span class="window-title">Linear — フロントエンドチーム</span>
+    </div>
+    <div class="window-body">
+      <div class="app-sidebar">
+        <div class="app-sidebar-section">
+          <div class="app-sidebar-label">ワークスペース</div>
+          <div class="app-sidebar-item active">
+            <div class="status-dot in-progress"></div>
+            すべての課題
+          </div>
+          <div class="app-sidebar-item">
+            <span>📊</span> ロードマップ
+          </div>
+          <div class="app-sidebar-item">
+            <span>📋</span> プロジェクト
+          </div>
+        </div>
+        <div class="app-sidebar-section">
+          <div class="app-sidebar-label">チーム</div>
+          <div class="app-sidebar-item">
+            <div class="status-dot in-progress"></div> フロントエンド
+          </div>
+          <div class="app-sidebar-item">
+            <div class="status-dot todo"></div> バックエンド
+          </div>
+          <div class="app-sidebar-item">
+            <div class="status-dot done"></div> デザイン
+          </div>
+          <div class="app-sidebar-item">
+            <div class="status-dot todo"></div> インフラ
+          </div>
+        </div>
+      </div>
+      <div class="app-main">
+        <div class="issues-header">
+          <div class="issues-title">すべての課題</div>
+          <div class="issues-actions">
+            <div class="issue-action-btn">フィルター</div>
+            <div class="issue-action-btn">グループ化</div>
+            <div class="issue-action-btn">表示設定</div>
+          </div>
+        </div>
+
+        <div class="issues-group">
+          <div class="issues-group-label">
+            <div class="status-dot in-progress"></div>
+            進行中
+            <span class="issue-count-badge">4</span>
+          </div>
+          <div class="issue-row">
+            <div class="issue-priority priority-urgent">&#9650;</div>
+            <div class="issue-id">FE-234</div>
+            <div class="issue-title">ダッシュボードの読み込み速度を50ms以下に最適化する</div>
+          </div>
+          <div class="issue-row">
+            <div class="issue-priority priority-high">&#9650;</div>
+            <div class="issue-id">FE-231</div>
+            <div class="issue-title">Cmd+K コマンドパレットのキーボードナビゲーション実装</div>
+          </div>
+          <div class="issue-row">
+            <div class="issue-priority priority-medium">&#9650;</div>
+            <div class="issue-id">FE-228</div>
+            <div class="issue-title">タイムラインビューのドラッグ&amp;ドロップ対応</div>
+          </div>
+          <div class="issue-row">
+            <div class="issue-priority priority-medium">&#9654;</div>
+            <div class="issue-id">FE-225</div>
+            <div class="issue-title">ダークモードの色変数をデザイントークンに移行</div>
+          </div>
+        </div>
+
+        <div class="issues-group">
+          <div class="issues-group-label">
+            <div class="status-dot todo"></div>
+            Todo
+            <span class="issue-count-badge">3</span>
+          </div>
+          <div class="issue-row">
+            <div class="issue-priority priority-high">&#9650;</div>
+            <div class="issue-id">FE-220</div>
+            <div class="issue-title">インライン編集コンポーネントのリファクタリング</div>
+          </div>
+          <div class="issue-row">
+            <div class="issue-priority priority-medium">&#9654;</div>
+            <div class="issue-id">FE-218</div>
+            <div class="issue-title">モバイルビューのレスポンシブ修正（768px以下）</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Features -->
+<div class="features-section">
+  <div class="features-header">
+    <div class="section-label">機能</div>
+    <h2 class="section-h2">すべては<br>速度のために</h2>
+    <p class="section-desc">Linear はパフォーマンスを妥協しない。UIからデータ同期まで、すべての操作が即座に反応する。</p>
+  </div>
+  <div class="feature-cards">
+    <div class="feature-card">
+      <div class="feature-card-icon">&#9889;</div>
+      <div class="feature-card-title">瞬時の反応</div>
+      <p class="feature-card-desc">すべての操作が50ms以下。オプティミスティックUIで、ネットワーク遅延を感じさせない体験を実現する。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-icon">&#8963;</div>
+      <div class="feature-card-title">キーボードファースト</div>
+      <p class="feature-card-desc">Cmd+K でどこからでもコマンドパレットを開く。マウス不要でほぼすべての操作が完結する設計。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-icon">&#128260;</div>
+      <div class="feature-card-title">サイクルとロードマップ</div>
+      <p class="feature-card-desc">スプリント管理からOKRまで。チームのリズムに合わせた開発サイクルを組み込む。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-icon">&#128257;</div>
+      <div class="feature-card-title">GitHub/GitLab 連携</div>
+      <p class="feature-card-desc">コミット、PRとIssueが自動で紐づく。コードとタスクを別々に管理する時代は終わり。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-icon">&#127775;</div>
+      <div class="feature-card-title">AI 自動化</div>
+      <p class="feature-card-desc">課題の自動分類、優先度の提案、重複検出。AIがチームの認知負荷を下げる。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-icon">&#128202;</div>
+      <div class="feature-card-title">詳細分析</div>
+      <p class="feature-card-desc">サイクルタイム、スループット、ボトルネック分析。データに基づいてチームを継続改善する。</p>
+    </div>
+  </div>
+</div>
+
+<!-- Keyboard section -->
+<div class="kbd-section">
+  <div class="kbd-inner">
+    <div class="kbd-text">
+      <div class="section-label">キーボードショートカット</div>
+      <h2 class="section-h2" style="font-size:40px;letter-spacing:-0.8px;">マウスを置いて、<br>コードに集中する</h2>
+      <p class="section-desc" style="margin:0;text-align:left;">250以上のキーボードショートカット。Vim風ナビゲーション、コマンドパレット、インクリメンタル検索。指がキーボードを離れない。</p>
+    </div>
+    <div class="kbd-grid">
+      <div class="kbd-row">
+        <span class="kbd-action">コマンドパレットを開く</span>
+        <div class="kbd-keys"><span class="kbd-key">&#8984;</span><span class="kbd-key">K</span></div>
+      </div>
+      <div class="kbd-row">
+        <span class="kbd-action">新しい課題を作成</span>
+        <div class="kbd-keys"><span class="kbd-key">C</span></div>
+      </div>
+      <div class="kbd-row">
+        <span class="kbd-action">課題を検索</span>
+        <div class="kbd-keys"><span class="kbd-key">&#8984;</span><span class="kbd-key">F</span></div>
+      </div>
+      <div class="kbd-row">
+        <span class="kbd-action">ステータスを変更</span>
+        <div class="kbd-keys"><span class="kbd-key">S</span></div>
+      </div>
+      <div class="kbd-row">
+        <span class="kbd-action">優先度を設定</span>
+        <div class="kbd-keys"><span class="kbd-key">P</span></div>
+      </div>
+      <div class="kbd-row">
+        <span class="kbd-action">担当者を割り当て</span>
+        <div class="kbd-keys"><span class="kbd-key">A</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Changelog -->
+<div class="changelog-section">
+  <div style="margin-bottom:48px;">
+    <div class="section-label">チェンジログ</div>
+    <h2 class="section-h2" style="font-size:40px;letter-spacing:-0.8px;">継続的な改善</h2>
+  </div>
+
+  <div class="changelog-entry">
+    <div class="changelog-date">2026.04.11</div>
+    <div class="changelog-content">
+      <div class="changelog-title">タイムラインビュー v2 リリース</div>
+      <p class="changelog-desc">ドラッグ＆ドロップによる日程調整、依存関係の可視化、マイルストーンの設定が可能になりました。チームのスプリント計画が大幅に効率化されます。</p>
+      <div class="changelog-tags">
+        <div class="changelog-tag">新機能</div>
+        <div class="changelog-tag">プロジェクト管理</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="changelog-entry">
+    <div class="changelog-date">2026.04.05</div>
+    <div class="changelog-content">
+      <div class="changelog-title">AI 課題分類の精度向上</div>
+      <p class="changelog-desc">機械学習モデルの更新により、課題の自動ラベル付けと優先度提案の精度が40%向上しました。チームの分類作業を自動化します。</p>
+      <div class="changelog-tags">
+        <div class="changelog-tag">改善</div>
+        <div class="changelog-tag">AI</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="changelog-entry" style="border:none;margin:0;padding:0;">
+    <div class="changelog-date">2026.03.28</div>
+    <div class="changelog-content">
+      <div class="changelog-title">Slack 双方向連携</div>
+      <p class="changelog-desc">Slack から直接 Linear の課題を作成・更新できるようになりました。メンションや絵文字リアクションでステータスを変更する機能も追加。</p>
+      <div class="changelog-tags">
+        <div class="changelog-tag">連携</div>
+        <div class="changelog-tag">Slack</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section">
+  <h2>今すぐ構築を<br>始めよう</h2>
+  <p>無料プランで永久に使える。チームが成長したら拡張する。</p>
+  <a href="#" class="btn-brand-large" style="font-size:16px;padding:12px 32px;">無料で始める — クレカ不要</a>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">Linear</div>
+        <p class="footer-tagline">製品チームのための<br>合理化された課題追跡。</p>
+      </div>
+      <div>
+        <div class="footer-col-title">プロダクト</div>
+        <ul class="footer-links">
+          <li><a href="#">課題管理</a></li>
+          <li><a href="#">ロードマップ</a></li>
+          <li><a href="#">サイクル</a></li>
+          <li><a href="#">分析</a></li>
+          <li><a href="#">API</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">連携</div>
+        <ul class="footer-links">
+          <li><a href="#">GitHub</a></li>
+          <li><a href="#">GitLab</a></li>
+          <li><a href="#">Slack</a></li>
+          <li><a href="#">Figma</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">リソース</div>
+        <ul class="footer-links">
+          <li><a href="#">ドキュメント</a></li>
+          <li><a href="#">チェンジログ</a></li>
+          <li><a href="#">ブログ</a></li>
+          <li><a href="#">ステータス</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">会社情報</div>
+        <ul class="footer-links">
+          <li><a href="#">About</a></li>
+          <li><a href="#">採用情報</a></li>
+          <li><a href="#">セキュリティ</a></li>
+          <li><a href="#">プライバシー</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">&copy; 2026 Linear Orbit, Inc.</span>
+      <span class="footer-copy">プライバシーポリシー · 利用規約</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

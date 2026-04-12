@@ -13,6 +13,13 @@
 | `docs/orchestration-spec.md` | オーケストレーション実験仕様・実験履歴 |
 | `docs/visual-style-guide.md` | Web ビジュアルスタイルガイド（16パターン、パターン選定ガイド） |
 | `docs/web-designer-manual.md` | Webデザイナー業務マニュアル（DESIGN.md 作成・ワークフロー・チェックリスト） |
+| `docs/codex-collaboration.md` | Codex / ChatGPT の参画ルール・役割分担・記録原則 |
+| `docs/handoff-protocol.md` | Claude Code と Codex 間の引き継ぎプロトコル |
+| `docs/handoff-samples.md` | handoff の実例集（Claude Code → Codex / Codex → Claude Code） |
+| `docs/codex-session-logging.md` | Codex セッションの全文保全ルール（`.reminiscence-cod/` 運用） |
+| `docs/web-production-fallback.md` | Web制作部の非常時代行パッケージ総合ガイド |
+| `docs/web-director-fallback.md` | web-director 相当を Codex が代行するときの判断基準 |
+| `docs/web-designer-fallback.md` | web-designer 相当を Codex が代行するときの判断基準 |
 | `docs/agent-genius-design.md` | エージェント天才化設計マニュアル・進捗管理 |
 | `docs/glossary.md` | 用語集・辞書（定義・調査済みの言葉を随時蓄積） |
 | `docs/orchestration-queue-schema.md` | オーケストレーションキュースキーマ定義 |
@@ -34,6 +41,9 @@
   全セッションの Q&A を全文・自動蓄積（変更不可）
   UserPromptSubmit フックで自動取込（process-session）
   関連記憶をセッション開始時に自動注入（inject）
+【生ソース層（Codex）】.reminiscence-cod/sessions/*.yaml
+  Codex / ChatGPT 系セッションの全文記録を 1セッション1ファイルで保持
+  YAML 形式でメタ情報・会話全文・成果物・handoff を保存
         ↓ セッション終了時（Stop フック）
 【ダイジェスト層】docs/digest/YYYY-Www.md
   週次で決定事項・設定変更・固有名詞を抽出
@@ -49,6 +59,7 @@
 | レイヤー | 場所 | 稼働 | 読者 |
 |---|---|---|---|
 | 生ソース | `.reminiscence/memory.db` | 全自動 | Claude（inject 経由） |
+| 生ソース（Codex） | `.reminiscence-cod/sessions/` | 手動 / 運用整備中 | 人間・Codex・Claude |
 | ダイジェスト | `docs/digest/` | Stop 時自動 | Claude（参照）・人間 |
 | 議事録 | `minutes/` | 手動 | 人間・Claude（補完） |
 

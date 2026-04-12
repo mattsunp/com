@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Airbnb — Design Template</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#ff385c;
+  --near-black:#222;
+  --secondary:#6a6a6a;
+  --border:#dddddd;
+  --surface-light:#f2f2f2;
+  --white:#fff;
+  --shadow-card:rgba(0,0,0,0.02) 0px 0px 0px 1px,rgba(0,0,0,0.04) 0px 2px 6px,rgba(0,0,0,0.10) 0px 4px 8px;
+  --shadow-hover:rgba(0,0,0,0.08) 0px 4px 12px;
+}
+body{background:var(--white);color:var(--near-black);font-family:Circular,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;-webkit-font-smoothing:antialiased}
+
+/* ─── NAV ─── */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:#fff;border-bottom:1px solid var(--border);
+  padding:0 24px;height:80px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:16px;
+}
+.nav-logo{color:var(--red);font-size:28px;font-weight:700;text-decoration:none;letter-spacing:-0.5px}
+.search-bar{
+  flex:1;max-width:480px;
+  display:flex;align-items:center;
+  border:1px solid var(--border);border-radius:40px;
+  box-shadow:var(--shadow-card);
+  padding:0;overflow:hidden;
+  height:48px;
+}
+.search-segment{
+  flex:1;padding:0 16px;font-size:13px;font-weight:500;color:var(--near-black);
+  cursor:pointer;display:flex;flex-direction:column;justify-content:center;
+  border-right:1px solid var(--border);min-height:48px;
+}
+.search-segment:last-of-type{border-right:none}
+.search-segment span{display:block;font-size:11px;color:var(--secondary);font-weight:400}
+.search-btn{
+  background:var(--red);color:#fff;border:none;
+  width:36px;height:36px;border-radius:50%;
+  margin:0 6px;cursor:pointer;font-size:16px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.nav-right{display:flex;align-items:center;gap:12px}
+.nav-link{font-size:14px;font-weight:500;color:var(--near-black);text-decoration:none;padding:10px 14px;border-radius:20px;transition:background .15s}
+.nav-link:hover{background:var(--surface-light)}
+.nav-user{
+  display:flex;align-items:center;gap:8px;
+  border:1px solid var(--border);border-radius:24px;padding:6px 10px;
+  cursor:pointer;transition:box-shadow .15s;
+}
+.nav-user:hover{box-shadow:var(--shadow-hover)}
+.nav-user .ham{font-size:18px}
+.nav-user .avatar{width:30px;height:30px;background:var(--near-black);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px}
+
+/* ─── CATEGORY PILLS ─── */
+.category-bar{
+  border-bottom:1px solid var(--border);
+  padding:0 24px;
+  display:flex;gap:28px;overflow-x:auto;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+  position:relative;
+}
+.category-bar::-webkit-scrollbar{display:none}
+.category-item{
+  flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:6px;
+  padding:14px 0 12px;cursor:pointer;
+  border-bottom:2px solid transparent;
+  transition:border-color .15s,opacity .15s;
+  opacity:0.6;
+  min-width:56px;
+}
+.category-item.active{border-bottom:2px solid var(--near-black);opacity:1}
+.category-item:hover{opacity:0.9}
+.category-icon{font-size:22px}
+.category-label{font-size:12px;font-weight:600;white-space:nowrap;color:var(--near-black)}
+
+/* ─── GRID ─── */
+.main{padding:24px;max-width:1280px;margin:0 auto}
+.listing-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:24px;
+}
+
+/* ─── LISTING CARD ─── */
+.card{cursor:pointer}
+.card-img{
+  position:relative;aspect-ratio:1/1;border-radius:12px;
+  background:var(--surface-light);overflow:hidden;margin-bottom:10px;
+}
+.card-img .bg{width:100%;height:100%;object-fit:cover;display:flex;align-items:center;justify-content:center;font-size:64px}
+.card-img .heart{
+  position:absolute;top:12px;right:12px;
+  background:none;border:none;cursor:pointer;
+  font-size:20px;filter:drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+}
+.card-img .dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:4px}
+.card-img .dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.7)}
+.card-img .dot.active{background:#fff}
+
+.card-carousel-btn{
+  position:absolute;top:50%;transform:translateY(-50%);
+  background:var(--surface-light);border:none;cursor:pointer;
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:12px;
+  opacity:0;transition:opacity .15s;
+}
+.card:hover .card-carousel-btn{opacity:1}
+.card-carousel-btn.prev{left:8px}
+.card-carousel-btn.next{right:8px}
+
+.card-info{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.card-title{font-size:14px;font-weight:600;color:var(--near-black);line-height:1.3}
+.card-sub{font-size:13px;color:var(--secondary);margin-top:2px;line-height:1.4}
+.card-date{font-size:13px;color:var(--secondary)}
+.card-price{text-align:right;flex-shrink:0}
+.card-price strong{font-size:14px;font-weight:600;color:var(--near-black)}
+.card-price span{font-size:13px;font-weight:400;color:var(--secondary)}
+.card-stars{font-size:12px;color:var(--near-black);display:flex;align-items:center;gap:2px;margin-top:4px}
+
+/* ─── MAP TOGGLE ─── */
+.map-toggle-bar{
+  position:fixed;bottom:32px;left:50%;transform:translateX(-50%);z-index:200;
+}
+.map-toggle{
+  background:var(--near-black);color:#fff;border:none;
+  padding:12px 24px;border-radius:24px;font-size:14px;font-weight:600;
+  cursor:pointer;display:flex;align-items:center;gap:8px;
+  box-shadow:0 6px 20px rgba(0,0,0,0.3);
+  transition:transform .15s;
+}
+.map-toggle:hover{transform:scale(1.04)}
+
+/* ─── HERO AREA (above grid, inside page) ─── */
+.page-header{padding:28px 24px 0;max-width:1280px;margin:0 auto}
+.page-header h1{font-size:28px;font-weight:700;color:var(--near-black);margin-bottom:4px}
+.page-header p{font-size:14px;color:var(--secondary)}
+
+/* ─── FOOTER ─── */
+footer{
+  border-top:1px solid var(--border);
+  padding:32px 24px;margin-top:64px;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:16px;
+}
+.footer-col h4{font-size:12px;font-weight:600;color:var(--near-black);text-transform:uppercase;margin-bottom:12px;letter-spacing:0.05em}
+.footer-col a{display:block;font-size:13px;color:var(--secondary);text-decoration:none;margin-bottom:8px}
+.footer-col a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">airbnb</a>
+
+  <div class="search-bar">
+    <div class="search-segment">
+      行き先
+      <span>場所を検索</span>
+    </div>
+    <div class="search-segment">
+      チェックイン
+      <span>日程を追加</span>
+    </div>
+    <div class="search-segment">
+      チェックアウト
+      <span>日程を追加</span>
+    </div>
+    <div class="search-segment">
+      ゲスト
+      <span>人数を追加</span>
+    </div>
+    <button class="search-btn">🔍</button>
+  </div>
+
+  <div class="nav-right">
+    <a class="nav-link" href="#">体験を提供する</a>
+    <div class="nav-user">
+      <span class="ham">☰</span>
+      <div class="avatar">👤</div>
+    </div>
+  </div>
+</nav>
+
+<!-- CATEGORY BAR -->
+<div class="category-bar">
+  <div class="category-item active"><span class="category-icon">🏡</span><span class="category-label">ユニーク</span></div>
+  <div class="category-item"><span class="category-icon">🌊</span><span class="category-label">海辺</span></div>
+  <div class="category-item"><span class="category-icon">🏔</span><span class="category-label">山岳</span></div>
+  <div class="category-item"><span class="category-icon">🌿</span><span class="category-label">自然</span></div>
+  <div class="category-item"><span class="category-icon">🏯</span><span class="category-label">城・歴史</span></div>
+  <div class="category-item"><span class="category-icon">🌃</span><span class="category-label">都市</span></div>
+  <div class="category-item"><span class="category-icon">♨️</span><span class="category-label">温泉</span></div>
+  <div class="category-item"><span class="category-icon">🏖</span><span class="category-label">ビーチ</span></div>
+  <div class="category-item"><span class="category-icon">🌸</span><span class="category-label">庭園</span></div>
+  <div class="category-item"><span class="category-icon">🛖</span><span class="category-label">コテージ</span></div>
+  <div class="category-item"><span class="category-icon">🗼</span><span class="category-label">眺望</span></div>
+  <div class="category-item"><span class="category-icon">🎋</span><span class="category-label">町家</span></div>
+</div>
+
+<!-- MAIN -->
+<div class="page-header">
+  <h1>日本 — 人気のリスティング</h1>
+  <p>2,400件以上の宿泊施設が見つかりました</p>
+</div>
+
+<main class="main">
+  <div class="listing-grid">
+
+    <!-- Card 1 -->
+    <div class="card">
+      <div class="card-img">
+        <div class="bg">🏯</div>
+        <button class="heart">🤍</button>
+        <button class="card-carousel-btn prev">‹</button>
+        <button class="card-carousel-btn next">›</button>
+        <div class="dots"><div class="dot active"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <div class="card-info">
+        <div>
+          <div class="card-title">築100年の京町家 — 祇園エリア</div>
+          <div class="card-sub">民泊 · 京都市</div>
+          <div class="card-date">5月12〜17日</div>
+          <div class="card-stars">★ 4.98 <span style="color:var(--secondary)">· レビュー 312</span></div>
+        </div>
+        <div class="card-price"><strong>¥32,000</strong><span> /泊</span></div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="card">
+      <div class="card-img" style="background:#e8f4f8">
+        <div class="bg">🌊</div>
+        <button class="heart">🤍</button>
+        <button class="card-carousel-btn prev">‹</button>
+        <button class="card-carousel-btn next">›</button>
+        <div class="dots"><div class="dot active"></div><div class="dot"></div></div>
+      </div>
+      <div class="card-info">
+        <div>
+          <div class="card-title">オーシャンビュー一棟貸し — 熱海</div>
+          <div class="card-sub">一棟貸し · 静岡県</div>
+          <div class="card-date">4月29〜5月4日</div>
+          <div class="card-stars">★ 4.87 <span style="color:var(--secondary)">· レビュー 89</span></div>
+        </div>
+        <div class="card-price"><strong>¥58,000</strong><span> /泊</span></div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="card">
+      <div class="card-img" style="background:#f0ebe6">
+        <div class="bg">🌸</div>
+        <button class="heart">❤️</button>
+        <button class="card-carousel-btn prev">‹</button>
+        <button class="card-carousel-btn next">›</button>
+        <div class="dots"><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <div class="card-info">
+        <div>
+          <div class="card-title">花見テラス付き古民家 — 奈良</div>
+          <div class="card-sub">古民家 · 奈良県</div>
+          <div class="card-date">4月1〜6日</div>
+          <div class="card-stars">★ 5.00 <span style="color:var(--secondary)">· レビュー 47</span></div>
+        </div>
+        <div class="card-price"><strong>¥21,500</strong><span> /泊</span></div>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="card">
+      <div class="card-img" style="background:#eef0e6">
+        <div class="bg">🎋</div>
+        <button class="heart">🤍</button>
+        <button class="card-carousel-btn prev">‹</button>
+        <button class="card-carousel-btn next">›</button>
+        <div class="dots"><div class="dot active"></div><div class="dot"></div></div>
+      </div>
+      <div class="card-info">
+        <div>
+          <div class="card-title">竹林を望む数寄屋造り — 嵐山</div>
+          <div class="card-sub">民泊 · 京都市西京区</div>
+          <div class="card-date">6月3〜8日</div>
+          <div class="card-stars">★ 4.94 <span style="color:var(--secondary)">· レビュー 205</span></div>
+        </div>
+        <div class="card-price"><strong>¥44,000</strong><span> /泊</span></div>
+      </div>
+    </div>
+
+    <!-- Card 5 -->
+    <div class="card">
+      <div class="card-img" style="background:#e6e8f0">
+        <div class="bg">🗼</div>
+        <button class="heart">🤍</button>
+        <button class="card-carousel-btn prev">‹</button>
+        <button class="card-carousel-btn next">›</button>
+        <div class="dots"><div class="dot active"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <div class="card-info">
+        <div>
+          <div class="card-title">スカイツリーが見えるペントハウス</div>
+          <div class="card-sub">ペントハウス · 東京都墨田区</div>
+          <div class="card-date">5月20〜25日</div>
+          <div class="card-stars">★ 4.91 <span style="color:var(--secondary)">· レビュー 133</span></div>
+        </div>
+        <div class="card-price"><strong>¥76,000</strong><span> /泊</span></div>
+      </div>
+    </div>
+
+    <!-- Card 6 -->
+    <div class="card">
+      <div class="card-img" style="background:#f5eee6">
+        <div class="bg">♨️</div>
+        <button class="heart">🤍</button>
+        <button class="card-carousel-btn prev">‹</button>
+        <button class="card-carousel-btn next">›</button>
+        <div class="dots"><div class="dot active"></div><div class="dot"></div></div>
+      </div>
+      <div class="card-info">
+        <div>
+          <div class="card-title">露天温泉付き離れ — 別府</div>
+          <div class="card-sub">旅館 · 大分県別府市</div>
+          <div class="card-date">7月14〜17日</div>
+          <div class="card-stars">★ 4.96 <span style="color:var(--secondary)">· レビュー 68</span></div>
+        </div>
+        <div class="card-price"><strong>¥38,500</strong><span> /泊</span></div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- MAP TOGGLE -->
+<div class="map-toggle-bar">
+  <button class="map-toggle">🗺 地図で探す</button>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-col">
+    <h4>サポート</h4>
+    <a href="#">ヘルプセンター</a>
+    <a href="#">AirCover</a>
+    <a href="#">セーフティ情報</a>
+    <a href="#">アクセシビリティ</a>
+    <a href="#">キャンセルオプション</a>
+  </div>
+  <div class="footer-col">
+    <h4>コミュニティ</h4>
+    <a href="#">Airbnbを紹介する</a>
+    <a href="#">新規ホスト向けサポート</a>
+    <a href="#">エアカバー for ホスト</a>
+    <a href="#">コミュニティフォーラム</a>
+  </div>
+  <div class="footer-col">
+    <h4>ホストになる</h4>
+    <a href="#">あなたのホームを登録</a>
+    <a href="#">体験の提供を始める</a>
+    <a href="#">料金計算ツール</a>
+    <a href="#">リソースセンター</a>
+  </div>
+  <div class="footer-col">
+    <h4>Airbnb</h4>
+    <a href="#">ニュースルーム</a>
+    <a href="#">新機能</a>
+    <a href="#">採用情報</a>
+    <a href="#">投資家情報</a>
+    <a href="#">緊急事態の措置</a>
+  </div>
+</footer>
+
+</body>
+</html>

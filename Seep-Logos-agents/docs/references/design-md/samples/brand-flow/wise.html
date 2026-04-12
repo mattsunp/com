@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wise — Money without borders</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --near-black: #0e0f0c;
+    --wise-green: #9fe870;
+    --dark-green: #163300;
+    --light-mint: #e2f6d5;
+    --pastel-green: #cdffad;
+    --warm-dark: #454745;
+    --gray: #868685;
+    --light-surface: #e8ebe6;
+    --white: #ffffff;
+    --off-white: #f9faf7;
+    --positive-green: #054d28;
+    --danger-red: #d03238;
+    --font-display: Inter, "Helvetica Neue", Arial, sans-serif;
+    --font-body: Inter, Helvetica, Arial, sans-serif;
+  }
+
+  html { font-size: 16px; }
+  body {
+    font-family: var(--font-body);
+    background: var(--white);
+    color: var(--near-black);
+    line-height: 1.44;
+    font-feature-settings: "calt";
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    background: var(--white);
+    border-bottom: 1px solid rgba(14,15,12,0.08);
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    padding: 0 24px;
+  }
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-logo {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--near-black);
+    letter-spacing: -0.3px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .logo-flag {
+    width: 24px; height: 16px;
+    background: var(--wise-green);
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 900;
+    color: var(--dark-green);
+  }
+  .nav-links { display: flex; gap: 0; list-style: none; }
+  .nav-links a {
+    display: block;
+    padding: 0 16px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--near-black);
+    text-decoration: none;
+    line-height: 64px;
+    transition: background 0.15s;
+    border-radius: 8px;
+    font-feature-settings: "calt";
+    letter-spacing: -0.108px;
+  }
+  .nav-links a:hover { background: rgba(211,242,192,0.4); }
+  .nav-right { display: flex; gap: 8px; align-items: center; }
+  .btn-nav-ghost {
+    padding: 8px 16px;
+    border-radius: 9999px;
+    border: none;
+    background: rgba(22,51,0,0.08);
+    color: var(--near-black);
+    font-size: 16px;
+    font-weight: 600;
+    font-family: var(--font-body);
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.2s, background 0.2s;
+    font-feature-settings: "calt";
+    letter-spacing: -0.108px;
+  }
+  .btn-nav-ghost:hover { transform: scale(1.05); }
+  .btn-nav-green {
+    padding: 8px 20px;
+    border-radius: 9999px;
+    border: none;
+    background: var(--wise-green);
+    color: var(--dark-green);
+    font-size: 16px;
+    font-weight: 600;
+    font-family: var(--font-body);
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.2s;
+    font-feature-settings: "calt";
+    letter-spacing: -0.108px;
+  }
+  .btn-nav-green:hover { transform: scale(1.05); }
+  .btn-nav-green:active { transform: scale(0.95); }
+
+  /* ─── HERO ─── */
+  .hero {
+    background: var(--white);
+    padding: 80px 24px 64px;
+    overflow: hidden;
+    position: relative;
+  }
+  .hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .hero h1 {
+    font-size: 96px;
+    font-weight: 900;
+    line-height: 0.85;
+    color: var(--near-black);
+    letter-spacing: normal;
+    font-feature-settings: "calt";
+    margin-bottom: 28px;
+  }
+  .hero p {
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--warm-dark);
+    line-height: 1.44;
+    letter-spacing: 0.18px;
+    margin-bottom: 32px;
+    font-feature-settings: "calt";
+    max-width: 480px;
+  }
+  .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-green {
+    padding: 12px 24px;
+    border-radius: 9999px;
+    border: none;
+    background: var(--wise-green);
+    color: var(--dark-green);
+    font-size: 18px;
+    font-weight: 600;
+    font-family: var(--font-body);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: transform 0.2s;
+    font-feature-settings: "calt";
+    letter-spacing: -0.108px;
+  }
+  .btn-green:hover { transform: scale(1.05); }
+  .btn-green:active { transform: scale(0.95); }
+  .btn-ghost-dark {
+    padding: 12px 24px;
+    border-radius: 9999px;
+    border: none;
+    background: rgba(22,51,0,0.08);
+    color: var(--near-black);
+    font-size: 18px;
+    font-weight: 600;
+    font-family: var(--font-body);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: transform 0.2s;
+    font-feature-settings: "calt";
+    letter-spacing: -0.108px;
+  }
+  .btn-ghost-dark:hover { transform: scale(1.05); }
+
+  /* Exchange rate card */
+  .exchange-panel {
+    background: var(--white);
+    border-radius: 30px;
+    box-shadow: rgba(14,15,12,0.12) 0px 0px 0px 1px, 0 8px 32px rgba(14,15,12,0.08);
+    padding: 28px;
+  }
+  .exchange-label { font-size: 14px; font-weight: 600; color: var(--gray); margin-bottom: 16px; letter-spacing: -0.084px; font-feature-settings: "calt"; }
+  .exchange-input-group { margin-bottom: 8px; }
+  .exchange-row {
+    display: flex;
+    align-items: center;
+    background: var(--off-white);
+    border-radius: 16px;
+    padding: 16px 20px;
+    gap: 12px;
+    margin-bottom: 8px;
+    box-shadow: rgba(14,15,12,0.12) 0px 0px 0px 1px;
+  }
+  .flag-icon { font-size: 22px; flex-shrink: 0; }
+  .currency-code { font-size: 16px; font-weight: 600; color: var(--near-black); flex-shrink: 0; min-width: 36px; }
+  .amount-display { flex: 1; font-size: 26px; font-weight: 600; color: var(--near-black); text-align: right; letter-spacing: -0.39px; font-feature-settings: "calt"; }
+  .exchange-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 0;
+  }
+  .exchange-divider .arrow {
+    width: 32px; height: 32px;
+    background: var(--wise-green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: var(--dark-green);
+    font-weight: 700;
+  }
+  .exchange-rate-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 16px 0;
+    padding: 12px 16px;
+    background: var(--light-mint);
+    border-radius: 12px;
+  }
+  .rate-label { font-size: 14px; color: var(--positive-green); font-weight: 600; letter-spacing: -0.084px; }
+  .rate-value { font-size: 14px; color: var(--positive-green); font-weight: 600; }
+  .fee-info {
+    font-size: 14px;
+    color: var(--gray);
+    text-align: center;
+    margin-bottom: 16px;
+    letter-spacing: -0.084px;
+    font-feature-settings: "calt";
+  }
+  .fee-info strong { color: var(--near-black); font-weight: 600; }
+  .btn-send {
+    width: 100%;
+    padding: 14px;
+    border-radius: 9999px;
+    border: none;
+    background: var(--wise-green);
+    color: var(--dark-green);
+    font-size: 18px;
+    font-weight: 600;
+    font-family: var(--font-body);
+    cursor: pointer;
+    transition: transform 0.2s;
+    font-feature-settings: "calt";
+    letter-spacing: -0.108px;
+  }
+  .btn-send:hover { transform: scale(1.05); }
+
+  /* ─── SECTION ─── */
+  .section { padding: 80px 24px; }
+  .section-gray { background: var(--off-white); }
+  .section-dark { background: var(--near-black); color: var(--white); }
+  .section-inner { max-width: 1200px; margin: 0 auto; }
+  .section-header { margin-bottom: 48px; }
+  .section-tag {
+    display: inline-block;
+    background: var(--light-mint);
+    color: var(--positive-green);
+    border-radius: 9999px;
+    padding: 4px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.084px;
+    margin-bottom: 12px;
+    font-feature-settings: "calt";
+  }
+  .section-title {
+    font-size: 64px;
+    font-weight: 900;
+    line-height: 0.85;
+    color: var(--near-black);
+    margin-bottom: 16px;
+    font-feature-settings: "calt";
+  }
+  .section-title-light { color: var(--white); }
+  .section-lead { font-size: 18px; font-weight: 400; color: var(--warm-dark); line-height: 1.44; letter-spacing: 0.18px; font-feature-settings: "calt"; }
+  .section-lead-light { color: rgba(255,255,255,0.75); }
+
+  /* ─── FEATURES GRID ─── */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .feat-card {
+    background: var(--white);
+    border-radius: 30px;
+    padding: 32px;
+    box-shadow: rgba(14,15,12,0.12) 0px 0px 0px 1px;
+    transition: transform 0.2s;
+  }
+  .feat-card:hover { transform: translateY(-4px); }
+  .feat-icon { font-size: 36px; margin-bottom: 16px; display: block; }
+  .feat-title { font-size: 22px; font-weight: 600; color: var(--near-black); margin-bottom: 10px; letter-spacing: -0.396px; font-feature-settings: "calt"; }
+  .feat-desc { font-size: 16px; color: var(--warm-dark); line-height: 1.5; letter-spacing: -0.108px; font-feature-settings: "calt"; }
+
+  /* ─── COMPARE TABLE ─── */
+  .compare-table { width: 100%; border-radius: 30px; overflow: hidden; box-shadow: rgba(14,15,12,0.12) 0px 0px 0px 1px; border-collapse: separate; border-spacing: 0; }
+  .compare-table th, .compare-table td { padding: 16px 24px; text-align: left; border-bottom: 1px solid rgba(14,15,12,0.08); }
+  .compare-table thead th { background: var(--near-black); color: var(--white); font-size: 14px; font-weight: 600; letter-spacing: -0.084px; }
+  .compare-table thead th:first-child { border-radius: 0; }
+  .compare-table thead .wise-col { background: var(--wise-green); color: var(--dark-green); font-weight: 700; }
+  .compare-table tbody tr:last-child td { border-bottom: none; }
+  .compare-table td { font-size: 15px; color: var(--near-black); background: var(--white); }
+  .compare-table td.wise-data { background: rgba(159,232,112,0.08); font-weight: 600; color: var(--positive-green); }
+  .compare-table td .check-g { color: var(--positive-green); font-weight: 700; }
+  .compare-table td .cross { color: var(--danger-red); }
+  .compare-table th:first-child { font-weight: 400; color: rgba(255,255,255,0.7); }
+  .compare-table td:first-child { font-weight: 500; color: var(--warm-dark); }
+
+  /* ─── SEND FLOW ─── */
+  .flow-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    position: relative;
+  }
+  .flow-steps::before {
+    content: '';
+    position: absolute;
+    top: 32px; left: calc(12.5% + 16px); right: calc(12.5% + 16px);
+    height: 2px;
+    background: var(--wise-green);
+    z-index: 0;
+  }
+  .flow-step { text-align: center; padding: 0 16px; position: relative; z-index: 1; }
+  .step-number {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: var(--wise-green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--dark-green);
+    margin: 0 auto 16px;
+    box-shadow: 0 0 0 4px var(--white), 0 0 0 6px var(--wise-green);
+    font-feature-settings: "calt";
+  }
+  .step-title { font-size: 18px; font-weight: 600; color: var(--near-black); margin-bottom: 8px; letter-spacing: -0.108px; font-feature-settings: "calt"; }
+  .step-desc { font-size: 14px; color: var(--gray); line-height: 1.5; letter-spacing: -0.084px; font-feature-settings: "calt"; }
+
+  /* ─── TESTIMONIALS ─── */
+  .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .testimonial-card {
+    background: var(--white);
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: rgba(14,15,12,0.12) 0px 0px 0px 1px;
+  }
+  .testimonial-stars { color: var(--wise-green); font-size: 16px; margin-bottom: 12px; }
+  .testimonial-text { font-size: 16px; color: var(--near-black); line-height: 1.6; margin-bottom: 16px; letter-spacing: -0.108px; font-feature-settings: "calt"; }
+  .testimonial-author { display: flex; align-items: center; gap: 10px; }
+  .author-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--wise-green);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px; color: var(--dark-green);
+    flex-shrink: 0;
+  }
+  .author-name { font-size: 14px; font-weight: 600; color: var(--near-black); }
+  .author-detail { font-size: 13px; color: var(--gray); }
+
+  /* ─── CTA ─── */
+  .cta-section {
+    background: var(--near-black);
+    padding: 80px 24px;
+    text-align: center;
+  }
+  .cta-section h2 {
+    font-size: 64px;
+    font-weight: 900;
+    line-height: 0.85;
+    color: var(--white);
+    margin-bottom: 16px;
+    font-feature-settings: "calt";
+  }
+  .cta-section h2 span { color: var(--wise-green); }
+  .cta-section p { font-size: 18px; color: rgba(255,255,255,0.65); margin-bottom: 32px; letter-spacing: 0.18px; font-feature-settings: "calt"; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--off-white);
+    border-top: 1px solid rgba(14,15,12,0.08);
+    padding: 48px 24px 24px;
+  }
+  .footer-inner { max-width: 1200px; margin: 0 auto; }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 32px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid rgba(14,15,12,0.08);
+  }
+  .footer-brand-name { font-size: 20px; font-weight: 700; color: var(--near-black); margin-bottom: 10px; letter-spacing: -0.3px; }
+  .footer-brand p { font-size: 14px; color: var(--gray); line-height: 1.6; letter-spacing: -0.084px; font-feature-settings: "calt"; }
+  .footer-col h5 { font-size: 14px; font-weight: 700; color: var(--near-black); margin-bottom: 12px; letter-spacing: -0.084px; }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 8px; }
+  .footer-col ul li a { font-size: 14px; color: var(--gray); text-decoration: none; transition: color 0.15s; font-feature-settings: "calt"; }
+  .footer-col ul li a:hover { color: var(--near-black); }
+  .footer-bottom { display: flex; justify-content: space-between; font-size: 13px; color: var(--gray); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 992px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .features-grid { grid-template-columns: repeat(2, 1fr); }
+    .flow-steps { grid-template-columns: repeat(2, 1fr); }
+    .flow-steps::before { display: none; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 576px) {
+    .hero h1 { font-size: 56px; }
+    .section-title { font-size: 40px; }
+    .nav-links { display: none; }
+    .features-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .flow-steps { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <div class="logo-flag">W</div>
+      Wise
+    </div>
+    <ul class="nav-links">
+      <li><a href="#">Personal</a></li>
+      <li><a href="#">Business</a></li>
+      <li><a href="#">Send money</a></li>
+      <li><a href="#">Multi-currency</a></li>
+      <li><a href="#">Cards</a></li>
+      <li><a href="#">Pricing</a></li>
+    </ul>
+    <div class="nav-right">
+      <a href="#" class="btn-nav-ghost">Log in</a>
+      <a href="#" class="btn-nav-green">Register</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <h1>Money without borders.</h1>
+      <p>Send, spend, and receive money internationally. No hidden fees. Real exchange rate. Move money across 160+ countries at a fraction of bank costs.</p>
+      <div class="hero-btns">
+        <a href="#" class="btn-green">Get started for free</a>
+        <a href="#" class="btn-ghost-dark">See how it works</a>
+      </div>
+    </div>
+    <div class="exchange-panel">
+      <div class="exchange-label">You send exactly</div>
+      <div class="exchange-row">
+        <span class="flag-icon">&#127471;&#127477;</span>
+        <span class="currency-code">JPY</span>
+        <span class="amount-display">100,000</span>
+      </div>
+      <div class="exchange-divider">
+        <div class="arrow">&#8595;</div>
+      </div>
+      <div class="exchange-label" style="margin-top:8px;">Recipient gets</div>
+      <div class="exchange-row">
+        <span class="flag-icon">&#127482;&#127480;</span>
+        <span class="currency-code">USD</span>
+        <span class="amount-display">654.83</span>
+      </div>
+      <div class="exchange-rate-info">
+        <span class="rate-label">&#10003; Mid-market rate</span>
+        <span class="rate-value">1 JPY = 0.006549 USD</span>
+      </div>
+      <div class="fee-info">Wise fee: <strong>&#165;476 (0.48%)</strong> — banks charge 3–5%</div>
+      <button class="btn-send">Send money &#8594;</button>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-tag">Why Wise</div>
+      <h2 class="section-title">The smarter way<br>to move money.</h2>
+    </div>
+    <div class="features-grid">
+      <div class="feat-card">
+        <span class="feat-icon">&#128200;</span>
+        <div class="feat-title">Real exchange rate</div>
+        <p class="feat-desc">We always use the mid-market exchange rate — the same rate you see on Google. Never a hidden markup. Ever.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">&#9889;</span>
+        <div class="feat-title">Fast transfers</div>
+        <p class="feat-desc">50% of transfers arrive in under an hour. Most reach the recipient the same day. No more waiting for your bank's "2-5 business days."</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">&#127760;</span>
+        <div class="feat-title">160+ countries</div>
+        <p class="feat-desc">Send to over 160 countries and territories. Hold 40+ currencies in one account and switch between them instantly.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">&#128179;</span>
+        <div class="feat-title">Multi-currency account</div>
+        <p class="feat-desc">Get local account details in USD, EUR, GBP, AUD, and more. Receive money like a local, without a local bank account.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">&#128274;</span>
+        <div class="feat-title">Fully regulated</div>
+        <p class="feat-desc">Regulated by the Financial Conduct Authority (UK) and authorized in 30+ countries. Your money is safeguarded and protected.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">&#128197;</span>
+        <div class="feat-title">Wise Card</div>
+        <p class="feat-desc">Spend worldwide with the Wise debit card. Pay in local currency automatically. No foreign transaction fees up to &#165;80,000/month.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section section-gray">
+  <div class="section-inner">
+    <div class="section-header" style="text-align:center;">
+      <div class="section-tag">How it works</div>
+      <h2 class="section-title">Send money in 4 steps.</h2>
+    </div>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="step-number">1</div>
+        <div class="step-title">Enter amount</div>
+        <p class="step-desc">Type how much you want to send. See the exact rate and fee before you continue.</p>
+      </div>
+      <div class="flow-step">
+        <div class="step-number">2</div>
+        <div class="step-title">Add recipient</div>
+        <p class="step-desc">Enter the recipient's bank account details. We support 1,700+ banks worldwide.</p>
+      </div>
+      <div class="flow-step">
+        <div class="step-number">3</div>
+        <div class="step-title">Pay securely</div>
+        <p class="step-desc">Pay via bank transfer, debit card, or credit card. All transactions are encrypted.</p>
+      </div>
+      <div class="flow-step">
+        <div class="step-number">4</div>
+        <div class="step-title">Money arrives</div>
+        <p class="step-desc">Track your transfer live. 50% arrive in under 1 hour. We send a notification on delivery.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARE -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-tag">Fee comparison</div>
+      <h2 class="section-title">How does Wise compare?</h2>
+      <p class="section-lead" style="margin-top:12px;">Sending &#165;100,000 to the United States</p>
+    </div>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Provider</th>
+          <th class="wise-col">Wise &#9989;</th>
+          <th>Major Bank</th>
+          <th>Bank B</th>
+          <th>Remittance A</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Fee</td>
+          <td class="wise-data">&#165;476 (0.48%)</td>
+          <td>&#165;3,000 + spread</td>
+          <td>&#165;2,500 + spread</td>
+          <td>&#165;1,800</td>
+        </tr>
+        <tr>
+          <td>Exchange rate</td>
+          <td class="wise-data"><span class="check-g">&#10003;</span> Mid-market rate</td>
+          <td>Up to 3% markup</td>
+          <td>2.5% markup</td>
+          <td>1.8% markup</td>
+        </tr>
+        <tr>
+          <td>USD received</td>
+          <td class="wise-data"><strong>$654.83</strong></td>
+          <td>~$627.00</td>
+          <td>~$631.00</td>
+          <td>~$639.00</td>
+        </tr>
+        <tr>
+          <td>Speed</td>
+          <td class="wise-data">Same day</td>
+          <td>3–5 business days</td>
+          <td>2–3 business days</td>
+          <td>1–2 business days</td>
+        </tr>
+        <tr>
+          <td>Track transfer</td>
+          <td class="wise-data"><span class="check-g">&#10003;</span> Real-time</td>
+          <td><span class="cross">&#10007;</span></td>
+          <td>Limited</td>
+          <td><span class="cross">&#10007;</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section section-gray">
+  <div class="section-inner">
+    <div class="section-header" style="text-align:center;">
+      <div class="section-tag">Customer reviews</div>
+      <h2 class="section-title">Trusted by 16 million customers.</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="testimonial-text">「毎月海外送金しているので、Wiseは本当に助かります。銀行より手数料が圧倒的に安く、到着も早い。もう銀行には戻れません。」</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">田</div>
+          <div>
+            <div class="author-name">田中 美穂</div>
+            <div class="author-detail">フリーランスデザイナー、東京</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="testimonial-text">"I receive payments from Japanese clients every month. Wise's multi-currency account is a lifesaver — I get local JPY account details without needing a Japanese bank."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">S</div>
+          <div>
+            <div class="author-name">Sarah K.</div>
+            <div class="author-detail">Remote contractor, London</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="testimonial-text">「海外出張が多いのでWise Card を使っています。現地通貨で自動決済されて、手数料なし。空港の両替所には一生行かないと思います。」</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">山</div>
+          <div>
+            <div class="author-name">山本 拓真</div>
+            <div class="author-detail">グローバル事業部、大阪</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <h2>Join <span>16 million</span><br>wise people.</h2>
+  <p>No hidden fees. Real exchange rate. Money that works everywhere.</p>
+  <a href="#" class="btn-green" style="font-size:20px; padding:16px 40px;">Create your account — free</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-brand-name">Wise</div>
+        <p>Formerly TransferWise. Wise is on a mission to make international money transfers cheap, fair, and simple. Regulated in 30+ countries worldwide.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Products</h5>
+        <ul>
+          <li><a href="#">Send money</a></li>
+          <li><a href="#">Receive money</a></li>
+          <li><a href="#">Multi-currency account</a></li>
+          <li><a href="#">Wise Card</a></li>
+          <li><a href="#">Wise Business</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Countries</h5>
+        <ul>
+          <li><a href="#">Japan</a></li>
+          <li><a href="#">United States</a></li>
+          <li><a href="#">United Kingdom</a></li>
+          <li><a href="#">Europe</a></li>
+          <li><a href="#">Australia</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Mission</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Press</a></li>
+          <li><a href="#">Blog</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Support</h5>
+        <ul>
+          <li><a href="#">Help center</a></li>
+          <li><a href="#">How to send</a></li>
+          <li><a href="#">Safety</a></li>
+          <li><a href="#">Rates</a></li>
+          <li><a href="#">Contact us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Wise Payments Ltd. Authorised by the FCA.</span>
+      <span>Privacy &#47; Terms &#47; Cookies &#47; Legal</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
